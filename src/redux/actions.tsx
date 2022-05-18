@@ -1,25 +1,26 @@
-import { INCREMENT, DECREMENT, INPUT_TEXT, COMM_CREATE, MASSFAZ_CREATE } from './types';
+//import { INCREMENT, DECREMENT, INPUT_TEXT, COMM_CREATE, MASSFAZ_CREATE } from './types';
+import { COMM_CREATE, MASSFAZ_CREATE } from './types';
 
 import { DateRPU } from './../interfaceRPU.d';
 
-export function incrementLikes() {
-  return {
-    type: INCREMENT,
-  };
-}
+// export function incrementLikes() {
+//   return {
+//     type: INCREMENT,
+//   };
+// }
 
-export function decrementLikes() {
-  return {
-    type: DECREMENT,
-  };
-}
+// export function decrementLikes() {
+//   return {
+//     type: DECREMENT,
+//   };
+// }
 
-export function inputText(text: string) {
-  return {
-    type: INPUT_TEXT,
-    text,
-  };
-}
+// export function inputText(text: string) {
+//   return {
+//     type: INPUT_TEXT,
+//     text,
+//   };
+// }
 
 export function commCreate(dateRpu: DateRPU) {
   return {

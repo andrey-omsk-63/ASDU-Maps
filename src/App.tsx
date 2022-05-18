@@ -34,6 +34,9 @@ export let massFaz: Array<Array<number>> = [[]];
 
 let flagOpenRpu = true;
 
+let flagWS = true;
+let WS: any = null;
+
 const App = () => {
   //== Piece of Redux ======================================
   const comm = useSelector((state: any) => {
@@ -86,6 +89,17 @@ const App = () => {
   //     setIsOpenRpu(true);
   //   });
   // }, []);
+
+  const host ="wss://192.168.115.25/mapW"
+  //  'wss://' + window.location.host + window.location.pathname + 'W' + window.location.search;
+  // let WS: React.MutableRefObject<WebSocket> = {};
+  //const WS: any = React.useRef(new WebSocket('wss://ws.kraken.com/'));
+  //const WS = React.useRef(new WebSocket('wss://ws.kraken.com/'));
+  if (flagWS) {
+    WS = new WebSocket(host);
+    flagWS = false;
+    console.log('WS:', WS)
+  }
 
   if (flagOpenRpu) {                // костыль для отладки на планшете
     setPointsRpu(dataRpu);
