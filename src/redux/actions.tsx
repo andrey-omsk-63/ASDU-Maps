@@ -1,7 +1,8 @@
 //import { INCREMENT, DECREMENT, INPUT_TEXT, COMM_CREATE, MASSFAZ_CREATE } from './types';
-import { COMM_CREATE, MASSFAZ_CREATE } from './types';
+import { MAP_CREATE, COMM_CREATE, MASSFAZ_CREATE } from './types';
 
 import { DateRPU } from './../interfaceRPU.d';
+import { DateMAP } from './../interfaceMAP.d';
 
 // export function incrementLikes() {
 //   return {
@@ -12,13 +13,6 @@ import { DateRPU } from './../interfaceRPU.d';
 // export function decrementLikes() {
 //   return {
 //     type: DECREMENT,
-//   };
-// }
-
-// export function inputText(text: string) {
-//   return {
-//     type: INPUT_TEXT,
-//     text,
 //   };
 // }
 
@@ -33,5 +27,13 @@ export function massfazCreate(massFaza: Array<Array<number>> = [[]]) {
   return {
     type: MASSFAZ_CREATE,
     data: massFaza,
+  };
+}
+
+// export function mapCreate(dateMap: DateMAP) {
+export function mapCreate(dateMap: any) {
+  return {
+    type: MAP_CREATE,
+    data: { dateMap },
   };
 }

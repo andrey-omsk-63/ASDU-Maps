@@ -34,6 +34,12 @@ let massFaza: Array<Array<number>> = [[]];
 
 const BindDirections = (props: any) => {
   //== Piece of Redux ======================================
+  const map = useSelector((state: any) => {
+    const { mapReducer } = state;
+    return mapReducer.map;
+  });
+  console.log('map_Directions:', map);
+
   const comm = useSelector((state: any) => {
     const { commReducer } = state;
     return commReducer.comm;
