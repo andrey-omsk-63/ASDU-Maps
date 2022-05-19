@@ -12,7 +12,7 @@ import TabPanel from '@mui/lab/TabPanel';
 //import axios from 'axios';
 
 import Condition from './components/Condition';
-import Technology from './components/Technology';
+//import Technology from './components/Technology';
 import Eguipment from './components/Eguipment';
 import BindDirections from './components/Bind/BindDirections';
 import BindOutputs from './components/Bind/BindOutputs';
@@ -26,20 +26,21 @@ import { styleTitle, styleButt02 } from './AppStyle';
 import { DateRPU } from './interfaceRPU.d';
 import { dataRpu } from './otladkaRpuData';
 
-import { DateMAP } from './interfaceMAP.d';
+import { Tflight, DateMAP } from './interfaceMAP.d';
+//import { dataMap } from './otladkaMaps';
 import { dataMap } from './otladkaMaps';
 
 import AppIconAsdu from './AppIconAsdu';
 
 export let dateRpuGl: DateRPU = {} as DateRPU;
-//export let dateMapGl: DateMAP = {} as DateMAP;
-export let dateMapGl: any;
-
+//export let dateMapGl: Tflight[] = [];
+export let dateMapGl: Tflight[] = [{} as Tflight];
 export let massFaz: Array<Array<number>> = [[]];
 
 let flagOpenRpu = true;
 let flagKostil = true;
 
+let flagOpenWS = true;
 let flagWS = true;
 let WS: any = null;
 
@@ -49,7 +50,7 @@ const App = () => {
     const { commReducer } = state;
     return commReducer.comm;
   });
-  console.log('comm_App:', comm);
+  //console.log('comm_App:', comm);
 
   const map = useSelector((state: any) => {
     const { mapReducer } = state;
@@ -61,7 +62,7 @@ const App = () => {
     const { massfazReducer } = state;
     return massfazReducer.massfaz;
   });
-  console.log('massfaz_App:', massfaz);
+  //console.log('massfaz_App:', massfaz);
 
   const dispatch = useDispatch();
   //========================================================
@@ -91,28 +92,38 @@ const App = () => {
   };
 
   const [pointsRpu, setPointsRpu] = React.useState<DateRPU>({} as DateRPU);
-  const [pointsMap, setPointsMap] = React.useState<DateMAP>({} as DateMAP);
   const [isOpenRpu, setIsOpenRpu] = React.useState(false);
-  //const ipAdress: string = 'http://localhost:3000/otladkaRpu.json';
-  //const ipAdress: string = 'http://192.168.115.114:3000/otladkaRpu.json';
-
-  // React.useEffect(() => {
-  //   axios.get(ipAdress).then(({ data }) => {
-  //     setPointsRpu(data);
-  //     setIsOpenRpu(true);
-  //   });
-  // }, []);
 
   const host = 'wss://192.168.115.25/mapW';
-  //  'wss://' + window.location.host + window.location.pathname + 'W' + window.location.search;
-  // let WS: React.MutableRefObject<WebSocket> = {};
-  //const WS: any = React.useRef(new WebSocket('wss://ws.kraken.com/'));
-  //const WS = React.useRef(new WebSocket('wss://ws.kraken.com/'));
-  if (flagWS) {
+
+  if (flagOpenWS) {
     WS = new WebSocket(host);
-    flagWS = false;
-    console.log('WS:', WS);
+    flagOpenWS = false;
   }
+
+  React.useEffect(() => {
+    WS.onopen = function (event: any) {
+      console.log('WS.current.onopen:', event);
+    };
+
+    WS.onclose = function (event: any) {
+      console.log('WS.current.onclose:', event);
+    };
+
+    WS.onerror = function (event: any) {
+      console.log('WS.current.onerror:', event);
+    };
+
+    WS.onmessage = function (event: any) {
+      if (flagWS) {
+        let allData = JSON.parse(event.data);
+        let data: DateMAP = allData.data;
+        dateMapGl = data.tflight;
+        dispatch(mapCreate(dateMapGl));
+        flagWS = false;
+      }
+    };
+  }, []);
 
   if (flagOpenRpu) {
     // костыль для отладки на планшете
@@ -120,17 +131,17 @@ const App = () => {
     setIsOpenRpu(true);
   }
 
-  if (flagKostil) {
-    console.log('dataMap:', dataMap);
-    //setPointsMap(dataMap);
-    flagKostil = true;
-  }
+  // if (flagKostil) {
+  //   // костыль для отладки дома
+  //   console.log('dataMap_kostil:', dataMap.tflight, dataMap);
+  //   dateMapGl = dataMap.tflight;
+  //   dispatch(mapCreate(dateMapGl));
+  //   flagKostil = false;
+  // }
 
-  if (isOpenRpu && flagOpenRpu && flagKostil) {
+  if (isOpenRpu && flagOpenRpu) {
     dateRpuGl = pointsRpu;
-    dateMapGl = dataMap;
 
-    dispatch(mapCreate(dateMapGl));
     // входящий контроль pointsRpu
     for (let i = 0; i < dateRpuGl.tirtonap.length; i++) {
       let massRab = [0, 0, 0];
@@ -157,7 +168,6 @@ const App = () => {
     }
     dispatch(massfazCreate(massFaz));
     flagOpenRpu = false;
-    flagKostil = false;
   }
 
   const [value, setValue] = React.useState('1');
@@ -195,7 +205,7 @@ const App = () => {
               <Condition />
             </TabPanel>
             <TabPanel value="2">
-              <Technology />
+              {/* <Technology /> */}
             </TabPanel>
             <TabPanel value="3">
               <Eguipment />
@@ -236,13 +246,3 @@ const App = () => {
 
 export default App;
 
-// отслеживание изменения размера экрана
-// const [size, setSize] = React.useState([0, 0]);
-// React.useLayoutEffect(() => {
-//   function updateSize() {
-//     setSize([window.innerWidth, window.innerHeight]);
-//   }
-//   window.addEventListener('resize', updateSize);
-//   updateSize();
-//   return () => window.removeEventListener('resize', updateSize);
-// }, []);

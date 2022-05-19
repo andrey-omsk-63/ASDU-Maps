@@ -2,7 +2,7 @@
 import { MAP_CREATE, COMM_CREATE, MASSFAZ_CREATE } from './types';
 
 import { DateRPU } from './../interfaceRPU.d';
-import { DateMAP } from './../interfaceMAP.d';
+import { Tflight } from './../interfaceMAP.d';
 
 // export function incrementLikes() {
 //   return {
@@ -31,7 +31,7 @@ export function massfazCreate(massFaza: Array<Array<number>> = [[]]) {
 }
 
 // export function mapCreate(dateMap: DateMAP) {
-export function mapCreate(dateMap: any) {
+export function mapCreate(dateMap: Tflight[]) {
   return {
     type: MAP_CREATE,
     data: { dateMap },
