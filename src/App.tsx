@@ -118,8 +118,8 @@ const App = () => {
       if (flagWS) {
         let allData = JSON.parse(event.data);
         let data: DateMAP = allData.data;
-        dateMapGl = data.tflight;
-        dispatch(mapCreate(dateMapGl));
+        // dateMapGl = data.tflight;
+        // dispatch(mapCreate(dateMapGl));
         flagWS = false;
       }
     };
@@ -131,13 +131,13 @@ const App = () => {
     setIsOpenRpu(true);
   }
 
-  // if (flagKostil) {
-  //   // костыль для отладки дома
-  //   console.log('dataMap_kostil:', dataMap.tflight, dataMap);
-  //   dateMapGl = dataMap.tflight;
-  //   dispatch(mapCreate(dateMapGl));
-  //   flagKostil = false;
-  // }
+  if (flagKostil) {
+    // костыль для отладки дома
+    console.log('dataMap_kostil:', dataMap.tflight, dataMap);
+    dateMapGl = dataMap.tflight;
+    dispatch(mapCreate(dateMapGl));
+    flagKostil = false;
+  }
 
   if (isOpenRpu && flagOpenRpu) {
     dateRpuGl = pointsRpu;
