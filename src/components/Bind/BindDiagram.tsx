@@ -37,48 +37,30 @@ const BindDiagram = () => {
     zoom,
   ])
 
+  let widthWindow = (window.innerWidth / 1.4).toString() +'px';
+  //let widthWindow = window.innerWidth - 400;
+  const DlWind = () => {
+    console.log('window.innerWidth:',window.innerWidth)
+    
+    //console.log('offsetWidth:',document.getElementById("mydiv").offsetWidth)
+  }
+  
+  //отслеживание изменения размера экрана
+  const [size, setSize] = React.useState(0); 
+  React.useLayoutEffect(() => {
+    function updateSize() {
+      setSize(window.innerWidth);
+    }
+    window.addEventListener('resize', updateSize);
+    updateSize();
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
+
   return (
-
-    // <YMaps>
-    //   <div>
-    //     My awesome application with maps!
-    //     <Map defaultState={{ center: [55.75, 37.57], zoom: 9 }} />
-    //   </div>
-    // </YMaps>
-
-    // <YMaps>
-    //   <Map defaultState={mapData}>
-    //     {coordinates.map(coordinate => <Placemark geometry={coordinate} />)}
-    //   </Map>
-    // </YMaps>
-
-    // <YMaps>
-    //   <Map
-    //     defaultState={{
-    //       center: [55.75, 37.57],
-    //       zoom: 9,
-    //       controls: ['zoomControl', 'fullscreenControl'],
-    //     }}
-    //     modules={['control.ZoomControl', 'control.FullscreenControl']}
-    //   >
-    //     <Placemark
-    //       modules={['geoObject.addon.balloon']}
-    //       defaultGeometry={[55.75, 37.57]}
-    //       properties={{
-    //         balloonContentBody:
-    //           'This is balloon loaded by the Yandex.Maps API module system',
-    //       }}
-    //     />
-    //   </Map>
-    // </YMaps>
-    <Grid container sx={{ border: 1, height: "85vh" }}>
-      <YMaps
-      // query={{
-      //   ns: 'use-load-option',
-      //   load:
-      //     'Map,Placemark,control.ZoomControl,control.FullscreenControl,geoObject.addon.balloon',
-      // }}
-      >
+  
+    <Grid container className={"mydiv"} sx={{ border: 1, height: "85vh" }}>
+      {DlWind()}
+      <YMaps>
         <Map
           defaultState={{
             center: [55.75, 37.57],
@@ -86,7 +68,8 @@ const BindDiagram = () => {
             //controls: ['zoomControl', 'fullscreenControl'],
             controls: [],
           }}
-          width={"72vw"}
+          //width={"72vw"}
+          width={widthWindow}
           height={"100%"}
         >
           <Placemark
