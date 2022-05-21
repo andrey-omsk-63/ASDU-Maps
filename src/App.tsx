@@ -12,7 +12,7 @@ import TabPanel from '@mui/lab/TabPanel';
 //import axios from 'axios';
 
 import Condition from './components/Condition';
-//import Technology from './components/Technology';
+import Technology from './components/Technology';
 import Eguipment from './components/Eguipment';
 import BindDirections from './components/Bind/BindDirections';
 import BindOutputs from './components/Bind/BindOutputs';
@@ -205,7 +205,7 @@ const App = () => {
               <Condition />
             </TabPanel>
             <TabPanel value="2">
-              {/* <Technology /> */}
+              <Technology />
             </TabPanel>
             <TabPanel value="3">
               <Eguipment />
@@ -245,4 +245,3 @@ const App = () => {
 };
 
 export default App;
-
