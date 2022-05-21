@@ -64,6 +64,7 @@ const BindDiagram = () => {
             //controls: ['zoomControl', 'fullscreenControl'],
             controls: [],
           }}
+          //width={"72vw"}
           width={'99.5%'}
           height={'100%'}>
           <Placemark
