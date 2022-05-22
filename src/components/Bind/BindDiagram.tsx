@@ -2,6 +2,7 @@ import * as React from 'react';
 //import ReactDOM from "react-dom";
 
 import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 
 import {
   YMaps,
@@ -55,40 +56,41 @@ const BindDiagram = () => {
   }, []);
 
   return (
-    <Grid container className={'mydiv'} sx={{ border: 1, height: '85vh' }}>
-      <YMaps>
-        <Map
-          defaultState={{
-            center: [55.75, 37.57],
-            zoom: 9,
-            //controls: ['zoomControl', 'fullscreenControl'],
-            controls: [],
-          }}
-          //width={"72vw"}
-          width={'99.5%'}
-          height={'100%'}>
-          <Placemark
-            defaultGeometry={[55.75, 37.57]}
-            properties={{
-              balloonContentBody: 'This is balloon loaded by the Yandex.Maps API module system',
+    <Box sx={{ marginTop: -3, marginLeft: -3, marginRight: -3 }}>
+      <Grid container sx={{ border: 0, height: '92vh' }}>
+        <YMaps>
+          <Map
+            defaultState={{
+              center: [55.75, 37.57],
+              zoom: 9,
+              //controls: ['zoomControl', 'fullscreenControl'],
+              controls: [],
             }}
-          />
-          <FullscreenControl />
-          <GeolocationControl options={{ float: 'left' }} />
-          <ListBox data={{ content: 'Выберите город' }}>
-            <ListBoxItem data={{ content: 'Москва' }} />
-            <ListBoxItem data={{ content: 'Омск' }} />
-            <ListBoxItem data={{ content: 'Иркутск' }} />
-          </ListBox>
-          <RouteButton options={{ float: 'right' }} />
-          <RulerControl options={{ float: 'right' }} />
-          <SearchControl options={{ float: 'right' }} />
-          <TrafficControl options={{ float: 'right' }} />
-          <TypeSelector options={{ float: 'right' }} />
-          <ZoomControl options={{ float: 'right' }} />
-        </Map>
-      </YMaps>
-    </Grid>
+            width={'99.5%'}
+            height={'100%'}>
+            <Placemark
+              defaultGeometry={[55.75, 37.57]}
+              properties={{
+                balloonContentBody: 'This is balloon loaded by the Yandex.Maps API module system',
+              }}
+            />
+            <FullscreenControl />
+            <GeolocationControl options={{ float: 'left' }} />
+            <ListBox data={{ content: 'Выберите город' }}>
+              <ListBoxItem data={{ content: 'Москва' }} />
+              <ListBoxItem data={{ content: 'Омск' }} />
+              <ListBoxItem data={{ content: 'Иркутск' }} />
+            </ListBox>
+            <RouteButton options={{ float: 'right' }} />
+            <RulerControl options={{ float: 'right' }} />
+            <SearchControl options={{ float: 'right' }} />
+            <TrafficControl options={{ float: 'right' }} />
+            <TypeSelector options={{ float: 'right' }} />
+            <ZoomControl options={{ float: 'right' }} />
+          </Map>
+        </YMaps>
+      </Grid>
+    </Box>
   );
 };
 
