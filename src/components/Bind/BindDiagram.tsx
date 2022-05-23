@@ -41,7 +41,7 @@ const BindDiagram = () => {
   //const mapRef = React.createRef(null);
 
   // () => {
-  const [zoom, setZoom] = React.useState(9);
+  const [zoom, setZoom] = React.useState(10);
   const mapState = React.useMemo(() => ({ center: [55.75, 37.57], zoom }), [zoom]);
 
   //отслеживание изменения размера экрана
@@ -62,7 +62,7 @@ const BindDiagram = () => {
           <Map
             defaultState={{
               center: [55.75, 37.57],
-              zoom: 9,
+              zoom: 10,
               //controls: ['zoomControl', 'fullscreenControl'],
               controls: [],
             }}

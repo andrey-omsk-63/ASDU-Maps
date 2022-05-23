@@ -1,7 +1,7 @@
-# ASDU-Dkam-Redux
+# ASDU-Maps
 
 
-HTTPS = true npm start
+set HTTPS=true&&react-scripts start
 
 
 https://192.168.115.153:3000
