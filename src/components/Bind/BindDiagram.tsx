@@ -1,5 +1,5 @@
 import * as React from 'react';
-//import ReactDOM from "react-dom";
+import { useSelector } from 'react-redux';
 
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -20,66 +20,53 @@ import {
   ZoomControl,
 } from 'react-yandex-maps';
 
-// const mapState = {
-//   center: [48.704272, 65.60203],
-//   zoom: 4
-// };
+import { Tflight, DateMAP } from './../../interfaceMAP.d';
 
-// const COLORS = ["#F0F075", "#FB6C3F", "#3D4C76", "#49C0B5"];
-
-// const mapData = {
-//   center: [55.751574, 37.573856],
-//   zoom: 5,
-// };
+const mapData = {
+  center: [55.751574, 37.573856],
+  zoom: 8,
+};
 
 // const coordinates = [
 //   [55.684758, 37.738521],
-//   [57.684758, 39.738521]
+//   [57.684758, 39.738521],
 // ];
+let coordinates: Array<Array<number>> = [[]];
+
+let dateMap: Tflight[] = [{} as Tflight];
 
 const BindDiagram = () => {
-  //const mapRef = React.createRef(null);
+  //== Piece of Redux ======================================
+  const map = useSelector((state: any) => {
+    const { mapReducer } = state;
+    return mapReducer.map;
+  });
+  dateMap = map.dateMap;
+  //console.log('dateMap_Diagram:', dateMap);
+  //========================================================
 
-  // () => {
-  const [zoom, setZoom] = React.useState(10);
-  const mapState = React.useMemo(() => ({ center: [55.75, 37.57], zoom }), [zoom]);
-
-  //отслеживание изменения размера экрана
-  const [size, setSize] = React.useState(0);
-  React.useLayoutEffect(() => {
-    function updateSize() {
-      setSize(window.innerWidth);
-    }
-    window.addEventListener('resize', updateSize);
-    updateSize();
-    return () => window.removeEventListener('resize', updateSize);
-  }, []);
+  for (let i = 0; i < dateMap.length; i++) {
+    let mass = [0, 0];
+    mass[0] = dateMap[i].points.Y;
+    mass[1] = dateMap[i].points.X;
+    coordinates.push(mass);
+  }
+  coordinates.splice(0, 1);
+  console.log('coord:', coordinates);
 
   return (
     <Box sx={{ marginTop: -3, marginLeft: -3, marginRight: -3 }}>
       <Grid container sx={{ border: 0, height: '92vh' }}>
         <YMaps>
-          <Map
-            defaultState={{
-              center: [55.75, 37.57],
-              zoom: 10,
-              //controls: ['zoomControl', 'fullscreenControl'],
-              controls: [],
-            }}
-            width={'99.5%'}
-            height={'100%'}>
-            <Placemark
-              defaultGeometry={[55.75, 37.57]}
-              properties={{
-                balloonContentBody: 'This is balloon loaded by the Yandex.Maps API module system',
-              }}
-            />
+          <Map defaultState={mapData} width={'99.5%'} height={'100%'}>
+            {coordinates.map((coordinate) => (
+              <Placemark key={Math.random()} geometry={coordinate} />
+            ))}
             <FullscreenControl />
             <GeolocationControl options={{ float: 'left' }} />
             <ListBox data={{ content: 'Выберите город' }}>
               <ListBoxItem data={{ content: 'Москва' }} />
               <ListBoxItem data={{ content: 'Омск' }} />
-              <ListBoxItem data={{ content: 'Иркутск' }} />
             </ListBox>
             <RouteButton options={{ float: 'right' }} />
             <RulerControl options={{ float: 'right' }} />
@@ -95,30 +82,3 @@ const BindDiagram = () => {
 };
 
 export default BindDiagram;
-
-// import Backdrop from '@mui/material/Backdrop';
-// import CircularProgress from '@mui/material/CircularProgress';
-// import Button from '@mui/material/Button';
-
-//   console.log('BindDiagram - props:', props);
-
-//   const [open, setOpen] = React.useState(false);
-//   const handleClose = () => {
-//     setOpen(false);
-//   };
-//   const handleToggle = () => {
-//     setOpen(!open);
-//   };
-
-//   return (
-//     <div>
-//       <Button onClick={handleToggle}>Show backdrop</Button>
-//       <Backdrop
-//         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-//         open={open}
-//         onClick={handleClose}
-//       >
-//         <CircularProgress color="inherit" />
-//       </Backdrop>
-//     </div>
-//   );
