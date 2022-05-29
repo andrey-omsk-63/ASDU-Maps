@@ -18,13 +18,14 @@ import {
   TrafficControl,
   TypeSelector,
   ZoomControl,
+  Clusterer,
 } from 'react-yandex-maps';
 
 import { Tflight, DateMAP } from './../../interfaceMAP.d';
 
 const mapData = {
   center: [55.751574, 37.573856],
-  zoom: 8,
+  zoom: 9,
 };
 
 // const coordinates = [
@@ -34,6 +35,7 @@ const mapData = {
 let coordinates: Array<Array<number>> = [[]];
 
 let dateMap: Tflight[] = [{} as Tflight];
+let flagOpen = true;
 
 const BindDiagram = () => {
   //== Piece of Redux ======================================
@@ -45,22 +47,52 @@ const BindDiagram = () => {
   //console.log('dateMap_Diagram:', dateMap);
   //========================================================
 
-  for (let i = 0; i < dateMap.length; i++) {
-    let mass = [0, 0];
-    mass[0] = dateMap[i].points.Y;
-    mass[1] = dateMap[i].points.X;
-    coordinates.push(mass);
+  if (flagOpen) {
+    for (let i = 0; i < dateMap.length; i++) {
+      let mass = [0, 0];
+      mass[0] = dateMap[i].points.Y;
+      mass[1] = dateMap[i].points.X;
+      coordinates.push(mass);
+    }
+    coordinates.splice(0, 1);
+    flagOpen = false;
+
+    //console.log('coord:', coordinates);
   }
-  coordinates.splice(0, 1);
-  console.log('coord:', coordinates);
+
+  const getPointData = (index: any) => {
+    return {
+      balloonContentBody: 'placemark <strong>balloon ' + index + '</strong>',
+      clusterCaption: 'placemark <strong>' + index + '</strong>',
+    };
+  };
+
+  const getPointOptions = () => {
+    return {
+      preset: 'islands#violetIcon',
+    };
+  };
 
   return (
     <Box sx={{ marginTop: -3, marginLeft: -3, marginRight: -3 }}>
       <Grid container sx={{ border: 0, height: '92vh' }}>
         <YMaps>
           <Map defaultState={mapData} width={'99.5%'} height={'100%'}>
-            {coordinates.map((coordinate) => (
-              <Placemark key={Math.random()} geometry={coordinate} />
+            {/* <Clusterer> */}
+            {/* options={{
+                preset: 'islands#invertedVioletClusterIcons',
+                groupByCoordinates: false,
+                clusterDisableClickZoom: true,
+                clusterHideIconOnBalloonOpen: false,
+                geoObjectHideIconOnBalloonOpen: false,
+              }}> */}
+            {coordinates.map((coordinate, idx) => (
+              <Placemark
+                key={idx}
+                geometry={coordinate}
+                properties={getPointData(idx)}
+                options={getPointOptions()}
+              />
             ))}
             <FullscreenControl />
             <GeolocationControl options={{ float: 'left' }} />
@@ -74,6 +106,7 @@ const BindDiagram = () => {
             <TrafficControl options={{ float: 'right' }} />
             <TypeSelector options={{ float: 'right' }} />
             <ZoomControl options={{ float: 'right' }} />
+            {/* </Clusterer> */}
           </Map>
         </YMaps>
       </Grid>
