@@ -49,6 +49,8 @@ const BindDiagram = () => {
   //========================================================
 
   const mapp = React.useRef(null);
+  const mapRef = React.useRef<any>(null);
+  const [zoom, setZoom] = React.useState<number>(18);
 
   if (flagOpen) {
     for (let i = 0; i < dateMap.length; i++) {
@@ -60,8 +62,6 @@ const BindDiagram = () => {
     }
     coordinates.splice(0, 1);
     flagOpen = false;
-
-    console.log('nameCoordinates:', nameCoordinates);
   }
 
   const getPointData = (index: number) => {
@@ -75,6 +75,10 @@ const BindDiagram = () => {
   const getPointOptions = () => {
     return {
       preset: 'islands#violetIcon',
+      //iconLayout: 'default#image',
+      //iconImageHref: 'images/myIcon.gif',
+      // iconImageSize: [30, 42],
+      // iconImageOffset: [-3, -42],
     };
   };
 
@@ -86,12 +90,12 @@ const BindDiagram = () => {
       {
         referencePoints: [pointA, pointB],
         params: {
-          routingMode: "pedestrian"
-        }
+          routingMode: 'pedestrian',
+        },
       },
       {
-        boundsAutoApply: true
-      }
+        boundsAutoApply: true,
+      },
     );
 
     map.current.geoObjects.add(multiRoute);
@@ -100,22 +104,29 @@ const BindDiagram = () => {
   return (
     <Box sx={{ marginTop: -3, marginLeft: -3, marginRight: -3 }}>
       <Grid container sx={{ border: 0, height: '92vh' }}>
-        <YMaps>
+        <YMaps query={{ apikey: '65162f5f-2d15-41d1-a881-6c1acf34cfa1', lang: 'ru_RU' }}>
           <Map
-            modules={["multiRouter.MultiRoute"]}
+            modules={['multiRouter.MultiRoute']}
             defaultState={mapData}
             //instanceRef={mapp}
-            onLoad={addRoute}
-            width={'99.5%'} height={'100%'}>
+            // instanceRef={(ref) => {
+            //   if (ref) {
+            //     mapRef.current = ref;
+            //     mapRef.current.events.add(['boundschange'], () =>
+            //       setZoom(mapRef.current.getZoom()),
+            //     );
+            //   }
+            // }}
+            //onLoad={addRoute}
+            width={'99.5%'}
+            height={'100%'}>
             {coordinates.map((coordinate, idx) => (
               <Placemark
                 key={idx}
                 geometry={coordinate}
                 properties={getPointData(idx)}
                 options={getPointOptions()}
-                modules={
-                  ['geoObject.addon.balloon', 'geoObject.addon.hint']
-                }
+                modules={['geoObject.addon.balloon', 'geoObject.addon.hint']}
               />
             ))}
             <FullscreenControl />
