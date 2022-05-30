@@ -18,7 +18,7 @@ import {
   TrafficControl,
   TypeSelector,
   ZoomControl,
-  Clusterer,
+  //Clusterer,
 } from 'react-yandex-maps';
 
 import { Tflight, DateMAP } from './../../interfaceMAP.d';
@@ -33,6 +33,7 @@ const mapData = {
 //   [57.684758, 39.738521],
 // ];
 let coordinates: Array<Array<number>> = [[]];
+let nameCoordinates: Array<string> = [];
 
 let dateMap: Tflight[] = [{} as Tflight];
 let flagOpen = true;
@@ -47,23 +48,27 @@ const BindDiagram = () => {
   //console.log('dateMap_Diagram:', dateMap);
   //========================================================
 
+  const mapp = React.useRef(null);
+
   if (flagOpen) {
     for (let i = 0; i < dateMap.length; i++) {
       let mass = [0, 0];
       mass[0] = dateMap[i].points.Y;
       mass[1] = dateMap[i].points.X;
       coordinates.push(mass);
+      nameCoordinates.push(dateMap[i].description);
     }
     coordinates.splice(0, 1);
     flagOpen = false;
 
-    //console.log('coord:', coordinates);
+    console.log('nameCoordinates:', nameCoordinates);
   }
 
-  const getPointData = (index: any) => {
+  const getPointData = (index: number) => {
     return {
-      balloonContentBody: 'placemark <strong>balloon ' + index + '</strong>',
-      clusterCaption: 'placemark <strong>' + index + '</strong>',
+      //balloonContentBody: 'placemark <strong>balloon ' + index + '</strong>',
+      //clusterCaption: 'placemark <strong>' + index + '</strong>',
+      hintContent: nameCoordinates[index],
     };
   };
 
@@ -73,25 +78,44 @@ const BindDiagram = () => {
     };
   };
 
+  const addRoute = (ymaps: any) => {
+    const pointA = [55.749, 37.524]; // Москва
+    const pointB = [59.918072, 30.304908]; // Санкт-Петербург
+
+    const multiRoute = new ymaps.multiRouter.MultiRoute(
+      {
+        referencePoints: [pointA, pointB],
+        params: {
+          routingMode: "pedestrian"
+        }
+      },
+      {
+        boundsAutoApply: true
+      }
+    );
+
+    map.current.geoObjects.add(multiRoute);
+  };
+
   return (
     <Box sx={{ marginTop: -3, marginLeft: -3, marginRight: -3 }}>
       <Grid container sx={{ border: 0, height: '92vh' }}>
         <YMaps>
-          <Map defaultState={mapData} width={'99.5%'} height={'100%'}>
-            {/* <Clusterer> */}
-            {/* options={{
-                preset: 'islands#invertedVioletClusterIcons',
-                groupByCoordinates: false,
-                clusterDisableClickZoom: true,
-                clusterHideIconOnBalloonOpen: false,
-                geoObjectHideIconOnBalloonOpen: false,
-              }}> */}
+          <Map
+            modules={["multiRouter.MultiRoute"]}
+            defaultState={mapData}
+            //instanceRef={mapp}
+            onLoad={addRoute}
+            width={'99.5%'} height={'100%'}>
             {coordinates.map((coordinate, idx) => (
               <Placemark
                 key={idx}
                 geometry={coordinate}
                 properties={getPointData(idx)}
                 options={getPointOptions()}
+                modules={
+                  ['geoObject.addon.balloon', 'geoObject.addon.hint']
+                }
               />
             ))}
             <FullscreenControl />
