@@ -25,13 +25,20 @@ import { Tflight, DateMAP } from './../../interfaceMAP.d';
 
 const mapData = {
   center: [55.751574, 37.573856],
-  zoom: 9,
+  zoom: 8.5,
+  controls: []
 };
 
-// const coordinates = [
+// let coordinates: Array<Array<number>> = [
 //   [55.684758, 37.738521],
-//   [57.684758, 39.738521],
+//   [55.749, 37.524],
 // ];
+
+// let nameCoordinates: Array<string> = [
+//   'Точка А',
+//   'Точка В',
+// ];
+
 let coordinates: Array<Array<number>> = [[]];
 let nameCoordinates: Array<string> = [];
 
@@ -48,9 +55,14 @@ const BindDiagram = () => {
   //console.log('dateMap_Diagram:', dateMap);
   //========================================================
 
-  const mapp = React.useRef(null);
-  const mapRef = React.useRef<any>(null);
+  const mapp = React.useRef<any>(null);
+  //const mapRef = React.useRef<any>(null);
   const [zoom, setZoom] = React.useState<number>(18);
+
+  const mapState = {
+    center: [55.739625, 37.5412],
+    zoom: 12
+  };
 
   if (flagOpen) {
     for (let i = 0; i < dateMap.length; i++) {
@@ -66,8 +78,6 @@ const BindDiagram = () => {
 
   const getPointData = (index: number) => {
     return {
-      //balloonContentBody: 'placemark <strong>balloon ' + index + '</strong>',
-      //clusterCaption: 'placemark <strong>' + index + '</strong>',
       hintContent: nameCoordinates[index],
     };
   };
@@ -83,41 +93,50 @@ const BindDiagram = () => {
   };
 
   const addRoute = (ymaps: any) => {
-    const pointA = [55.749, 37.524]; // Москва
-    const pointB = [59.918072, 30.304908]; // Санкт-Петербург
+    const pointA = [coordinates[0][0], coordinates[0][1]];
+    //const pointA = [0, 0];
+    const pointB = [coordinates[2][0], coordinates[2][1]];
+    //const pointB = [0, 0];
+
 
     const multiRoute = new ymaps.multiRouter.MultiRoute(
       {
         referencePoints: [pointA, pointB],
         params: {
-          routingMode: 'pedestrian',
-        },
+          //   routingMode: "auto",
+          //reverseGeocoding: true
+        }
       },
       {
-        boundsAutoApply: true,
-      },
+        //wayPointVisible: false,
+        wayPointDraggable: true,
+        boundsAutoApply: true
+      }
     );
 
-    map.current.geoObjects.add(multiRoute);
+    if (mapp.current) mapp.current.geoObjects.add(multiRoute);
+
   };
 
   return (
     <Box sx={{ marginTop: -3, marginLeft: -3, marginRight: -3 }}>
       <Grid container sx={{ border: 0, height: '92vh' }}>
         <YMaps query={{ apikey: '65162f5f-2d15-41d1-a881-6c1acf34cfa1', lang: 'ru_RU' }}>
+          {/* <YMaps> */}
           <Map
-            modules={['multiRouter.MultiRoute']}
+            modules={['multiRouter.MultiRoute', 'templateLayoutFactory']}
+            //state={mapState}
             defaultState={mapData}
             //instanceRef={mapp}
-            // instanceRef={(ref) => {
-            //   if (ref) {
-            //     mapRef.current = ref;
-            //     mapRef.current.events.add(['boundschange'], () =>
-            //       setZoom(mapRef.current.getZoom()),
-            //     );
-            //   }
-            // }}
-            //onLoad={addRoute}
+            instanceRef={(ref) => {
+              if (ref) {
+                mapp.current = ref;
+                mapp.current.events.add(['boundschange'], () =>
+                  setZoom(mapp.current.getZoom()),
+                );
+              }
+            }}
+            onLoad={addRoute}
             width={'99.5%'}
             height={'100%'}>
             {coordinates.map((coordinate, idx) => (
@@ -135,13 +154,13 @@ const BindDiagram = () => {
               <ListBoxItem data={{ content: 'Москва' }} />
               <ListBoxItem data={{ content: 'Омск' }} />
             </ListBox>
-            <RouteButton options={{ float: 'right' }} />
+            {/* <RouteButton options={{ float: 'right' }} /> */}
             <RulerControl options={{ float: 'right' }} />
             <SearchControl options={{ float: 'right' }} />
             <TrafficControl options={{ float: 'right' }} />
             <TypeSelector options={{ float: 'right' }} />
             <ZoomControl options={{ float: 'right' }} />
-            {/* </Clusterer> */}
+
           </Map>
         </YMaps>
       </Grid>
