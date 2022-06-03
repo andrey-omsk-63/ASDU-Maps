@@ -72,10 +72,10 @@ const BindDiagram = () => {
     flagOpen = false;
   }
 
-  //const pointA: any = [coordinates[0][0], coordinates[0][1]];
-  let pointA: any = 0;
-  //const pointB: any = [coordinates[2][0], coordinates[2][1]];
-  let pointB: any = 0;
+  const pointA: Array<number> = [coordinates[0][0], coordinates[0][1]];
+  //let pointA = [0, 0];
+  const pointB: Array<number> = [coordinates[2][0], coordinates[2][1]];
+  //let pointB = [0, 0];
 
   const PressBalloon = (index: number) => {
     //console.log('!!!', index)
@@ -85,22 +85,20 @@ const BindDiagram = () => {
 
   const PressBalloonBody = (index: number) => {
     console.log('Кликнули по точке ', index + 1, onRoute);
-    let mass = [0, 0];
 
-    if (!onRoute) {
-      mass[0] = coordinates[index][0];
-      mass[1] = coordinates[index][1];
-      if (pointA === 0) {
-        pointA = mass;
-        console.log('A', pointA, 'B', pointB);
-      } else {
-        if (pointB === 0) {
-          pointB = mass;
-          console.log('a', pointA, 'b', pointB);
-          onRoute = true;
-        }
-      }
-    }
+    // if (!onRoute) {
+    //   if (pointA[0] === 0) {
+    //     pointA[0] = coordinates[index][0];
+    //     pointA[1] = coordinates[index][1];
+    //     console.log("A", pointA, "B", pointB)
+    //   } else {
+
+    //     pointB[0] = coordinates[index][0];
+    //     pointB[1] = coordinates[index][1];
+    //     console.log("a", pointA, "b", pointB)
+    //     onRoute = true;
+    //   }
+    // }
   };
 
   const getPointData = (index: number) => {
@@ -122,7 +120,7 @@ const BindDiagram = () => {
   };
 
   const addRoute = (ymaps: any) => {
-    console.log('3333', pointA, pointB);
+    console.log('3333', pointA);
     const multiRoute = new ymaps.multiRouter.MultiRoute(
       {
         referencePoints: [pointA, pointB],
@@ -133,8 +131,8 @@ const BindDiagram = () => {
       },
       {
         //wayPointVisible: false,
-        wayPointDraggable: true,
-        boundsAutoApply: true,
+        //wayPointDraggable: true,
+        boundsAutoApply: false,
       },
     );
     if (mapp.current) mapp.current.geoObjects.add(multiRoute);
@@ -147,9 +145,9 @@ const BindDiagram = () => {
           <Map
             modules={[
               'multiRouter.MultiRoute',
-              // 'templateLayoutFactory',
-              'geoObject.addon.balloon',
-              'geoObject.addon.hint',
+              'templateLayoutFactory',
+              // 'geoObject.addon.balloon',
+              // 'geoObject.addon.hint',
             ]}
             defaultState={mapData}
             instanceRef={(ref) => {
@@ -167,7 +165,7 @@ const BindDiagram = () => {
                 geometry={coordinate}
                 properties={getPointData(idx)}
                 options={getPointOptions()}
-                //modules={['geoObject.addon.balloon', 'geoObject.addon.hint']}
+                modules={['geoObject.addon.balloon', 'geoObject.addon.hint']}
                 instanceRef={(ref: any) => {
                   ref &&
                     ref.events.add('balloonopen', () => {

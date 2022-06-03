@@ -44,7 +44,6 @@ let nameCoordinates: Array<string> = [];
 
 let dateMap: Tflight[] = [{} as Tflight];
 let flagOpen = true;
-let onRoute = false;
 
 const BindDiagram = () => {
   //== Piece of Redux ======================================
@@ -60,6 +59,11 @@ const BindDiagram = () => {
   //const mapRef = React.useRef<any>(null);
   const [zoom, setZoom] = React.useState<number>(18);
 
+  const mapState = {
+    center: [55.739625, 37.5412],
+    zoom: 12,
+  };
+
   if (flagOpen) {
     for (let i = 0; i < dateMap.length; i++) {
       let mass = [0, 0];
@@ -72,42 +76,9 @@ const BindDiagram = () => {
     flagOpen = false;
   }
 
-  //const pointA: any = [coordinates[0][0], coordinates[0][1]];
-  let pointA: any = 0;
-  //const pointB: any = [coordinates[2][0], coordinates[2][1]];
-  let pointB: any = 0;
-
-  const PressBalloon = (index: number) => {
-    //console.log('!!!', index)
-
-    return 'Это балун ' + (index + 1);
-  };
-
-  const PressBalloonBody = (index: number) => {
-    console.log('Кликнули по точке ', index + 1, onRoute);
-    let mass = [0, 0];
-
-    if (!onRoute) {
-      mass[0] = coordinates[index][0];
-      mass[1] = coordinates[index][1];
-      if (pointA === 0) {
-        pointA = mass;
-        console.log('A', pointA, 'B', pointB);
-      } else {
-        if (pointB === 0) {
-          pointB = mass;
-          console.log('a', pointA, 'b', pointB);
-          onRoute = true;
-        }
-      }
-    }
-  };
-
   const getPointData = (index: number) => {
-    //console.log('!!!',index)
     return {
       hintContent: nameCoordinates[index],
-      balloonContent: PressBalloon(index),
     };
   };
 
@@ -122,10 +93,14 @@ const BindDiagram = () => {
   };
 
   const addRoute = (ymaps: any) => {
-    console.log('3333', pointA, pointB);
+    const pointA = [coordinates[0][0], coordinates[0][1]];
+    //const pointA = [0, 0];
+    const pointB = [coordinates[2][0], coordinates[2][1]];
+    //const pointB = [0, 0];
+
     const multiRoute = new ymaps.multiRouter.MultiRoute(
       {
-        referencePoints: [pointA, pointB],
+        referencePoints: [pointA, 0],
         params: {
           //   routingMode: "auto",
           //reverseGeocoding: true
@@ -134,9 +109,10 @@ const BindDiagram = () => {
       {
         //wayPointVisible: false,
         wayPointDraggable: true,
-        boundsAutoApply: true,
+        //boundsAutoApply: true,
       },
     );
+
     if (mapp.current) mapp.current.geoObjects.add(multiRoute);
   };
 
@@ -144,14 +120,12 @@ const BindDiagram = () => {
     <Box sx={{ marginTop: -3, marginLeft: -3, marginRight: -3 }}>
       <Grid container sx={{ border: 0, height: '92vh' }}>
         <YMaps query={{ apikey: '65162f5f-2d15-41d1-a881-6c1acf34cfa1', lang: 'ru_RU' }}>
+          {/* <YMaps> */}
           <Map
-            modules={[
-              'multiRouter.MultiRoute',
-              // 'templateLayoutFactory',
-              'geoObject.addon.balloon',
-              'geoObject.addon.hint',
-            ]}
+            modules={['multiRouter.MultiRoute', 'templateLayoutFactory']}
+            //state={mapState}
             defaultState={mapData}
+            //instanceRef={mapp}
             instanceRef={(ref) => {
               if (ref) {
                 mapp.current = ref;
@@ -167,13 +141,7 @@ const BindDiagram = () => {
                 geometry={coordinate}
                 properties={getPointData(idx)}
                 options={getPointOptions()}
-                //modules={['geoObject.addon.balloon', 'geoObject.addon.hint']}
-                instanceRef={(ref: any) => {
-                  ref &&
-                    ref.events.add('balloonopen', () => {
-                      PressBalloonBody(idx);
-                    });
-                }}
+                modules={['geoObject.addon.balloon', 'geoObject.addon.hint']}
               />
             ))}
             <FullscreenControl />
@@ -184,13 +152,7 @@ const BindDiagram = () => {
             </ListBox>
             {/* <RouteButton options={{ float: 'right' }} /> */}
             <RulerControl options={{ float: 'right' }} />
-            <SearchControl
-              options={{
-                float: 'left',
-                provider: 'yandex#search',
-                size: 'large',
-              }}
-            />
+            <SearchControl options={{ float: 'right' }} />
             <TrafficControl options={{ float: 'right' }} />
             <TypeSelector options={{ float: 'right' }} />
             <ZoomControl options={{ float: 'right' }} />
