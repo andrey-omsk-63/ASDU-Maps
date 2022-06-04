@@ -29,22 +29,20 @@ const mapData = {
   controls: [],
 };
 
-// let coordinates: Array<Array<number>> = [
-//   [55.684758, 37.738521],
-//   [55.749, 37.524],
-// ];
-
-// let nameCoordinates: Array<string> = [
-//   'Точка А',
-//   'Точка В',
-// ];
-
 let coordinates: Array<Array<number>> = [[]];
 let nameCoordinates: Array<string> = [];
 
 let dateMap: Tflight[] = [{} as Tflight];
 let flagOpen = true;
 let onRoute = false;
+
+//let pointA: any = [coordinates[0][0], coordinates[0][1]];
+let pointa: any = [];
+let pointA: any = 0;
+//const pointB: any = [coordinates[2][0], coordinates[2][1]];
+let pointb: any = [];
+let pointB: any = 0;
+let ch = 0;
 
 const BindDiagram = () => {
   //== Piece of Redux ======================================
@@ -70,36 +68,50 @@ const BindDiagram = () => {
     }
     coordinates.splice(0, 1);
     flagOpen = false;
+    pointa = [coordinates[4][0], coordinates[4][1]];
+    pointb = [coordinates[3][0], coordinates[3][1]];
+    pointA = [coordinates[0][0], coordinates[0][1]];
+    pointB = [coordinates[2][0], coordinates[2][1]];
   }
-
-  //const pointA: any = [coordinates[0][0], coordinates[0][1]];
-  let pointA: any = 0;
-  //const pointB: any = [coordinates[2][0], coordinates[2][1]];
-  let pointB: any = 0;
 
   const PressBalloon = (index: number) => {
     //console.log('!!!', index)
-
     return 'Это балун ' + (index + 1);
   };
 
   const PressBalloonBody = (index: number) => {
     console.log('Кликнули по точке ', index + 1, onRoute);
     let mass = [0, 0];
+    // const multiRoute = new ymaps.multiRouter.MultiRoute(
+    //   {
+    //     referencePoints: [pointA, pointB],
+
+    //   },
+    //   {
+
+    //     boundsAutoApply: true,
+    //   },
+    // );
 
     if (!onRoute) {
-      mass[0] = coordinates[index][0];
-      mass[1] = coordinates[index][1];
-      if (pointA === 0) {
-        pointA = mass;
-        console.log('A', pointA, 'B', pointB);
-      } else {
-        if (pointB === 0) {
-          pointB = mass;
-          console.log('a', pointA, 'b', pointB);
-          onRoute = true;
-        }
-      }
+      pointA = pointa;
+      pointB = pointb;
+      //   mass[0] = coordinates[index][0];
+      //   mass[1] = coordinates[index][1];
+      //   if (pointA === 0) {
+      //     pointA = mass;
+      //     console.log('A', pointA, 'B', pointB);
+      //   } else {
+      //     if (pointB === 0) {
+      //       pointB = mass;
+      //       console.log('a', pointA, 'b', pointB);
+      //       onRoute = true;
+      //     }
+      //   }
+      console.log('A', pointA, 'B', pointB);
+      onRoute = true;
+      //mapp.current.geoObjects.add(multiRoute);
+      setSize(window.innerWidth + Math.random());
     }
   };
 
@@ -114,31 +126,49 @@ const BindDiagram = () => {
   const getPointOptions = () => {
     return {
       preset: 'islands#violetIcon',
-      //iconLayout: 'default#image',
-      //iconImageHref: 'images/myIcon.gif',
-      // iconImageSize: [30, 42],
-      // iconImageOffset: [-3, -42],
     };
   };
 
   const addRoute = (ymaps: any) => {
-    console.log('3333', pointA, pointB);
+    console.log('3333', ymaps, pointA, pointB);
     const multiRoute = new ymaps.multiRouter.MultiRoute(
       {
         referencePoints: [pointA, pointB],
-        params: {
-          //   routingMode: "auto",
-          //reverseGeocoding: true
-        },
+        // params: {
+        //   //   routingMode: "auto",
+        //   //reverseGeocoding: true
+        // },
       },
       {
         //wayPointVisible: false,
-        wayPointDraggable: true,
+        //wayPointDraggable: true,
         boundsAutoApply: true,
       },
     );
+
     if (mapp.current) mapp.current.geoObjects.add(multiRoute);
+    // if (onRoute) {
+    //   console.log('!!!!!!!')
+    //   multiRoute.model.setReferencePoints([
+    //     'метро Смоленская',
+    //     'метро Текстильщики'
+    //   ]);
+    // }
   };
+
+  //отслеживание изменения размера экрана
+  const [size, setSize] = React.useState(0);
+  React.useLayoutEffect(() => {
+    function updateSize() {
+      setSize(window.innerWidth);
+    }
+    window.addEventListener('resize', updateSize);
+    updateSize();
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
+
+  ch++
+  console.log('AA', ch, pointA, 'B', pointB);
 
   return (
     <Box sx={{ marginTop: -3, marginLeft: -3, marginRight: -3 }}>
@@ -148,14 +178,15 @@ const BindDiagram = () => {
             modules={[
               'multiRouter.MultiRoute',
               // 'templateLayoutFactory',
-              'geoObject.addon.balloon',
-              'geoObject.addon.hint',
+              // 'geoObject.addon.balloon',
+              // 'geoObject.addon.hint',
             ]}
             defaultState={mapData}
             instanceRef={(ref) => {
               if (ref) {
                 mapp.current = ref;
-                mapp.current.events.add(['boundschange'], () => setZoom(mapp.current.getZoom()));
+                mapp.current.events.add(['boundschange'],
+                  () => setZoom(mapp.current.getZoom()));
               }
             }}
             onLoad={addRoute}
@@ -167,10 +198,11 @@ const BindDiagram = () => {
                 geometry={coordinate}
                 properties={getPointData(idx)}
                 options={getPointOptions()}
-                //modules={['geoObject.addon.balloon', 'geoObject.addon.hint']}
+                modules={['geoObject.addon.balloon', 'geoObject.addon.hint']}
                 instanceRef={(ref: any) => {
                   ref &&
                     ref.events.add('balloonopen', () => {
+                      //ref.events.add( () => {
                       PressBalloonBody(idx);
                     });
                 }}
@@ -202,3 +234,32 @@ const BindDiagram = () => {
 };
 
 export default BindDiagram;
+
+
+{/* <script type="text/javascript">
+  ymaps.ready(function () {
+    let myMap = new ymaps.Map('map', {
+    center: [55.751574, 37.573856],
+    zoom: 9,
+    controls: []
+    });
+
+  // Создание экземпляра маршрута.
+  let multiRoute = new ymaps.multiRouter.MultiRoute({
+    // Точки маршрута.
+    // Обязательное поле. 
+    referencePoints: [
+  'Москва, метро Смоленская',
+  'Москва, метро Арбатская',
+  [55.734876, 37.59308], // улица Льва Толстого.
+  ]
+    }, {
+    // Автоматически устанавливать границы карты так,
+    // чтобы маршрут был виден целиком.
+    boundsAutoApply: true
+});
+
+  // Добавление маршрута на карту.
+  myMap.geoObjects.add(multiRoute);
+});
+</script> */}
