@@ -46,10 +46,10 @@ let nameCoordinates: Array<string> = [];
 let dateMap: Tflight[] = [{} as Tflight];
 let flagOpen = true;
 let ch = 0;
-// let pointA: any = [55.749, 37.524];
-let pointA: any = 0;
-// let pointB: any = 'Москва, Красная площадь';
-let pointB: any = 0;
+let pointA: any = [55.749, 37.524];
+//let pointA: any = 0;
+let pointB: any = 'Москва, Красная площадь';
+//let pointB: any = 0;
 
 const BindDiagram = () => {
   //== Piece of Redux ======================================
@@ -65,7 +65,7 @@ const BindDiagram = () => {
   const styleApp01 = {
     fontSize: 14,
     marginRight: 1,
-    width: '12%',
+    width: '27%',
     maxHeight: '21px',
     minHeight: '21px',
     backgroundColor: '#F1F3F4',
@@ -139,6 +139,7 @@ const BindDiagram = () => {
 
     const OnPlacemarkClick = (index: number) => {
       console.log('OnPlacemarkClick', index + 1);
+      //NewPoint(2);
       // if (!onRoute) {
       //   pointA = pointa;
       //   pointB = pointb;
@@ -204,7 +205,7 @@ const BindDiagram = () => {
     <Box sx={{ marginTop: -3, marginLeft: -3, marginRight: -3 }}>
       <Grid container sx={{ border: 0, height: '92vh' }}>
         <Button sx={styleApp01} variant="contained" onClick={() => NewPoint(1)}>
-          <b>Управление</b>
+          <b>Перестроить маршрут</b>
         </Button>
         <MapGl pointa={pointA} pointb={pointB} />
       </Grid>
