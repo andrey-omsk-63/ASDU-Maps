@@ -12,12 +12,13 @@ import {
   GeolocationControl,
   ListBox,
   ListBoxItem,
-  RouteButton,
+  //RouteButton,
   RulerControl,
   SearchControl,
   TrafficControl,
   TypeSelector,
   ZoomControl,
+  YMapsApi,
   //Clusterer,
 } from 'react-yandex-maps';
 
@@ -119,7 +120,7 @@ const BindDiagram = () => {
     //console.log('!!!',index)
     return {
       hintContent: nameCoordinates[index],
-      balloonContent: PressBalloon(index),
+      //balloonContent: PressBalloon(index),
     };
   };
 
@@ -130,10 +131,14 @@ const BindDiagram = () => {
   };
 
   const addRoute = (ymaps: any) => {
-    console.log('3333', ymaps, pointA, pointB);
     const multiRoute = new ymaps.multiRouter.MultiRoute(
       {
         referencePoints: [pointA, pointB],
+        // referencePoints: [
+        //   'Москва, метро Смоленская',
+        //   'Москва, метро Арбатская',
+        //   [55.734876, 37.59308], // улица Льва Толстого.
+        // ],
         // params: {
         //   //   routingMode: "auto",
         //   //reverseGeocoding: true
@@ -141,19 +146,33 @@ const BindDiagram = () => {
       },
       {
         //wayPointVisible: false,
-        //wayPointDraggable: true,
+        wayPointDraggable: true,
         boundsAutoApply: true,
       },
     );
 
-    if (mapp.current) mapp.current.geoObjects.add(multiRoute);
-    // if (onRoute) {
-    //   console.log('!!!!!!!')
-    //   multiRoute.model.setReferencePoints([
-    //     'метро Смоленская',
-    //     'метро Текстильщики'
-    //   ]);
-    // }
+    console.log('mapp.current', mapp.current);
+    // multiRoute.editor.start({
+    //   addWayPoints: true,
+    // });
+    // if (mapp.current)
+    mapp.current.geoObjects.add(multiRoute);
+
+    if (onRoute) {
+      multiRoute.model.setReferencePoints(['метро Смоленская', 'метро Текстильщики']);
+    }
+  };
+
+  const OnPlacemarkClick = (index: number) => {
+    console.log('OnPlacemarkClick', index + 1);
+    if (!onRoute) {
+      pointA = pointa;
+      pointB = pointb;
+      console.log('A', pointA, 'B', pointB);
+      onRoute = true;
+      //mapp.current.geoObjects.add(multiRoute);
+    }
+    setSize(window.innerWidth + Math.random());
   };
 
   //отслеживание изменения размера экрана
@@ -167,8 +186,9 @@ const BindDiagram = () => {
     return () => window.removeEventListener('resize', updateSize);
   }, []);
 
-  ch++
-  console.log('AA', ch, pointA, 'B', pointB);
+  ch++;
+  console.log('AA', ch, pointA, 'BB', pointB);
+  //const [ymaps, setYmaps] = React.useState<YMapsApi | null>(null);
 
   return (
     <Box sx={{ marginTop: -3, marginLeft: -3, marginRight: -3 }}>
@@ -185,11 +205,16 @@ const BindDiagram = () => {
             instanceRef={(ref) => {
               if (ref) {
                 mapp.current = ref;
-                mapp.current.events.add(['boundschange'],
-                  () => setZoom(mapp.current.getZoom()));
+                mapp.current.events.add(['boundschange'], () => setZoom(mapp.current.getZoom()));
               }
             }}
             onLoad={addRoute}
+            // onLoad={(ref) => {
+            //   if (ref) {
+            //     setYmaps(ref);
+            //     addRoute(ymaps, ref);
+            //   }
+            // }}
             width={'99.5%'}
             height={'100%'}>
             {coordinates.map((coordinate, idx) => (
@@ -199,13 +224,14 @@ const BindDiagram = () => {
                 properties={getPointData(idx)}
                 options={getPointOptions()}
                 modules={['geoObject.addon.balloon', 'geoObject.addon.hint']}
-                instanceRef={(ref: any) => {
-                  ref &&
-                    ref.events.add('balloonopen', () => {
-                      //ref.events.add( () => {
-                      PressBalloonBody(idx);
-                    });
-                }}
+                onClick={() => OnPlacemarkClick(idx)}
+                // instanceRef={(ref: any) => {
+                //   ref &&
+                //     ref.events.add('balloonopen', () => {
+                //       //ref.events.add( () => {
+                //       PressBalloonBody(idx);
+                //     });
+                // }}
               />
             ))}
             <FullscreenControl />
@@ -235,8 +261,8 @@ const BindDiagram = () => {
 
 export default BindDiagram;
 
-
-{/* <script type="text/javascript">
+{
+  /* <script type="text/javascript">
   ymaps.ready(function () {
     let myMap = new ymaps.Map('map', {
     center: [55.751574, 37.573856],
@@ -262,4 +288,5 @@ export default BindDiagram;
   // Добавление маршрута на карту.
   myMap.geoObjects.add(multiRoute);
 });
-</script> */}
+</script> */
+}

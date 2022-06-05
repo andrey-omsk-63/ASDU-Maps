@@ -17,7 +17,7 @@ import Eguipment from './components/Eguipment';
 import BindDirections from './components/Bind/BindDirections';
 import BindOutputs from './components/Bind/BindOutputs';
 import BindPlans from './components/Bind/BindPlans';
-import BindDiagram from './components/Bind/BindDiagram';
+import BindDiagram from './components/Bind/BindDiagramExp';
 import Journal from './components/Journal/Journal';
 
 import { styleAppMenu, styleAppPodv, styleButt01 } from './AppStyle';
