@@ -788,6 +788,7 @@ const BindDirections = (props: any) => {
   const handleCloseSetBut = () => {
     setOpenSet(false);
   };
+  
   //отслеживание изменения размера экрана
   React.useLayoutEffect(() => {
     function updateSize() {
