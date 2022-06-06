@@ -198,7 +198,6 @@ const BindDiagram = () => {
 
     const PressBalloonBody = (index: number) => {
       console.log('Кликнули по точке ', index + 1);
-      //NewPoint(1);
     };
 
     const OnPlacemarkClick = (index: number) => {
