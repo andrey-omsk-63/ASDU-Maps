@@ -80,7 +80,7 @@ const BindDiagram = () => {
       coordinates.push(mass);
       nameCoordinates.push(dateMap[i].description);
     }
-    console.log('111:', pointaa, pointbb)
+    console.log('111:', pointaa, pointbb);
     coordinates.splice(0, 1);
     flagOpen = true;
   }
@@ -116,8 +116,8 @@ const BindDiagram = () => {
           </Typography>
         </Box>
       </Modal>
-    )
-  }
+    );
+  };
 
   const styleSetInf = {
     position: 'absolute',
@@ -132,16 +132,6 @@ const BindDiagram = () => {
     p: 1.5,
   };
 
-  // const styleModalEndInf = {
-  //   position: 'absolute',
-  //   top: '0%',
-  //   left: 'auto',
-  //   right: '-6%',
-  //   height: '21px',
-  //   width: '6%',
-  //   color: 'black',
-  // };
-
   const [openSetInf, setOpenSetInf] = React.useState(false);
   const handleCloseSetInf = (event: any, reason: string) => {
     if (reason !== 'backdropClick') setOpenSetEr(false);
@@ -151,19 +141,18 @@ const BindDiagram = () => {
     setOpenSetInf(false);
   };
 
-
   const RouteInfo = () => {
     let dlRoute1 = 0;
     let tmRoute1 = '';
     let dlRoute2 = 0;
     let tmRoute2 = '';
     if (activeRoute) {
-      dlRoute1 = Math.round(activeRoute.properties.get("distance").value);
-      tmRoute1 = activeRoute.properties.get("duration").text
+      dlRoute1 = Math.round(activeRoute.properties.get('distance').value);
+      tmRoute1 = activeRoute.properties.get('duration').text;
       activeRoutePaths.each(function (path: any) {
-        dlRoute2 = Math.round(path.properties.get("distance").value);
-        tmRoute2 = path.properties.get("duration").text;
-      })
+        dlRoute2 = Math.round(path.properties.get('distance').value);
+        tmRoute2 = path.properties.get('duration').text;
+      });
     }
     return (
       <Modal open={openSetInf} onClose={handleCloseSetInf} hideBackdrop>
@@ -172,57 +161,65 @@ const BindDiagram = () => {
             <b>&#10006;</b>
           </Button>
           <Box>
-            <b>Начальная точка связи:</b><br />
-            {nameCoordinates[pointAaIndex]}<br />
-            <b>Конечная точка связи:</b><br />
-            {nameCoordinates[pointBbIndex]}<br />
-            <b>1. Длина связи: </b>{dlRoute1} м<br />&nbsp;&nbsp;&nbsp;&nbsp;
-            <b>Время прохождения: </b>{tmRoute1}<br />
+            <b>Начальная точка связи:</b>
+            <br />
+            {nameCoordinates[pointAaIndex]}
+            <br />
+            <b>Конечная точка связи:</b>
+            <br />
+            {nameCoordinates[pointBbIndex]}
+            <br />
+            <b>1. Длина связи: </b>
+            {dlRoute1} м<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <b>Время прохождения: </b>
+            {tmRoute1}
+            <br />
           </Box>
-          {activeRoute && activeRoute.properties.get("blocked") &&
-            <Box>
-              Имеются участки с перекрытыми дорогами
-            </Box>
-          }
+          {activeRoute && activeRoute.properties.get('blocked') && (
+            <Box>Имеются участки с перекрытыми дорогами</Box>
+          )}
           <Box>
-            <b>2. Длина связи: </b>{dlRoute2} м<br />&nbsp;&nbsp;&nbsp;&nbsp;
-            <b>Время прохождения: </b>{tmRoute2}<br />
+            <b>2. Длина связи: </b>
+            {dlRoute2} м<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <b>Время прохождения: </b>
+            {tmRoute2}
+            <br />
           </Box>
         </Box>
       </Modal>
-    )
-  }
+    );
+  };
 
   const PressMenuButtonInf = () => {
     setOpenSetInf(true);
-    console.log('Длина: ', Math.round(activeRoute.properties.get("distance").value), 'м')
-    console.log("Время прохождения: " + activeRoute.properties.get("duration").text);
-    if (activeRoute.properties.get("blocked")) {
-      console.log("На маршруте имеются участки с перекрытыми дорогами.");
+    console.log('Длина: ', Math.round(activeRoute.properties.get('distance').value), 'м');
+    console.log('Время прохождения: ' + activeRoute.properties.get('duration').text);
+    if (activeRoute.properties.get('blocked')) {
+      console.log('На маршруте имеются участки с перекрытыми дорогами.');
     }
     activeRoutePaths.each(function (path: any) {
-      console.log('activeRoutePaths:', activeRoutePaths.each)
-      console.log('Paths:', path)
-      console.log("Длина пути: " + path.properties.get("distance").text);
-      console.log("Время прохождения пути: " + path.properties.get("duration").text);
-      if (path.properties.get("blocked")) {
-        console.log("На маршруте имеются участки с перекрытыми дорогами.");
+      //console.log('activeRoutePaths:', activeRoutePaths.each);
+      //console.log('Paths:', path);
+      console.log('Длина пути: ' + path.properties.get('distance').text);
+      console.log('Время прохождения пути: ' + path.properties.get('duration').text);
+      if (path.properties.get('blocked')) {
+        console.log('На маршруте имеются участки с перекрытыми дорогами.');
       }
     });
-  }
+  };
 
   const PressMenuButton = (mode: number) => {
-    console.log('mode:', mode);
-
     switch (mode) {
       case 1:
         if (pointAa === 0) {
-          soobError = "Не задана начальная точка связи";
+          soobError = 'Не задана начальная точка связи';
           setOpenSetEr(true);
           break;
         }
         if (pointBb === 0) {
-          soobError = "Не задана конечная точка связи";
+          soobError = 'Не задана конечная точка связи';
           setOpenSetEr(true);
           break;
         }
@@ -231,10 +228,10 @@ const BindDiagram = () => {
         flagRoute = true;
         setSize(window.innerWidth + Math.random());
         break;
-      case 69:             //инфа о маршруте
-        if (activeRoute) PressMenuButtonInf()
+      case 69: //инфа о маршруте
+        if (activeRoute) PressMenuButtonInf();
         break;
-      case 77:             //удаление маршрута
+      case 77: //удаление маршрута
         pointA = 0;
         pointB = 0;
         pointAa = 0;
@@ -244,24 +241,28 @@ const BindDiagram = () => {
     }
   };
 
-
-  const bounds = [pointaa, pointBb]
+  const bounds = [pointaa, pointbb];
+  console.log('bounds:', bounds);
   // const [mapState, setMapState] = React.useState({
   //   bounds,
   //   //zoom: 12,
   //   autoFitToViewport: true,
-  // })
+  // });
 
   const mapState = {
-    center: [55.751574, 37.573856],
+    //bounds,
+    center: pointaa,
     zoom: 9.5,
+    //controls: [],
+
+    //autoFitToViewport: true,
   };
 
   const [zoom, setZoom] = React.useState<number>(18);
 
   // React.useEffect(() => {
-  //setMapState({ autoFitToViewport: true, bounds: bounds })
-  // }, [bounds])
+  //   setMapState({ autoFitToViewport: true, bounds: bounds });
+  // }, []);
 
   const MapGl = (props: { pointa: any; pointb: any }) => {
     const mapp = React.useRef<any>(null);
@@ -284,33 +285,33 @@ const BindDiagram = () => {
           boundsAutoApply: true,
         },
       );
+
       mapp.current.geoObjects.add(multiRoute);
+
       multiRoute.model.events.add('requestsuccess', function () {
         activeRoute = multiRoute.getActiveRoute();
         //console.log('activeRoute:', activeRoute)
         if (activeRoute) {
-          // console.log('Длина: ', activeRoute.properties.get("distance").text)
-          // console.log("Время прохождения: " + activeRoute.properties.get("duration").text);
-          // Для автомобильных маршрутов можно вывести 
+          //   console.log('Длина: ', activeRoute.properties.get('distance').text);
+          //   console.log('Время прохождения: ' + activeRoute.properties.get('duration').text);
+          // Для автомобильных маршрутов можно вывести
           // информацию о перекрытых участках.
           // if (activeRoute.properties.get("blocked")) {
           //   console.log("На маршруте имеются участки с перекрытыми дорогами.");
           // }
           activeRoutePaths = activeRoute.getPaths();
           // Проход по коллекции путей.
-          // console.log('activeRoutePaths:', activeRoutePaths)
-          // activeRoutePaths.each(function (path: any) {
-          //   console.log("Длина пути: " + path.properties.get("distance").text);
-          //   console.log("Время прохождения пути: " + path.properties.get("duration").text);
-          //   if (path.properties.get("blocked")) {
-          //     console.log("На маршруте имеются участки с перекрытыми дорогами.");
-          //   }
-          // });
+          console.log('activeRoutePaths:', activeRoutePaths);
+          activeRoutePaths.each(function (path: {
+            properties: { get: (arg0: string) => { (): any; new (): any; text: string } };
+          }) {
+            console.log('Длина пути: ' + path.properties.get('distance').text);
+            console.log('Время прохождения пути: ' + path.properties.get('duration').text);
+          });
         }
-
-
-      })
-
+        //multiRoute.editor.stop();
+      });
+      mapp.current.geoObjects.add(multiRoute);
     };
 
     const PressBalloon = (index: number) => {
@@ -389,7 +390,7 @@ const BindDiagram = () => {
 
     const ModalPressBalloon = () => {
       const handleClose = (param: number) => {
-        console.log('indexPoint:', indexPoint)
+        console.log('indexPoint:', indexPoint);
         if (param === 1) {
           pointAaIndex = indexPoint;
           pointAa = [coordinates[indexPoint][0], coordinates[indexPoint][1]];
@@ -420,7 +421,7 @@ const BindDiagram = () => {
             </Box>
           </Box>
         </Modal>
-      )
+      );
     };
 
     return (
@@ -431,7 +432,7 @@ const BindDiagram = () => {
           instanceRef={(ref) => {
             if (ref) {
               mapp.current = ref;
-              mapp.current.events.add(['boundschange'], () => setZoom(mapp.current.getZoom()));
+              //mapp.current.events.add(['boundschange'], () => setZoom(mapp.current.getZoom()));
             }
           }}
           onLoad={addRoute}
@@ -513,11 +514,9 @@ const BindDiagram = () => {
               <b>Информ о связе</b>
             </Button>
           </>
-
         )}
 
         <MapGl pointa={pointA} pointb={pointB} />
-
       </Grid>
     </Box>
   );
