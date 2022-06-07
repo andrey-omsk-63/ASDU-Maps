@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
-import Stack from '@mui/material/Stack';
+//import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import {
@@ -37,12 +37,16 @@ let ch = 0;
 let activeRoute: any;
 let activeRoutePaths: any;
 
-//let pointA: any = [55.749, 37.524];
 let pointA: any = 0;
 let pointAa: any = 0;
-//let pointB: any = 'Москва, Красная площадь';
+let pointaa: any = 0;
 let pointB: any = 0;
 let pointBb: any = 0;
+let pointbb: any = 0;
+let indexPoint = -1;
+let pointAaIndex: number = -1;
+let pointBbIndex: number = -1;
+let soobError = '';
 
 const BindDiagram = () => {
   //== Piece of Redux ======================================
@@ -71,22 +75,134 @@ const BindDiagram = () => {
       let mass = [0, 0];
       mass[0] = dateMap[i].points.Y;
       mass[1] = dateMap[i].points.X;
+      if (i === 0) pointaa = mass;
+      if (i === 1) pointbb = mass;
       coordinates.push(mass);
       nameCoordinates.push(dateMap[i].description);
     }
+    console.log('111:', pointaa, pointbb)
     coordinates.splice(0, 1);
     flagOpen = true;
   }
 
+  const styleModalEnd = {
+    position: 'absolute',
+    top: '0%',
+    left: 'auto',
+    right: '-6%',
+    height: '21px',
+    width: '6%',
+    color: 'black',
+  };
+
+  const [openSetEr, setOpenSetEr] = React.useState(false);
+  const handleCloseSetEr = (event: any, reason: string) => {
+    if (reason !== 'backdropClick') setOpenSetEr(false);
+  };
+
+  const handleCloseSetEndEr = () => {
+    setOpenSetEr(false);
+  };
+
+  const PointDataError = () => {
+    return (
+      <Modal open={openSetEr} onClose={handleCloseSetEr} hideBackdrop>
+        <Box sx={styleSetInf}>
+          <Button sx={styleModalEnd} onClick={handleCloseSetEndEr}>
+            <b>&#10006;</b>
+          </Button>
+          <Typography variant="h6" sx={{ textAlign: 'center', color: 'red' }}>
+            {soobError}
+          </Typography>
+        </Box>
+      </Modal>
+    )
+  }
+
+  const styleSetInf = {
+    position: 'absolute',
+    marginTop: '15vh',
+    marginLeft: '24vh',
+    width: 340,
+    bgcolor: 'background.paper',
+    border: '3px solid #000',
+    borderColor: 'primary.main',
+    borderRadius: 2,
+    boxShadow: 24,
+    p: 1.5,
+  };
+
+  // const styleModalEndInf = {
+  //   position: 'absolute',
+  //   top: '0%',
+  //   left: 'auto',
+  //   right: '-6%',
+  //   height: '21px',
+  //   width: '6%',
+  //   color: 'black',
+  // };
+
+  const [openSetInf, setOpenSetInf] = React.useState(false);
+  const handleCloseSetInf = (event: any, reason: string) => {
+    if (reason !== 'backdropClick') setOpenSetEr(false);
+  };
+
+  const handleCloseSetEndInf = () => {
+    setOpenSetInf(false);
+  };
+
+
+  const RouteInfo = () => {
+    let dlRoute1 = 0;
+    let tmRoute1 = '';
+    let dlRoute2 = 0;
+    let tmRoute2 = '';
+    if (activeRoute) {
+      dlRoute1 = Math.round(activeRoute.properties.get("distance").value);
+      tmRoute1 = activeRoute.properties.get("duration").text
+      activeRoutePaths.each(function (path: any) {
+        dlRoute2 = Math.round(path.properties.get("distance").value);
+        tmRoute2 = path.properties.get("duration").text;
+      })
+    }
+    return (
+      <Modal open={openSetInf} onClose={handleCloseSetInf} hideBackdrop>
+        <Box sx={styleSetInf}>
+          <Button sx={styleModalEnd} onClick={handleCloseSetEndInf}>
+            <b>&#10006;</b>
+          </Button>
+          <Box>
+            <b>Начальная точка связи:</b><br />
+            {nameCoordinates[pointAaIndex]}<br />
+            <b>Конечная точка связи:</b><br />
+            {nameCoordinates[pointBbIndex]}<br />
+            <b>1. Длина связи: </b>{dlRoute1} м<br />&nbsp;&nbsp;&nbsp;&nbsp;
+            <b>Время прохождения: </b>{tmRoute1}<br />
+          </Box>
+          {activeRoute && activeRoute.properties.get("blocked") &&
+            <Box>
+              Имеются участки с перекрытыми дорогами
+            </Box>
+          }
+          <Box>
+            <b>2. Длина связи: </b>{dlRoute2} м<br />&nbsp;&nbsp;&nbsp;&nbsp;
+            <b>Время прохождения: </b>{tmRoute2}<br />
+          </Box>
+        </Box>
+      </Modal>
+    )
+  }
+
   const PressMenuButtonInf = () => {
-    //console.log('Длина: ', activeRoute.properties.get("distance").text)
+    setOpenSetInf(true);
     console.log('Длина: ', Math.round(activeRoute.properties.get("distance").value), 'м')
     console.log("Время прохождения: " + activeRoute.properties.get("duration").text);
     if (activeRoute.properties.get("blocked")) {
       console.log("На маршруте имеются участки с перекрытыми дорогами.");
     }
     activeRoutePaths.each(function (path: any) {
-      console.log('activeRoutePaths:', activeRoutePaths)
+      console.log('activeRoutePaths:', activeRoutePaths.each)
+      console.log('Paths:', path)
       console.log("Длина пути: " + path.properties.get("distance").text);
       console.log("Время прохождения пути: " + path.properties.get("duration").text);
       if (path.properties.get("blocked")) {
@@ -101,14 +217,13 @@ const BindDiagram = () => {
     switch (mode) {
       case 1:
         if (pointAa === 0) {
-          console.log("Не задана начальная точка связи");
-          pointAa = [coordinates[ch][0], coordinates[ch][1]];
-          ch++;
+          soobError = "Не задана начальная точка связи";
+          setOpenSetEr(true);
           break;
         }
         if (pointBb === 0) {
-          console.log("Не задана конечная точка связи");
-          pointBb = [coordinates[ch][0], coordinates[ch][1]];
+          soobError = "Не задана конечная точка связи";
+          setOpenSetEr(true);
           break;
         }
         pointA = pointAa;
@@ -129,16 +244,35 @@ const BindDiagram = () => {
     }
   };
 
+
+  const bounds = [pointaa, pointBb]
+  // const [mapState, setMapState] = React.useState({
+  //   bounds,
+  //   //zoom: 12,
+  //   autoFitToViewport: true,
+  // })
+
+  const mapState = {
+    center: [55.751574, 37.573856],
+    zoom: 9.5,
+  };
+
+  const [zoom, setZoom] = React.useState<number>(18);
+
+  // React.useEffect(() => {
+  //setMapState({ autoFitToViewport: true, bounds: bounds })
+  // }, [bounds])
+
   const MapGl = (props: { pointa: any; pointb: any }) => {
     const mapp = React.useRef<any>(null);
-    const [zoom, setZoom] = React.useState<number>(18);
+    //const [zoom, setZoom] = React.useState<number>(18);
     let pointAA = props.pointa;
     let pointBB = props.pointb;
 
-    const mapState = {
-      center: [55.751574, 37.573856],
-      zoom: 9.5,
-    };
+    // const mapState = {
+    //   center: [55.751574, 37.573856],
+    //   zoom: 9.5,
+    // };
 
     const addRoute = (ymaps: any) => {
       const multiRoute = new ymaps.multiRouter.MultiRoute(
@@ -153,7 +287,7 @@ const BindDiagram = () => {
       mapp.current.geoObjects.add(multiRoute);
       multiRoute.model.events.add('requestsuccess', function () {
         activeRoute = multiRoute.getActiveRoute();
-        console.log('activeRoute:', activeRoute)
+        //console.log('activeRoute:', activeRoute)
         if (activeRoute) {
           // console.log('Длина: ', activeRoute.properties.get("distance").text)
           // console.log("Время прохождения: " + activeRoute.properties.get("duration").text);
@@ -202,23 +336,26 @@ const BindDiagram = () => {
 
     const OnPlacemarkClick = (index: number) => {
       console.log('OnPlacemarkClick', index, index + 1);
-      if (index >= 0) setOpenSet(true);
+      if (index >= 0) {
+        indexPoint = index;
+        setOpenSet(true);
+      }
     };
 
-    const styleSetDirect = {
+    const styleSetPoint = {
       position: 'absolute',
       marginTop: '15vh',
       marginLeft: '24vh',
-      width: 200,
+      width: 220,
       bgcolor: 'background.paper',
       border: '3px solid #000',
       borderColor: 'primary.main',
       borderRadius: 2,
       boxShadow: 24,
-      p: 2,
+      p: 1.5,
     };
 
-    const styleModalEndDir = {
+    const styleModalEnd = {
       position: 'absolute',
       top: '0%',
       left: 'auto',
@@ -226,8 +363,19 @@ const BindDiagram = () => {
       maxHeight: '21px',
       minHeight: '21px',
       width: '6%',
-      //fontSize: 16,
       color: 'black',
+    };
+
+    const styleModalMenu = {
+      fontSize: 17,
+      maxHeight: '21px',
+      minHeight: '21px',
+      backgroundColor: '#F1F3F4',
+      color: 'black',
+      marginRight: 1,
+      marginBottom: 2,
+      textTransform: 'unset !important',
+      textAlign: 'center',
     };
 
     const [openSet, setOpenSet] = React.useState(false);
@@ -240,19 +388,36 @@ const BindDiagram = () => {
     };
 
     const ModalPressBalloon = () => {
+      const handleClose = (param: number) => {
+        console.log('indexPoint:', indexPoint)
+        if (param === 1) {
+          pointAaIndex = indexPoint;
+          pointAa = [coordinates[indexPoint][0], coordinates[indexPoint][1]];
+        } else {
+          pointBbIndex = indexPoint;
+          pointBb = [coordinates[indexPoint][0], coordinates[indexPoint][1]];
+        }
+        setOpenSet(false);
+      };
+
       return (
-        <Modal open={openSet} onClose={handleCloseSet}>
-          <Box sx={styleSetDirect}>
-            <Button sx={styleModalEndDir} onClick={handleCloseSetBut}>
+        <Modal open={openSet} onClose={handleCloseSet} hideBackdrop>
+          <Box sx={styleSetPoint}>
+            <Button sx={styleModalEnd} onClick={handleCloseSetBut}>
               <b>&#10006;</b>
             </Button>
-            <Stack direction="column">
-              <Typography variant="h6" sx={{ textAlign: 'center', color: '#5B1080' }}>
-                Удаление фазы №
-                <br />
-                Вы уверены в этом?
-              </Typography>
-            </Stack>
+            <Typography variant="h6" sx={{ textAlign: 'center', color: '#5B1080' }}>
+              Создание новой связи
+            </Typography>
+            <br />
+            <Box sx={{ textAlign: 'center' }}>
+              <Button sx={styleModalMenu} variant="contained" onClick={() => handleClose(1)}>
+                <b>Начальная точка</b>
+              </Button>
+              <Button sx={styleModalMenu} variant="contained" onClick={() => handleClose(2)}>
+                <b>Конечная точка</b>
+              </Button>
+            </Box>
           </Box>
         </Modal>
       )
@@ -271,7 +436,7 @@ const BindDiagram = () => {
           }}
           onLoad={addRoute}
           onClick={() => OnPlacemarkClick(-1)}
-          width={'100%'}
+          width={'99.8%'}
           height={'97%'}>
           {coordinates.map((coordinate, idx) => (
             <Placemark
@@ -289,7 +454,6 @@ const BindDiagram = () => {
               }}
             />
           ))}
-          <ModalPressBalloon />
           <FullscreenControl />
           <GeolocationControl options={{ float: 'left' }} />
           <ListBox data={{ content: 'Выберите город' }}>
@@ -308,6 +472,10 @@ const BindDiagram = () => {
           <TrafficControl options={{ float: 'right' }} />
           <TypeSelector options={{ float: 'right' }} />
           <ZoomControl options={{ float: 'right' }} />
+          {/* служебные компоненты */}
+          <ModalPressBalloon />
+          <PointDataError />
+          <RouteInfo />
         </Map>
       </YMaps>
     );
