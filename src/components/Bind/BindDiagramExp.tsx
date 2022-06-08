@@ -141,6 +141,23 @@ const BindDiagram = () => {
     setOpenSetInf(false);
   };
 
+  const RouteInfoStr = () => {
+    let dlRoute1 = 1;
+
+    return (
+      <>
+        {
+          dlRoute1 > 0 && (
+            <Box sx={{ border: 5 }}>
+              KU-KU
+            </Box>
+          )
+        }
+      </>
+
+    )
+  }
+
   const RouteInfo = () => {
     let dlRoute1 = 0;
     let tmRoute1 = '';
@@ -155,6 +172,13 @@ const BindDiagram = () => {
       });
     }
     return (
+      // <> {
+      //   dlRoute1 > 0 && (
+      //     <Box sx={{border: 5}}>
+      //       KU-KU
+      //     </Box>
+      //   )
+      //}
       <Modal open={openSetInf} onClose={handleCloseSetInf} hideBackdrop>
         <Box sx={styleSetInf}>
           <Button sx={styleModalEnd} onClick={handleCloseSetEndInf}>
@@ -189,6 +213,7 @@ const BindDiagram = () => {
           </Box>
         </Box>
       </Modal>
+      // </>
     );
   };
 
@@ -253,7 +278,10 @@ const BindDiagram = () => {
     //bounds,
     center: pointaa,
     zoom: 9.5,
-    //controls: [],
+    controls: [
+      //  'zoomControl', 
+      //'fullscreenControl'
+    ],
 
     //autoFitToViewport: true,
   };
@@ -270,11 +298,6 @@ const BindDiagram = () => {
     let pointAA = props.pointa;
     let pointBB = props.pointb;
 
-    // const mapState = {
-    //   center: [55.751574, 37.573856],
-    //   zoom: 9.5,
-    // };
-
     const addRoute = (ymaps: any) => {
       const multiRoute = new ymaps.multiRouter.MultiRoute(
         {
@@ -285,28 +308,16 @@ const BindDiagram = () => {
           boundsAutoApply: true,
         },
       );
-
-      mapp.current.geoObjects.add(multiRoute);
-
+      //mapp.current.geoObjects.add(multiRoute);
       multiRoute.model.events.add('requestsuccess', function () {
         activeRoute = multiRoute.getActiveRoute();
-        //console.log('activeRoute:', activeRoute)
         if (activeRoute) {
-          //   console.log('Длина: ', activeRoute.properties.get('distance').text);
-          //   console.log('Время прохождения: ' + activeRoute.properties.get('duration').text);
-          // Для автомобильных маршрутов можно вывести
-          // информацию о перекрытых участках.
-          // if (activeRoute.properties.get("blocked")) {
-          //   console.log("На маршруте имеются участки с перекрытыми дорогами.");
-          // }
           activeRoutePaths = activeRoute.getPaths();
-          // Проход по коллекции путей.
-          console.log('activeRoutePaths:', activeRoutePaths);
           activeRoutePaths.each(function (path: {
-            properties: { get: (arg0: string) => { (): any; new (): any; text: string } };
+            properties: { get: (arg0: string) => { (): any; new(): any; text: string } };
           }) {
-            console.log('Длина пути: ' + path.properties.get('distance').text);
-            console.log('Время прохождения пути: ' + path.properties.get('duration').text);
+            console.log('!Длина пути: ' + path.properties.get('distance').text);
+            console.log('!Время прохождения пути: ' + path.properties.get('duration').text);
           });
         }
         //multiRoute.editor.stop();
@@ -322,12 +333,25 @@ const BindDiagram = () => {
       return {
         hintContent: nameCoordinates[index],
         //balloonContent: PressBalloon(index),
+        iconCaption: ''
       };
     };
 
-    const getPointOptions = () => {
+    const getPointOptions = (index: number) => {
+
+      let colorBalloon = 'islands#violetIcon';
+      if (index === pointAaIndex) {
+        console.log('getPointOptions:', index, pointAaIndex)
+        colorBalloon = 'islands#redCircleDotIcon'
+      }
+      if (index === pointBbIndex) {
+        console.log('getPointOptions:', index, pointBbIndex)
+        colorBalloon = 'islands#darkBlueCircleDotIcon'
+      }
       return {
-        preset: 'islands#violetIcon',
+        // preset: 'islands#violetIcon',
+        preset: colorBalloon,
+
       };
     };
 
@@ -394,6 +418,7 @@ const BindDiagram = () => {
         if (param === 1) {
           pointAaIndex = indexPoint;
           pointAa = [coordinates[indexPoint][0], coordinates[indexPoint][1]];
+          //pointaa = pointAa
         } else {
           pointBbIndex = indexPoint;
           pointBb = [coordinates[indexPoint][0], coordinates[indexPoint][1]];
@@ -444,7 +469,7 @@ const BindDiagram = () => {
               key={idx}
               geometry={coordinate}
               properties={getPointData(idx)}
-              options={getPointOptions()}
+              options={getPointOptions(idx)}
               modules={['geoObject.addon.balloon', 'geoObject.addon.hint']}
               onClick={() => OnPlacemarkClick(idx)}
               instanceRef={(ref: any) => {
@@ -477,6 +502,7 @@ const BindDiagram = () => {
           <ModalPressBalloon />
           <PointDataError />
           <RouteInfo />
+          <RouteInfoStr />
         </Map>
       </YMaps>
     );
@@ -500,25 +526,22 @@ const BindDiagram = () => {
   if (flagRoute) soobButtonRoute = 'Перестроить связь';
 
   return (
-    <Box sx={{ marginTop: -3, marginLeft: -3, marginRight: -3 }}>
-      <Grid container sx={{ border: 0, height: '92vh' }}>
-        <Button sx={styleApp01} variant="contained" onClick={() => PressMenuButton(1)}>
-          <b>{soobButtonRoute}</b>
-        </Button>
-        {flagRoute && (
-          <>
-            <Button sx={styleApp01} variant="contained" onClick={() => PressMenuButton(77)}>
-              <b>Удалить связь</b>
-            </Button>
-            <Button sx={styleApp01} variant="contained" onClick={() => PressMenuButton(69)}>
-              <b>Информ о связе</b>
-            </Button>
-          </>
-        )}
-
-        <MapGl pointa={pointA} pointb={pointB} />
-      </Grid>
-    </Box>
+    <Grid container sx={{ border: 0, height: '99.5vh' }}>
+      <Button sx={styleApp01} variant="contained" onClick={() => PressMenuButton(1)}>
+        <b>{soobButtonRoute}</b>
+      </Button>
+      {flagRoute && (
+        <>
+          <Button sx={styleApp01} variant="contained" onClick={() => PressMenuButton(77)}>
+            <b>Удалить связь</b>
+          </Button>
+          <Button sx={styleApp01} variant="contained" onClick={() => PressMenuButton(69)}>
+            <b>Информ о связе</b>
+          </Button>
+        </>
+      )}
+      <MapGl pointa={pointA} pointb={pointB} />
+    </Grid>
   );
 };
 
