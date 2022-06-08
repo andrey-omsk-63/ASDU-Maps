@@ -48,6 +48,9 @@ let pointAaIndex: number = -1;
 let pointBbIndex: number = -1;
 let soobError = '';
 
+let dlRoute1 = '';
+let tmRoute1 = '';
+
 const BindDiagram = () => {
   //== Piece of Redux ======================================
   const map = useSelector((state: any) => {
@@ -142,21 +145,40 @@ const BindDiagram = () => {
   };
 
   const RouteInfoStr = () => {
-    let dlRoute1 = 1;
+    // let dlRoute1 = '';
+    // let tmRoute1 = '';
+
+    // if (activeRoute) {
+    //   activeRoutePaths = activeRoute.getPaths();
+    //   activeRoutePaths.each(function (path: {
+    //     properties: { get: (arg0: string) => { (): any; new (): any; text: string } };
+    //   }) {
+    //     console.log('!Длина пути: ' + path.properties.get('distance').text);
+    //     console.log('!Время прохождения пути: ' + path.properties.get('duration').text);
+    //     dlRoute1 = path.properties.get('distance').text;
+    //     tmRoute1 = path.properties.get('duration').text;
+    //   });
+
+    // dlRoute1 = Math.round(activeRoute.properties.get('distance').value);
+    // tmRoute1 = activeRoute.properties.get('duration').text;
+    //}
+
+    console.log('!!Длина пути: ' + dlRoute1);
+    console.log('!!Время прохождения пути: ' + tmRoute1);
 
     return (
-      <>
-        {
-          dlRoute1 > 0 && (
-            <Box sx={{ border: 5 }}>
-              KU-KU
-            </Box>
-          )
-        }
-      </>
-
-    )
-  }
+      // <>
+      //   {dlRoute1 !== '' && (
+      <Box sx={{ border: 5 }}>
+        <b>Длина связи: </b>
+        {dlRoute1} м&nbsp;&nbsp;&nbsp;&nbsp;
+        <b>Время прохождения: </b>
+        {tmRoute1}
+      </Box>
+      //   )}
+      // </>
+    );
+  };
 
   const RouteInfo = () => {
     let dlRoute1 = 0;
@@ -172,13 +194,6 @@ const BindDiagram = () => {
       });
     }
     return (
-      // <> {
-      //   dlRoute1 > 0 && (
-      //     <Box sx={{border: 5}}>
-      //       KU-KU
-      //     </Box>
-      //   )
-      //}
       <Modal open={openSetInf} onClose={handleCloseSetInf} hideBackdrop>
         <Box sx={styleSetInf}>
           <Button sx={styleModalEnd} onClick={handleCloseSetEndInf}>
@@ -279,7 +294,7 @@ const BindDiagram = () => {
     center: pointaa,
     zoom: 9.5,
     controls: [
-      //  'zoomControl', 
+      //  'zoomControl',
       //'fullscreenControl'
     ],
 
@@ -314,10 +329,13 @@ const BindDiagram = () => {
         if (activeRoute) {
           activeRoutePaths = activeRoute.getPaths();
           activeRoutePaths.each(function (path: {
-            properties: { get: (arg0: string) => { (): any; new(): any; text: string } };
+            properties: { get: (arg0: string) => { (): any; new (): any; text: string } };
           }) {
             console.log('!Длина пути: ' + path.properties.get('distance').text);
             console.log('!Время прохождения пути: ' + path.properties.get('duration').text);
+            dlRoute1 = path.properties.get('distance').text;
+            tmRoute1 = path.properties.get('duration').text;
+            RouteInfoStr();
           });
         }
         //multiRoute.editor.stop();
@@ -333,25 +351,23 @@ const BindDiagram = () => {
       return {
         hintContent: nameCoordinates[index],
         //balloonContent: PressBalloon(index),
-        iconCaption: ''
+        iconCaption: '',
       };
     };
 
     const getPointOptions = (index: number) => {
-
       let colorBalloon = 'islands#violetIcon';
       if (index === pointAaIndex) {
-        console.log('getPointOptions:', index, pointAaIndex)
-        colorBalloon = 'islands#redCircleDotIcon'
+        console.log('getPointOptions:', index, pointAaIndex);
+        colorBalloon = 'islands#redCircleDotIcon';
       }
       if (index === pointBbIndex) {
-        console.log('getPointOptions:', index, pointBbIndex)
-        colorBalloon = 'islands#darkBlueCircleDotIcon'
+        console.log('getPointOptions:', index, pointBbIndex);
+        colorBalloon = 'islands#darkBlueCircleDotIcon';
       }
       return {
         // preset: 'islands#violetIcon',
         preset: colorBalloon,
-
       };
     };
 
