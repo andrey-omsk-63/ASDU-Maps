@@ -25,6 +25,7 @@ import { styleApp01, styleModalEnd, styleSetInf } from './MainMapStyle';
 import { styleSetPoint, styleModalEndMapGl, styleModalMenu } from './MainMapStyle';
 
 import { Tflight } from './../interfaceMAP.d';
+import { Console } from 'console';
 
 let coordinates: Array<Array<number>> = [[]];
 let nameCoordinates: Array<string> = [];
@@ -124,14 +125,19 @@ const MainMap = () => {
             <b>&#10006;</b>
           </Button>
           <Box>
-            <b>Начальная точка связи:</b><br />
-            {nameCoordinates[pointAaIndex]}<br />
-            <b>Конечная точка связи:</b><br />
-            {nameCoordinates[pointBbIndex]}<br />
+            <b>Начальная точка связи:</b>
+            <br />
+            {nameCoordinates[pointAaIndex]}
+            <br />
+            <b>Конечная точка связи:</b>
+            <br />
+            {nameCoordinates[pointBbIndex]}
+            <br />
             <b>Длина связи: </b>
             {dlRoute1} м<br />
             <b>Время прохождения: </b>
-            {tmRoute1}<br />
+            {tmRoute1}
+            <br />
           </Box>
           {activeRoute && activeRoute.properties.get('blocked') && (
             <Box>Имеются участки с перекрытыми дорогами</Box>
@@ -173,13 +179,14 @@ const MainMap = () => {
     }
   };
 
+  const [zoom, setZoom] = React.useState<number>(9.5);
+
   const mapState = {
     center: pointaa,
-    zoom: 9.5,
+    // zoom: 9.5,
+    zoom,
     controls: [],
   };
-
-  //const [zoom, setZoom] = React.useState<number>(18);
 
   const MapGl = (props: { pointa: any; pointb: any }) => {
     const mapp = React.useRef<any>(null);
@@ -232,7 +239,6 @@ const MainMap = () => {
     };
 
     const OnPlacemarkClick = (e: any, index: number) => {
-      //console.log('OnPlacemarkClick', index, e, '!!!', e.originalEvent);
       if (index >= 0) {
         indexPoint = index;
         setOpenSet(true);
@@ -250,12 +256,17 @@ const MainMap = () => {
 
     const ModalPressBalloon = () => {
       const handleClose = (param: number) => {
-        if (param === 1) {
-          pointAaIndex = indexPoint;
-          pointAa = [coordinates[indexPoint][0], coordinates[indexPoint][1]];
-        } else {
-          pointBbIndex = indexPoint;
-          pointBb = [coordinates[indexPoint][0], coordinates[indexPoint][1]];
+        switch (param) {
+          case 1: //Начальная точка
+            pointAaIndex = indexPoint;
+            pointAa = [coordinates[indexPoint][0], coordinates[indexPoint][1]];
+            break;
+          case 2: //Конечная точка
+            pointBbIndex = indexPoint;
+            pointBb = [coordinates[indexPoint][0], coordinates[indexPoint][1]];
+            break;
+          case 3: //Удаление точки
+            console.log('Здесь будет удаление');
         }
         setOpenSet(false);
       };
@@ -266,8 +277,14 @@ const MainMap = () => {
             <Button sx={styleModalEndMapGl} onClick={handleCloseSetBut}>
               <b>&#10006;</b>
             </Button>
+            <Box sx={{ marginTop: 2, textAlign: 'center' }}>
+              <Button sx={styleModalMenu} variant="contained" onClick={() => handleClose(3)}>
+                <b>Удаление точки</b>
+              </Button>
+            </Box>
+
             <Typography variant="h6" sx={{ textAlign: 'center', color: '#5B1080' }}>
-              Создание новой связи
+              Создание новой связи:
             </Typography>
             <br />
             <Box sx={{ textAlign: 'center' }}>
@@ -283,10 +300,12 @@ const MainMap = () => {
       );
     };
 
-    const NewPoint = () => {
-      console.log('Cоздание новой точки')
-    }
-
+    const NewPoint = (coords: any) => {
+      let nomer = nameCoordinates.length;
+      nameCoordinates.push('Новая точка ' + String(nomer));
+      coordinates.push(coords);
+      pointaa = coords;
+    };
 
     return (
       <YMaps query={{ apikey: '65162f5f-2d15-41d1-a881-6c1acf34cfa1', lang: 'ru_RU' }}>
@@ -297,21 +316,21 @@ const MainMap = () => {
             if (ref) {
               mapp.current = ref;
 
-              // mapp.current.events.add('contextmenu', function (e: any) {
-              //   mapp.current.hint.open(e.get('coords'), 'Кто-то щелкнул правой кнопкой');
-              // });
               mapp.current.events.add('contextmenu', function (e: any) {
                 if (!mapp.current.hint.isOpen()) {
                   let coords = e.get('coords');
-                  NewPoint()
-                  mapp.current.hint.open(e.get('coords'), '<p>Кто-то щелкнул правой кнопкой</p>' +
-                    '<p>Координаты щелчка: ' + [
-                      coords[0].toPrecision(6),
-                      coords[1].toPrecision(6)
-                    ].join(', ') + '</p>',
+                  NewPoint(coords);
+                  mapp.current.hint.open(
+                    e.get('coords'),
+                    '<p>Создана новая точка</p>' +
+                      '<p>Координаты: <b>' +
+                      [coords[0].toPrecision(6), coords[1].toPrecision(6)].join(', ') +
+                      '</b></p>' +
+                      '<p>Повторно нажите правую кнопку</p>',
                   );
                 } else {
                   mapp.current.hint.close();
+                  setSize(window.innerWidth + Math.random());
                 }
               });
 
@@ -320,19 +339,22 @@ const MainMap = () => {
                   let coords = e.get('coords');
                   mapp.current.balloon.open(coords, {
                     //contentHeader: 'Событие!',
-                    contentBody: '<p>Кто-то щелкнул по карте.</p>' +
-                      '<p>Координаты щелчка: ' + [
-                        coords[0].toPrecision(6),
-                        coords[1].toPrecision(6)
-                      ].join(', ') + '</p>',
-                    //contentFooter: '<sup>Щелкните еще раз</sup>'
+                    contentBody:
+                      '<p>Поиск по карте.</p>' +
+                      '<p>Координаты точки: <b>' +
+                      [coords[0].toPrecision(6), coords[1].toPrecision(6)].join(', ') +
+                      '</b></p>',
+                    contentFooter: '<sup>Повторно нажите левую кнопку</sup>',
                   });
-                }
-                else {
+                } else {
                   mapp.current.balloon.close();
                 }
               });
-              //mapp.current.events.add(['boundschange'], () => setZoom(mapp.current.getZoom()));
+
+              mapp.current.events.add(['boundschange'], function () {
+                //console.log('ZOOM:', mapp.current.getZoom());
+                setZoom(mapp.current.getZoom());
+              });
             }
           }}
           onLoad={addRoute}
@@ -412,6 +434,5 @@ const MainMap = () => {
 };
 
 export default MainMap;
-
 
 //https://yandex.ru/dev/maps/jsbox/2.1/event_properties/

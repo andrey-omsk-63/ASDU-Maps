@@ -38,13 +38,13 @@ export const styleSetPoint = {
   position: 'absolute',
   marginTop: '15vh',
   marginLeft: '24vh',
-  width: 220,
+  width: 225,
   bgcolor: 'background.paper',
   border: '3px solid #000',
   borderColor: 'primary.main',
   borderRadius: 2,
   boxShadow: 24,
-  p: 1.5,
+  p: 2,
 };
 
 export const styleModalEndMapGl = {
@@ -69,19 +69,3 @@ export const styleModalMenu = {
   textTransform: 'unset !important',
   textAlign: 'center',
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
