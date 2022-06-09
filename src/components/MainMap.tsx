@@ -14,9 +14,6 @@ import {
   Placemark,
   FullscreenControl,
   GeolocationControl,
-  ListBox,
-  ListBoxItem,
-  //RouteButton,
   RulerControl,
   SearchControl,
   TrafficControl,
@@ -24,7 +21,10 @@ import {
   ZoomControl,
 } from 'react-yandex-maps';
 
-import { Tflight, DateMAP } from './../../interfaceMAP.d';
+import { styleApp01, styleModalEnd, styleSetInf } from './MainMapStyle';
+import { styleSetPoint, styleModalEndMapGl, styleModalMenu } from './MainMapStyle';
+
+import { Tflight } from './../interfaceMAP.d';
 
 let coordinates: Array<Array<number>> = [[]];
 let nameCoordinates: Array<string> = [];
@@ -32,10 +32,9 @@ let nameCoordinates: Array<string> = [];
 let dateMap: Tflight[] = [{} as Tflight];
 let flagOpen = false;
 let flagRoute = false;
-let ch = 0;
 
 let activeRoute: any;
-let activeRoutePaths: any;
+//let activeRoutePaths: any;
 
 let pointA: any = 0;
 let pointAa: any = 0;
@@ -48,10 +47,10 @@ let pointAaIndex: number = -1;
 let pointBbIndex: number = -1;
 let soobError = '';
 
-let dlRoute1 = '';
-let tmRoute1 = '';
+// let dlRoute1 = '';
+// let tmRoute1 = '';
 
-const BindDiagram = () => {
+const MainMap = () => {
   //== Piece of Redux ======================================
   const map = useSelector((state: any) => {
     const { mapReducer } = state;
@@ -62,16 +61,6 @@ const BindDiagram = () => {
   //========================================================
 
   //const mapp = React.useRef<any>(null);
-  const styleApp01 = {
-    fontSize: 14,
-    marginRight: 0.5,
-    width: '24%',
-    maxHeight: '21px',
-    minHeight: '21px',
-    backgroundColor: '#F1F3F4',
-    color: 'black',
-    textTransform: 'unset !important',
-  };
 
   if (!flagOpen) {
     for (let i = 0; i < dateMap.length; i++) {
@@ -83,20 +72,9 @@ const BindDiagram = () => {
       coordinates.push(mass);
       nameCoordinates.push(dateMap[i].description);
     }
-    console.log('111:', pointaa, pointbb);
     coordinates.splice(0, 1);
     flagOpen = true;
   }
-
-  const styleModalEnd = {
-    position: 'absolute',
-    top: '0%',
-    left: 'auto',
-    right: '-6%',
-    height: '21px',
-    width: '6%',
-    color: 'black',
-  };
 
   const [openSetEr, setOpenSetEr] = React.useState(false);
   const handleCloseSetEr = (event: any, reason: string) => {
@@ -122,19 +100,6 @@ const BindDiagram = () => {
     );
   };
 
-  const styleSetInf = {
-    position: 'absolute',
-    marginTop: '15vh',
-    marginLeft: '24vh',
-    width: 340,
-    bgcolor: 'background.paper',
-    border: '3px solid #000',
-    borderColor: 'primary.main',
-    borderRadius: 2,
-    boxShadow: 24,
-    p: 1.5,
-  };
-
   const [openSetInf, setOpenSetInf] = React.useState(false);
   const handleCloseSetInf = (event: any, reason: string) => {
     if (reason !== 'backdropClick') setOpenSetEr(false);
@@ -144,54 +109,13 @@ const BindDiagram = () => {
     setOpenSetInf(false);
   };
 
-  const RouteInfoStr = () => {
-    // let dlRoute1 = '';
-    // let tmRoute1 = '';
-
-    // if (activeRoute) {
-    //   activeRoutePaths = activeRoute.getPaths();
-    //   activeRoutePaths.each(function (path: {
-    //     properties: { get: (arg0: string) => { (): any; new (): any; text: string } };
-    //   }) {
-    //     console.log('!Длина пути: ' + path.properties.get('distance').text);
-    //     console.log('!Время прохождения пути: ' + path.properties.get('duration').text);
-    //     dlRoute1 = path.properties.get('distance').text;
-    //     tmRoute1 = path.properties.get('duration').text;
-    //   });
-
-    // dlRoute1 = Math.round(activeRoute.properties.get('distance').value);
-    // tmRoute1 = activeRoute.properties.get('duration').text;
-    //}
-
-    console.log('!!Длина пути: ' + dlRoute1);
-    console.log('!!Время прохождения пути: ' + tmRoute1);
-
-    return (
-      // <>
-      //   {dlRoute1 !== '' && (
-      <Box sx={{ border: 5 }}>
-        <b>Длина связи: </b>
-        {dlRoute1} м&nbsp;&nbsp;&nbsp;&nbsp;
-        <b>Время прохождения: </b>
-        {tmRoute1}
-      </Box>
-      //   )}
-      // </>
-    );
-  };
-
   const RouteInfo = () => {
     let dlRoute1 = 0;
     let tmRoute1 = '';
-    let dlRoute2 = 0;
-    let tmRoute2 = '';
     if (activeRoute) {
       dlRoute1 = Math.round(activeRoute.properties.get('distance').value);
-      tmRoute1 = activeRoute.properties.get('duration').text;
-      activeRoutePaths.each(function (path: any) {
-        dlRoute2 = Math.round(path.properties.get('distance').value);
-        tmRoute2 = path.properties.get('duration').text;
-      });
+      let tm = activeRoute.properties.get('duration').text;
+      tmRoute1 = tm.substring(0, tm.length - 1);
     }
     return (
       <Modal open={openSetInf} onClose={handleCloseSetInf} hideBackdrop>
@@ -200,54 +124,22 @@ const BindDiagram = () => {
             <b>&#10006;</b>
           </Button>
           <Box>
-            <b>Начальная точка связи:</b>
-            <br />
-            {nameCoordinates[pointAaIndex]}
-            <br />
-            <b>Конечная точка связи:</b>
-            <br />
-            {nameCoordinates[pointBbIndex]}
-            <br />
-            <b>1. Длина связи: </b>
+            <b>Начальная точка связи:</b><br />
+            {nameCoordinates[pointAaIndex]}<br />
+            <b>Конечная точка связи:</b><br />
+            {nameCoordinates[pointBbIndex]}<br />
+            <b>Длина связи: </b>
             {dlRoute1} м<br />
-            &nbsp;&nbsp;&nbsp;&nbsp;
             <b>Время прохождения: </b>
-            {tmRoute1}
-            <br />
+            {tmRoute1}<br />
           </Box>
           {activeRoute && activeRoute.properties.get('blocked') && (
             <Box>Имеются участки с перекрытыми дорогами</Box>
           )}
-          <Box>
-            <b>2. Длина связи: </b>
-            {dlRoute2} м<br />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <b>Время прохождения: </b>
-            {tmRoute2}
-            <br />
-          </Box>
         </Box>
       </Modal>
       // </>
     );
-  };
-
-  const PressMenuButtonInf = () => {
-    setOpenSetInf(true);
-    console.log('Длина: ', Math.round(activeRoute.properties.get('distance').value), 'м');
-    console.log('Время прохождения: ' + activeRoute.properties.get('duration').text);
-    if (activeRoute.properties.get('blocked')) {
-      console.log('На маршруте имеются участки с перекрытыми дорогами.');
-    }
-    activeRoutePaths.each(function (path: any) {
-      //console.log('activeRoutePaths:', activeRoutePaths.each);
-      //console.log('Paths:', path);
-      console.log('Длина пути: ' + path.properties.get('distance').text);
-      console.log('Время прохождения пути: ' + path.properties.get('duration').text);
-      if (path.properties.get('blocked')) {
-        console.log('На маршруте имеются участки с перекрытыми дорогами.');
-      }
-    });
   };
 
   const PressMenuButton = (mode: number) => {
@@ -269,7 +161,7 @@ const BindDiagram = () => {
         setSize(window.innerWidth + Math.random());
         break;
       case 69: //инфа о маршруте
-        if (activeRoute) PressMenuButtonInf();
+        if (activeRoute) setOpenSetInf(true);
         break;
       case 77: //удаление маршрута
         pointA = 0;
@@ -281,31 +173,13 @@ const BindDiagram = () => {
     }
   };
 
-  const bounds = [pointaa, pointbb];
-  console.log('bounds:', bounds);
-  // const [mapState, setMapState] = React.useState({
-  //   bounds,
-  //   //zoom: 12,
-  //   autoFitToViewport: true,
-  // });
-
   const mapState = {
-    //bounds,
     center: pointaa,
     zoom: 9.5,
-    controls: [
-      //  'zoomControl',
-      //'fullscreenControl'
-    ],
-
-    //autoFitToViewport: true,
+    controls: [],
   };
 
-  const [zoom, setZoom] = React.useState<number>(18);
-
-  // React.useEffect(() => {
-  //   setMapState({ autoFitToViewport: true, bounds: bounds });
-  // }, []);
+  //const [zoom, setZoom] = React.useState<number>(18);
 
   const MapGl = (props: { pointa: any; pointb: any }) => {
     const mapp = React.useRef<any>(null);
@@ -323,29 +197,18 @@ const BindDiagram = () => {
           boundsAutoApply: true,
         },
       );
-      //mapp.current.geoObjects.add(multiRoute);
+      // mapp.events.add('contextmenu', function (e) {
+      //   mapp.hint.open(e.get('coords'), 'Кто-то щелкнул правой кнопкой');
+      // });
       multiRoute.model.events.add('requestsuccess', function () {
         activeRoute = multiRoute.getActiveRoute();
-        if (activeRoute) {
-          activeRoutePaths = activeRoute.getPaths();
-          activeRoutePaths.each(function (path: {
-            properties: { get: (arg0: string) => { (): any; new (): any; text: string } };
-          }) {
-            console.log('!Длина пути: ' + path.properties.get('distance').text);
-            console.log('!Время прохождения пути: ' + path.properties.get('duration').text);
-            dlRoute1 = path.properties.get('distance').text;
-            tmRoute1 = path.properties.get('duration').text;
-            RouteInfoStr();
-          });
-        }
-        //multiRoute.editor.stop();
       });
       mapp.current.geoObjects.add(multiRoute);
     };
 
-    const PressBalloon = (index: number) => {
-      return 'Это балун ' + (index + 1);
-    };
+    // const PressBalloon = (index: number) => {
+    //   return 'Это балун ' + (index + 1);
+    // };
 
     const getPointData = (index: number) => {
       return {
@@ -357,16 +220,9 @@ const BindDiagram = () => {
 
     const getPointOptions = (index: number) => {
       let colorBalloon = 'islands#violetIcon';
-      if (index === pointAaIndex) {
-        console.log('getPointOptions:', index, pointAaIndex);
-        colorBalloon = 'islands#redCircleDotIcon';
-      }
-      if (index === pointBbIndex) {
-        console.log('getPointOptions:', index, pointBbIndex);
-        colorBalloon = 'islands#darkBlueCircleDotIcon';
-      }
+      if (index === pointAaIndex) colorBalloon = 'islands#redCircleDotIcon';
+      if (index === pointBbIndex) colorBalloon = 'islands#darkBlueCircleDotIcon';
       return {
-        // preset: 'islands#violetIcon',
         preset: colorBalloon,
       };
     };
@@ -375,48 +231,12 @@ const BindDiagram = () => {
       console.log('Кликнули по точке ', index + 1);
     };
 
-    const OnPlacemarkClick = (index: number) => {
-      console.log('OnPlacemarkClick', index, index + 1);
+    const OnPlacemarkClick = (e: any, index: number) => {
+      //console.log('OnPlacemarkClick', index, e, '!!!', e.originalEvent);
       if (index >= 0) {
         indexPoint = index;
         setOpenSet(true);
       }
-    };
-
-    const styleSetPoint = {
-      position: 'absolute',
-      marginTop: '15vh',
-      marginLeft: '24vh',
-      width: 220,
-      bgcolor: 'background.paper',
-      border: '3px solid #000',
-      borderColor: 'primary.main',
-      borderRadius: 2,
-      boxShadow: 24,
-      p: 1.5,
-    };
-
-    const styleModalEnd = {
-      position: 'absolute',
-      top: '0%',
-      left: 'auto',
-      right: '-9%',
-      maxHeight: '21px',
-      minHeight: '21px',
-      width: '6%',
-      color: 'black',
-    };
-
-    const styleModalMenu = {
-      fontSize: 17,
-      maxHeight: '21px',
-      minHeight: '21px',
-      backgroundColor: '#F1F3F4',
-      color: 'black',
-      marginRight: 1,
-      marginBottom: 2,
-      textTransform: 'unset !important',
-      textAlign: 'center',
     };
 
     const [openSet, setOpenSet] = React.useState(false);
@@ -430,11 +250,9 @@ const BindDiagram = () => {
 
     const ModalPressBalloon = () => {
       const handleClose = (param: number) => {
-        console.log('indexPoint:', indexPoint);
         if (param === 1) {
           pointAaIndex = indexPoint;
           pointAa = [coordinates[indexPoint][0], coordinates[indexPoint][1]];
-          //pointaa = pointAa
         } else {
           pointBbIndex = indexPoint;
           pointBb = [coordinates[indexPoint][0], coordinates[indexPoint][1]];
@@ -445,7 +263,7 @@ const BindDiagram = () => {
       return (
         <Modal open={openSet} onClose={handleCloseSet} hideBackdrop>
           <Box sx={styleSetPoint}>
-            <Button sx={styleModalEnd} onClick={handleCloseSetBut}>
+            <Button sx={styleModalEndMapGl} onClick={handleCloseSetBut}>
               <b>&#10006;</b>
             </Button>
             <Typography variant="h6" sx={{ textAlign: 'center', color: '#5B1080' }}>
@@ -465,6 +283,11 @@ const BindDiagram = () => {
       );
     };
 
+    const NewPoint = () => {
+      console.log('Cоздание новой точки')
+    }
+
+
     return (
       <YMaps query={{ apikey: '65162f5f-2d15-41d1-a881-6c1acf34cfa1', lang: 'ru_RU' }}>
         <Map
@@ -473,11 +296,47 @@ const BindDiagram = () => {
           instanceRef={(ref) => {
             if (ref) {
               mapp.current = ref;
+
+              // mapp.current.events.add('contextmenu', function (e: any) {
+              //   mapp.current.hint.open(e.get('coords'), 'Кто-то щелкнул правой кнопкой');
+              // });
+              mapp.current.events.add('contextmenu', function (e: any) {
+                if (!mapp.current.hint.isOpen()) {
+                  let coords = e.get('coords');
+                  NewPoint()
+                  mapp.current.hint.open(e.get('coords'), '<p>Кто-то щелкнул правой кнопкой</p>' +
+                    '<p>Координаты щелчка: ' + [
+                      coords[0].toPrecision(6),
+                      coords[1].toPrecision(6)
+                    ].join(', ') + '</p>',
+                  );
+                } else {
+                  mapp.current.hint.close();
+                }
+              });
+
+              mapp.current.events.add('click', function (e: any) {
+                if (!mapp.current.balloon.isOpen()) {
+                  let coords = e.get('coords');
+                  mapp.current.balloon.open(coords, {
+                    //contentHeader: 'Событие!',
+                    contentBody: '<p>Кто-то щелкнул по карте.</p>' +
+                      '<p>Координаты щелчка: ' + [
+                        coords[0].toPrecision(6),
+                        coords[1].toPrecision(6)
+                      ].join(', ') + '</p>',
+                    //contentFooter: '<sup>Щелкните еще раз</sup>'
+                  });
+                }
+                else {
+                  mapp.current.balloon.close();
+                }
+              });
               //mapp.current.events.add(['boundschange'], () => setZoom(mapp.current.getZoom()));
             }
           }}
           onLoad={addRoute}
-          onClick={() => OnPlacemarkClick(-1)}
+          onClick={(e: any) => OnPlacemarkClick(e, -1)}
           width={'99.8%'}
           height={'97%'}>
           {coordinates.map((coordinate, idx) => (
@@ -487,7 +346,7 @@ const BindDiagram = () => {
               properties={getPointData(idx)}
               options={getPointOptions(idx)}
               modules={['geoObject.addon.balloon', 'geoObject.addon.hint']}
-              onClick={() => OnPlacemarkClick(idx)}
+              onClick={(e: any) => OnPlacemarkClick(e, idx)}
               instanceRef={(ref: any) => {
                 ref &&
                   ref.events.add('balloonopen', () => {
@@ -498,11 +357,6 @@ const BindDiagram = () => {
           ))}
           <FullscreenControl />
           <GeolocationControl options={{ float: 'left' }} />
-          <ListBox data={{ content: 'Выберите город' }}>
-            <ListBoxItem data={{ content: 'Москва' }} />
-            <ListBoxItem data={{ content: 'Омск' }} />
-          </ListBox>
-          {/* <RouteButton options={{ float: 'right' }} /> */}
           <RulerControl options={{ float: 'right' }} />
           <SearchControl
             options={{
@@ -518,16 +372,12 @@ const BindDiagram = () => {
           <ModalPressBalloon />
           <PointDataError />
           <RouteInfo />
-          <RouteInfoStr />
         </Map>
       </YMaps>
     );
   };
 
-  ch++;
-  console.log('Загрузка ', ch, 'A:', pointA, 'B:', pointB);
-
-  //отслеживание изменения размера экрана
+  //отслеживание изменения размера экрана - костыль, делает ререндер
   const [size, setSize] = React.useState(0);
   React.useLayoutEffect(() => {
     function updateSize() {
@@ -561,4 +411,7 @@ const BindDiagram = () => {
   );
 };
 
-export default BindDiagram;
+export default MainMap;
+
+
+//https://yandex.ru/dev/maps/jsbox/2.1/event_properties/

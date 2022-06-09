@@ -4,7 +4,7 @@ import { mapCreate, commCreate, massfazCreate } from './redux/actions';
 
 import Grid from '@mui/material/Grid';
 
-import BindDiagram from './components/Bind/BindDiagramExp';
+import MainMap from './components/MainMap';
 
 import { DateRPU } from './interfaceRPU.d';
 import { dataRpu } from './otladkaRpuData';
@@ -136,7 +136,7 @@ const App = () => {
   return (
     <Grid container sx={{ height: '100vh', width: '100%', backgroundColor: '#F1F5FB', }}>
       <Grid item xs>
-        <BindDiagram />
+        <MainMap />
       </Grid>
  
     </Grid>
