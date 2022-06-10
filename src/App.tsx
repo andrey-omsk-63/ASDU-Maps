@@ -96,7 +96,7 @@ const App = () => {
 
   if (flagKostil) {
     // костыль для отладки дома
-    console.log('dataMap_kostil:', dataMap.tflight, dataMap);
+    //console.log('dataMap_kostil:', dataMap.tflight, dataMap);
     dateMapGl = dataMap.tflight;
     dispatch(mapCreate(dateMapGl));
     flagKostil = false;
@@ -138,7 +138,6 @@ const App = () => {
       <Grid item xs>
         <MainMap />
       </Grid>
- 
     </Grid>
   );
 };

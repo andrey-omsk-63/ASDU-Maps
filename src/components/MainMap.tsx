@@ -25,25 +25,25 @@ import { styleApp01, styleModalEnd, styleSetInf } from './MainMapStyle';
 import { styleSetPoint, styleModalEndMapGl, styleModalMenu } from './MainMapStyle';
 
 import { Tflight } from './../interfaceMAP.d';
-import { Console } from 'console';
 
-let coordinates: Array<Array<number>> = [[]];
-let nameCoordinates: Array<string> = [];
+let coordinates: Array<Array<number>> = [[]];  // массив координат
+let nameCoordinates: Array<string> = [];       // массив адресов
+let newCoordinates: Array<number> = [];        // массив флагов новых координат
+let chNewCoord = 1;
+
 
 let dateMap: Tflight[] = [{} as Tflight];
 let flagOpen = false;
 let flagRoute = false;
 
 let activeRoute: any;
-//let activeRoutePaths: any;
 
+let pointCenter: any = 0;
 let pointA: any = 0;
 let pointAa: any = 0;
-let pointaa: any = 0;
 let pointB: any = 0;
 let pointBb: any = 0;
-let pointbb: any = 0;
-let indexPoint = -1;
+let indexPoint: number = -1;
 let pointAaIndex: number = -1;
 let pointBbIndex: number = -1;
 let soobError = '';
@@ -68,10 +68,12 @@ const MainMap = () => {
       let mass = [0, 0];
       mass[0] = dateMap[i].points.Y;
       mass[1] = dateMap[i].points.X;
-      if (i === 0) pointaa = mass;
-      if (i === 1) pointbb = mass;
+      // if (i === 0) pointaa = mass;
+      if (i === 0) pointCenter = mass;
+      //if (i === 1) pointbb = mass;
       coordinates.push(mass);
       nameCoordinates.push(dateMap[i].description);
+      newCoordinates.push(0);
     }
     coordinates.splice(0, 1);
     flagOpen = true;
@@ -150,7 +152,7 @@ const MainMap = () => {
 
   const PressMenuButton = (mode: number) => {
     switch (mode) {
-      case 1:
+      case 1: // создание/пересоздание маршрута
         if (pointAa === 0) {
           soobError = 'Не задана начальная точка связи';
           setOpenSetEr(true);
@@ -163,17 +165,26 @@ const MainMap = () => {
         }
         pointA = pointAa;
         pointB = pointBb;
+        // вычисление координат середины связи
+        // let coord0 = ((pointA[0] - pointB[0]) / 2) + pointB[0]
+        // if (pointA[0] < pointB[0]) coord0 = ((pointB[0] - pointA[0]) / 2) + pointA[0]
+        // let coord1 = ((pointA[1] - pointB[1]) / 2) + pointB[1]
+        // if (pointA[1] < pointB[1]) coord1 = ((pointB[1] - pointA[1]) / 2) + pointA[1]
+        // pointCenter[0] = coord0;
+        // pointCenter[1] = coord1;
         flagRoute = true;
         setSize(window.innerWidth + Math.random());
         break;
-      case 69: //инфа о маршруте
+      case 69: // инфа о маршруте
         if (activeRoute) setOpenSetInf(true);
         break;
-      case 77: //удаление маршрута
+      case 77: // удаление маршрута
         pointA = 0;
         pointB = 0;
         pointAa = 0;
         pointBb = 0;
+        pointAaIndex = -1;
+        pointBbIndex = -1;
         flagRoute = false;
         setSize(window.innerWidth + Math.random());
     }
@@ -182,10 +193,11 @@ const MainMap = () => {
   const [zoom, setZoom] = React.useState<number>(9.5);
 
   const mapState = {
-    center: pointaa,
-    // zoom: 9.5,
+    center: pointCenter,
+    //zoom: 9.5,
     zoom,
-    controls: [],
+    //autoFitToViewport: true,
+    //controls: [],
   };
 
   const MapGl = (props: { pointa: any; pointb: any }) => {
@@ -200,13 +212,11 @@ const MainMap = () => {
           referencePoints: [pointAA, pointBB],
         },
         {
-          wayPointDraggable: true,
-          boundsAutoApply: true,
+          //wayPointDraggable: true,
+          //boundsAutoApply: true,
         },
       );
-      // mapp.events.add('contextmenu', function (e) {
-      //   mapp.hint.open(e.get('coords'), 'Кто-то щелкнул правой кнопкой');
-      // });
+
       multiRoute.model.events.add('requestsuccess', function () {
         activeRoute = multiRoute.getActiveRoute();
       });
@@ -221,12 +231,13 @@ const MainMap = () => {
       return {
         hintContent: nameCoordinates[index],
         //balloonContent: PressBalloon(index),
-        iconCaption: '',
+        //iconCaption: '',
       };
     };
 
     const getPointOptions = (index: number) => {
       let colorBalloon = 'islands#violetIcon';
+      if (newCoordinates[index] > 0) colorBalloon = 'islands#darkOrangeIcon';
       if (index === pointAaIndex) colorBalloon = 'islands#redCircleDotIcon';
       if (index === pointBbIndex) colorBalloon = 'islands#darkBlueCircleDotIcon';
       return {
@@ -266,7 +277,9 @@ const MainMap = () => {
             pointBb = [coordinates[indexPoint][0], coordinates[indexPoint][1]];
             break;
           case 3: //Удаление точки
-            console.log('Здесь будет удаление');
+            coordinates.splice(indexPoint, 1);
+            nameCoordinates.splice(indexPoint, 1);
+            newCoordinates.splice(indexPoint, 1);
         }
         setOpenSet(false);
       };
@@ -281,6 +294,12 @@ const MainMap = () => {
               <Button sx={styleModalMenu} variant="contained" onClick={() => handleClose(3)}>
                 <b>Удаление точки</b>
               </Button>
+              {flagRoute && (
+                <>
+                  <Button sx={styleModalMenu} variant="contained" onClick={() => handleClose(4)}>
+                    <b>Реверс старой связи</b>
+                  </Button>
+                </>)}
             </Box>
 
             <Typography variant="h6" sx={{ textAlign: 'center', color: '#5B1080' }}>
@@ -301,50 +320,60 @@ const MainMap = () => {
     };
 
     const NewPoint = (coords: any) => {
-      let nomer = nameCoordinates.length;
+      let nomer = chNewCoord;
       nameCoordinates.push('Новая точка ' + String(nomer));
       coordinates.push(coords);
-      pointaa = coords;
+      newCoordinates.push(1);
+      pointCenter = coords;
+      chNewCoord++
     };
 
     return (
       <YMaps query={{ apikey: '65162f5f-2d15-41d1-a881-6c1acf34cfa1', lang: 'ru_RU' }}>
         <Map
-          modules={['multiRouter.MultiRoute']}
+          modules={['multiRouter.MultiRoute',
+            //'geocode', 'geoObject.addon.balloon', 'geoObject.addon.hint'
+          ]}
           state={mapState}
           instanceRef={(ref) => {
             if (ref) {
               mapp.current = ref;
 
               mapp.current.events.add('contextmenu', function (e: any) {
-                if (!mapp.current.hint.isOpen()) {
-                  let coords = e.get('coords');
-                  NewPoint(coords);
-                  mapp.current.hint.open(
-                    e.get('coords'),
-                    '<p>Создана новая точка</p>' +
+                console.log('mapp.current.hint', mapp.current.hint)
+                if (mapp.current.hint) {
+                  if (!mapp.current.hint.isOpen()) {
+                    let coords = e.get('coords');
+                    NewPoint(coords);
+                    mapp.current.hint.open(
+                      e.get('coords'),
+                      '<p>Создана новая точка</p>' +
                       '<p>Координаты: <b>' +
                       [coords[0].toPrecision(6), coords[1].toPrecision(6)].join(', ') +
-                      '</b></p>' +
-                      '<p>Повторно нажите правую кнопку</p>',
-                  );
-                } else {
-                  mapp.current.hint.close();
-                  setSize(window.innerWidth + Math.random());
+                      '</b></p>'
+                      + '<p>Повторно нажите правую кнопку</p>',
+                    );
+                  } else {
+                    mapp.current.hint.close();
+                    console.log('закрытие hint')
+                    setSize(window.innerWidth + Math.random());
+                  }
                 }
+
               });
 
               mapp.current.events.add('click', function (e: any) {
                 if (!mapp.current.balloon.isOpen()) {
                   let coords = e.get('coords');
+                  pointCenter = coords;
                   mapp.current.balloon.open(coords, {
                     //contentHeader: 'Событие!',
                     contentBody:
-                      '<p>Поиск по карте.</p>' +
+                      '<p>Центр карты после Zoom</p>' +
                       '<p>Координаты точки: <b>' +
                       [coords[0].toPrecision(6), coords[1].toPrecision(6)].join(', ') +
                       '</b></p>',
-                    contentFooter: '<sup>Повторно нажите левую кнопку</sup>',
+                    // contentFooter: '<sup>Повторно нажите левую кнопку</sup>',
                   });
                 } else {
                   mapp.current.balloon.close();
@@ -436,3 +465,5 @@ const MainMap = () => {
 export default MainMap;
 
 //https://yandex.ru/dev/maps/jsbox/2.1/event_properties/
+
+//https://github.com/gribnoysup/react-yandex-maps/issues/255
