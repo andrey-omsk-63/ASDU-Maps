@@ -151,7 +151,7 @@ const MainMap = () => {
   };
 
   const PressMenuButton = (mode: number) => {
-    switch (mode) {
+     switch (mode) {
       case 1: // создание/пересоздание маршрута
         if (pointAa === 0) {
           soobError = 'Не задана начальная точка связи';
@@ -174,6 +174,13 @@ const MainMap = () => {
         // pointCenter[1] = coord1;
         flagRoute = true;
         setSize(window.innerWidth + Math.random());
+        break;
+        case 12: // реверс маршрута
+        let pa = pointA;
+        let pb = pointB;
+        pointA = pb;
+        pointB = pa;
+        setSize(window.innerWidth + Math.random()); 
         break;
       case 69: // инфа о маршруте
         if (activeRoute) setOpenSetInf(true);
@@ -294,12 +301,12 @@ const MainMap = () => {
               <Button sx={styleModalMenu} variant="contained" onClick={() => handleClose(3)}>
                 <b>Удаление точки</b>
               </Button>
-              {flagRoute && (
+              {/* {flagRoute && (
                 <>
                   <Button sx={styleModalMenu} variant="contained" onClick={() => handleClose(4)}>
                     <b>Реверс старой связи</b>
                   </Button>
-                </>)}
+                </>)} */}
             </Box>
 
             <Typography variant="h6" sx={{ textAlign: 'center', color: '#5B1080' }}>
@@ -449,6 +456,9 @@ const MainMap = () => {
       </Button>
       {flagRoute && (
         <>
+          <Button sx={styleApp01} variant="contained" onClick={() => PressMenuButton(12)}>
+            <b>Реверс связи</b>
+          </Button>
           <Button sx={styleApp01} variant="contained" onClick={() => PressMenuButton(77)}>
             <b>Удалить связь</b>
           </Button>

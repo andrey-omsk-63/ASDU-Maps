@@ -1,7 +1,7 @@
 export const styleApp01 = {
   fontSize: 14,
   marginRight: 0.5,
-  width: '24%',
+  width: '19%',
   maxHeight: '21px',
   minHeight: '21px',
   backgroundColor: '#F1F3F4',
