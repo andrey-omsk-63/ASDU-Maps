@@ -278,36 +278,40 @@ const MainMap = () => {
 
     const handleCloseSetAdr = () => {
       setOpenSetAdress(false);
-      console.log('openSetAdress:', openSetAdress);
     };
 
     const styleSet = {
-      position: 'absolute',
-      top: '14%',
-      right: '-9%',
-      transform: 'translate(-50%, -50%)',
-      width: 360,
-      bgcolor: 'background.paper',
-      //border: '3px solid #000',
-      //borderColor: 'primary.main',
-      borderRadius: 2,
+      width: '230px',
+      maxHeight: '4px',
+      minHeight: '4px',
+      bgcolor: '#FAFAFA',
       boxShadow: 24,
       textAlign: 'center',
       p: 1.5,
     };
+
     const styleInpKnop = {
+      fontSize: 13.3,
       color: 'black',
-      marginTop: 1,
-      maxHeight: '26px',
-      minHeight: '26px',
+      maxHeight: '28px',
+      minHeight: '28px',
+      maxWidth: '62px',
+      minWidth: '62px',
       backgroundColor: '#FFDB4D',
       textTransform: 'unset !important',
+    };
+
+    const styleSetAdress = {
+      width: '319px',
+      height: '30px',
+      marginTop: '9vh',
+      marginLeft: '48px',
     };
 
     const styleBoxForm = {
       '& > :not(style)': {
         marginTop: 2,
-        width: '40px',
+        width: '35px',
       },
     };
 
@@ -320,32 +324,50 @@ const MainMap = () => {
 
       const handleChange = (event: any) => {
         let valueInp = event.target.value.replace(/^0+/, '');
-        // if (valueInp > maxi) valueInp = maxi;
-        // if (valueInp < 0) valueInp = 0;
-        // if (event.target.value === '') valueInp = 0;
         setValuen(valueInp);
       };
 
       return (
         <Box>
           <Modal open={openSetAdress} onClose={handleCloseSetAdr} hideBackdrop>
-            <Box sx={styleSet}>
-              {/* <Button sx={styleModalEndMapGl} onClick={handleCloseSetBut}> */}
-              <Button sx={styleInpKnop} onClick={handleCloseSetAdr}>
-                Ввод
-              </Button>
-              <Box component="form" sx={styleBoxForm} noValidate autoComplete="off">
-                <TextField
-                  size="small"
-                  onKeyPress={handleKey} //отключение Enter
-                  //type="number"
-                  //inputProps={{ min: 0, max: maxi, style: { fontSize: fSizeInp } }}
-                  value={valuen}
-                  onChange={handleChange}
-                  variant="standard"
-                />
+            <Grid item container sx={styleSetAdress}>
+              <Grid item xs={9.5} sx={{ border: 0 }}>
+                <Box sx={styleSet}>
+                  <Box component="form" sx={styleBoxForm} noValidate autoComplete="off">
+                    <TextField
+                      size="small"
+                      onKeyPress={handleKey} //отключение Enter
+                      //type="number"
+                      //inputProps={{ min: 0, max: maxi, style: { fontSize: fSizeInp } }}
+                      value={valuen}
+                      onChange={handleChange}
+                      variant="standard"
+                    />
+                  </Box>
+                </Box>
+              </Grid>
+              <Grid item xs sx={{ border: 0 }}>
+                <Box>
+                  <Button sx={styleInpKnop} variant="contained" onClick={handleCloseSetAdr}>
+                    Ввод
+                  </Button>
+                </Box>
+              </Grid>
+            </Grid>
+            {/* <Box sx={styleSet}>
+                <Box component="form" sx={styleBoxForm} noValidate autoComplete="off">
+                  <TextField
+                    size="small"
+                    onKeyPress={handleKey} //отключение Enter
+                    //type="number"
+                    //inputProps={{ min: 0, max: maxi, style: { fontSize: fSizeInp } }}
+                    value={valuen}
+                    onChange={handleChange}
+                    variant="standard"
+                  />
+                </Box>
               </Box>
-            </Box>
+               */}
           </Modal>
         </Box>
       );
