@@ -38,7 +38,7 @@ export const styleSetPoint = {
   position: 'absolute',
   marginTop: '15vh',
   marginLeft: '24vh',
-  width: 225,
+  width: 250,
   bgcolor: 'background.paper',
   border: '3px solid #000',
   borderColor: 'primary.main',

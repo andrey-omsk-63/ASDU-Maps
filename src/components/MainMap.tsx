@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
-//import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
 import {
@@ -26,11 +26,10 @@ import { styleSetPoint, styleModalEndMapGl, styleModalMenu } from './MainMapStyl
 
 import { Tflight } from './../interfaceMAP.d';
 
-let coordinates: Array<Array<number>> = [[]];  // массив координат
-let nameCoordinates: Array<string> = [];       // массив адресов
-let newCoordinates: Array<number> = [];        // массив флагов новых координат
+let coordinates: Array<Array<number>> = [[]]; // массив координат
+let nameCoordinates: Array<string> = []; // массив адресов
+let newCoordinates: Array<number> = []; // массив флагов новых координат
 let chNewCoord = 1;
-
 
 let dateMap: Tflight[] = [{} as Tflight];
 let flagOpen = false;
@@ -151,7 +150,7 @@ const MainMap = () => {
   };
 
   const PressMenuButton = (mode: number) => {
-     switch (mode) {
+    switch (mode) {
       case 1: // создание/пересоздание маршрута
         if (pointAa === 0) {
           soobError = 'Не задана начальная точка связи';
@@ -175,12 +174,12 @@ const MainMap = () => {
         flagRoute = true;
         setSize(window.innerWidth + Math.random());
         break;
-        case 12: // реверс маршрута
+      case 12: // реверс маршрута
         let pa = pointA;
         let pb = pointB;
         pointA = pb;
         pointB = pa;
-        setSize(window.innerWidth + Math.random()); 
+        setSize(window.innerWidth + Math.random());
         break;
       case 69: // инфа о маршруте
         if (activeRoute) setOpenSetInf(true);
@@ -272,21 +271,104 @@ const MainMap = () => {
       setOpenSet(false);
     };
 
+    const [openSetAdress, setOpenSetAdress] = React.useState(false);
+    // const handleCloseSetAdress = (event: any, reason: string) => {
+    //   if (reason !== 'backdropClick') setOpenSetAdress(false);
+    // };
+
+    const handleCloseSetAdr = () => {
+      setOpenSetAdress(false);
+      console.log('openSetAdress:', openSetAdress);
+    };
+
+    const styleSet = {
+      position: 'absolute',
+      top: '14%',
+      right: '-9%',
+      transform: 'translate(-50%, -50%)',
+      width: 360,
+      bgcolor: 'background.paper',
+      //border: '3px solid #000',
+      //borderColor: 'primary.main',
+      borderRadius: 2,
+      boxShadow: 24,
+      textAlign: 'center',
+      p: 1.5,
+    };
+    const styleInpKnop = {
+      color: 'black',
+      marginTop: 1,
+      maxHeight: '26px',
+      minHeight: '26px',
+      backgroundColor: '#FFDB4D',
+      textTransform: 'unset !important',
+    };
+
+    const styleBoxForm = {
+      '& > :not(style)': {
+        marginTop: 2,
+        width: '40px',
+      },
+    };
+
+    const InputAdress = () => {
+      const [valuen, setValuen] = React.useState('');
+
+      const handleKey = (event: any) => {
+        if (event.key === 'Enter') event.preventDefault();
+      };
+
+      const handleChange = (event: any) => {
+        let valueInp = event.target.value.replace(/^0+/, '');
+        // if (valueInp > maxi) valueInp = maxi;
+        // if (valueInp < 0) valueInp = 0;
+        // if (event.target.value === '') valueInp = 0;
+        setValuen(valueInp);
+      };
+
+      return (
+        <Box>
+          <Modal open={openSetAdress} onClose={handleCloseSetAdr} hideBackdrop>
+            <Box sx={styleSet}>
+              {/* <Button sx={styleModalEndMapGl} onClick={handleCloseSetBut}> */}
+              <Button sx={styleInpKnop} onClick={handleCloseSetAdr}>
+                Ввод
+              </Button>
+              <Box component="form" sx={styleBoxForm} noValidate autoComplete="off">
+                <TextField
+                  size="small"
+                  onKeyPress={handleKey} //отключение Enter
+                  //type="number"
+                  //inputProps={{ min: 0, max: maxi, style: { fontSize: fSizeInp } }}
+                  value={valuen}
+                  onChange={handleChange}
+                  variant="standard"
+                />
+              </Box>
+            </Box>
+          </Modal>
+        </Box>
+      );
+    };
+
     const ModalPressBalloon = () => {
       const handleClose = (param: number) => {
         switch (param) {
-          case 1: //Начальная точка
+          case 1: // Начальная точка
             pointAaIndex = indexPoint;
             pointAa = [coordinates[indexPoint][0], coordinates[indexPoint][1]];
             break;
-          case 2: //Конечная точка
+          case 2: // Конечная точка
             pointBbIndex = indexPoint;
             pointBb = [coordinates[indexPoint][0], coordinates[indexPoint][1]];
             break;
-          case 3: //Удаление точки
+          case 3: // Удаление точки
             coordinates.splice(indexPoint, 1);
             nameCoordinates.splice(indexPoint, 1);
             newCoordinates.splice(indexPoint, 1);
+          //   break;
+          // case 4: // Редактирование адреса
+          //   setOpenSetAdress(true);
         }
         setOpenSet(false);
       };
@@ -302,11 +384,14 @@ const MainMap = () => {
                 <b>Удаление точки</b>
               </Button>
               {/* {flagRoute && (
-                <>
-                  <Button sx={styleModalMenu} variant="contained" onClick={() => handleClose(4)}>
-                    <b>Реверс старой связи</b>
-                  </Button>
-                </>)} */}
+                <> */}
+              <Button
+                sx={styleModalMenu}
+                variant="contained"
+                onClick={() => setOpenSetAdress(true)}>
+                <b>Редактирование адреса</b>
+              </Button>
+              {/* </>)} */}
             </Box>
 
             <Typography variant="h6" sx={{ textAlign: 'center', color: '#5B1080' }}>
@@ -321,6 +406,7 @@ const MainMap = () => {
                 <b>Конечная точка</b>
               </Button>
             </Box>
+            {openSetAdress && <InputAdress />}
           </Box>
         </Modal>
       );
@@ -332,13 +418,14 @@ const MainMap = () => {
       coordinates.push(coords);
       newCoordinates.push(1);
       pointCenter = coords;
-      chNewCoord++
+      chNewCoord++;
     };
 
     return (
       <YMaps query={{ apikey: '65162f5f-2d15-41d1-a881-6c1acf34cfa1', lang: 'ru_RU' }}>
         <Map
-          modules={['multiRouter.MultiRoute',
+          modules={[
+            'multiRouter.MultiRoute',
             //'geocode', 'geoObject.addon.balloon', 'geoObject.addon.hint'
           ]}
           state={mapState}
@@ -347,7 +434,7 @@ const MainMap = () => {
               mapp.current = ref;
 
               mapp.current.events.add('contextmenu', function (e: any) {
-                console.log('mapp.current.hint', mapp.current.hint)
+                console.log('mapp.current.hint', mapp.current.hint);
                 if (mapp.current.hint) {
                   if (!mapp.current.hint.isOpen()) {
                     let coords = e.get('coords');
@@ -355,18 +442,17 @@ const MainMap = () => {
                     mapp.current.hint.open(
                       e.get('coords'),
                       '<p>Создана новая точка</p>' +
-                      '<p>Координаты: <b>' +
-                      [coords[0].toPrecision(6), coords[1].toPrecision(6)].join(', ') +
-                      '</b></p>'
-                      + '<p>Повторно нажите правую кнопку</p>',
+                        '<p>Координаты: <b>' +
+                        [coords[0].toPrecision(6), coords[1].toPrecision(6)].join(', ') +
+                        '</b></p>' +
+                        '<p>Повторно нажите правую кнопку</p>',
                     );
                   } else {
                     mapp.current.hint.close();
-                    console.log('закрытие hint')
+                    console.log('закрытие hint');
                     setSize(window.innerWidth + Math.random());
                   }
                 }
-
               });
 
               mapp.current.events.add('click', function (e: any) {
