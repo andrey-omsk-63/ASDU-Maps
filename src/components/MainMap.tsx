@@ -276,10 +276,6 @@ const MainMap = () => {
     //   if (reason !== 'backdropClick') setOpenSetAdress(false);
     // };
 
-    const handleCloseSetAdr = () => {
-      setOpenSetAdress(false);
-    };
-
     const styleSet = {
       width: '230px',
       maxHeight: '4px',
@@ -293,8 +289,8 @@ const MainMap = () => {
     const styleInpKnop = {
       fontSize: 13.3,
       color: 'black',
-      maxHeight: '28px',
-      minHeight: '28px',
+      maxHeight: '27px',
+      minHeight: '27px',
       maxWidth: '62px',
       minWidth: '62px',
       backgroundColor: '#FFDB4D',
@@ -310,21 +306,26 @@ const MainMap = () => {
 
     const styleBoxForm = {
       '& > :not(style)': {
-        marginTop: 2,
-        width: '35px',
+        marginTop: '-9px',
+        marginLeft: '-12px',
+        width: '255px',
       },
     };
 
     const InputAdress = () => {
-      const [valuen, setValuen] = React.useState('');
+      const [valuen, setValuen] = React.useState(nameCoordinates[indexPoint]);
 
       const handleKey = (event: any) => {
         if (event.key === 'Enter') event.preventDefault();
       };
 
-      const handleChange = (event: any) => {
-        let valueInp = event.target.value.replace(/^0+/, '');
-        setValuen(valueInp);
+      const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setValuen(event.target.value);
+      };
+
+      const handleCloseSetAdr = () => {
+        nameCoordinates[indexPoint] = valuen;
+        setOpenSetAdress(false);
       };
 
       return (
@@ -337,8 +338,7 @@ const MainMap = () => {
                     <TextField
                       size="small"
                       onKeyPress={handleKey} //отключение Enter
-                      //type="number"
-                      //inputProps={{ min: 0, max: maxi, style: { fontSize: fSizeInp } }}
+                      inputProps={{ style: { fontSize: 13.3 } }}
                       value={valuen}
                       onChange={handleChange}
                       variant="standard"
@@ -354,20 +354,6 @@ const MainMap = () => {
                 </Box>
               </Grid>
             </Grid>
-            {/* <Box sx={styleSet}>
-                <Box component="form" sx={styleBoxForm} noValidate autoComplete="off">
-                  <TextField
-                    size="small"
-                    onKeyPress={handleKey} //отключение Enter
-                    //type="number"
-                    //inputProps={{ min: 0, max: maxi, style: { fontSize: fSizeInp } }}
-                    value={valuen}
-                    onChange={handleChange}
-                    variant="standard"
-                  />
-                </Box>
-              </Box>
-               */}
           </Modal>
         </Box>
       );
@@ -394,6 +380,7 @@ const MainMap = () => {
         }
         setOpenSet(false);
       };
+      let adress = '123456 адрес';
 
       return (
         <Modal open={openSet} onClose={handleCloseSet} hideBackdrop>
@@ -405,15 +392,12 @@ const MainMap = () => {
               <Button sx={styleModalMenu} variant="contained" onClick={() => handleClose(3)}>
                 <b>Удаление точки</b>
               </Button>
-              {/* {flagRoute && (
-                <> */}
               <Button
                 sx={styleModalMenu}
                 variant="contained"
                 onClick={() => setOpenSetAdress(true)}>
                 <b>Редактирование адреса</b>
               </Button>
-              {/* </>)} */}
             </Box>
 
             <Typography variant="h6" sx={{ textAlign: 'center', color: '#5B1080' }}>
