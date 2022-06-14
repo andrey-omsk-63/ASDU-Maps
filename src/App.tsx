@@ -4,7 +4,7 @@ import { mapCreate, commCreate, massfazCreate } from './redux/actions';
 
 import Grid from '@mui/material/Grid';
 
-import MainMap from './components/MainMap';
+import MainMap from './components/MainMapGl';
 
 import { DateRPU } from './interfaceRPU.d';
 import { dataRpu } from './otladkaRpuData';
