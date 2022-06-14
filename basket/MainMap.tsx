@@ -24,7 +24,7 @@ import {
 import { styleApp01, styleModalEnd, styleSetInf } from './MainMapStyle';
 import { styleSetPoint, styleModalEndMapGl, styleModalMenu } from './MainMapStyle';
 import { styleSet, styleInpKnop, styleSetAdress } from './MainMapStyle';
-import { styleBoxForm,  } from './MainMapStyle';
+import { styleBoxForm } from './MainMapStyle';
 
 import { Tflight } from './../interfaceMAP.d';
 
@@ -260,10 +260,10 @@ const MainMap = () => {
     // };
 
     const OnPlacemarkClickPoint = (index: number) => {
-      console.log('click:',index)
+      console.log('click:', index);
       if (pointAa) {
         pointAaIndex = index;
-            pointAa = [coordinates[indexPoint][0], coordinates[indexPoint][1]];
+        pointAa = [coordinates[indexPoint][0], coordinates[indexPoint][1]];
       }
     };
 
@@ -277,7 +277,7 @@ const MainMap = () => {
     };
 
     const [openSetAdress, setOpenSetAdress] = React.useState(false);
-   
+
     const InputAdress = () => {
       //const [openSetAdress, setOpenSetAdress] = React.useState(false);
       const [valuen, setValuen] = React.useState(nameCoordinates[indexPoint]);
@@ -381,7 +381,6 @@ const MainMap = () => {
       );
     };
 
-
     const NewPoint = (coords: any) => {
       let nomer = chNewCoord;
       nameCoordinates.push('Новая точка ' + String(nomer));
@@ -392,24 +391,24 @@ const MainMap = () => {
       setSize(window.innerWidth + Math.random());
     };
 
-    // const OnClickKnopMouse = (typeClick: number, coords: any, e: any) => {
-    //   console.log('CLICK:', typeClick, coords);
-    //   switch (typeClick) {
-    //     case 0: // левая кнопка
-    //         pointCenter = coords;
-    //         break;
-    //     case 2: 
-    //         console.log('Правая'); 
-    //         //OnPlacemarkClick(e, 1)
-    //         // let nomer = chNewCoord;
-    //         // coordinates.push(coords);
-    //         // newCoordinates.push(1);
-    //         // pointCenter = coords;
-    //         // chNewCoord++;
-    //         // setSize(window.innerWidth + Math.random());
-    //         //NewPoint(coords);  
-    //   }
-    // }
+    const OnClickKnopMouse = (typeClick: number, coords: any, e: any) => {
+      console.log('CLICK:', typeClick, coords);
+      switch (typeClick) {
+        case 0: // левая кнопка
+          pointCenter = coords;
+          break;
+        case 2:
+          console.log('Правая');
+        //OnPlacemarkClick(e, 1)
+        // let nomer = chNewCoord;
+        // coordinates.push(coords);
+        // newCoordinates.push(1);
+        // pointCenter = coords;
+        // chNewCoord++;
+        // setSize(window.innerWidth + Math.random());
+        //NewPoint(coords);
+      }
+    };
 
     return (
       <YMaps query={{ apikey: '65162f5f-2d15-41d1-a881-6c1acf34cfa1', lang: 'ru_RU' }}>
@@ -422,26 +421,36 @@ const MainMap = () => {
           instanceRef={(ref) => {
             if (ref) {
               mapp.current = ref;
+              // нажата правая кнопка мыши
               mapp.current.events.add('contextmenu', function (e: any) {
-                console.log('mapp.current.hint', mapp.current.hint);
+                console.log('mapp.current.hint');
                 let coords = e.get('coords');
                 //OnPlacemarkClick(e, 1)
                 NewPoint(coords);
               });
-
+              // нажата левая кнопка мыши
               mapp.current.events.add('mousedown', function (e: any) {
+                console.log('mousedown:');
                 // 0, 1 или 2 в зависимости от того, какая кнопка мыши нажата (В IE значение может быть от 0 до 7).
                 let coords = e.get('coords');
-                // let typeClick = e.get('domEvent').originalEvent.button;
-                // console.log('CLICK:', typeClick, coords);
                 if (e.get('domEvent').originalEvent.button === 0) pointCenter = coords;
-                //OnClickKnopMouse(typeClick, coords, e)
+                OnClickKnopMouse(e.get('domEvent').originalEvent.button, coords, e);
               });
 
               mapp.current.events.add(['boundschange'], function () {
+                console.log('boundschange');
                 setZoom(mapp.current.getZoom());
               });
             }
+
+            mapp.current.add('mouseleave', function (e: any) {
+              console.log('mouseleave:', chNewCoord);
+              chNewCoord++;
+            });
+            // ref.events.add('Placemark mouseenter:', function (e: any) {
+            //   console.log('Placemark mouseenter:', chNewCoord);
+            //   chNewCoord++;
+            // });
           }}
           onLoad={addRoute}
           //onClick={(e: any) => OnPlacemarkClick(e, -1)}
@@ -528,61 +537,61 @@ export default MainMap;
 
 //https://github.com/gribnoysup/react-yandex-maps/issues/255
 
-  // вычисление координат середины связи
-  // let coord0 = ((pointA[0] - pointB[0]) / 2) + pointB[0]
-  // if (pointA[0] < pointB[0]) coord0 = ((pointB[0] - pointA[0]) / 2) + pointA[0]
-  // let coord1 = ((pointA[1] - pointB[1]) / 2) + pointB[1]
-  // if (pointA[1] < pointB[1]) coord1 = ((pointB[1] - pointA[1]) / 2) + pointA[1]
-  // pointCenter[0] = coord0;
-  // pointCenter[1] = coord1;
+// вычисление координат середины связи
+// let coord0 = ((pointA[0] - pointB[0]) / 2) + pointB[0]
+// if (pointA[0] < pointB[0]) coord0 = ((pointB[0] - pointA[0]) / 2) + pointA[0]
+// let coord1 = ((pointA[1] - pointB[1]) / 2) + pointB[1]
+// if (pointA[1] < pointB[1]) coord1 = ((pointB[1] - pointA[1]) / 2) + pointA[1]
+// pointCenter[0] = coord0;
+// pointCenter[1] = coord1;
 
-  // mapp.current.events.add('click', function (e: any) {
-              //   if (!mapp.current.balloon.isOpen()) {
-              //     let coords = e.get('coords');
-              //     pointCenter = coords;
-              //     mapp.current.balloon.open(coords, {
-              //       //contentHeader: 'Событие!',
-              //       contentBody:
-              //         '<p>Центр карты после Zoom</p>' +
-              //         '<p>Координаты точки: <b>' +
-              //         [coords[0].toPrecision(6), coords[1].toPrecision(6)].join(', ') +
-              //         '</b></p>',
-              //       // contentFooter: '<sup>Повторно нажите левую кнопку</sup>',
-              //     });
-              //   } else {
-              //     mapp.current.balloon.close();
-              //   }
-              // });
+// mapp.current.events.add('click', function (e: any) {
+//   if (!mapp.current.balloon.isOpen()) {
+//     let coords = e.get('coords');
+//     pointCenter = coords;
+//     mapp.current.balloon.open(coords, {
+//       //contentHeader: 'Событие!',
+//       contentBody:
+//         '<p>Центр карты после Zoom</p>' +
+//         '<p>Координаты точки: <b>' +
+//         [coords[0].toPrecision(6), coords[1].toPrecision(6)].join(', ') +
+//         '</b></p>',
+//       // contentFooter: '<sup>Повторно нажите левую кнопку</sup>',
+//     });
+//   } else {
+//     mapp.current.balloon.close();
+//   }
+// });
 //
 // ref.events.add('mouseleave', function (e: any) {
-                //   console.log('mouseleave:', chNewCoord);
-                //   chNewCoord++;
-                // });
-                // ref.events.add('Placemark mouseenter:', function (e: any) {
-                //   console.log('Placemark mouseenter:', chNewCoord);
-                //   chNewCoord++;
-                // });
+//   console.log('mouseleave:', chNewCoord);
+//   chNewCoord++;
+// });
+// ref.events.add('Placemark mouseenter:', function (e: any) {
+//   console.log('Placemark mouseenter:', chNewCoord);
+//   chNewCoord++;
+// });
 // if (mapp.current.hint) {
-                //   if (!mapp.current.hint.isOpen()) {
-                //     let coords = e.get('coords');
-                //     NewPoint(coords);
-                // mapp.current.hint.open(
-                //   e.get('coords'),
-                //   '<p>Создана новая точка</p>' +
-                //     '<p>Координаты: <b>' +
-                //     [coords[0].toPrecision(6), coords[1].toPrecision(6)].join(', ') +
-                //     '</b></p>' +
-                //     '<p>Повторно нажите правую кнопку</p>',
-                // );
-                //mapp.current.hint.close();
-                // } 
-                //  else {
-                //mapp.current.hint.close();
-                //   if (openHint) {
-                //     console.log('закрытие hint');
+//   if (!mapp.current.hint.isOpen()) {
+//     let coords = e.get('coords');
+//     NewPoint(coords);
+// mapp.current.hint.open(
+//   e.get('coords'),
+//   '<p>Создана новая точка</p>' +
+//     '<p>Координаты: <b>' +
+//     [coords[0].toPrecision(6), coords[1].toPrecision(6)].join(', ') +
+//     '</b></p>' +
+//     '<p>Повторно нажите правую кнопку</p>',
+// );
+//mapp.current.hint.close();
+// }
+//  else {
+//mapp.current.hint.close();
+//   if (openHint) {
+//     console.log('закрытие hint');
 
-                //     setSize(window.innerWidth + Math.random());
-                //   }
-                //   setOpenHint(false); 
-                //   }
-                // }                
+//     setSize(window.innerWidth + Math.random());
+//   }
+//   setOpenHint(false);
+//   }
+// }
