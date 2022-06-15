@@ -1,12 +1,12 @@
-import * as React from 'react';
-import { useSelector } from 'react-redux';
+import * as React from "react";
+import { useSelector } from "react-redux";
 
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Modal from '@mui/material/Modal';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Modal from "@mui/material/Modal";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 
 import {
   YMaps,
@@ -19,17 +19,29 @@ import {
   TrafficControl,
   TypeSelector,
   ZoomControl,
-} from 'react-yandex-maps';
+} from "react-yandex-maps";
 
-import { styleApp01, styleModalEnd, styleSetInf } from './MainMapStyle';
-import { styleSetPoint, styleModalEndMapGl, styleModalMenu } from './MainMapStyle';
-import { styleSet, styleInpKnop, styleSetAdress } from './MainMapStyle';
-import { styleBoxForm } from './MainMapStyle';
+import MapRouteInfo from "./MapRouteInfo";
 
-import { Tflight } from './../interfaceMAP.d';
+import { styleSetPoint, styleModalEnd, styleSetInf } from "./MainMapStyle";
+import { styleApp01, styleModalEndMapGl, styleModalMenu } from "./MainMapStyle";
+import { styleSet, styleInpKnop, styleSetAdress } from "./MainMapStyle";
+import { styleBoxForm } from "./MainMapStyle";
+
+import { Tflight } from "./../interfaceMAP.d";
+
+export interface Pointer {
+  ID: number;
+  nameCoordinates: string;
+  region: string;
+  area: string;
+  subarea: number;
+}
 
 let coordinates: Array<Array<number>> = [[]]; // массив координат
 let nameCoordinates: Array<string> = []; // массив адресов
+let dateCoordinates: Pointer[] = [];
+
 let newCoordinates: Array<number> = []; // массив флагов новых координат
 let chNewCoord = 1;
 
@@ -47,25 +59,26 @@ let pointBb: any = 0;
 let indexPoint: number = -1;
 let pointAaIndex: number = -1;
 let pointBbIndex: number = -1;
-let soobError = '';
+let soobError = "";
 
-// let dlRoute1 = '';
-// let tmRoute1 = '';
-
-const MainMap = () => {
+const MainMap = (props: { Y: number; X: number }) => {
   //== Piece of Redux ======================================
   const map = useSelector((state: any) => {
     const { mapReducer } = state;
     return mapReducer.map;
   });
   dateMap = map.dateMap;
-  //console.log('dateMap_Diagram:', dateMap);
   //========================================================
-
-  //const mapp = React.useRef<any>(null);
-
+  // инициализация
   if (!flagOpen) {
     for (let i = 0; i < dateMap.length; i++) {
+      let masskPoint = {
+        ID: 0,
+        nameCoordinates: "",
+        region: "",
+        area: "",
+        subarea: 0,
+      };
       let mass = [0, 0];
       mass[0] = dateMap[i].points.Y;
       mass[1] = dateMap[i].points.X;
@@ -77,12 +90,14 @@ const MainMap = () => {
       newCoordinates.push(0);
     }
     coordinates.splice(0, 1);
+    pointCenter = [props.Y, props.X];
     flagOpen = true;
   }
-
+  //========================================================
+  const [openSetInf, setOpenSetInf] = React.useState(false);
   const [openSetEr, setOpenSetEr] = React.useState(false);
   const handleCloseSetEr = (event: any, reason: string) => {
-    if (reason !== 'backdropClick') setOpenSetEr(false);
+    if (reason !== "backdropClick") setOpenSetEr(false);
   };
 
   const handleCloseSetEndEr = () => {
@@ -96,7 +111,7 @@ const MainMap = () => {
           <Button sx={styleModalEnd} onClick={handleCloseSetEndEr}>
             <b>&#10006;</b>
           </Button>
-          <Typography variant="h6" sx={{ textAlign: 'center', color: 'red' }}>
+          <Typography variant="h6" sx={{ textAlign: "center", color: "red" }}>
             {soobError}
           </Typography>
         </Box>
@@ -104,77 +119,34 @@ const MainMap = () => {
     );
   };
 
-  const [openSetInf, setOpenSetInf] = React.useState(false);
-  const handleCloseSetInf = (event: any, reason: string) => {
-    if (reason !== 'backdropClick') setOpenSetEr(false);
-  };
-
-  const handleCloseSetEndInf = () => {
-    setOpenSetInf(false);
-  };
-
-  const RouteInfo = () => {
-    let dlRoute1 = 0;
-    let tmRoute1 = '';
-    if (activeRoute) {
-      dlRoute1 = Math.round(activeRoute.properties.get('distance').value);
-      let tm = activeRoute.properties.get('duration').text;
-      tmRoute1 = tm.substring(0, tm.length - 1);
-    }
-    return (
-      <Modal open={openSetInf} onClose={handleCloseSetInf} hideBackdrop>
-        <Box sx={styleSetInf}>
-          <Button sx={styleModalEnd} onClick={handleCloseSetEndInf}>
-            <b>&#10006;</b>
-          </Button>
-          <Box>
-            <b>Начальная точка связи:</b>
-            <br />
-            {nameCoordinates[pointAaIndex]}
-            <br />
-            <b>Конечная точка связи:</b>
-            <br />
-            {nameCoordinates[pointBbIndex]}
-            <br />
-            <b>Длина связи: </b>
-            {dlRoute1} м<br />
-            <b>Время прохождения: </b>
-            {tmRoute1}
-            <br />
-          </Box>
-          {activeRoute && activeRoute.properties.get('blocked') && (
-            <Box>Имеются участки с перекрытыми дорогами</Box>
-          )}
-        </Box>
-      </Modal>
-      // </>
-    );
-  };
-
   const PressMenuButton = (mode: number) => {
     switch (mode) {
       case 1: // создание/пересоздание маршрута
         if (pointAa === 0) {
-          soobError = 'Не задана начальная точка связи';
+          soobError = "Не задана начальная точка связи";
           setOpenSetEr(true);
           break;
         }
         if (pointBb === 0) {
-          soobError = 'Не задана конечная точка связи';
+          soobError = "Не задана конечная точка связи";
           setOpenSetEr(true);
           break;
         }
         pointA = pointAa;
         pointB = pointBb;
-
         flagRoute = true;
         setSize(window.innerWidth + Math.random());
         break;
       case 12: // реверс маршрута
         let pa = pointA;
-        let pb = pointB;
-        pointA = pb;
+        pointA = pointB;
         pointB = pa;
+        pa = pointAa;
+        pointAa = pointBb;
+        pointBb = pa;
+        pa = pointAaIndex;
+        pointAaIndex = pointBbIndex;
+        pointBbIndex = pa;
         setSize(window.innerWidth + Math.random());
         break;
       case 69: // инфа о маршруте
@@ -199,12 +171,13 @@ const MainMap = () => {
     //zoom: 9.5,
     zoom,
     //autoFitToViewport: true,
+    behaviors: ["default", "scrollZoom"],
     controls: [],
+    yandexMapDisablePoiInteractivity: true,
   };
 
   const MapGl = (props: { pointa: any; pointb: any }) => {
     const mapp = React.useRef<any>(null);
-    //const [zoom, setZoom] = React.useState<number>(18);
     let pointAA = props.pointa;
     let pointBB = props.pointb;
 
@@ -216,68 +189,63 @@ const MainMap = () => {
         {
           //wayPointDraggable: true,
           //boundsAutoApply: true,
-        },
+        }
       );
 
-      multiRoute.model.events.add('requestsuccess', function () {
+      multiRoute.model.events.add("requestsuccess", function () {
         activeRoute = multiRoute.getActiveRoute();
       });
       mapp.current.geoObjects.add(multiRoute);
     };
 
-    // const PressBalloon = (index: number) => {
-    //   return 'Это балун ' + (index + 1);
-    // };
-
     const getPointData = (index: number) => {
+      let textBalloon = "";
+      if (index === pointAaIndex) textBalloon = "НАЧАЛО";
+      if (index === pointBbIndex) textBalloon = "КОНЕЦ";
+
       return {
         hintContent: nameCoordinates[index],
         //balloonContent: PressBalloon(index),
-        //iconCaption: '',
+        iconCaption: textBalloon,
       };
     };
 
     const getPointOptions = (index: number) => {
-      let colorBalloon = 'islands#violetIcon';
-      if (newCoordinates[index] > 0) colorBalloon = 'islands#darkOrangeIcon';
-      if (index === pointAaIndex) colorBalloon = 'islands#redCircleDotIcon';
-      if (index === pointBbIndex) colorBalloon = 'islands#darkBlueCircleDotIcon';
+      let colorBalloon = "islands#violetIcon";
+      if (newCoordinates[index] > 0) colorBalloon = "islands#darkOrangeIcon";
+      if (index === pointAaIndex) colorBalloon = "islands#redCircleDotIcon";
+      if (index === pointBbIndex)
+        colorBalloon = "islands#darkBlueCircleDotIcon";
       return {
         preset: colorBalloon,
       };
     };
 
-    // const PressBalloonBody = (index: number) => {
-    //   console.log('Кликнули по точке ', index + 1);
-    // };
-
-    // const OnPlacemarkClick = (e: any, index: number) => {
-    //   console.log('click:', e,  index)
-    //   if (index >= 0) {
-    //     indexPoint = index;
-    //     setOpenSet(true);
-    //   }
-    // };
-
     const OnPlacemarkClickPoint = (index: number) => {
-      console.log('!!!!click:', index, pointAa, pointAaIndex, pointBb, pointBbIndex);
       if (pointAa === 0) {
         pointAaIndex = index;
         pointAa = [coordinates[index][0], coordinates[index][1]];
-        console.log('1111click:', index, pointAa, pointAaIndex);
         setSize(window.innerWidth + Math.random());
       } else {
         if (pointBb === 0) {
-          pointBbIndex = index;
-          pointBb = [coordinates[index][0], coordinates[index][1]];
-          setSize(window.innerWidth + Math.random());
+          if (pointAaIndex === index) {
+            soobError = "Начальная и конечная точки совподают";
+            setOpenSetEr(true);
+          } else {
+            pointBbIndex = index;
+            pointBb = [coordinates[index][0], coordinates[index][1]];
+            setSize(window.innerWidth + Math.random());
+          }
+        } else {
+          indexPoint = index;
+          setOpenSet(true);
         }
       }
     };
 
     const [openSet, setOpenSet] = React.useState(false);
     const handleCloseSet = (event: any, reason: string) => {
-      if (reason !== 'backdropClick') setOpenSet(false);
+      if (reason !== "backdropClick") setOpenSet(false);
     };
 
     const handleCloseSetBut = () => {
@@ -287,11 +255,10 @@ const MainMap = () => {
     const [openSetAdress, setOpenSetAdress] = React.useState(false);
 
     const InputAdress = () => {
-      //const [openSetAdress, setOpenSetAdress] = React.useState(false);
       const [valuen, setValuen] = React.useState(nameCoordinates[indexPoint]);
 
       const handleKey = (event: any) => {
-        if (event.key === 'Enter') event.preventDefault();
+        if (event.key === "Enter") event.preventDefault();
       };
 
       const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -309,7 +276,12 @@ const MainMap = () => {
             <Grid item container sx={styleSetAdress}>
               <Grid item xs={9.5} sx={{ border: 0 }}>
                 <Box sx={styleSet}>
-                  <Box component="form" sx={styleBoxForm} noValidate autoComplete="off">
+                  <Box
+                    component="form"
+                    sx={styleBoxForm}
+                    noValidate
+                    autoComplete="off"
+                  >
                     <TextField
                       size="small"
                       onKeyPress={handleKey} //отключение Enter
@@ -323,7 +295,11 @@ const MainMap = () => {
               </Grid>
               <Grid item xs sx={{ border: 0 }}>
                 <Box>
-                  <Button sx={styleInpKnop} variant="contained" onClick={handleCloseSetAdr}>
+                  <Button
+                    sx={styleInpKnop}
+                    variant="contained"
+                    onClick={handleCloseSetAdr}
+                  >
                     Ввод
                   </Button>
                 </Box>
@@ -359,27 +335,42 @@ const MainMap = () => {
             <Button sx={styleModalEndMapGl} onClick={handleCloseSetBut}>
               <b>&#10006;</b>
             </Button>
-            <Box sx={{ marginTop: 2, textAlign: 'center' }}>
-              <Button sx={styleModalMenu} variant="contained" onClick={() => handleClose(3)}>
+            <Box sx={{ marginTop: 2, textAlign: "center" }}>
+              <Button
+                sx={styleModalMenu}
+                variant="contained"
+                onClick={() => handleClose(3)}
+              >
                 <b>Удаление точки</b>
               </Button>
               <Button
                 sx={styleModalMenu}
                 variant="contained"
-                onClick={() => setOpenSetAdress(true)}>
+                onClick={() => setOpenSetAdress(true)}
+              >
                 <b>Редактирование адреса</b>
               </Button>
             </Box>
 
-            <Typography variant="h6" sx={{ textAlign: 'center', color: '#5B1080' }}>
-              Создание новой связи:
+            <Typography
+              variant="h6"
+              sx={{ textAlign: "center", color: "#5B1080" }}
+            >
+              Перестроение связи:
             </Typography>
-            <br />
-            <Box sx={{ textAlign: 'center' }}>
-              <Button sx={styleModalMenu} variant="contained" onClick={() => handleClose(1)}>
+            <Box sx={{ textAlign: "center" }}>
+              <Button
+                sx={styleModalMenu}
+                variant="contained"
+                onClick={() => handleClose(1)}
+              >
                 <b>Начальная точка</b>
               </Button>
-              <Button sx={styleModalMenu} variant="contained" onClick={() => handleClose(2)}>
+              <Button
+                sx={styleModalMenu}
+                variant="contained"
+                onClick={() => handleClose(2)}
+              >
                 <b>Конечная точка</b>
               </Button>
             </Box>
@@ -391,7 +382,7 @@ const MainMap = () => {
 
     const NewPoint = (coords: any) => {
       let nomer = chNewCoord;
-      nameCoordinates.push('Новая точка ' + String(nomer));
+      nameCoordinates.push("Новая точка " + String(nomer));
       coordinates.push(coords);
       newCoordinates.push(1);
       pointCenter = coords;
@@ -399,109 +390,78 @@ const MainMap = () => {
       setSize(window.innerWidth + Math.random());
     };
 
-    // const OnClickKnopMouse = (typeClick: number, coords: any, e: any) => {
-    //   console.log('CLICK:', typeClick, coords);
-    //   switch (typeClick) {
-    //     case 0: // левая кнопка
-    //         pointCenter = coords;
-    //         break;
-    //     case 2:
-    //         console.log('Правая');
-    //         //OnPlacemarkClick(e, 1)
-    //         // let nomer = chNewCoord;
-    //         // coordinates.push(coords);
-    //         // newCoordinates.push(1);
-    //         // pointCenter = coords;
-    //         // chNewCoord++;
-    //         // setSize(window.innerWidth + Math.random());
-    //         //NewPoint(coords);
-    //   }
-    // }
-
     return (
       <YMaps
         query={{
-          apikey: '65162f5f-2d15-41d1-a881-6c1acf34cfa1',
-          lang: 'ru_RU',
-        }}>
+          apikey: "65162f5f-2d15-41d1-a881-6c1acf34cfa1",
+          lang: "ru_RU",
+        }}
+      >
         <Map
-          modules={[
-            'multiRouter.MultiRoute',
-            //'geocode', 'geoObject.addon.balloon', 'geoObject.addon.hint'
-          ]}
+          modules={["multiRouter.MultiRoute"]}
           state={mapState}
           instanceRef={(ref) => {
             if (ref) {
               mapp.current = ref;
               // нажата правая кнопка мыши
-              mapp.current.events.add('contextmenu', function (e: any) {
-                console.log('mapp.current.hint', mapp.current.hint);
-                let coords = e.get('coords');
-                //OnPlacemarkClick(e, 1)
+              mapp.current.events.add("contextmenu", function (e: any) {
+                //console.log("mapp.current.hint", mapp.current.hint);
+                let coords = e.get("coords");
                 NewPoint(coords);
               });
               // нажата левая/правая кнопка мыши
-              mapp.current.events.add('mousedown', function (e: any) {
+              mapp.current.events.add("mousedown", function (e: any) {
                 // 0, 1 или 2 в зависимости от того, какая кнопка мыши нажата (В IE значение может быть от 0 до 7).
-                let coords = e.get('coords');
-                let typeClick = e.get('domEvent').originalEvent.button;
-                console.log('CLICK:', typeClick, coords);
+                let coords = e.get("coords");
+                let typeClick = e.get("domEvent").originalEvent.button;
+                //console.log("CLICK:", typeClick, coords);
                 if (typeClick === 0) pointCenter = coords;
-                //if (typeClick === 2) NewPoint(coords);
-                //OnClickKnopMouse(typeClick, coords, e)
               });
               // нажато колёсико мыши
-              mapp.current.events.add(['boundschange'], function () {
-                console.log('ZOOM:', mapp.current.getZoom());
+              mapp.current.events.add(["boundschange"], function () {
+                //console.log("ZOOM:", mapp.current.getZoom());
                 setZoom(mapp.current.getZoom());
               });
             }
           }}
           onLoad={addRoute}
-          //onClick={(e: any) => OnPlacemarkClick(e, -1)}
-          width={'99.8%'}
-          height={'97%'}>
+          width={"99.8%"}
+          height={"97%"}
+        >
           {coordinates.map((coordinate, idx) => (
             <Placemark
               key={idx}
               geometry={coordinate}
               properties={getPointData(idx)}
               options={getPointOptions(idx)}
-              modules={['geoObject.addon.balloon', 'geoObject.addon.hint']}
+              modules={["geoObject.addon.balloon", "geoObject.addon.hint"]}
               onClick={() => OnPlacemarkClickPoint(idx)}
-              instanceRef={(ref: any) => {
-                ref &&
-                  // ref.events.add('balloonopen', () => {
-                  //   PressBalloonBody(idx);
-                  // });
-                  // ref.events.add('mouseleave', function (e: any) {
-                  //   console.log('P mouseleave:', chNewCoord);
-                  //   chNewCoord++;
-                  // });
-                  ref.events.add('mouseenter:', function (e: any) {
-                    console.log('Placemark mouseenter:', chNewCoord);
-                    chNewCoord++;
-                  });
-              }}
             />
           ))}
           <FullscreenControl />
-          <GeolocationControl options={{ float: 'left' }} />
-          <RulerControl options={{ float: 'right' }} />
+          <GeolocationControl options={{ float: "left" }} />
+          <RulerControl options={{ float: "right" }} />
           <SearchControl
             options={{
-              float: 'left',
-              provider: 'yandex#search',
-              size: 'large',
+              float: "left",
+              provider: "yandex#search",
+              size: "large",
             }}
           />
-          <TrafficControl options={{ float: 'right' }} />
-          <TypeSelector options={{ float: 'right' }} />
-          <ZoomControl options={{ float: 'right' }} />
+          <TrafficControl options={{ float: "right" }} />
+          <TypeSelector options={{ float: "right" }} />
+          <ZoomControl options={{ float: "right" }} />
           {/* служебные компоненты */}
           <ModalPressBalloon />
           <PointDataError />
-          <RouteInfo />
+          {openSetInf && (
+            <MapRouteInfo
+              activeRoute={activeRoute}
+              name1={nameCoordinates[pointAaIndex]}
+              name2={nameCoordinates[pointBbIndex]}
+              setOpen={setOpenSetInf}
+            />
+          )}
         </Map>
       </YMaps>
     );
@@ -513,29 +473,61 @@ const MainMap = () => {
     function updateSize() {
       setSize(window.innerWidth);
     }
-    window.addEventListener('resize', updateSize);
+    window.addEventListener("resize", updateSize);
     updateSize();
-    return () => window.removeEventListener('resize', updateSize);
+    return () => window.removeEventListener("resize", updateSize);
   }, []);
 
-  let soobButtonRoute = 'Создать связь';
-  if (flagRoute) soobButtonRoute = 'Перестроить связь';
+  let soobButtonRoute = "Создать связь";
+  if (flagRoute) soobButtonRoute = "Перестроить связь";
 
   return (
-    <Grid container sx={{ border: 0, height: '99.5vh' }}>
-      <Button sx={styleApp01} variant="contained" onClick={() => PressMenuButton(1)}>
+    <Grid container sx={{ border: 0, height: "99.5vh" }}>
+      <Button
+        sx={styleApp01}
+        variant="contained"
+        onClick={() => PressMenuButton(1)}
+      >
         <b>{soobButtonRoute}</b>
       </Button>
+      {!flagRoute && (
+        <Button
+          sx={styleApp01}
+          variant="contained"
+          onClick={() => PressMenuButton(77)}
+        >
+          <b>Отмена назначений</b>
+        </Button>
+      )}
       {flagRoute && (
         <>
-          <Button sx={styleApp01} variant="contained" onClick={() => PressMenuButton(12)}>
+          <Button
+            sx={styleApp01}
+            variant="contained"
+            onClick={() => PressMenuButton(21)}
+          >
+            <b>Сохранить связь</b>
+          </Button>
+          <Button
+            sx={styleApp01}
+            variant="contained"
+            onClick={() => PressMenuButton(77)}
+          >
+            <b>Отменить связь</b>
+          </Button>
+          <Button
+            sx={styleApp01}
+            variant="contained"
+            onClick={() => PressMenuButton(12)}
+          >
             <b>Реверс связи</b>
           </Button>
-          <Button sx={styleApp01} variant="contained" onClick={() => PressMenuButton(77)}>
-            <b>Удалить связь</b>
-          </Button>
-          <Button sx={styleApp01} variant="contained" onClick={() => PressMenuButton(69)}>
-            <b>Информ о связе</b>
+          <Button
+            sx={styleApp01}
+            variant="contained"
+            onClick={() => PressMenuButton(69)}
+          >
+            <b>Информ о связи</b>
           </Button>
         </>
       )}
@@ -608,3 +600,18 @@ export default MainMap;
 //   setOpenHint(false);
 //   }
 // }
+//
+// instanceRef={(ref: any) => {
+//   ref &&
+// ref.events.add('balloonopen', () => {
+//   PressBalloonBody(idx);
+// });
+// ref.events.add('mouseleave', function (e: any) {
+//   console.log('P mouseleave:', chNewCoord);
+//   chNewCoord++;
+// });
+// ref.events.add("mouseenter:", function (e: any) {
+//   console.log("Placemark mouseenter:", chNewCoord);
+//   chNewCoord++;
+// });
+// }}
