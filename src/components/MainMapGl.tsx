@@ -1,12 +1,12 @@
-import * as React from "react";
-import { useSelector } from "react-redux";
+import * as React from 'react';
+import { useSelector } from 'react-redux';
 
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 
 import {
   YMaps,
@@ -19,16 +19,16 @@ import {
   TrafficControl,
   TypeSelector,
   ZoomControl,
-} from "react-yandex-maps";
+} from 'react-yandex-maps';
 
-import MapRouteInfo from "./MapRouteInfo";
+import MapRouteInfo from './MapRouteInfo';
 
-import { styleSetPoint, styleModalEnd, styleSetInf } from "./MainMapStyle";
-import { styleApp01, styleModalEndMapGl, styleModalMenu } from "./MainMapStyle";
-import { styleSet, styleInpKnop, styleSetAdress } from "./MainMapStyle";
-import { styleBoxForm } from "./MainMapStyle";
+import { styleSetPoint, styleModalEnd, styleSetInf } from './MainMapStyle';
+import { styleApp01, styleModalEndMapGl, styleModalMenu } from './MainMapStyle';
+import { styleSet, styleInpKnop, styleSetAdress } from './MainMapStyle';
+import { styleBoxForm } from './MainMapStyle';
 
-import { Tflight } from "./../interfaceMAP.d";
+import { Tflight } from './../interfaceMAP.d';
 
 export interface Pointer {
   ID: number;
@@ -59,7 +59,7 @@ let pointBb: any = 0;
 let indexPoint: number = -1;
 let pointAaIndex: number = -1;
 let pointBbIndex: number = -1;
-let soobError = "";
+let soobError = '';
 
 const MainMap = (props: { Y: number; X: number }) => {
   //== Piece of Redux ======================================
@@ -74,12 +74,19 @@ const MainMap = (props: { Y: number; X: number }) => {
     for (let i = 0; i < dateMap.length; i++) {
       let masskPoint = {
         ID: 0,
-        nameCoordinates: "",
-        region: "",
-        area: "",
+        nameCoordinates: '',
+        region: '',
+        area: '',
         subarea: 0,
       };
       let mass = [0, 0];
+      masskPoint.ID = dateMap[i].ID;
+      masskPoint.nameCoordinates = dateMap[i].description;
+      masskPoint.region = dateMap[i].region.num;
+      masskPoint.area = dateMap[i].area.num;
+      masskPoint.subarea = dateMap[i].subarea;
+      dateCoordinates.push(masskPoint);
+
       mass[0] = dateMap[i].points.Y;
       mass[1] = dateMap[i].points.X;
       // if (i === 0) pointaa = mass;
@@ -89,6 +96,7 @@ const MainMap = (props: { Y: number; X: number }) => {
       nameCoordinates.push(dateMap[i].description);
       newCoordinates.push(0);
     }
+    console.log('dateCoordinates:', dateCoordinates[75].nameCoordinates);
     coordinates.splice(0, 1);
     pointCenter = [props.Y, props.X];
     flagOpen = true;
@@ -97,7 +105,7 @@ const MainMap = (props: { Y: number; X: number }) => {
   const [openSetInf, setOpenSetInf] = React.useState(false);
   const [openSetEr, setOpenSetEr] = React.useState(false);
   const handleCloseSetEr = (event: any, reason: string) => {
-    if (reason !== "backdropClick") setOpenSetEr(false);
+    if (reason !== 'backdropClick') setOpenSetEr(false);
   };
 
   const handleCloseSetEndEr = () => {
@@ -111,7 +119,7 @@ const MainMap = (props: { Y: number; X: number }) => {
           <Button sx={styleModalEnd} onClick={handleCloseSetEndEr}>
             <b>&#10006;</b>
           </Button>
-          <Typography variant="h6" sx={{ textAlign: "center", color: "red" }}>
+          <Typography variant="h6" sx={{ textAlign: 'center', color: 'red' }}>
             {soobError}
           </Typography>
         </Box>
@@ -123,12 +131,12 @@ const MainMap = (props: { Y: number; X: number }) => {
     switch (mode) {
       case 1: // создание/пересоздание маршрута
         if (pointAa === 0) {
-          soobError = "Не задана начальная точка связи";
+          soobError = 'Не задана начальная точка связи';
           setOpenSetEr(true);
           break;
         }
         if (pointBb === 0) {
-          soobError = "Не задана конечная точка связи";
+          soobError = 'Не задана конечная точка связи';
           setOpenSetEr(true);
           break;
         }
@@ -171,7 +179,7 @@ const MainMap = (props: { Y: number; X: number }) => {
     //zoom: 9.5,
     zoom,
     //autoFitToViewport: true,
-    behaviors: ["default", "scrollZoom"],
+    behaviors: ['default', 'scrollZoom'],
     controls: [],
     yandexMapDisablePoiInteractivity: true,
   };
@@ -189,19 +197,19 @@ const MainMap = (props: { Y: number; X: number }) => {
         {
           //wayPointDraggable: true,
           //boundsAutoApply: true,
-        }
+        },
       );
 
-      multiRoute.model.events.add("requestsuccess", function () {
+      multiRoute.model.events.add('requestsuccess', function () {
         activeRoute = multiRoute.getActiveRoute();
       });
       mapp.current.geoObjects.add(multiRoute);
     };
 
     const getPointData = (index: number) => {
-      let textBalloon = "";
-      if (index === pointAaIndex) textBalloon = "НАЧАЛО";
-      if (index === pointBbIndex) textBalloon = "КОНЕЦ";
+      let textBalloon = '';
+      if (index === pointAaIndex) textBalloon = 'НАЧАЛО';
+      if (index === pointBbIndex) textBalloon = 'КОНЕЦ';
 
       return {
         hintContent: nameCoordinates[index],
@@ -211,11 +219,10 @@ const MainMap = (props: { Y: number; X: number }) => {
     };
 
     const getPointOptions = (index: number) => {
-      let colorBalloon = "islands#violetIcon";
-      if (newCoordinates[index] > 0) colorBalloon = "islands#darkOrangeIcon";
-      if (index === pointAaIndex) colorBalloon = "islands#redCircleDotIcon";
-      if (index === pointBbIndex)
-        colorBalloon = "islands#darkBlueCircleDotIcon";
+      let colorBalloon = 'islands#violetIcon';
+      if (newCoordinates[index] > 0) colorBalloon = 'islands#darkOrangeIcon';
+      if (index === pointAaIndex) colorBalloon = 'islands#redCircleDotIcon';
+      if (index === pointBbIndex) colorBalloon = 'islands#darkBlueCircleDotIcon';
       return {
         preset: colorBalloon,
       };
@@ -229,7 +236,7 @@ const MainMap = (props: { Y: number; X: number }) => {
       } else {
         if (pointBb === 0) {
           if (pointAaIndex === index) {
-            soobError = "Начальная и конечная точки совподают";
+            soobError = 'Начальная и конечная точки совподают';
             setOpenSetEr(true);
           } else {
             pointBbIndex = index;
@@ -245,7 +252,7 @@ const MainMap = (props: { Y: number; X: number }) => {
 
     const [openSet, setOpenSet] = React.useState(false);
     const handleCloseSet = (event: any, reason: string) => {
-      if (reason !== "backdropClick") setOpenSet(false);
+      if (reason !== 'backdropClick') setOpenSet(false);
     };
 
     const handleCloseSetBut = () => {
@@ -258,7 +265,7 @@ const MainMap = (props: { Y: number; X: number }) => {
       const [valuen, setValuen] = React.useState(nameCoordinates[indexPoint]);
 
       const handleKey = (event: any) => {
-        if (event.key === "Enter") event.preventDefault();
+        if (event.key === 'Enter') event.preventDefault();
       };
 
       const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -276,12 +283,7 @@ const MainMap = (props: { Y: number; X: number }) => {
             <Grid item container sx={styleSetAdress}>
               <Grid item xs={9.5} sx={{ border: 0 }}>
                 <Box sx={styleSet}>
-                  <Box
-                    component="form"
-                    sx={styleBoxForm}
-                    noValidate
-                    autoComplete="off"
-                  >
+                  <Box component="form" sx={styleBoxForm} noValidate autoComplete="off">
                     <TextField
                       size="small"
                       onKeyPress={handleKey} //отключение Enter
@@ -295,11 +297,7 @@ const MainMap = (props: { Y: number; X: number }) => {
               </Grid>
               <Grid item xs sx={{ border: 0 }}>
                 <Box>
-                  <Button
-                    sx={styleInpKnop}
-                    variant="contained"
-                    onClick={handleCloseSetAdr}
-                  >
+                  <Button sx={styleInpKnop} variant="contained" onClick={handleCloseSetAdr}>
                     Ввод
                   </Button>
                 </Box>
@@ -335,42 +333,26 @@ const MainMap = (props: { Y: number; X: number }) => {
             <Button sx={styleModalEndMapGl} onClick={handleCloseSetBut}>
               <b>&#10006;</b>
             </Button>
-            <Box sx={{ marginTop: 2, textAlign: "center" }}>
-              <Button
-                sx={styleModalMenu}
-                variant="contained"
-                onClick={() => handleClose(3)}
-              >
+            <Box sx={{ marginTop: 2, textAlign: 'center' }}>
+              <Button sx={styleModalMenu} variant="contained" onClick={() => handleClose(3)}>
                 <b>Удаление точки</b>
               </Button>
               <Button
                 sx={styleModalMenu}
                 variant="contained"
-                onClick={() => setOpenSetAdress(true)}
-              >
+                onClick={() => setOpenSetAdress(true)}>
                 <b>Редактирование адреса</b>
               </Button>
             </Box>
 
-            <Typography
-              variant="h6"
-              sx={{ textAlign: "center", color: "#5B1080" }}
-            >
+            <Typography variant="h6" sx={{ textAlign: 'center', color: '#5B1080' }}>
               Перестроение связи:
             </Typography>
-            <Box sx={{ textAlign: "center" }}>
-              <Button
-                sx={styleModalMenu}
-                variant="contained"
-                onClick={() => handleClose(1)}
-              >
+            <Box sx={{ textAlign: 'center' }}>
+              <Button sx={styleModalMenu} variant="contained" onClick={() => handleClose(1)}>
                 <b>Начальная точка</b>
               </Button>
-              <Button
-                sx={styleModalMenu}
-                variant="contained"
-                onClick={() => handleClose(2)}
-              >
+              <Button sx={styleModalMenu} variant="contained" onClick={() => handleClose(2)}>
                 <b>Конечная точка</b>
               </Button>
             </Box>
@@ -382,7 +364,7 @@ const MainMap = (props: { Y: number; X: number }) => {
 
     const NewPoint = (coords: any) => {
       let nomer = chNewCoord;
-      nameCoordinates.push("Новая точка " + String(nomer));
+      nameCoordinates.push('Новая точка ' + String(nomer));
       coordinates.push(coords);
       newCoordinates.push(1);
       pointCenter = coords;
@@ -393,64 +375,62 @@ const MainMap = (props: { Y: number; X: number }) => {
     return (
       <YMaps
         query={{
-          apikey: "65162f5f-2d15-41d1-a881-6c1acf34cfa1",
-          lang: "ru_RU",
-        }}
-      >
+          apikey: '65162f5f-2d15-41d1-a881-6c1acf34cfa1',
+          lang: 'ru_RU',
+        }}>
         <Map
-          modules={["multiRouter.MultiRoute"]}
+          modules={['multiRouter.MultiRoute']}
           state={mapState}
           instanceRef={(ref) => {
             if (ref) {
               mapp.current = ref;
               // нажата правая кнопка мыши
-              mapp.current.events.add("contextmenu", function (e: any) {
+              mapp.current.events.add('contextmenu', function (e: any) {
                 //console.log("mapp.current.hint", mapp.current.hint);
-                let coords = e.get("coords");
+                let coords = e.get('coords');
                 NewPoint(coords);
               });
               // нажата левая/правая кнопка мыши
-              mapp.current.events.add("mousedown", function (e: any) {
+              mapp.current.events.add('mousedown', function (e: any) {
                 // 0, 1 или 2 в зависимости от того, какая кнопка мыши нажата (В IE значение может быть от 0 до 7).
-                let coords = e.get("coords");
-                let typeClick = e.get("domEvent").originalEvent.button;
+                let coords = e.get('coords');
+                let typeClick = e.get('domEvent').originalEvent.button;
                 //console.log("CLICK:", typeClick, coords);
                 if (typeClick === 0) pointCenter = coords;
               });
               // нажато колёсико мыши
-              mapp.current.events.add(["boundschange"], function () {
+              mapp.current.events.add(['boundschange'], function () {
                 //console.log("ZOOM:", mapp.current.getZoom());
                 setZoom(mapp.current.getZoom());
               });
             }
           }}
           onLoad={addRoute}
-          width={"99.8%"}
-          height={"97%"}
-        >
+          width={'99.8%'}
+          height={'97%'}>
           {coordinates.map((coordinate, idx) => (
             <Placemark
               key={idx}
               geometry={coordinate}
               properties={getPointData(idx)}
               options={getPointOptions(idx)}
-              modules={["geoObject.addon.balloon", "geoObject.addon.hint"]}
+              modules={['geoObject.addon.balloon', 'geoObject.addon.hint']}
               onClick={() => OnPlacemarkClickPoint(idx)}
             />
           ))}
           <FullscreenControl />
-          <GeolocationControl options={{ float: "left" }} />
-          <RulerControl options={{ float: "right" }} />
+          <GeolocationControl options={{ float: 'left' }} />
+          <RulerControl options={{ float: 'right' }} />
           <SearchControl
             options={{
-              float: "left",
-              provider: "yandex#search",
-              size: "large",
+              float: 'left',
+              provider: 'yandex#search',
+              size: 'large',
             }}
           />
-          <TrafficControl options={{ float: "right" }} />
-          <TypeSelector options={{ float: "right" }} />
-          <ZoomControl options={{ float: "right" }} />
+          <TrafficControl options={{ float: 'right' }} />
+          <TypeSelector options={{ float: 'right' }} />
+          <ZoomControl options={{ float: 'right' }} />
           {/* служебные компоненты */}
           <ModalPressBalloon />
           <PointDataError />
@@ -473,60 +453,36 @@ const MainMap = (props: { Y: number; X: number }) => {
     function updateSize() {
       setSize(window.innerWidth);
     }
-    window.addEventListener("resize", updateSize);
+    window.addEventListener('resize', updateSize);
     updateSize();
-    return () => window.removeEventListener("resize", updateSize);
+    return () => window.removeEventListener('resize', updateSize);
   }, []);
 
-  let soobButtonRoute = "Создать связь";
-  if (flagRoute) soobButtonRoute = "Перестроить связь";
+  let soobButtonRoute = 'Создать связь';
+  if (flagRoute) soobButtonRoute = 'Перестроить связь';
 
   return (
-    <Grid container sx={{ border: 0, height: "99.5vh" }}>
-      <Button
-        sx={styleApp01}
-        variant="contained"
-        onClick={() => PressMenuButton(1)}
-      >
+    <Grid container sx={{ border: 0, height: '99.5vh' }}>
+      <Button sx={styleApp01} variant="contained" onClick={() => PressMenuButton(1)}>
         <b>{soobButtonRoute}</b>
       </Button>
       {!flagRoute && (
-        <Button
-          sx={styleApp01}
-          variant="contained"
-          onClick={() => PressMenuButton(77)}
-        >
+        <Button sx={styleApp01} variant="contained" onClick={() => PressMenuButton(77)}>
           <b>Отмена назначений</b>
         </Button>
       )}
       {flagRoute && (
         <>
-          <Button
-            sx={styleApp01}
-            variant="contained"
-            onClick={() => PressMenuButton(21)}
-          >
+          <Button sx={styleApp01} variant="contained" onClick={() => PressMenuButton(21)}>
             <b>Сохранить связь</b>
           </Button>
-          <Button
-            sx={styleApp01}
-            variant="contained"
-            onClick={() => PressMenuButton(77)}
-          >
+          <Button sx={styleApp01} variant="contained" onClick={() => PressMenuButton(77)}>
             <b>Отменить связь</b>
           </Button>
-          <Button
-            sx={styleApp01}
-            variant="contained"
-            onClick={() => PressMenuButton(12)}
-          >
+          <Button sx={styleApp01} variant="contained" onClick={() => PressMenuButton(12)}>
             <b>Реверс связи</b>
           </Button>
-          <Button
-            sx={styleApp01}
-            variant="contained"
-            onClick={() => PressMenuButton(69)}
-          >
+          <Button sx={styleApp01} variant="contained" onClick={() => PressMenuButton(69)}>
             <b>Информ о связи</b>
           </Button>
         </>
