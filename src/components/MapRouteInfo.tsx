@@ -13,7 +13,7 @@ const MapRouteInfo = (props: {
   setOpen: any;
 }) => {
   const [openSetInf, setOpenSetInf] = React.useState(true);
-  
+
   const handleCloseSetEndInf = () => {
     props.setOpen(false);
     setOpenSetInf(false);
@@ -23,7 +23,12 @@ const MapRouteInfo = (props: {
   if (props.activeRoute) {
     dlRoute1 = Math.round(props.activeRoute.properties.get("distance").value);
     let tm = props.activeRoute.properties.get("duration").text;
-    tmRoute1 = tm.substring(0, tm.length - 1);
+    tmRoute1 =
+      tm.substring(0, tm.length - 1) +
+      " (" +
+      Math.round(props.activeRoute.properties.get("duration").value) +
+      " сек)";
+    console.log("1111", props.activeRoute.properties.get("duration"));
   }
   return (
     <Modal open={openSetInf} onClose={handleCloseSetEndInf} hideBackdrop>

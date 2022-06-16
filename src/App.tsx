@@ -12,6 +12,7 @@ import { dataRpu } from "./otladkaRpuData";
 import { Tflight, DateMAP } from "./interfaceMAP.d";
 //import { dataMap } from './otladkaMaps';
 import { dataMap } from "./otladkaMaps";
+import { number } from "prop-types";
 
 //import AppIconAsdu from './AppIconAsdu';
 
@@ -23,8 +24,8 @@ export let massFaz: Array<Array<number>> = [[]];
 let flagOpenRpu = true;
 let flagKostil = true;
 
-let coord0 = 0;
-let coord1 = 0;
+let coord0: Array<number> = [];
+//let coord1 = 0;
 
 let flagOpenWS = true;
 //let flagWS = true;
@@ -48,9 +49,15 @@ const App = () => {
     const { massfazReducer } = state;
     return massfazReducer.massfaz;
   });
-  //console.log('massfaz_App:', massfaz);
-
   const dispatch = useDispatch();
+  //========================================================
+  const CenterCoord = (aY: number, aX: number, bY: number, bX: number) => {
+    let coord0 = (aY - bY) / 2 + bY;
+    if (aY < bY) coord0 = (bY - aY) / 2 + aY;
+    let coord1 = (aX - bX) / 2 + bX;
+    if (aX < bX) coord1 = (bX - aX) / 2 + aX;
+    return [coord0, coord1];
+  };
 
   const [pointsRpu, setPointsRpu] = React.useState<DateRPU>({} as DateRPU);
   const [isOpenRpu, setIsOpenRpu] = React.useState(false);
@@ -100,18 +107,13 @@ const App = () => {
     // костыль для отладки дома
     //console.log('dataMap_kostil:', dataMap.tflight, dataMap);
     //вычисление координат середины связи
-    let aY = dataMap.boxPoint.point0.Y;
-    let aX = dataMap.boxPoint.point0.X;
-    let bY = dataMap.boxPoint.point1.Y;
-    let bX = dataMap.boxPoint.point1.X;
-    coord0 = (aY - bY) / 2 + bY;
-    if (aY < bY) coord0 = (bY - aY) / 2 + aY;
-    coord1 = (aX - bX) / 2 + bX;
-    if (aX < bX) coord1 = (bX - aX) / 2 + aX;
 
-    console.log("Y:", aY, aX);
-    console.log("X:", bY, bX);
-    console.log("U:", coord0, coord1);
+    coord0 = CenterCoord(
+      dataMap.boxPoint.point0.Y,
+      dataMap.boxPoint.point0.X,
+      dataMap.boxPoint.point1.Y,
+      dataMap.boxPoint.point1.X
+    );
 
     dateMapGl = dataMap.tflight;
     dispatch(mapCreate(dateMapGl));
@@ -155,7 +157,7 @@ const App = () => {
       sx={{ height: "100vh", width: "100%", backgroundColor: "#F1F5FB" }}
     >
       <Grid item xs>
-        <MainMap Y={coord0} X={coord1} />
+        <MainMap Y={coord0[0]} X={coord0[1]} />
       </Grid>
     </Grid>
   );
