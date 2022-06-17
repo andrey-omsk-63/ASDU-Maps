@@ -12,9 +12,6 @@ import { dataRpu } from "./otladkaRpuData";
 import { Tflight, DateMAP } from "./interfaceMAP.d";
 //import { dataMap } from './otladkaMaps';
 import { dataMap } from "./otladkaMaps";
-import { number } from "prop-types";
-
-//import AppIconAsdu from './AppIconAsdu';
 
 export let dateRpuGl: DateRPU = {} as DateRPU;
 //export let dateMapGl: Tflight[] = [];
