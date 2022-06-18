@@ -3,6 +3,7 @@ import { MAP_CREATE, COMM_CREATE, MASSFAZ_CREATE } from './types';
 
 import { DateRPU } from './../interfaceRPU.d';
 import { Tflight } from './../interfaceMAP.d';
+import { Pointer } from './../App';
 
 // export function incrementLikes() {
 //   return {
@@ -23,7 +24,7 @@ export function commCreate(dateRpu: DateRPU) {
   };
 }
 
-export function massfazCreate(massFaza: Array<Array<number>> = [[]]) {
+export function massfazCreate(massFaza: Pointer[] = []) {
   return {
     type: MASSFAZ_CREATE,
     data: massFaza,
