@@ -32,6 +32,7 @@ import { Tflight } from "./../interfaceMAP.d";
 
 export interface Pointer {
   ID: number;
+  coordinates: Array<number>;
   nameCoordinates: string;
   region: string;
   area: string;
@@ -40,16 +41,12 @@ export interface Pointer {
 }
 
 let coordinates: Array<Array<number>> = [[]]; // массив координат
-//let nameCoordinates: Array<string> = []; // массив адресов
 let dateCoordinates: Pointer[] = [];
-
-//let newCoordinates: Array<number> = []; // массив флагов новых координат
-let chNewCoord = 1;
 
 let dateMap: Tflight[] = [{} as Tflight];
 let flagOpen = false;
 let flagRoute = false;
-
+let chNewCoord = 1;
 let activeRoute: any;
 
 let pointCenter: any = 0;
@@ -74,8 +71,9 @@ const MainMap = (props: { Y: number; X: number }) => {
   // инициализация
   if (!flagOpen) {
     for (let i = 0; i < dateMap.length; i++) {
-      let masskPoint = {
+      let masskPoint: Pointer = {
         ID: 0,
+        coordinates: [],
         nameCoordinates: "",
         region: "",
         area: "",
@@ -83,25 +81,25 @@ const MainMap = (props: { Y: number; X: number }) => {
         newCoordinates: 0,
       };
       let mass = [0, 0];
+      mass[0] = dateMap[i].points.Y;
+      mass[1] = dateMap[i].points.X;
       masskPoint.ID = dateMap[i].ID;
+      masskPoint.coordinates = mass;
       masskPoint.nameCoordinates = dateMap[i].description;
       masskPoint.region = dateMap[i].region.num;
       masskPoint.area = dateMap[i].area.num;
       masskPoint.subarea = dateMap[i].subarea;
       masskPoint.newCoordinates = 0;
-      mass[0] = dateMap[i].points.Y;
-      mass[1] = dateMap[i].points.X;
 
       dateCoordinates.push(masskPoint);
       coordinates.push(mass);
-    //nameCoordinates.push(dateMap[i].description);
-      //newCoordinates.push(0);
     }
-    //console.log('dateCoordinates:', dateCoordinates[75].nameCoordinates);
+
     coordinates.splice(0, 1);
     pointCenter = [props.Y, props.X];
     pointCenterOld = pointCenter;
     flagOpen = true;
+    //console.log("dateCoordinates:", dateCoordinates);
   }
   //========================================================
   const CenterCoord = (aY: number, aX: number, bY: number, bX: number) => {
@@ -205,7 +203,7 @@ const MainMap = (props: { Y: number; X: number }) => {
           referencePoints: [pointAA, pointBB],
         },
         {
-          routeActiveStrokeWidth: 8,
+          routeActiveStrokeWidth: 6,
           routeActiveStrokeColor: "#1A9165",
         }
       );
@@ -297,7 +295,10 @@ const MainMap = (props: { Y: number; X: number }) => {
     const OnPlacemarkClickPoint = (index: number) => {
       if (pointAa === 0) {
         pointAaIndex = index;
-        pointAa = [coordinates[index][0], coordinates[index][1]];
+        pointAa = [
+          dateCoordinates[index].coordinates[0],
+          dateCoordinates[index].coordinates[1],
+        ];
         pointCenter = pointCenterOld;
         setSize(window.innerWidth + Math.random());
       } else {
@@ -307,7 +308,10 @@ const MainMap = (props: { Y: number; X: number }) => {
             setOpenSetEr(true);
           } else {
             pointBbIndex = index;
-            pointBb = [coordinates[index][0], coordinates[index][1]];
+            pointBb = [
+              dateCoordinates[index].coordinates[0],
+              dateCoordinates[index].coordinates[1],
+            ];
             //pointCenter = CenterCoord(pointAa[0], pointAa[1], pointBb[0], pointBb[1]);
             pointCenter = pointCenterOld;
             setSize(window.innerWidth + Math.random());
@@ -331,7 +335,9 @@ const MainMap = (props: { Y: number; X: number }) => {
     const [openSetAdress, setOpenSetAdress] = React.useState(false);
 
     const InputAdress = () => {
-      const [valuen, setValuen] = React.useState(dateCoordinates[indexPoint].nameCoordinates);
+      const [valuen, setValuen] = React.useState(
+        dateCoordinates[indexPoint].nameCoordinates
+      );
 
       const handleKey = (event: any) => {
         if (event.key === "Enter") event.preventDefault();
@@ -407,7 +413,10 @@ const MainMap = (props: { Y: number; X: number }) => {
               <Button sx={styleModalEnd} onClick={handleCloseSetEndErBall}>
                 <b>&#10006;</b>
               </Button>
-              <Typography variant="h6" sx={{ textAlign: "center", color: "red" }}>
+              <Typography
+                variant="h6"
+                sx={{ textAlign: "center", color: "red" }}
+              >
                 {soobError}
               </Typography>
             </Box>
@@ -424,8 +433,8 @@ const MainMap = (props: { Y: number; X: number }) => {
             } else {
               pointAaIndex = indexPoint;
               pointAa = [
-                coordinates[indexPoint][0],
-                coordinates[indexPoint][1],
+                dateCoordinates[indexPoint].coordinates[0],
+                dateCoordinates[indexPoint].coordinates[1],
               ];
               pointCenter = pointCenterOld;
               setOpenSet(false);
@@ -438,8 +447,8 @@ const MainMap = (props: { Y: number; X: number }) => {
             } else {
               pointBbIndex = indexPoint;
               pointBb = [
-                coordinates[indexPoint][0],
-                coordinates[indexPoint][1],
+                dateCoordinates[indexPoint].coordinates[0],
+                dateCoordinates[indexPoint].coordinates[1],
               ];
               pointCenter = pointCenterOld;
               setOpenSet(false);
@@ -448,10 +457,9 @@ const MainMap = (props: { Y: number; X: number }) => {
           case 3: // Удаление точки
             dateCoordinates.splice(indexPoint, 1);
             coordinates.splice(indexPoint, 1);
-            //nameCoordinates.splice(indexPoint, 1);
             setOpenSet(false);
         }
-        //setOpenSet(false);
+
       };
 
       return (
@@ -508,25 +516,25 @@ const MainMap = (props: { Y: number; X: number }) => {
 
     const NewPoint = (coords: any) => {
       let nomer = chNewCoord;
-      let masskPoint = {
+      let masskPoint: Pointer = {
         ID: 0,
+        coordinates: [],
         nameCoordinates: "",
         region: "",
         area: "",
         subarea: 0,
         newCoordinates: 0,
       };
-      //nameCoordinates.push("Новая точка " + String(nomer));
-      coordinates.push(coords);
-      //newCoordinates.push(1);
-      //pointCenter = coords;
+
       masskPoint.ID = 0;
+      masskPoint.coordinates = coords;
       masskPoint.nameCoordinates = "Новая точка " + String(nomer);
       masskPoint.region = "";
       masskPoint.area = "";
       masskPoint.subarea = 0;
       masskPoint.newCoordinates = 1;
       dateCoordinates.push(masskPoint);
+      coordinates.push(coords);
       chNewCoord++;
       setSize(window.innerWidth + Math.random());
     };
@@ -546,9 +554,9 @@ const MainMap = (props: { Y: number; X: number }) => {
               mapp.current = ref;
               // нажата правая кнопка мыши
               mapp.current.events.add("contextmenu", function (e: any) {
-                //console.log("mapp.current.hint", mapp.current.hint);
-                let coords = e.get("coords");
-                NewPoint(coords);
+                if (mapp.current.hint) {
+                  NewPoint(e.get("coords"));
+                }
               });
               // нажата левая/правая кнопка мыши
               mapp.current.events.add("mousedown", function (e: any) {
