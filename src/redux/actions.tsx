@@ -1,5 +1,5 @@
 //import { INCREMENT, DECREMENT, INPUT_TEXT, COMM_CREATE, MASSFAZ_CREATE } from './types';
-import { MAP_CREATE, COMM_CREATE, MASSFAZ_CREATE } from './types';
+import { MAP_CREATE, COMM_CREATE, MASSDK_CREATE } from './types';
 
 import { DateRPU } from './../interfaceRPU.d';
 import { Tflight } from './../interfaceMAP.d';
@@ -24,10 +24,10 @@ export function commCreate(dateRpu: DateRPU) {
   };
 }
 
-export function massfazCreate(massFaza: Pointer[] = []) {
+export function massdkCreate(massDka: Pointer[] = []) {
   return {
-    type: MASSFAZ_CREATE,
-    data: massFaza,
+    type: MASSDK_CREATE,
+    data: massDka,
   };
 }
 

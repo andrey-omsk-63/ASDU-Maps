@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { massfazCreate } from './../redux/actions';
+import { massdkCreate } from './../redux/actions';
 
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -62,11 +62,11 @@ let pointBbIndex: number = -1;
 let soobError = '';
 
 const MainMap = (props: { Y: number; X: number }) => {
-  let massfaz = useSelector((state: any) => {
-    const { massfazReducer } = state;
-    return massfazReducer.massfaz;
+  let massdk = useSelector((state: any) => {
+    const { massdkReducer } = state;
+    return massdkReducer.massdk;
   });
-  console.log('massfaz:', massfaz);
+  console.log('massdk:', massdk);
 
   const map = useSelector((state: any) => {
     const { mapReducer } = state;
@@ -106,9 +106,9 @@ const MainMap = (props: { Y: number; X: number }) => {
     pointCenter = [props.Y, props.X];
     pointCenterOld = pointCenter;
     flagOpen = true;
-    massfaz = dateCoordinates;
-    dispatch(massfazCreate(massfaz));
-    console.log('!!!massfaz:', massfaz);
+    massdk = dateCoordinates;
+    dispatch(massdkCreate(massdk));
+    console.log('!!!massdk:', massdk);
   }
   //========================================================
   const CenterCoord = (aY: number, aX: number, bY: number, bX: number) => {
@@ -281,7 +281,7 @@ const MainMap = (props: { Y: number; X: number }) => {
       let textBalloon = '';
       if (index === pointAaIndex) textBalloon = 'НАЧАЛО';
       if (index === pointBbIndex) textBalloon = 'КОНЕЦ';
-      let textID = massfaz[index].ID;
+      let textID = massdk[index].ID;
       return {
         hintContent: dateCoordinates[index].nameCoordinates,
         //balloonContent: PressBalloon(index),
@@ -449,7 +449,7 @@ const MainMap = (props: { Y: number; X: number }) => {
             } else {
               dateCoordinates.splice(indexPoint, 1);
               coordinates.splice(indexPoint, 1);
-              console.log('Massfaz_del:', massfaz);
+              console.log('Massdk_del:', massdk);
               setOpenSet(false);
             }
         }
@@ -513,7 +513,7 @@ const MainMap = (props: { Y: number; X: number }) => {
       dateCoordinates.push(masskPoint);
       coordinates.push(coords);
       chNewCoord++;
-      console.log('Massfaz_new:', massfaz);
+      console.log('Massdk_new:', massdk);
       setSize(window.innerWidth + Math.random());
     };
 

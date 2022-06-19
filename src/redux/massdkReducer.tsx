@@ -5,13 +5,13 @@ const intialState = {
   massdk: massDk,
 };
 
-export const massfazReducer = (state = intialState, action: any) => {
+export const massdkReducer = (state = intialState, action: any) => {
   //console.log('massfazReducer:', action);
   switch (action.type) {
     case MASSDK_CREATE:
       return {
         ...state,
-        massdk: action.data,
+        massfaz: action.data,
       };
 
     default:

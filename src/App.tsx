@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { mapCreate, commCreate, massfazCreate } from './redux/actions';
+import { mapCreate, commCreate, massdkCreate } from './redux/actions';
 
 import Grid from '@mui/material/Grid';
 
@@ -26,7 +26,7 @@ export interface Pointer {
   subarea: number;
   newCoordinates: number;
 }
-export let massFaz: Pointer[] = [];
+export let massDk: Pointer[] = [];
 
 let flagOpenRpu = true;
 let flagKostil = true;
@@ -52,9 +52,9 @@ const App = () => {
   });
   console.log('map_App:', map);
 
-  const massfaz = useSelector((state: any) => {
-    const { massfazReducer } = state;
-    return massfazReducer.massfaz;
+  const massdk = useSelector((state: any) => {
+    const { massdkReducer } = state;
+    return massdkReducer.massdk;
   });
   const dispatch = useDispatch();
   //========================================================
@@ -140,7 +140,7 @@ const App = () => {
     }
     dispatch(commCreate(dateRpuGl));
 
-    // инициализация massFaza
+    // инициализация massDk
     let masskPoint: Pointer = {
       ID: 0,
       coordinates: [],
@@ -150,22 +150,9 @@ const App = () => {
       subarea: 0,
       newCoordinates: 0,
     };
-    //massFaz.push(masskPoint);
-    massFaz[0] = masskPoint;
-    // let kolFaz = dateRpuGl.timetophases.length;
-    // massFaz = Array.from({ length: kolFaz }, () =>
-    //   Array.from({ length: dateRpuGl.tirtonap.length }, () => 0),
-    // );
-    // for (let i = 0; i < kolFaz; i++) {
-    //   // i - столбец
-    //   for (let j = 0; j < dateRpuGl.tirtonap.length; j++) {
-    //     // j - строка
-    //     if (dateRpuGl.naptoph[i].naps.includes(j + 1)) {
-    //       massFaz[i][j] = j + 1;
-    //     }
-    //   }
-    // }
-    dispatch(massfazCreate(massFaz));
+
+    massDk[0] = masskPoint;
+    dispatch(massdkCreate(massDk));
     flagOpenRpu = false;
   }
 
