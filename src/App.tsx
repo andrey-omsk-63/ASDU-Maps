@@ -1,23 +1,23 @@
-import React from "react";
+import React from 'react';
 import {
   useDispatch,
   //useSelector
-} from "react-redux";
+} from 'react-redux';
 import {
   mapCreate,
   commCreate,
   // massdkCreate
-} from "./redux/actions";
+} from './redux/actions';
 
-import Grid from "@mui/material/Grid";
+import Grid from '@mui/material/Grid';
 
-import MainMap from "./components/MainMapGl";
+import MainMap from './components/MainMapGl';
 
-import { DateRPU } from "./interfaceRPU.d";
-import { dataRpu } from "./otladkaRpuData";
+import { DateRPU } from './interfaceRPU.d';
+import { dataRpu } from './otladkaRpuData';
 
-import { dataMap } from "./otladkaMaps";
-import { Tflight, DateMAP } from "./interfaceMAP.d";
+import { dataMap } from './otladkaMaps';
+import { Tflight, DateMAP } from './interfaceMAP.d';
 //import { dataMap } from './otladkaMaps';
 
 export let dateRpuGl: DateRPU = {} as DateRPU;
@@ -73,7 +73,7 @@ const App = () => {
   //   return massdkReducer.massdk;
   // });
   //console.log("massdk_App:", massdk);
-  
+
   const dispatch = useDispatch();
   //========================================================
   const CenterCoord = (aY: number, aX: number, bY: number, bX: number) => {
@@ -87,34 +87,34 @@ const App = () => {
   const [pointsRpu, setPointsRpu] = React.useState<DateRPU>({} as DateRPU);
   const [isOpenRpu, setIsOpenRpu] = React.useState(false);
 
-  const host = "wss://192.168.115.25/mapW";
+  const host = 'wss://192.168.115.25/mapW';
   // const host =
   // 'wss://' + window.location.host + window.location.pathname + 'W' + window.location.search;
 
   if (flagOpenWS) {
     WS = new WebSocket(host);
     flagOpenWS = false;
-    console.log("WS:", WS);
+    console.log('WS:', WS);
   }
 
   React.useEffect(() => {
     WS.onopen = function (event: any) {
-      console.log("WS.current.onopen:", event);
+      console.log('WS.current.onopen:', event);
     };
 
     WS.onclose = function (event: any) {
-      console.log("WS.current.onclose:", event);
+      console.log('WS.current.onclose:', event);
     };
 
     WS.onerror = function (event: any) {
-      console.log("WS.current.onerror:", event);
+      console.log('WS.current.onerror:', event);
     };
 
     WS.onmessage = function (event: any) {
       // if (flagWS) {
       let allData = JSON.parse(event.data);
       let data: DateMAP = allData.data;
-      console.log("data_onmessage:", data);
+      console.log('data_onmessage:', data);
       // dateMapGl = data.tflight;
       // dispatch(mapCreate(dateMapGl));
       //   flagWS = false;
@@ -128,20 +128,28 @@ const App = () => {
     setIsOpenRpu(true);
   }
 
-  if (flagKostil) {
-    // костыль для отладки дома
-    //console.log('dataMap_kostil:', dataMap.tflight, dataMap);
-    //вычисление координат середины связи
-    // coord0 = CenterCoord(
-    //   dataMap.boxPoint.point0.Y,
-    //   dataMap.boxPoint.point0.X,
-    //   dataMap.boxPoint.point1.Y,
-    //   dataMap.boxPoint.point1.X,
-    // );
-    // dateMapGl = dataMap.tflight;
-    // dispatch(mapCreate(dateMapGl));
-    // flagKostil = false;
-  }
+  //if (flagKostil) {
+  // костыль для отладки дома
+  //console.log('dataMap_kostil:', dataMap.tflight, dataMap);
+  //вычисление координат середины связи
+  // coord0 = CenterCoord(
+  //   dataMap.boxPoint.point0.Y,
+  //   dataMap.boxPoint.point0.X,
+  //   dataMap.boxPoint.point1.Y,
+  //   dataMap.boxPoint.point1.X,
+  // );
+  // dateMapGl = dataMap.tflight;
+  // dispatch(mapCreate(dateMapGl));
+  // flagKostil = false;
+  //}
+
+  const DecodingCoord = (coord2: string) => {
+    return coord2.split(',').map(Number);
+  };
+
+  const CodingCoord = (coord0: Array<number>) => {
+    return String(coord0[0]) + ',' + String(coord0[1]);
+  };
 
   if (isOpenRpu && flagOpenRpu) {
     dateRpuGl = pointsRpu;
@@ -158,10 +166,6 @@ const App = () => {
 
     dateMapGl = dataMap.tflight;
     dispatch(mapCreate(dateMapGl));
-
-    // console.log('map.dateMapGl:',map.dateMap)
-    // console.log('dateMapGl:',dateMapGl)
-    // console.log('map:',map)
 
     // инициализация massDk
     // let dateMap = map.dateMap;
@@ -200,15 +204,17 @@ const App = () => {
       dataMap.boxPoint.point0.Y,
       dataMap.boxPoint.point0.X,
       dataMap.boxPoint.point1.Y,
-      dataMap.boxPoint.point1.X
+      dataMap.boxPoint.point1.X,
     );
+    console.log('coord0:', coord0);
+    let coord2 = String(coord0[0]) + ',' + String(coord0[1]);
+    console.log('coord2:', CodingCoord(coord0));
+    let coord3 = coord2.split(',').map(Number);
+    console.log('coord3:', DecodingCoord(coord2));
   }
 
   return (
-    <Grid
-      container
-      sx={{ height: "100vh", width: "100%", backgroundColor: "#F1F5FB" }}
-    >
+    <Grid container sx={{ height: '100vh', width: '100%', backgroundColor: '#F1F5FB' }}>
       <Grid item xs>
         <MainMap Y={coord0[0]} X={coord0[1]} />
       </Grid>
