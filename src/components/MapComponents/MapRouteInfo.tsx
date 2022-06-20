@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 
-import { styleModalEnd, styleSetInf } from "./MainMapStyle";
+import { styleModalEnd, styleSetInf } from "./../MainMapStyle";
 
 const MapRouteInfo = (props: {
   activeRoute: any;

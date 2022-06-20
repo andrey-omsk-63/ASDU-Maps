@@ -4,3 +4,4 @@
 export const COMM_CREATE = 'COMM_CREATE';
 export const MASSDK_CREATE = 'MASSDK_CREATE';
 export const MAP_CREATE = 'MAP_CREATE';
+export const MASSROUTE_CREATE = 'MASSROUTE_CREATE';

@@ -11,7 +11,7 @@ export const massdkReducer = (state = intialState, action: any) => {
     case MASSDK_CREATE:
       return {
         ...state,
-        massfaz: action.data,
+        massdk: action.data,
       };
 
     default:

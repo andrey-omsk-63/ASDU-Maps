@@ -31,3 +31,13 @@ type WayToWeb struct {
     Lenght     int    `json:"lenght"`
     Time       int    `json:"time"`
 }
+
+
+{
+  "time": 0,
+  "stops": "55.62968055298542,37.021400723452174",
+  "lenght": 853,
+  "region": 1,
+  "source": 4295098432,
+  "starts": "55.915574740390284,37.86770506862059",
+  "target": 4295032865
