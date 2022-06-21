@@ -460,8 +460,6 @@ const MainMap = (props: { Y: number; X: number }) => {
               mapp.current.events.add("contextmenu", function (e: any) {
                 if (mapp.current.hint) {
                   pointCenter = pointCenterOld
-                  // pointCenterOld = pointCenter;
-                  // pointCenter = e.get("coords");
                   NewPoint(e.get("coords"));
                 }
               });
