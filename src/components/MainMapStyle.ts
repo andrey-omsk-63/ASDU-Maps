@@ -4,10 +4,17 @@ export const styleApp01 = {
   width: '19%',
   maxHeight: '21px',
   minHeight: '21px',
-  backgroundColor: '#F1F3F4',
+  //backgroundColor: '#F1F3F4',
+  backgroundColor: '#E6F5D6',
   color: 'black',
   textTransform: 'unset !important',
 };
+
+export const styleTypography = {
+  textAlign: "center", 
+  color: "#5B1080"
+};
+
 
 export const styleModalEnd = {
   position: 'absolute',
