@@ -1,6 +1,6 @@
 //import * as React from "react";
 
-import { Pointer } from "./../App";
+import { Pointer, Router } from "./../App";
 
 export const MapNewPoint = (coords: any, chNewCoord: number) => {
   let masskPoint: Pointer = {
@@ -22,6 +22,27 @@ export const MapNewPoint = (coords: any, chNewCoord: number) => {
   masskPoint.newCoordinates = 1;
   return masskPoint;
 };
+
+export const RecordMassRoute = (pointAcod: string, pointBcod: string, activeRoute: any) => {
+  let masskRoute: Router = {
+    region: 0,
+    start: "",
+    stop: "",
+    length: 0,
+    time: 0,
+  };
+  masskRoute.start = pointAcod;
+  masskRoute.stop = pointBcod;
+  if (activeRoute) {
+    masskRoute.time = Math.round(
+      activeRoute.properties.get("duration").value
+    );
+    masskRoute.length = Math.round(
+      activeRoute.properties.get("distance").value
+    );
+  }
+  return masskRoute;
+}
 
 export const DecodingCoord = (coord: string) => {
   return coord.split(",").map(Number);

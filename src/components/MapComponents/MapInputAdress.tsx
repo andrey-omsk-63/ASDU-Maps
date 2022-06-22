@@ -10,30 +10,15 @@ import TextField from "@mui/material/TextField";
 import { styleSet, styleInpKnop, styleSetAdress } from "./../MainMapStyle";
 import { styleBoxForm } from "./../MainMapStyle";
 
-//import { Tflight } from "./../../interfaceMAP.d";
-//import { Pointer } from './../App';
-//let dateMap: Tflight[] = [{} as Tflight];
-
-const MapInputAdress = (props: {
-  indexPoint: number;
-  setOpen: any;
-}) => {
+const MapInputAdress = (props: { indexPoint: number; setOpen: any }) => {
   //== Piece of Redux ======================================
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;
     return massdkReducer.massdk;
   });
-  console.log("Inp_massdk:", massdk);
-
-  // const map = useSelector((state: any) => {
-  //   const { mapReducer } = state;
-  //   return mapReducer.map;
-  // });
-  // dateMap = map.dateMap;
   //========================================================
-
   const [openSetAdress, setOpenSetAdress] = React.useState(true);
-
+ 
   const [valuen, setValuen] = React.useState(
     massdk[props.indexPoint].nameCoordinates
   );
