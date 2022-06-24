@@ -132,4 +132,4 @@ let a9 = {
   length: 32653,
   time: 1924,
 };
-export let MassOtladka = [a0, a1, a2, a3, a4, a5, a6, a7, a8, a9];
+export let massOtladka = [a0, a1, a2, a3, a4, a5, a6, a7, a8, a9];
