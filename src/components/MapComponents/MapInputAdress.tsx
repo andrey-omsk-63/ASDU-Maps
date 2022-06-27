@@ -10,7 +10,7 @@ import TextField from "@mui/material/TextField";
 import { styleSet, styleInpKnop, styleSetAdress } from "./../MainMapStyle";
 import { styleBoxForm } from "./../MainMapStyle";
 
-const MapInputAdress = (props: { indexPoint: number; setOpen: any }) => {
+const MapInputAdress = (props: { iPoint: number; setOpen: any }) => {
   //== Piece of Redux ======================================
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;
@@ -20,7 +20,7 @@ const MapInputAdress = (props: { indexPoint: number; setOpen: any }) => {
   const [openSetAdress, setOpenSetAdress] = React.useState(true);
  
   const [valuen, setValuen] = React.useState(
-    massdk[props.indexPoint].nameCoordinates
+    massdk[props.iPoint].nameCoordinates
   );
 
   const handleKey = (event: any) => {
@@ -32,7 +32,7 @@ const MapInputAdress = (props: { indexPoint: number; setOpen: any }) => {
   };
 
   const handleCloseSetAdr = () => {
-    massdk[props.indexPoint].nameCoordinates = valuen;
+    massdk[props.iPoint].nameCoordinates = valuen;
     setOpenSetAdress(false);
     props.setOpen(false);
   };

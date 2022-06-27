@@ -69,14 +69,14 @@ export const styleModalMenu = {
   fontSize: 17,
   maxHeight: '21px',
   minHeight: '21px',
-  backgroundColor: '#F1F3F4',
+  //backgroundColor: '#F1F3F4',
+  backgroundColor: '#E6F5D6',
   color: 'black',
   marginRight: 1,
   marginBottom: 2,
   textTransform: 'unset !important',
   textAlign: 'center',
 };
-
 //=== InputAdress =====================================================
 export const styleSet = {
   width: '230px',

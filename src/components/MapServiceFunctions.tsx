@@ -62,6 +62,43 @@ export const CenterCoord = (aY: number, aX: number, bY: number, bX: number) => {
   return [coord0, coord1];
 };
 
+//=== addRoute =====================================
+export const getMultiRouteOptions = () => {
+  return {
+    routeActiveStrokeWidth: 5,
+    //routeActiveStrokeColor: "#224E1F",
+    routeStrokeWidth: 1.5,
+  };
+};
+
+export const getMassPolyRouteOptions = () => {
+  return {
+    balloonCloseButton: false,
+    strokeColor: "#1A9165",
+    strokeWidth: 3,
+  };
+};
+
+export const getMassMultiRouteOptions = () => {
+  return {
+    balloonCloseButton: false,
+    routeStrokeStyle: "dot",
+    strokeColor: "#1A9165",
+    routeActiveStrokeWidth: 3,
+    routeStrokeWidth: 0,
+  };
+};
+
+export const getMassMultiRouteInOptions = () => {
+  return {
+    routeActiveStrokeWidth: 3,
+    routeStrokeStyle: "dot",
+    routeActiveStrokeColor: "#E91427",
+    routeStrokeWidth: 0,
+  };
+};
+
+//=== костыль ======================================
 let a0 = {
   region: 0,
   start: "55.7276995,36.8193915",

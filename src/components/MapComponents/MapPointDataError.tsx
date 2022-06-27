@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 
 import { styleModalEnd, styleSetInf } from "./../MainMapStyle";
 
-const MapPointDataError = (props: { soobError: string; setOpen: any }) => {
+const MapPointDataError = (props: { sErr: string; setOpen: any }) => {
   const [openSetEr, setOpenSetEr] = React.useState(true);
   const handleCloseSetEr = (event: any, reason: string) => {
     if (reason !== "backdropClick") setOpenSetEr(false);
@@ -25,7 +25,7 @@ const MapPointDataError = (props: { soobError: string; setOpen: any }) => {
           <b>&#10006;</b>
         </Button>
         <Typography variant="h6" sx={{ textAlign: "center", color: "red" }}>
-          {props.soobError}
+          {props.sErr}
         </Typography>
       </Box>
     </Modal>
