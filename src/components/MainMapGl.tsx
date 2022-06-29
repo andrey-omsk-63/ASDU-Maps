@@ -290,8 +290,7 @@ const MainMap = (props: { Y: number; X: number }) => {
     const OnPlacemarkClickPoint = (index: number) => {
       pointCenter = pointCenterOld;
       if (pointAa === 0) {
-        // начальная точка
-        pointAaIndex = index;
+        pointAaIndex = index; // начальная точка
         pointAa = [massdk[index].coordinates[0], massdk[index].coordinates[1]];
         MakeСollectionRoute();
         flagPusk = true;
@@ -299,10 +298,9 @@ const MainMap = (props: { Y: number; X: number }) => {
         setSize(window.innerWidth + Math.random());
       } else {
         if (pointBb === 0) {
-          // конечная точка
           if (pointAaIndex === index) {
-            indexPoint = index;
-            //setOpenSet(true); // в меню работы с точками
+            indexPoint = index; // конечная точка
+            //setOpenSet(true);   // в меню работы с точками
             soobError = "Начальная и конечная точки совпадают";
             setOpenSetEr(true);
           } else {
@@ -439,7 +437,7 @@ const MainMap = (props: { Y: number; X: number }) => {
             if (ref) {
               mapp.current = ref;
               mapp.current.events.add("contextmenu", function (e: any) {
-                // нажата правая кнопка мыши (новая точка)
+                // нажата правая кнопка мыши (создание новой точки)
                 if (mapp.current.hint) {
                   massdk.push(MapNewPoint(e.get("coords"), chNewCoord++));
                   coordinates.push(e.get("coords"));
