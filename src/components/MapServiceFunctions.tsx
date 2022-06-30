@@ -62,7 +62,41 @@ export const CenterCoord = (aY: number, aX: number, bY: number, bX: number) => {
   return [coord0, coord1];
 };
 
+//=== Placemark =====================================
+
+export const getPointData = (
+  index: number,
+  pointAaIndex: number,
+  pointBbIndex: number,
+  massdk: any
+) => {
+  let textBalloon = "";
+  if (index === pointAaIndex) textBalloon = "Начало";
+  if (index === pointBbIndex) textBalloon = "Конец";
+  return {
+    hintContent: massdk[index].nameCoordinates, //balloonContent: PressBalloon(index), iconCaption: textBalloon,
+    iconContent: textBalloon,
+  };
+};
+
+export const getPointOptions = (
+  index: number,
+  pointAaIndex: number,
+  pointBbIndex: number,
+  massdk: any
+) => {
+  let colorBalloon = "islands#violetStretchyIcon";
+  if (massdk[index].newCoordinates > 0)
+    colorBalloon = "islands#darkOrangeStretchyIcon";
+  if (index === pointAaIndex) colorBalloon = "islands#redStretchyIcon";
+  if (index === pointBbIndex) colorBalloon = "islands#darkBlueStretchyIcon";
+  return {
+    preset: colorBalloon,
+  };
+};
+
 //=== addRoute =====================================
+
 export const getMultiRouteOptions = () => {
   return {
     routeActiveStrokeWidth: 5,

@@ -75,9 +75,10 @@ const App = () => {
   const dispatch = useDispatch();
   //========================================================
   
-  const host = "wss://192.168.115.25/mapW";
-  // const host =
-  // 'wss://' + window.location.host + window.location.pathname + 'W' + window.location.search;
+  //const host = "wss://192.168.115.25/mapW";
+  //const host = "wss://192.168.115.25/user/andrey_omsk/graphManageW";
+  const host =
+  'wss://' + window.location.host + window.location.pathname + 'W' + window.location.search;
 
   if (flagOpenWS) {
     WS = new WebSocket(host);

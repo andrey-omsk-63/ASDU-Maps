@@ -24,6 +24,7 @@ import { getMultiRouteOptions } from "./MapServiceFunctions";
 import { getMassPolyRouteOptions } from "./MapServiceFunctions";
 import { getMassMultiRouteOptions } from "./MapServiceFunctions";
 import { getMassMultiRouteInOptions } from "./MapServiceFunctions";
+import { getPointData, getPointOptions } from "./MapServiceFunctions";
 import { massOtladka } from "./MapServiceFunctions";
 
 import { styleSetPoint, styleTypography } from "./MainMapStyle";
@@ -147,6 +148,9 @@ const MainMap = (props: { Y: number; X: number }) => {
       setOpenSetEr(true);
     } else {
       massroute.push(RecordMassRoute(pointAcod, pointBcod, activeRoute));
+
+      console.log('massroute:',massroute)
+      
       ZeroRoute();
     }
   };
@@ -187,7 +191,6 @@ const MainMap = (props: { Y: number; X: number }) => {
         if (activeRoute) setOpenSetInf(true);
         break;
       case 77: // удаление маршрута
-        pointCenter = pointCenterOld;
         ZeroRoute();
     }
   };
@@ -251,27 +254,6 @@ const MainMap = (props: { Y: number; X: number }) => {
       multiRoute.model.events.add("requestsuccess", function () {
         activeRoute = multiRoute.getActiveRoute();
       });
-    };
-
-    const getPointData = (index: number) => {
-      let textBalloon = "";
-      if (index === pointAaIndex) textBalloon = "Начало";
-      if (index === pointBbIndex) textBalloon = "Конец";
-      return {
-        hintContent: massdk[index].nameCoordinates, //balloonContent: PressBalloon(index), iconCaption: textBalloon,
-        iconContent: textBalloon,
-      };
-    };
-
-    const getPointOptions = (index: number) => {
-      let colorBalloon = "islands#violetStretchyIcon";
-      if (massdk[index].newCoordinates > 0)
-        colorBalloon = "islands#darkOrangeStretchyIcon";
-      if (index === pointAaIndex) colorBalloon = "islands#redStretchyIcon";
-      if (index === pointBbIndex) colorBalloon = "islands#darkBlueStretchyIcon";
-      return {
-        preset: colorBalloon,
-      };
     };
 
     const MakeСollectionRoute = () => {
@@ -359,6 +341,7 @@ const MainMap = (props: { Y: number; X: number }) => {
               soobError = "Начальную и конечную точки удалять нельзя";
               setOpenSetErBall(true);
             } else {
+              console.log("indexPoint:", indexPoint, massroute);
               let massRouteRab: any = []; // удаление из массива сети связей
               let coordPoint: any = CodingCoord(coordinates[indexPoint]);
               for (let i = 0; i < massroute.length; i++) {
@@ -369,8 +352,13 @@ const MainMap = (props: { Y: number; X: number }) => {
                   massRouteRab.push(massroute[i]);
               }
               massroute.splice(0, massroute.length); // massroute = [];
+              // for (let i = 0; i < massroute.length; i++) {
+              //   massroute.push(massRouteRab[i]);
+              // }
               massroute = massRouteRab;
               massRoute = massroute;
+              console.log("massroute:", massroute);
+              dispatch(massrouteCreate(massroute));
               coordStart = []; // удаление колекции связей
               coordStop = [];
               coordStartIn = [];
@@ -378,7 +366,7 @@ const MainMap = (props: { Y: number; X: number }) => {
               massdk.splice(indexPoint, 1); // удаление самой точки
               coordinates.splice(indexPoint, 1);
               setOpenSet(false);
-              //pointCenter = pointCenterOld;
+              pointCenter = pointCenterOld;
               setSize(window.innerWidth + Math.random());
             }
             break;
@@ -464,8 +452,8 @@ const MainMap = (props: { Y: number; X: number }) => {
             <Placemark
               key={idx}
               geometry={coordinate}
-              properties={getPointData(idx)}
-              options={getPointOptions(idx)}
+              properties={getPointData(idx, pointAaIndex, pointBbIndex, massdk)}
+              options={getPointOptions(idx, pointAaIndex, pointBbIndex, massdk)}
               modules={["geoObject.addon.balloon", "geoObject.addon.hint"]}
               onClick={() => OnPlacemarkClickPoint(idx)}
             />
