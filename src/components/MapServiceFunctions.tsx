@@ -97,6 +97,12 @@ export const getPointOptions = (
 
 //=== addRoute =====================================
 
+export const getReferencePoints = (pointA: any, pointB: any) => {
+  return {
+    referencePoints: [pointA, pointB],
+  };
+};
+
 export const getMultiRouteOptions = () => {
   return {
     routeActiveStrokeWidth: 5,

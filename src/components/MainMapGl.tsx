@@ -21,6 +21,7 @@ import MapRouteBind from "./MapComponents/MapRouteBind";
 import { MapNewPoint, RecordMassRoute } from "./MapServiceFunctions";
 import { DecodingCoord, CodingCoord } from "./MapServiceFunctions";
 import { getMultiRouteOptions } from "./MapServiceFunctions";
+import { getReferencePoints } from "./MapServiceFunctions";
 import { getMassPolyRouteOptions } from "./MapServiceFunctions";
 import { getMassMultiRouteOptions } from "./MapServiceFunctions";
 import { getMassMultiRouteInOptions } from "./MapServiceFunctions";
@@ -148,9 +149,6 @@ const MainMap = (props: { Y: number; X: number }) => {
       setOpenSetEr(true);
     } else {
       massroute.push(RecordMassRoute(pointAcod, pointBcod, activeRoute));
-
-      console.log('massroute:',massroute)
-      
       ZeroRoute();
     }
   };
@@ -207,8 +205,7 @@ const MainMap = (props: { Y: number; X: number }) => {
     let pointBB = props.pointb;
 
     const MakeRoute = () => {
-      pointCenter = pointCenterOld; // === Запуск создания связи ===
-      pointA = pointAa;
+      pointA = pointAa; // === Запуск создания связи ===
       pointB = pointBb;
       flagRoute = true;
       setSize(window.innerWidth + Math.random());
@@ -216,9 +213,7 @@ const MainMap = (props: { Y: number; X: number }) => {
 
     const addRoute = (ymaps: any) => {
       const multiRoute = new ymaps.multiRouter.MultiRoute(
-        {
-          referencePoints: [pointAA, pointBB],
-        },
+        getReferencePoints(pointAA, pointBB),
         getMultiRouteOptions()
       );
       let massPolyRoute: any = []; // cеть связей
@@ -233,9 +228,7 @@ const MainMap = (props: { Y: number; X: number }) => {
       let massMultiRoute: any = []; // исходящие связи
       for (let i = 0; i < coordStart.length; i++) {
         massMultiRoute[i] = new ymaps.multiRouter.MultiRoute(
-          {
-            referencePoints: [coordStart[i], coordStop[i]],
-          },
+          getReferencePoints(coordStart[i], coordStop[i]),
           getMassMultiRouteOptions()
         );
         mapp.current.geoObjects.add(massMultiRoute[i]);
@@ -243,9 +236,7 @@ const MainMap = (props: { Y: number; X: number }) => {
       let massMultiRouteIn: any = []; // входящие связи
       for (let i = 0; i < coordStartIn.length; i++) {
         massMultiRouteIn[i] = new ymaps.multiRouter.MultiRoute(
-          {
-            referencePoints: [coordStartIn[i], coordStopIn[i]],
-          },
+          getReferencePoints(coordStartIn[i], coordStopIn[i]),
           getMassMultiRouteInOptions()
         );
         mapp.current.geoObjects.add(massMultiRouteIn[i]);
@@ -276,22 +267,20 @@ const MainMap = (props: { Y: number; X: number }) => {
         pointAa = [massdk[index].coordinates[0], massdk[index].coordinates[1]];
         MakeСollectionRoute();
         flagPusk = true;
-        //pointCenter = pointCenterOld;
         setSize(window.innerWidth + Math.random());
       } else {
         if (pointBb === 0) {
           if (pointAaIndex === index) {
-            indexPoint = index; // конечная точка
+            //indexPoint = index;
             //setOpenSet(true);   // в меню работы с точками
             soobError = "Начальная и конечная точки совпадают";
             setOpenSetEr(true);
           } else {
-            pointBbIndex = index;
+            pointBbIndex = index;   // конечная точка
             pointBb = [
               massdk[index].coordinates[0],
               massdk[index].coordinates[1],
             ];
-            pointCenter = pointCenterOld;
             MakeRoute();
           }
         } else {
@@ -321,7 +310,6 @@ const MainMap = (props: { Y: number; X: number }) => {
             } else {
               pointAaIndex = indexPoint;
               pointAa = pointRoute;
-              pointCenter = pointCenterOld;
               MakeRoute();
             }
             break;
@@ -332,7 +320,6 @@ const MainMap = (props: { Y: number; X: number }) => {
             } else {
               pointBbIndex = indexPoint;
               pointBb = pointRoute;
-              pointCenter = pointCenterOld;
               MakeRoute();
             }
             break;
@@ -341,7 +328,6 @@ const MainMap = (props: { Y: number; X: number }) => {
               soobError = "Начальную и конечную точки удалять нельзя";
               setOpenSetErBall(true);
             } else {
-              console.log("indexPoint:", indexPoint, massroute);
               let massRouteRab: any = []; // удаление из массива сети связей
               let coordPoint: any = CodingCoord(coordinates[indexPoint]);
               for (let i = 0; i < massroute.length; i++) {
@@ -352,12 +338,8 @@ const MainMap = (props: { Y: number; X: number }) => {
                   massRouteRab.push(massroute[i]);
               }
               massroute.splice(0, massroute.length); // massroute = [];
-              // for (let i = 0; i < massroute.length; i++) {
-              //   massroute.push(massRouteRab[i]);
-              // }
               massroute = massRouteRab;
               massRoute = massroute;
-              console.log("massroute:", massroute);
               dispatch(massrouteCreate(massroute));
               coordStart = []; // удаление колекции связей
               coordStop = [];
