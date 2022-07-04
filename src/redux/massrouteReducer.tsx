@@ -6,7 +6,6 @@ const intialState = {
 };
 
 export const massrouteReducer = (state = intialState, action: any) => {
-  //console.log('massfazReducer:', action);
   switch (action.type) {
     case MASSROUTE_CREATE:
       return {

@@ -21,7 +21,7 @@ import MapRouteBind from "./MapComponents/MapRouteBind";
 import { MapNewPoint, RecordMassRoute } from "./MapServiceFunctions";
 import { DecodingCoord, CodingCoord } from "./MapServiceFunctions";
 import { getMultiRouteOptions } from "./MapServiceFunctions";
-import { getReferencePoints } from "./MapServiceFunctions";
+import { getReferencePoints, CenterCoord } from "./MapServiceFunctions";
 import { getMassPolyRouteOptions } from "./MapServiceFunctions";
 import { getMassMultiRouteOptions } from "./MapServiceFunctions";
 import { getMassMultiRouteInOptions } from "./MapServiceFunctions";
@@ -35,14 +35,15 @@ import { Tflight } from "./../interfaceMAP.d";
 import { Pointer } from "./../App";
 
 let coordinates: Array<Array<number>> = [[]]; // массив координат
-let coordStart: any = []; // рабочий массив координат связей
-let coordStop: any = []; // рабочий массив координат связей
-let coordStartIn: any = []; // рабочий массив координат связей
-let coordStopIn: any = []; // рабочий массив координат связей
+let coordStart: any = []; // рабочий массив коллекции входящих связей
+let coordStop: any = []; // рабочий массив коллекции входящих связей
+let coordStartIn: any = []; // рабочий массив коллекции исходящих связей
+let coordStopIn: any = []; // рабочий массив коллекции исходящих связей
 let massRoute: any = []; // рабочий массив сети связей
 
 let dateMap: Tflight[] = [{} as Tflight];
 let flagOpen = false;
+let propsOpen = true;
 let flagPusk = false;
 let flagRoute = false;
 let flagBind = false;
@@ -61,7 +62,8 @@ let pointAaIndex: number = -1;
 let pointBbIndex: number = -1;
 let soobError = "";
 
-const MainMap = (props: { Y: number; X: number }) => {
+//const MainMap = (props: { open: boolean; Y: number; X: number }) => {
+const MainMap = () => {
   //== Piece of Redux =======================================
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;
@@ -75,10 +77,13 @@ const MainMap = (props: { Y: number; X: number }) => {
     const { mapReducer } = state;
     return mapReducer.map;
   });
-  dateMap = map.dateMap;
+  if (map) {
+    dateMap = map.dateMap.tflight;
+    propsOpen = false;
+  }
   const dispatch = useDispatch();
   //=== инициализация ======================================
-  if (!flagOpen) {
+  if (!flagOpen && !propsOpen) {
     for (let i = 0; i < dateMap.length; i++) {
       let masskPoint: Pointer = {
         ID: -1,
@@ -104,7 +109,12 @@ const MainMap = (props: { Y: number; X: number }) => {
       coordinates.push(mass);
     }
     coordinates.splice(0, 1);
-    pointCenter = [props.Y, props.X];
+    pointCenter = CenterCoord(
+      map.dateMap.boxPoint.point0.Y,
+      map.dateMap.boxPoint.point0.X,
+      map.dateMap.boxPoint.point1.Y,
+      map.dateMap.boxPoint.point1.X
+    );
     pointCenterOld = pointCenter;
     flagOpen = true;
     massroute = massOtladka; // костыль, потом убрать
@@ -271,12 +281,10 @@ const MainMap = (props: { Y: number; X: number }) => {
       } else {
         if (pointBb === 0) {
           if (pointAaIndex === index) {
-            //indexPoint = index;
-            //setOpenSet(true);   // в меню работы с точками
             soobError = "Начальная и конечная точки совпадают";
             setOpenSetEr(true);
           } else {
-            pointBbIndex = index;   // конечная точка
+            pointBbIndex = index; // конечная точка
             pointBb = [
               massdk[index].coordinates[0],
               massdk[index].coordinates[1],
@@ -510,7 +518,7 @@ const MainMap = (props: { Y: number; X: number }) => {
       )}
       {!flagDemo && <>{StrokaMenuGlob("Demo сети", 3)}</>}
       {flagDemo && <>{StrokaMenuGlob("Конец Demo", 6)}</>}
-      <MapGl pointa={pointA} pointb={pointB} />
+      {!propsOpen && <MapGl pointa={pointA} pointb={pointB} />}
     </Grid>
   );
 };

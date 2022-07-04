@@ -12,18 +12,21 @@ import {
 import Grid from "@mui/material/Grid";
 
 import MainMap from "./components/MainMapGl";
-import { CenterCoord } from "./components/MapServiceFunctions";
+//import { CenterCoord } from "./components/MapServiceFunctions";
 
-import { DateRPU } from "./interfaceRPU.d";
+//import { DateRPU } from "./interfaceRPU.d";
 //import { dataRpu } from "./otladkaRpuData";
 
+import { DateMAP } from "./interfaceMAP.d";
+//import { Tflight } from "./interfaceMAP.d";
 import { dataMap } from "./otladkaMaps";
-import { Tflight, DateMAP } from "./interfaceMAP.d";
-//import { dataMap } from './otladkaMaps';
+import { dataRoute } from "./otladkaRoutes";
 
-export let dateRpuGl: DateRPU = {} as DateRPU;
+//export let dateRpuGl: DateRPU = {} as DateRPU;
 //export let dateMapGl: Tflight[] = [];
-export let dateMapGl: Tflight[] = [{} as Tflight];
+//export let dateMapGl: Tflight[] = [{} as Tflight];
+//export let dateMapGl: DateMAP;
+export let dateMapGl: any;
 
 export interface Pointer {
   ID: number;
@@ -46,7 +49,6 @@ export interface Router {
 export let massRoute: Router[] = [];
 
 let flagOpen = true;
-let coord0: Array<number> = [];
 
 let flagOpenWS = true;
 //let flagWS = true;
@@ -74,11 +76,15 @@ const App = () => {
 
   const dispatch = useDispatch();
   //========================================================
-  
+
   //const host = "wss://192.168.115.25/mapW";
   //const host = "wss://192.168.115.25/user/andrey_omsk/graphManageW";
   const host =
-  'wss://' + window.location.host + window.location.pathname + 'W' + window.location.search;
+    "wss://" +
+    window.location.host +
+    window.location.pathname +
+    "W" +
+    window.location.search;
 
   if (flagOpenWS) {
     WS = new WebSocket(host);
@@ -100,37 +106,37 @@ const App = () => {
     };
 
     WS.onmessage = function (event: any) {
-      // if (flagWS) {
       let allData = JSON.parse(event.data);
       let data: DateMAP = allData.data;
-      console.log("data_onmessage:", data);
-      // dateMapGl = data.tflight;
-      // dispatch(mapCreate(dateMapGl));
-      //   flagWS = false;
-      // }
+      console.log("пришло:", allData.type, data);
+      switch (allData.type) {
+        case "mapInfo":
+          console.log("mapInfo:", data);
+          dateMapGl = data;
+          dispatch(mapCreate(dateMapGl));
+          break;
+        case "graphInfo":
+          console.log("graphInfo:", data);
+          // dateMapGl = dataMap.tflight;
+          // dispatch(mapCreate(dateMapGl));
+          break;
+        default:
+          console.log("data_default:", data);
+      }
     };
-  }, []);
+  }, [dispatch]);
 
+  // для отладки
   if (flagOpen) {
-    dateMapGl = dataMap.tflight;
+    dateMapGl = dataMap;
     dispatch(mapCreate(dateMapGl));
     flagOpen = false;
-
-    coord0 = CenterCoord(
-      dataMap.boxPoint.point0.Y,
-      dataMap.boxPoint.point0.X,
-      dataMap.boxPoint.point1.Y,
-      dataMap.boxPoint.point1.X
-    );
   }
 
   return (
-    <Grid
-      container
-      sx={{ height: "100vh", width: "100%", backgroundColor: "#F1F5FB" }}
-    >
+    <Grid container sx={{ height: "100vh", width: "100%", bgcolor: "#F1F5FB" }}>
       <Grid item xs>
-        <MainMap Y={coord0[0]} X={coord0[1]} />
+        <MainMap />
       </Grid>
     </Grid>
   );
