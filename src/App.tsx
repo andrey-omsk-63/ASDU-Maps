@@ -1,32 +1,26 @@
-import React from 'react';
+import React from "react";
 import {
   useDispatch,
   //useSelector
-} from 'react-redux';
+} from "react-redux";
 import {
   mapCreate,
   massrouteCreate,
   //commCreate,
   // massdkCreate
-} from './redux/actions';
+} from "./redux/actions";
 
-import Grid from '@mui/material/Grid';
+import Grid from "@mui/material/Grid";
 
-import MainMap from './components/MainMapGl';
+import MainMap from "./components/MainMapGl";
 //import { CenterCoord } from "./components/MapServiceFunctions";
 
-//import { DateRPU } from "./interfaceRPU.d";
-//import { dataRpu } from "./otladkaRpuData";
-
-import { DateMAP } from './interfaceMAP.d';
+//import { DateMAP } from './interfaceMAP.d';
+//import { DateRoute } from './interfaceRoute.d';
 //import { Tflight } from "./interfaceMAP.d";
-import { dataMap } from './otladkaMaps';
-import { dataRoute } from './otladkaRoutes';
+import { dataMap } from "./otladkaMaps";
+import { dataRoute } from "./otladkaRoutes";
 
-//export let dateRpuGl: DateRPU = {} as DateRPU;
-//export let dateMapGl: Tflight[] = [];
-//export let dateMapGl: Tflight[] = [{} as Tflight];
-//export let dateMapGl: DateMAP;
 export let dateMapGl: any;
 export let dateRouteGl: any;
 
@@ -57,10 +51,12 @@ export interface Router {
 export let massRoute: Router[] = [];
 
 let flagOpen = true;
+let flagRoute = 0;
 
 let flagOpenWS = true;
 //let flagWS = true;
 let WS: any = null;
+let homeRegion: any = "";
 
 const App = () => {
   //== Piece of Redux ======================================
@@ -88,44 +84,51 @@ const App = () => {
   //const host = "wss://192.168.115.25/mapW";
   //const host = "wss://192.168.115.25/user/andrey_omsk/graphManageW";
   const host =
-    'wss://' + window.location.host + window.location.pathname + 'W' + window.location.search;
+    "wss://" +
+    window.location.host +
+    window.location.pathname +
+    "W" +
+    window.location.search;
 
   if (flagOpenWS) {
     WS = new WebSocket(host);
     flagOpenWS = false;
-    console.log('WS:', WS);
+    let pageUrl = new URL(window.location.href);
+    homeRegion = pageUrl.searchParams.get("Region");
+    console.log("WS:", WS);
   }
 
   React.useEffect(() => {
     WS.onopen = function (event: any) {
-      console.log('WS.current.onopen:', event);
+      console.log("WS.current.onopen:", event);
     };
 
     WS.onclose = function (event: any) {
-      console.log('WS.current.onclose:', event);
+      console.log("WS.current.onclose:", event);
     };
 
     WS.onerror = function (event: any) {
-      console.log('WS.current.onerror:', event);
+      console.log("WS.current.onerror:", event);
     };
 
     WS.onmessage = function (event: any) {
       let allData = JSON.parse(event.data);
-      let data: DateMAP = allData.data;
-      console.log('пришло:', allData.type, data);
+      let data = allData.data;
+      console.log("пришло:", allData.type, data);
       switch (allData.type) {
-        case 'mapInfo':
-          console.log('mapInfo:', data);
+        case "mapInfo":
+          console.log("mapInfo:", data);
           dateMapGl = data;
           dispatch(mapCreate(dateMapGl));
           break;
-        case 'graphInfo':
-          console.log('graphInfo:', data);
-          // dateMapGl = dataMap.tflight;
-          // dispatch(mapCreate(dateMapGl));
+        case "graphInfo":
+          console.log("graphInfo:", data);
+          dateRouteGl = data.ways;
+          flagRoute = 1; // успешное прочтение
+          //dispatch(massrouteCreate(dateRouteGl));
           break;
         default:
-          console.log('data_default:', data);
+          console.log("data_default:", data);
       }
     };
   }, [dispatch]);
@@ -133,16 +136,42 @@ const App = () => {
   // для отладки
   if (flagOpen) {
     dateMapGl = dataMap;
+    flagRoute = 1;
     dispatch(mapCreate(dateMapGl));
     dateRouteGl = dataRoute.data.ways;
-    dispatch(massrouteCreate(dateRouteGl));
+    //dispatch(massrouteCreate(dateRouteGl));
     flagOpen = false;
   }
 
+  if (flagRoute === 1) {
+    // проверка/удаление дубликатных связей
+    let dateRouteRab: any = [];
+    let flagDubl = false;
+    for (let i = 0; i < dateRouteGl.length; i++) {
+      for (let j = 0; j < dateRouteRab.length; j++) {
+        if (
+          dateRouteRab[j].starts === dateRouteGl[i].starts &&
+          dateRouteRab[j].stops === dateRouteGl[i].stops
+        )
+          flagDubl = true;
+      }
+      if (!flagDubl) dateRouteRab.push(dateRouteGl[i]);
+      flagDubl = false;
+    }
+    dateRouteGl.splice(0, dateRouteGl.length);
+    dateRouteGl = dateRouteRab;
+    dispatch(massrouteCreate(dateRouteGl));
+    flagRoute = 2;
+  }
+
+  // {WS !== null && regionGlob !== 0 && (
+  //   <Points open={isOpenInf} ws={WS} xctrll={pointsEtalonXctrl} region={String(regionGlob)} />
+  // )}
+
   return (
-    <Grid container sx={{ height: '100vh', width: '100%', bgcolor: '#F1F5FB' }}>
+    <Grid container sx={{ height: "100vh", width: "100%", bgcolor: "#F1F5FB" }}>
       <Grid item xs>
-        <MainMap />
+        <MainMap ws={WS} region={homeRegion} />
       </Grid>
     </Grid>
   );
