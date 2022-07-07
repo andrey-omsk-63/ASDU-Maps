@@ -1,8 +1,5 @@
 import React from "react";
-import {
-  useDispatch,
-  //useSelector
-} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   mapCreate,
   massrouteCreate,
@@ -16,7 +13,7 @@ import MainMap from "./components/MainMapGl";
 //import { CenterCoord } from "./components/MapServiceFunctions";
 
 //import { DateMAP } from './interfaceMAP.d';
-import { DateRoute } from './interfaceRoute.d';
+//import { DateRoute } from "./interfaceRoute.d";
 //import { Tflight } from "./interfaceMAP.d";
 import { dataMap } from "./otladkaMaps";
 import { dataRoute } from "./otladkaRoutes";
@@ -51,8 +48,6 @@ export interface Router {
 export let massRoute: Router[] = [];
 
 let flagOpen = true;
-let flagRoute = 0;
-
 let flagOpenWS = true;
 //let flagWS = true;
 let WS: any = null;
@@ -72,15 +67,16 @@ const App = () => {
   // });
   //console.log("map_App:", map);
 
-  // const massdk = useSelector((state: any) => {
-  //   const { massdkReducer } = state;
-  //   return massdkReducer.massdk;
-  // });
+  const massdk = useSelector((state: any) => {
+    const { massdkReducer } = state;
+    return massdkReducer.massdk;
+  });
   //console.log("massdk_App:", massdk);
 
   const dispatch = useDispatch();
   //========================================================
-
+  //const [dateRouteGl, setDateRouteGl] = React.useState<DateRoute>({} as DateRoute);
+  
   //const host = "wss://192.168.115.25/mapW";
   //const host = "wss://192.168.115.25/user/andrey_omsk/graphManageW";
   const host =
@@ -123,37 +119,35 @@ const App = () => {
           break;
         case "graphInfo":
           console.log("graphInfo:", data);
+          //setDateRouteGl(data);
           dateRouteGl = data;
-          flagRoute = 1; // успешное прочтение
+          //flagRoute = 1; // успешное прочтение
           dispatch(massrouteCreate(dateRouteGl));
+          break;
+        case "createPoint":
+          console.log("createPoint:", data);
+          dateRouteGl.vertexes[dateRouteGl.vertexes.length - 1].id = data.id;
+          massdk[massdk.length - 1].ID = data.id;
+          console.log("!!!!dateRouteGl:", dateRouteGl);
+          console.log("!!!!massdk:", massdk);
           break;
         default:
           console.log("data_default:", data);
       }
     };
-  }, [WS, dispatch]);
+  }, [dispatch]);
 
   //для отладки
-
-  // if (flagOpen) {
-  //   dateMapGl = dataMap;
-  //   flagRoute = 1;
-  //   dispatch(mapCreate(dateMapGl));
-  //   dateRouteGl = dataRoute.data;
-  //   flagOpen = false;
-  //   dispatch(massrouteCreate(dateRouteGl));
-  // }
-
-  //отслеживание изменения размера экрана - костыль, делает ререндер
-  // const [size, setSize] = React.useState(0);
-  // React.useLayoutEffect(() => {
-  //   function updateSize() {
-  //     setSize(window.innerWidth);
-  //   }
-  //   window.addEventListener("resize", updateSize);
-  //   updateSize();
-  //   return () => window.removeEventListener("resize", updateSize);
-  // }, []);
+  if (WS.url === "wss://localhost:3000/W" && flagOpen) {
+    console.log("РЕЖИМ ОТЛАДКИ!!!");
+    dateMapGl = dataMap;
+    dispatch(mapCreate(dateMapGl));
+    //setDateRouteGl(dataRoute.data);
+    dateRouteGl = dataRoute.data;
+    flagOpen = false;
+    console.log("@@@dateRouteGl",dateRouteGl);
+    dispatch(massrouteCreate(dateRouteGl));
+  }
 
   // if (flagRoute === 1) {
   //   console.log("dateRouteGl:", dateRouteGl);
@@ -177,13 +171,12 @@ const App = () => {
   //   flagRoute = 2;
   //   //setSize(window.innerWidth + Math.random());
   // }
-  console.log("dateRouteGl:", dateRouteGl);
+  //console.log("dateRouteGl:", dateRouteGl);
+
   return (
     <Grid container sx={{ height: "100vh", width: "100%", bgcolor: "#F1F5FB" }}>
       <Grid item xs>
-      <MainMap flag={flagRoute} ws={WS} region={homeRegion} />
-        {/* {setTimeout(() => {<MainMap ws={WS} region={homeRegion} />}, 10000)  } */}
-        
+        <MainMap ws={WS} region={homeRegion} />
       </Grid>
     </Grid>
   );

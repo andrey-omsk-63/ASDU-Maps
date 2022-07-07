@@ -1,8 +1,13 @@
 //import * as React from "react";
 
 import { Pointer, Router } from "./../App";
+import { Vertex } from "./../interfaceRoute";
 
-export const MapNewPoint = (homeRegion: number, coords: any, chNewCoord: number) => {
+export const MapssdkNewPoint = (
+  homeRegion: number,
+  coords: any,
+  chNewCoord: number
+) => {
   let masskPoint: Pointer = {
     ID: 0,
     coordinates: [],
@@ -18,6 +23,29 @@ export const MapNewPoint = (homeRegion: number, coords: any, chNewCoord: number)
   masskPoint.region = homeRegion;
   masskPoint.area = 0;
   masskPoint.newCoordinates = 1;
+  return masskPoint;
+};
+
+export const MassrouteNewPoint = (
+  homeRegion: number,
+  coords: any,
+  chNewCoord: number
+) => {
+  let masskPoint: Vertex = {
+    region: 0,
+    area: 0,
+    id: 0,
+    dgis: "",
+    scale: 0,
+    name: "",
+  };
+
+  masskPoint.region = homeRegion;
+  masskPoint.area = 0;
+  masskPoint.id = 0;
+  masskPoint.dgis = CodingCoord(coords);
+  masskPoint.name = "Новая точка " + String(chNewCoord);
+  masskPoint.scale = 0;
   return masskPoint;
 };
 
@@ -65,10 +93,7 @@ export const DoublRoute = (massroute: any, pointA: any, pointB: any) => {
   let pointAcod = CodingCoord(pointA);
   let pointBcod = CodingCoord(pointB);
   for (let i = 0; i < massroute.length; i++) {
-    if (
-      massroute[i].starts === pointAcod &&
-      massroute[i].stops === pointBcod
-    )
+    if (massroute[i].starts === pointAcod && massroute[i].stops === pointBcod)
       flDubl = true;
   }
   return flDubl;
@@ -94,7 +119,7 @@ export const getPointData = (
   if (index === pointAaIndex) textBalloon = "Начало";
   if (index === pointBbIndex) textBalloon = "Конец";
   return {
-    hintContent: massdk[index].nameCoordinates, //balloonContent: PressBalloon(index), iconCaption: textBalloon,
+    hintContent: "ID:" + massdk[index].ID + " " + massdk[index].nameCoordinates, //balloonContent: PressBalloon(index), iconCaption: textBalloon,
     iconContent: textBalloon,
   };
 };
@@ -157,6 +182,56 @@ export const getMassMultiRouteInOptions = () => {
     routeStrokeWidth: 0,
   };
 };
+
+//=== SendSocket ===================================
+
+export const SendSocketCreatePoint = (
+  debugging: boolean,
+  ws: WebSocket,
+  codCoord: string,
+  chNewCoord: number
+) => {
+  const handleSendOpen = () => {
+    if (!debugging) {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(
+          JSON.stringify({
+            type: "createPoint",
+            data: {
+              position: codCoord,
+              name: "Новая точка " + String(chNewCoord - 1),
+            },
+          })
+        );
+      } else {
+        setTimeout(() => {
+          handleSendOpen();
+        }, 1000);
+      }
+    }
+  };
+  handleSendOpen();
+};
+
+export const SendSocketDeletePoint = (
+  debugging: boolean,
+  ws: WebSocket,
+  id: number
+) => {
+  const handleSendOpen = () => {
+    if (!debugging) {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ type: "deletePoint", data: { id } }));
+      } else {
+        setTimeout(() => {
+          handleSendOpen();
+        }, 1000);
+      }
+    }
+  };
+  handleSendOpen();
+};
+
 
 //=== костыль ======================================
 let a0 = {
