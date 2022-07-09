@@ -35,6 +35,7 @@ import { styleApp01, styleModalEndMapGl, styleModalMenu } from "./MainMapStyle";
 
 import { Pointer } from "./../App";
 
+//let coordinates: Array<Array<number>> = [[]]; // массив координат
 let coordStart: any = []; // рабочий массив коллекции входящих связей
 let coordStop: any = []; // рабочий массив коллекции входящих связей
 let coordStartIn: any = []; // рабочий массив коллекции исходящих связей
@@ -47,11 +48,13 @@ let flagPusk = false;
 let flagRoute = false;
 let flagBind = false;
 let flagDemo = false;
+let flagMapState = true;
 let chNewCoord = 1;
 let activeRoute: any;
 
 let homeRegion = 0;
 let pointCenter: any = 0;
+let pointCenterOld: any = 0;
 let pointA: any = 0;
 let pointAa: any = 0;
 let pointB: any = 0;
@@ -80,14 +83,13 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
   });
 
   const dispatch = useDispatch();
+  // const [zoom, setZoom] = React.useState<number>(9.5);
   const [openSetInf, setOpenSetInf] = React.useState(false);
   const [openSetEr, setOpenSetEr] = React.useState(false);
   const [openSetBind, setOpenSetBind] = React.useState(false);
   const [openSet, setOpenSet] = React.useState(false);
   const [openSetAdress, setOpenSetAdress] = React.useState(false);
-  const [coordinates, setCoordinates] = React.useState<Array<Array<number>>>([
-    [],
-  ]); // массив координат
+  const [coordinates, setCoord] = React.useState<Array<Array<number>>>([[]]); // массив координат
 
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(massroute).length) {
@@ -97,6 +99,8 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
     for (let i = 0; i < massroute.points.length; i++) {
       massroute.vertexes.push(massroute.points[i]);
     }
+    console.log("2massroute:", homeRegion, typeof homeRegion, massroute);
+
     for (let i = 0; i < massroute.vertexes.length; i++) {
       let masskPoint: Pointer = {
         ID: -1,
@@ -123,6 +127,7 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
       map.dateMap.boxPoint.point1.Y,
       map.dateMap.boxPoint.point1.X
     );
+    pointCenterOld = pointCenter;
     flagOpen = true;
     dispatch(massdkCreate(massdk));
     dispatch(massrouteCreate(massroute));
@@ -142,6 +147,7 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
     coordStopIn = [];
     flagRoute = false;
     flagBind = false;
+    pointCenter = pointCenterOld;
     setSize(window.innerWidth + Math.random());
   };
 
@@ -152,11 +158,9 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
       soobError = "Не сохранено - дубликатная связь";
       setOpenSetEr(true);
     } else {
-      console.log("massroute.ways1:", massroute.ways);
       massroute.ways.push(
         RecordMassRoute(Number(homeRegion), pointAcod, pointBcod, activeRoute)
       );
-      console.log("massroute.ways2:", massroute.ways);
     }
     ZeroRoute();
   };
@@ -201,14 +205,40 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
     }
   };
 
-  const [zoom, setZoom] = React.useState<number>(9.5);
-  let mapState: any = {
-    center: pointCenter,
-    zoom: zoom, //yandexMapDisablePoiInteractivity: true,
-  };
+  const bounds = React.useMemo(
+    () => [
+      [map.dateMap.boxPoint.point0.Y, map.dateMap.boxPoint.point0.X],
+      [map.dateMap.boxPoint.point1.Y, map.dateMap.boxPoint.point1.X],
+    ],
+    [
+      map.dateMap.boxPoint.point0.X,
+      map.dateMap.boxPoint.point0.Y,
+      map.dateMap.boxPoint.point1.X,
+      map.dateMap.boxPoint.point1.Y,
+    ]
+  );
+  
+  // const [mapState, setMapState] = React.useState({
+  //   bounds,
+  //   //zoom: 9.5,
+  //   autoFitToViewport: true,
+  // });
+
+  // const [mapState, setMapState] = React.useState<any>({
+  //   center: pointCenter,
+  //   zoom: 9.5,
+  //   yandexMapDisablePoiInteractivity: true,
+  // });
 
   const MapGl = (props: { ws: WebSocket; pointa: any; pointb: any }) => {
+    const [zoom, setZoom] = React.useState<number>(9.5);
     const mapp = React.useRef<any>(null);
+    let mapState: any = {
+      center: pointCenter,
+      zoom: 9.5, //autoFitToViewport: true, behaviors: ["default", "scrollZoom"], controls: [],
+      yandexMapDisablePoiInteractivity: true,
+    };
+
     let pointAA = props.pointa;
     let pointBB = props.pointb;
 
@@ -272,6 +302,7 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
     };
 
     const OnPlacemarkClickPoint = (index: number) => {
+      pointCenter = pointCenterOld;
       if (pointAa === 0) {
         pointAaIndex = index; // начальная точка
         pointAa = [massdk[index].coordinates[0], massdk[index].coordinates[1]];
@@ -343,38 +374,30 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
               setOpenSetErBall(true);
             } else {
               let massRouteRab: any = []; // удаление из массива сети связей
-              let coordPoint = massroute.vertexes[indexPoint].dgis;
+              let coordPoint: any = CodingCoord(coordinates[indexPoint]);
               let idPoint = massroute.vertexes[indexPoint].id;
-              for (let i = 0; i < massroute.ways.length; i++) {
+              for (let i = 0; i < massroute.length; i++) {
                 if (
-                  coordPoint !== massroute.ways[i].starts &&
-                  coordPoint !== massroute.ways[i].stops
+                  coordPoint !== massroute.ways[i].start &&
+                  coordPoint !== massroute.ways[i].stop
                 )
                   massRouteRab.push(massroute.ways[i]);
               }
               massroute.ways.splice(0, massroute.ways.length); // massroute = [];
               massroute.ways = massRouteRab;
-              if (flagDemo) massRoute = massroute.ways;
-
+              massRoute = massroute.ways;
+              dispatch(massrouteCreate(massroute));
               coordStart = []; // удаление колекции связей
               coordStop = [];
               coordStartIn = [];
               coordStopIn = [];
               massdk.splice(indexPoint, 1); // удаление самой точки
               massroute.vertexes.splice(indexPoint, 1);
-              dispatch(massdkCreate(massdk));
-              dispatch(massrouteCreate(massroute));
-              let oldPointAa = coordinates[pointAaIndex];
-              let oldPointBb = coordinates[pointBbIndex];
-              let aa = coordinates;
-              aa.splice(indexPoint, 1);
-              setCoordinates(aa);
-              for (let i = 0; i < coordinates.length; i++) {
-                if (coordinates[i] === oldPointAa) pointAaIndex = i;
-                if (coordinates[i] === oldPointBb) pointBbIndex = i;
-              }
+              coordinates.splice(indexPoint, 1);
               SendSocketDeletePoint(debugging, props.ws, idPoint);
               setOpenSet(false);
+              pointCenter = pointCenterOld;
+              setSize(window.innerWidth + Math.random());
             }
             break;
           case 4: // Редактирование адреса
@@ -389,6 +412,10 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
           </Button>
         );
       };
+
+      // const handleCloseSet = () => {
+      //   setOpenSet(false);
+      // };
 
       return (
         <Modal open={openSet} onClose={() => setOpenSet(false)} hideBackdrop>
@@ -423,11 +450,7 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
       massroute.vertexes.push(
         MassrouteNewPoint(homeRegion, coords, chNewCoord++)
       );
-      dispatch(massdkCreate(massdk));
-      dispatch(massrouteCreate(massroute));
-      let aa = coordinates;
-      aa.push(coords);
-      setCoordinates(aa);
+      coordinates.push(coords);
       let coor = CodingCoord(coords);
       SendSocketCreatePoint(debugging, props.ws, coor, chNewCoord);
       setSize(window.innerWidth + Math.random());
@@ -450,13 +473,29 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
                 // нажата правая кнопка мыши (создание новой точки)
                 if (mapp.current.hint) MakeNewPoint(e.get("coords"));
               });
+              pointCenter = mapp.current.getCenter();
+              pointCenterOld = pointCenter;
+              console.log("111:", mapState, pointCenter);
               mapp.current.events.add("mousedown", function (e: any) {
                 // нажата левая/правая кнопка мыши 0, 1 или 2 в зависимости от того, какая кнопка мыши нажата (В IE значение может быть от 0 до 7).
-                pointCenter = mapp.current.getCenter();
+                // if (e.get("domEvent").originalEvent.button === 0) {
+                //   pointCenterOld = pointCenter;
+                //   pointCenter = e.get("coords");
+                // }
+                // pointCenter = mapp.current.getCenter();
+                // pointCenterOld = pointCenter;
+                // console.log("111:", pointCenter);
               });
               // mapp.current.events.add(["boundschange"], function () {
               //   setZoom(mapp.current.getZoom()); // покрутили колёсико мыши
               // });
+              mapp.current.events.add(
+                ["boundschange"],
+                () => setZoom(mapp.current.getZoom()),
+                (pointCenter = mapp.current.getCenter()),
+                (pointCenterOld = pointCenter),
+                console.log("222:", pointCenter)
+              );
             }
           }}
           onLoad={addRoute}
