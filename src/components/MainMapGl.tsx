@@ -1,39 +1,39 @@
-import * as React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { massdkCreate, massrouteCreate } from "./../redux/actions";
+import * as React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { massdkCreate, massrouteCreate } from './../redux/actions';
 
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
-import Typography from "@mui/material/Typography";
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
+import Typography from '@mui/material/Typography';
 
-import { YMaps, Map, Placemark, FullscreenControl } from "react-yandex-maps";
-import { GeolocationControl } from "react-yandex-maps";
-import { RulerControl, SearchControl } from "react-yandex-maps";
-import { TrafficControl, TypeSelector, ZoomControl } from "react-yandex-maps";
+import { YMaps, Map, Placemark, FullscreenControl } from 'react-yandex-maps';
+import { GeolocationControl } from 'react-yandex-maps';
+import { RulerControl, SearchControl } from 'react-yandex-maps';
+import { TrafficControl, TypeSelector, ZoomControl } from 'react-yandex-maps';
 
-import MapRouteInfo from "./MapComponents/MapRouteInfo";
-import MapInputAdress from "./MapComponents/MapInputAdress";
-import MapPointDataError from "./MapComponents/MapPointDataError";
-import MapRouteBind from "./MapComponents/MapRouteBind";
+import MapRouteInfo from './MapComponents/MapRouteInfo';
+import MapInputAdress from './MapComponents/MapInputAdress';
+import MapPointDataError from './MapComponents/MapPointDataError';
+import MapRouteBind from './MapComponents/MapRouteBind';
 
-import { MapssdkNewPoint, RecordMassRoute } from "./MapServiceFunctions";
-import { DecodingCoord, CodingCoord } from "./MapServiceFunctions";
-import { getMultiRouteOptions, DoublRoute } from "./MapServiceFunctions";
-import { getReferencePoints, CenterCoord } from "./MapServiceFunctions";
-import { getMassPolyRouteOptions } from "./MapServiceFunctions";
-import { getMassMultiRouteOptions } from "./MapServiceFunctions";
-import { getMassMultiRouteInOptions } from "./MapServiceFunctions";
-import { getPointData, getPointOptions } from "./MapServiceFunctions";
-import { MassrouteNewPoint } from "./MapServiceFunctions";
-import { SendSocketCreatePoint } from "./MapServiceFunctions";
-import { SendSocketDeletePoint } from "./MapServiceFunctions";
+import { MapssdkNewPoint, RecordMassRoute } from './MapServiceFunctions';
+import { DecodingCoord, CodingCoord } from './MapServiceFunctions';
+import { getMultiRouteOptions, DoublRoute } from './MapServiceFunctions';
+import { getReferencePoints, CenterCoord } from './MapServiceFunctions';
+import { getMassPolyRouteOptions } from './MapServiceFunctions';
+import { getMassMultiRouteOptions } from './MapServiceFunctions';
+import { getMassMultiRouteInOptions } from './MapServiceFunctions';
+import { getPointData, getPointOptions } from './MapServiceFunctions';
+import { MassrouteNewPoint } from './MapServiceFunctions';
+import { SendSocketCreatePoint } from './MapServiceFunctions';
+import { SendSocketDeletePoint } from './MapServiceFunctions';
 
-import { styleSetPoint, styleTypography } from "./MainMapStyle";
-import { styleApp01, styleModalEndMapGl, styleModalMenu } from "./MainMapStyle";
+import { styleSetPoint, styleTypography } from './MainMapStyle';
+import { styleApp01, styleModalEndMapGl, styleModalMenu } from './MainMapStyle';
 
-import { Pointer } from "./../App";
+import { Pointer } from './../App';
 
 let coordStart: any = []; // рабочий массив коллекции входящих связей
 let coordStop: any = []; // рабочий массив коллекции входящих связей
@@ -59,10 +59,10 @@ let pointBb: any = 0;
 let indexPoint: number = -1;
 let pointAaIndex: number = -1;
 let pointBbIndex: number = -1;
-let soobError = "";
+let soobError = '';
 
 const MainMap = (props: { ws: WebSocket; region: any }) => {
-  if (props.ws.url === "wss://localhost:3000/W") debugging = true;
+  if (props.ws.url === 'wss://localhost:3000/W') debugging = true;
   //== Piece of Redux =======================================
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;
@@ -72,7 +72,7 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
     const { massrouteReducer } = state;
     return massrouteReducer.massroute;
   });
-  console.log("massroute:", props.region, typeof props.region, massroute);
+  console.log('massroute:', props.region, typeof props.region, massroute);
 
   const map = useSelector((state: any) => {
     const { mapReducer } = state;
@@ -85,15 +85,12 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
   const [openSetBind, setOpenSetBind] = React.useState(false);
   const [openSet, setOpenSet] = React.useState(false);
   const [openSetAdress, setOpenSetAdress] = React.useState(false);
-  const [coordinates, setCoordinates] = React.useState<Array<Array<number>>>([
-    [],
-  ]); // массив координат
+  const [coordinates, setCoordinates] = React.useState<Array<Array<number>>>([[]]); // массив координат
 
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(massroute).length) {
     if (props.region) homeRegion = props.region;
-    if (!props.region && massroute.vertexes.length)
-      homeRegion = massroute.vertexes[0].region;
+    if (!props.region && massroute.vertexes.length) homeRegion = massroute.vertexes[0].region;
     for (let i = 0; i < massroute.points.length; i++) {
       massroute.vertexes.push(massroute.points[i]);
     }
@@ -101,7 +98,7 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
       let masskPoint: Pointer = {
         ID: -1,
         coordinates: [],
-        nameCoordinates: "",
+        nameCoordinates: '',
         region: 0,
         area: 0,
         newCoordinates: 0,
@@ -121,7 +118,7 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
       map.dateMap.boxPoint.point0.Y,
       map.dateMap.boxPoint.point0.X,
       map.dateMap.boxPoint.point1.Y,
-      map.dateMap.boxPoint.point1.X
+      map.dateMap.boxPoint.point1.X,
     );
     flagOpen = true;
     dispatch(massdkCreate(massdk));
@@ -149,14 +146,12 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
     let pointAcod = CodingCoord(pointA);
     let pointBcod = CodingCoord(pointB);
     if (DoublRoute(massroute, pointA, pointB)) {
-      soobError = "Не сохранено - дубликатная связь";
+      soobError = 'Не сохранено - дубликатная связь';
       setOpenSetEr(true);
     } else {
-      console.log("massroute.ways1:", massroute.ways);
-      massroute.ways.push(
-        RecordMassRoute(Number(homeRegion), pointAcod, pointBcod, activeRoute)
-      );
-      console.log("massroute.ways2:", massroute.ways);
+      console.log('massroute.ways1:', massroute.ways);
+      massroute.ways.push(RecordMassRoute(Number(homeRegion), pointAcod, pointBcod, activeRoute));
+      console.log('massroute.ways2:', massroute.ways);
     }
     ZeroRoute();
   };
@@ -201,10 +196,10 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
     }
   };
 
-  const [zoom, setZoom] = React.useState<number>(9.5);
+  //const [zoom, setZoom] = React.useState<number>(9.5);
   let mapState: any = {
     center: pointCenter,
-    zoom: zoom, //yandexMapDisablePoiInteractivity: true,
+    zoom: 9.5, //yandexMapDisablePoiInteractivity: true,
   };
 
   const MapGl = (props: { ws: WebSocket; pointa: any; pointb: any }) => {
@@ -222,17 +217,14 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
     const addRoute = (ymaps: any) => {
       const multiRoute = new ymaps.multiRouter.MultiRoute(
         getReferencePoints(pointAA, pointBB),
-        getMultiRouteOptions()
+        getMultiRouteOptions(),
       );
       let massPolyRoute: any = []; // cеть связей
       for (let i = 0; i < massRoute.length; i++) {
         massPolyRoute[i] = new ymaps.Polyline(
-          [
-            DecodingCoord(massRoute[i].starts),
-            DecodingCoord(massRoute[i].stops),
-          ],
-          { balloonContent: "Ломаная линия" },
-          getMassPolyRouteOptions()
+          [DecodingCoord(massRoute[i].starts), DecodingCoord(massRoute[i].stops)],
+          { balloonContent: 'Ломаная линия' },
+          getMassPolyRouteOptions(),
         );
         mapp.current.geoObjects.add(massPolyRoute[i]);
       }
@@ -240,7 +232,7 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
       for (let i = 0; i < coordStart.length; i++) {
         massMultiRoute[i] = new ymaps.multiRouter.MultiRoute(
           getReferencePoints(coordStart[i], coordStop[i]),
-          getMassMultiRouteOptions()
+          getMassMultiRouteOptions(),
         );
         mapp.current.geoObjects.add(massMultiRoute[i]);
       }
@@ -248,12 +240,12 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
       for (let i = 0; i < coordStartIn.length; i++) {
         massMultiRouteIn[i] = new ymaps.multiRouter.MultiRoute(
           getReferencePoints(coordStartIn[i], coordStopIn[i]),
-          getMassMultiRouteInOptions()
+          getMassMultiRouteInOptions(),
         );
         mapp.current.geoObjects.add(massMultiRouteIn[i]);
       }
       mapp.current.geoObjects.add(multiRoute); // основная связь
-      multiRoute.model.events.add("requestsuccess", function () {
+      multiRoute.model.events.add('requestsuccess', function () {
         activeRoute = multiRoute.getActiveRoute();
       });
     };
@@ -281,17 +273,14 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
       } else {
         if (pointBb === 0) {
           if (pointAaIndex === index) {
-            soobError = "Начальная и конечная точки совпадают";
+            soobError = 'Начальная и конечная точки совпадают';
             setOpenSetEr(true);
           } else {
             pointBbIndex = index; // конечная точка
-            pointBb = [
-              massdk[index].coordinates[0],
-              massdk[index].coordinates[1],
-            ];
+            pointBb = [massdk[index].coordinates[0], massdk[index].coordinates[1]];
             MakeRoute();
             if (DoublRoute(massroute, pointAa, pointBb)) {
-              soobError = "Дубликатная связь";
+              soobError = 'Дубликатная связь';
               setOpenSetEr(true);
             }
           }
@@ -307,17 +296,14 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
       let pointRoute: any = 0;
 
       if (indexPoint >= 0 && indexPoint < massdk.length) {
-        pointRoute = [
-          massdk[indexPoint].coordinates[0],
-          massdk[indexPoint].coordinates[1],
-        ];
+        pointRoute = [massdk[indexPoint].coordinates[0], massdk[indexPoint].coordinates[1]];
       }
 
       const handleClose = (param: number) => {
         switch (param) {
           case 1: // Начальная точка
             if (pointBbIndex === indexPoint) {
-              soobError = "Начальная и конечная точки совпадают";
+              soobError = 'Начальная и конечная точки совпадают';
               setOpenSetErBall(true);
             } else {
               pointAaIndex = indexPoint;
@@ -328,7 +314,7 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
             break;
           case 2: // Конечная точка
             if (pointAaIndex === indexPoint) {
-              soobError = "Начальная и конечная точки совпадают";
+              soobError = 'Начальная и конечная точки совпадают';
               setOpenSetErBall(true);
             } else {
               pointBbIndex = indexPoint;
@@ -339,7 +325,7 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
             break;
           case 3: // Удаление точки
             if (pointAaIndex === indexPoint || pointBbIndex === indexPoint) {
-              soobError = "Начальную и конечную точки удалять нельзя";
+              soobError = 'Начальную и конечную точки удалять нельзя';
               setOpenSetErBall(true);
             } else {
               let massRouteRab: any = []; // удаление из массива сети связей
@@ -355,7 +341,6 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
               massroute.ways.splice(0, massroute.ways.length); // massroute = [];
               massroute.ways = massRouteRab;
               if (flagDemo) massRoute = massroute.ways;
-
               coordStart = []; // удаление колекции связей
               coordStop = [];
               coordStartIn = [];
@@ -396,23 +381,19 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
             <Button sx={styleModalEndMapGl} onClick={() => setOpenSet(false)}>
               <b>&#10006;</b>
             </Button>
-            <Box sx={{ marginTop: 2, textAlign: "center" }}>
-              {StrokaPressBalloon("Удаление точки", 3)}
-              {StrokaPressBalloon("Редактирование адреса", 4)}
+            <Box sx={{ marginTop: 2, textAlign: 'center' }}>
+              {StrokaPressBalloon('Удаление точки', 3)}
+              {StrokaPressBalloon('Редактирование адреса', 4)}
             </Box>
             <Typography variant="h6" sx={styleTypography}>
               Перестроение связи:
             </Typography>
-            <Box sx={{ textAlign: "center" }}>
-              {StrokaPressBalloon("Начальная точка", 1)}
-              {StrokaPressBalloon("Конечная точка", 2)}
+            <Box sx={{ textAlign: 'center' }}>
+              {StrokaPressBalloon('Начальная точка', 1)}
+              {StrokaPressBalloon('Конечная точка', 2)}
             </Box>
-            {openSetAdress && (
-              <MapInputAdress iPoint={indexPoint} setOpen={setOpenSetAdress} />
-            )}
-            {openSetErBall && (
-              <MapPointDataError sErr={soobError} setOpen={setOpenSetErBall} />
-            )}
+            {openSetAdress && <MapInputAdress iPoint={indexPoint} setOpen={setOpenSetAdress} />}
+            {openSetErBall && <MapPointDataError sErr={soobError} setOpen={setOpenSetErBall} />}
           </Box>
         </Modal>
       );
@@ -420,9 +401,7 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
 
     const MakeNewPoint = (coords: any) => {
       massdk.push(MapssdkNewPoint(homeRegion, coords, chNewCoord++));
-      massroute.vertexes.push(
-        MassrouteNewPoint(homeRegion, coords, chNewCoord++)
-      );
+      massroute.vertexes.push(MassrouteNewPoint(homeRegion, coords, chNewCoord++));
       dispatch(massdkCreate(massdk));
       dispatch(massrouteCreate(massroute));
       let aa = coordinates;
@@ -436,21 +415,20 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
     return (
       <YMaps
         query={{
-          apikey: "65162f5f-2d15-41d1-a881-6c1acf34cfa1",
-          lang: "ru_RU",
-        }}
-      >
+          apikey: '65162f5f-2d15-41d1-a881-6c1acf34cfa1',
+          lang: 'ru_RU',
+        }}>
         <Map
-          modules={["multiRouter.MultiRoute", "Polyline"]}
+          modules={['multiRouter.MultiRoute', 'Polyline']}
           state={mapState}
           instanceRef={(ref) => {
             if (ref) {
               mapp.current = ref;
-              mapp.current.events.add("contextmenu", function (e: any) {
+              mapp.current.events.add('contextmenu', function (e: any) {
                 // нажата правая кнопка мыши (создание новой точки)
-                if (mapp.current.hint) MakeNewPoint(e.get("coords"));
+                if (mapp.current.hint) MakeNewPoint(e.get('coords'));
               });
-              mapp.current.events.add("mousedown", function (e: any) {
+              mapp.current.events.add('mousedown', function (e: any) {
                 // нажата левая/правая кнопка мыши 0, 1 или 2 в зависимости от того, какая кнопка мыши нажата (В IE значение может быть от 0 до 7).
                 pointCenter = mapp.current.getCenter();
               });
@@ -460,48 +438,35 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
             }
           }}
           onLoad={addRoute}
-          width={"99.8%"}
-          height={"97%"}
-        >
+          width={'99.8%'}
+          height={'97%'}>
           {coordinates[0].length > 0 &&
             coordinates.map((coordinate, idx) => (
               <Placemark
                 key={idx}
                 geometry={coordinate}
-                properties={getPointData(
-                  idx,
-                  pointAaIndex,
-                  pointBbIndex,
-                  massdk
-                )}
-                options={getPointOptions(
-                  idx,
-                  pointAaIndex,
-                  pointBbIndex,
-                  massdk
-                )}
-                modules={["geoObject.addon.balloon", "geoObject.addon.hint"]}
+                properties={getPointData(idx, pointAaIndex, pointBbIndex, massdk)}
+                options={getPointOptions(idx, pointAaIndex, pointBbIndex, massdk)}
+                modules={['geoObject.addon.balloon', 'geoObject.addon.hint']}
                 onClick={() => OnPlacemarkClickPoint(idx)}
               />
             ))}
           <FullscreenControl />
-          <GeolocationControl options={{ float: "left" }} />
-          <RulerControl options={{ float: "right" }} />
+          <GeolocationControl options={{ float: 'left' }} />
+          <RulerControl options={{ float: 'right' }} />
           <SearchControl
             options={{
-              float: "left",
-              provider: "yandex#search",
-              size: "large",
+              float: 'left',
+              provider: 'yandex#search',
+              size: 'large',
             }}
           />
-          <TrafficControl options={{ float: "right" }} />
-          <TypeSelector options={{ float: "right" }} />
-          <ZoomControl options={{ float: "right" }} />
+          <TrafficControl options={{ float: 'right' }} />
+          <TypeSelector options={{ float: 'right' }} />
+          <ZoomControl options={{ float: 'right' }} />
           {/* служебные компоненты */}
           <ModalPressBalloon />
-          {openSetEr && (
-            <MapPointDataError sErr={soobError} setOpen={setOpenSetEr} />
-          )}
+          {openSetEr && <MapPointDataError sErr={soobError} setOpen={setOpenSetEr} />}
           {openSetInf && (
             <MapRouteInfo
               activeRoute={activeRoute}
@@ -522,9 +487,9 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
     function updateSize() {
       setSize(window.innerWidth);
     }
-    window.addEventListener("resize", updateSize);
+    window.addEventListener('resize', updateSize);
     updateSize();
-    return () => window.removeEventListener("resize", updateSize);
+    return () => window.removeEventListener('resize', updateSize);
   }, []);
 
   const StrokaMenuGlob = (soob: string, mode: number) => {
@@ -536,27 +501,25 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
   };
 
   return (
-    <Grid container sx={{ height: "99.5vh" }}>
-      {flagPusk && !flagBind && <>{StrokaMenuGlob("Отмена назначений", 77)}</>}
+    <Grid container sx={{ height: '99.5vh' }}>
+      {flagPusk && !flagBind && <>{StrokaMenuGlob('Отмена назначений', 77)}</>}
       {flagPusk && flagRoute && !flagBind && (
         <>
-          {StrokaMenuGlob("Привязка направлен", 33)}
-          {StrokaMenuGlob("Реверс связи", 12)}
-          {StrokaMenuGlob("Информ о связи", 69)}
+          {StrokaMenuGlob('Привязка направлен', 33)}
+          {StrokaMenuGlob('Реверс связи', 12)}
+          {StrokaMenuGlob('Информ о связи', 69)}
         </>
       )}
       {flagPusk && flagRoute && flagBind && (
         <>
-          {StrokaMenuGlob("Сохранить связь", 21)}
-          {StrokaMenuGlob("Отменить связь", 77)}
-          {StrokaMenuGlob("Информ о связи", 69)}
+          {StrokaMenuGlob('Сохранить связь', 21)}
+          {StrokaMenuGlob('Отменить связь', 77)}
+          {StrokaMenuGlob('Информ о связи', 69)}
         </>
       )}
-      {!flagDemo && <>{StrokaMenuGlob("Demo сети", 3)}</>}
-      {flagDemo && <>{StrokaMenuGlob("Конец Demo", 6)}</>}
-      {Object.keys(massroute).length && (
-        <MapGl ws={props.ws} pointa={pointA} pointb={pointB} />
-      )}
+      {!flagDemo && <>{StrokaMenuGlob('Demo сети', 3)}</>}
+      {flagDemo && <>{StrokaMenuGlob('Конец Demo', 6)}</>}
+      {Object.keys(massroute).length && <MapGl ws={props.ws} pointa={pointA} pointb={pointB} />}
     </Grid>
   );
 };
