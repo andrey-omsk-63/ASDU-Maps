@@ -20,9 +20,11 @@ export const styleModalEnd = {
   position: 'absolute',
   top: '0%',
   left: 'auto',
-  right: '-6%',
+  right: '-0%',
   height: '21px',
-  width: '6%',
+  //width: '2%',
+  maxWidth: '2%',
+  minWidth: '2%',
   color: 'black',
 };
 
@@ -58,10 +60,12 @@ export const styleModalEndMapGl = {
   position: 'absolute',
   top: '0%',
   left: 'auto',
-  right: '-9%',
+  right: '-2%',
   maxHeight: '21px',
   minHeight: '21px',
-  width: '6%',
+  //width: '2%',
+  maxWidth: '2%',
+  minWidth: '2%',
   color: 'black',
 };
 

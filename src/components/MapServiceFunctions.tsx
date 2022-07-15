@@ -232,6 +232,50 @@ export const SendSocketDeletePoint = (
   handleSendOpen();
 };
 
+export const SendSocketCreateWay = (
+  debugging: boolean,
+  ws: WebSocket,
+  regfrom: string,
+  areafrom: string,
+  idfrom: number,
+  regto: string,
+  areato: string,
+  idto: number,
+  activeRoute: any
+) => {
+  const handleSendOpen = () => {
+    if (!debugging) {
+      let lengthRoute = Math.round(
+        activeRoute.properties.get("distance").value
+      );
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(
+          JSON.stringify({
+            type: "createWay",
+            data: {
+              fromCross: {
+                region: regfrom,
+                area: areafrom,
+                id: idfrom,
+              },
+              toCross: {
+                region: regto,
+                area: areato,
+                id: idto,
+              },
+              length: lengthRoute,
+            },
+          })
+        );
+      } else {
+        setTimeout(() => {
+          handleSendOpen();
+        }, 1000);
+      }
+    }
+  };
+  handleSendOpen();
+};
 
 //=== костыль ======================================
 let a0 = {
