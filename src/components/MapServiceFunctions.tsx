@@ -235,12 +235,14 @@ export const SendSocketDeletePoint = (
 export const SendSocketCreateWay = (
   debugging: boolean,
   ws: WebSocket,
-  regfrom: string,
-  areafrom: string,
-  idfrom: number,
-  regto: string,
-  areato: string,
-  idto: number,
+  fromCr: any,
+  toCr: any,
+  // regfrom: string,
+  // areafrom: string,
+  // idfrom: number,
+  // regto: string,
+  // areato: string,
+  // idto: number,
   activeRoute: any
 ) => {
   const handleSendOpen = () => {
@@ -254,16 +256,52 @@ export const SendSocketCreateWay = (
             type: "createWay",
             data: {
               fromCross: {
-                region: regfrom,
-                area: areafrom,
-                id: idfrom,
+                region: fromCr.pointAaRegin,
+                area: fromCr.pointAaArea,
+                id: fromCr.pointAaID,
               },
               toCross: {
-                region: regto,
-                area: areato,
-                id: idto,
+                region: toCr.pointBbRegin,
+                area: toCr.pointBbArea,
+                id: toCr.pointBbID,
               },
               length: lengthRoute,
+            },
+          })
+        );
+      } else {
+        setTimeout(() => {
+          handleSendOpen();
+        }, 1000);
+      }
+    }
+  };
+  handleSendOpen();
+};
+
+export const SendSocketDeleteWay = (
+  debugging: boolean,
+  ws: WebSocket,
+  fromCr: any,
+  toCr: any
+) => {
+  const handleSendOpen = () => {
+    if (!debugging) {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(
+          JSON.stringify({
+            type: "deleteWay",
+            data: {
+              fromCross: {
+                region: fromCr.pointAaRegin,
+                area: fromCr.pointAaArea,
+                id: fromCr.pointAaID,
+              },
+              toCross: {
+                region: toCr.pointBbRegin,
+                area: toCr.pointBbArea,
+                id: toCr.pointBbID,
+              },
             },
           })
         );

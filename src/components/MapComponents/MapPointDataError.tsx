@@ -5,9 +5,24 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 
+import { SendSocketDeleteWay } from "./../MapServiceFunctions";
+
 import { styleModalEnd, styleSetInf } from "./../MainMapStyle";
 
-const MapPointDataError = (props: { sErr: string; setOpen: any }) => {
+const MapPointDataError = (props: {
+  sErr: string;
+  setOpen: any;
+  debugging: boolean;
+  ws: WebSocket;
+  fromCross: any;
+  toCross: any;
+}) => {
+  const styleModalMenu = {
+    backgroundColor: "#E6F5D6",
+    textTransform: "unset !important",
+    color: "black",
+  };
+
   const [openSetEr, setOpenSetEr] = React.useState(true);
   const handleCloseSetEr = (event: any, reason: string) => {
     if (reason !== "backdropClick") setOpenSetEr(false);
@@ -18,9 +33,15 @@ const MapPointDataError = (props: { sErr: string; setOpen: any }) => {
     setOpenSetEr(false);
   };
 
-  const handleClose = () => {
-    props.setOpen(false);
-    setOpenSetEr(false);
+  const handleClose = (mode: number) => {
+    if (mode === 1)
+      SendSocketDeleteWay(
+        props.debugging,
+        props.ws,
+        props.fromCross,
+        props.toCross
+      );
+    handleCloseSetEndEr();
   };
 
   return (
@@ -34,30 +55,12 @@ const MapPointDataError = (props: { sErr: string; setOpen: any }) => {
         </Typography>
         {props.sErr === "Дубликатная связь" && (
           <Box sx={{ textAlign: "center" }}>
-            <Typography variant="h6">
-              Удалить исходную связь?
-              </Typography>
-            <Button
-              sx={{
-                backgroundColor: "#F1F3F4",
-                textTransform: "unset !important",
-                color: "black",
-              }}
-              variant="contained"
-              onClick={handleClose}
-            >
+            <Typography variant="h6">Удалить исходную связь?</Typography>
+            <Button sx={styleModalMenu} onClick={() => handleClose(1)}>
               Да
             </Button>
             &nbsp;
-            <Button
-              sx={{
-                backgroundColor: "#F1F3F4",
-                textTransform: "unset !important",
-                color: "black",
-              }}
-              variant="contained"
-              onClick={handleClose}
-            >
+            <Button sx={styleModalMenu} onClick={() => handleClose(2)}>
               Нет
             </Button>
           </Box>

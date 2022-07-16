@@ -57,17 +57,21 @@ let indexPoint: number = -1;
 
 let pointA: any = 0;
 let pointAa: any = 0;
-let pointAaRegin = "";
-let pointAaArea = "";
-let pointAaID = 0;
 let pointAaIndex: number = -1;
+let fromCross: any = {
+  pointAaRegin: "",
+  pointAaArea: "",
+  pointAaID: 0,
+};
 
 let pointB: any = 0;
 let pointBb: any = 0;
-let pointBbRegin = "";
-let pointBbArea = "";
-let pointBbID = 0;
 let pointBbIndex: number = -1;
+let toCross: any = {
+  pointBbRegin: "",
+  pointBbArea: "",
+  pointBbID: 0,
+};
 
 const MainMap = (props: { ws: WebSocket; region: any }) => {
   if (props.ws.url === "wss://localhost:3000/W") debugging = true;
@@ -164,12 +168,8 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
       SendSocketCreateWay(
         debugging,
         props.ws,
-        pointAaRegin,
-        pointAaArea,
-        pointAaID,
-        pointBbRegin,
-        pointBbArea,
-        pointBbID,
+        fromCross,
+        toCross,
         activeRoute
       );
     }
@@ -290,9 +290,9 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
       if (pointAa === 0) {
         pointAaIndex = index; // начальная точка
         pointAa = [massdk[index].coordinates[0], massdk[index].coordinates[1]];
-        pointAaRegin = massdk[index].region.toString();
-        pointAaArea = massdk[index].area.toString();
-        pointAaID = massdk[index].ID;
+        fromCross.pointAaRegin = massdk[index].region.toString();
+        fromCross.pointAaArea = massdk[index].area.toString();
+        fromCross.pointAaID = massdk[index].ID;
         MakeСollectionRoute();
         flagPusk = true;
         setSize(window.innerWidth + Math.random());
@@ -307,9 +307,9 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
               massdk[index].coordinates[0],
               massdk[index].coordinates[1],
             ];
-            pointBbRegin = massdk[index].region.toString();
-            pointBbArea = massdk[index].area.toString();
-            pointBbID = massdk[index].ID;
+            toCross.pointBbRegin = massdk[index].region.toString();
+            toCross.pointBbArea = massdk[index].area.toString();
+            toCross.pointBbID = massdk[index].ID;
             MakeRoute();
             if (DoublRoute(massroute.ways, pointAa, pointBb)) {
               soobError = "Дубликатная связь";
@@ -343,9 +343,9 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
             } else {
               pointAaIndex = indexPoint;
               pointAa = pointRoute;
-              pointAaRegin = massdk[pointAaIndex].region.toString();
-              pointAaArea = massdk[pointAaIndex].area.toString();
-              pointAaID = massdk[pointAaIndex].ID;
+              fromCross.pointAaRegin = massdk[pointAaIndex].region.toString();
+              fromCross.pointAaArea = massdk[pointAaIndex].area.toString();
+              fromCross.pointAaID = massdk[pointAaIndex].ID;
               MakeRoute();
               setOpenSet(false);
             }
@@ -357,9 +357,9 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
             } else {
               pointBbIndex = indexPoint;
               pointBb = pointRoute;
-              pointBbRegin = massdk[pointBbIndex].region.toString();
-              pointBbArea = massdk[pointBbIndex].area.toString();
-              pointBbID = massdk[pointBbIndex].ID;
+              toCross.pointBbRegin = massdk[pointBbIndex].region.toString();
+              toCross.pointBbArea = massdk[pointBbIndex].area.toString();
+              toCross.pointBbID = massdk[pointBbIndex].ID;
               MakeRoute();
               setOpenSet(false);
             }
@@ -437,7 +437,14 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
               <MapInputAdress iPoint={indexPoint} setOpen={setOpenSetAdress} />
             )}
             {openSetErBall && (
-              <MapPointDataError sErr={soobError} setOpen={setOpenSetErBall} />
+              <MapPointDataError
+                sErr={soobError}
+                setOpen={setOpenSetErBall}
+                debugging={debugging}
+                ws={props.ws}
+                fromCross={fromCross}
+                toCross={toCross}
+              />
             )}
           </Box>
         </Modal>
@@ -526,7 +533,15 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
           {/* служебные компоненты */}
           <ModalPressBalloon />
           {openSetEr && (
-            <MapPointDataError sErr={soobError} setOpen={setOpenSetEr} />
+            // <MapPointDataError sErr={soobError} setOpen={setOpenSetEr} />
+            <MapPointDataError
+              sErr={soobError}
+              setOpen={setOpenSetEr}
+              debugging={debugging}
+              ws={props.ws}
+              fromCross={fromCross}
+              toCross={toCross}
+            />
           )}
           {openSetInf && (
             <MapRouteInfo
