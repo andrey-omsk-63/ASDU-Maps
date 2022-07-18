@@ -60,7 +60,7 @@ export const styleModalEndMapGl = {
   position: 'absolute',
   top: '0%',
   left: 'auto',
-  right: '-2%',
+  right: '-0%',
   maxHeight: '21px',
   minHeight: '21px',
   //width: '2%',

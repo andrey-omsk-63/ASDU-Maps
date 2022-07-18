@@ -76,7 +76,7 @@ const App = () => {
   const dispatch = useDispatch();
   //========================================================
   //const [dateRouteGl, setDateRouteGl] = React.useState<DateRoute>({} as DateRoute);
-  
+
   //const host = "wss://192.168.115.25/mapW";
   //const host = "wss://192.168.115.25/user/andrey_omsk/graphManageW";
   const host =
@@ -135,7 +135,7 @@ const App = () => {
           console.log("data_default:", data);
       }
     };
-  }, [dispatch]);
+  }, [dispatch, massdk]);
 
   //для отладки
   if (WS.url === "wss://localhost:3000/W" && flagOpen) {
@@ -145,7 +145,7 @@ const App = () => {
     //setDateRouteGl(dataRoute.data);
     dateRouteGl = dataRoute.data;
     flagOpen = false;
-    console.log("@@@dateRouteGl",dateRouteGl);
+    console.log("@@@dateRouteGl", dateRouteGl);
     dispatch(massrouteCreate(dateRouteGl));
   }
 

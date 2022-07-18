@@ -50,9 +50,8 @@ export const MassrouteNewPoint = (
 };
 
 export const RecordMassRoute = (
-  homeRegion: number,
-  pointAcod: string,
-  pointBcod: string,
+  fromCross: any,
+  toCross: any,
   activeRoute: any
 ) => {
   let masskRoute: Router = {
@@ -68,15 +67,23 @@ export const RecordMassRoute = (
     length: 0,
     time: 0,
   };
-  masskRoute.region = homeRegion;
-  masskRoute.starts = pointAcod;
-  masskRoute.stops = pointBcod;
+
+console.log('toCross:',toCross)
+
+  masskRoute.region = Number(fromCross.pointAaRegin);
+  masskRoute.sourceArea = Number(fromCross.pointAaArea);
+  masskRoute.sourceID = fromCross.pointAaID;
+  masskRoute.targetArea = Number(toCross.pointBbArea);
+  masskRoute.targetID = toCross.pointBbID;
+  masskRoute.starts = fromCross.pointAcod;
+  masskRoute.stops = toCross.pointBcod;
   if (activeRoute) {
     masskRoute.time = Math.round(activeRoute.properties.get("duration").value);
     masskRoute.length = Math.round(
       activeRoute.properties.get("distance").value
     );
   }
+  console.log('masskRoute:',masskRoute)
   return masskRoute;
 };
 
