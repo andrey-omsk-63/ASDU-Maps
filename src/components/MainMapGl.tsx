@@ -17,8 +17,9 @@ import MapRouteInfo from "./MapComponents/MapRouteInfo";
 import MapInputAdress from "./MapComponents/MapInputAdress";
 import MapPointDataError from "./MapComponents/MapPointDataError";
 import MapRouteBind from "./MapComponents/MapRouteBind";
+import MapCreatePointVertex from "./MapComponents/MapCreatePointVertex";
 
-import { MapssdkNewPoint, RecordMassRoute } from "./MapServiceFunctions";
+import { RecordMassRoute } from "./MapServiceFunctions";
 import { DecodingCoord, CodingCoord } from "./MapServiceFunctions";
 import { getMultiRouteOptions, DoublRoute } from "./MapServiceFunctions";
 import { getReferencePoints, CenterCoord } from "./MapServiceFunctions";
@@ -26,13 +27,12 @@ import { getMassPolyRouteOptions } from "./MapServiceFunctions";
 import { getMassMultiRouteOptions } from "./MapServiceFunctions";
 import { getMassMultiRouteInOptions } from "./MapServiceFunctions";
 import { getPointData, getPointOptions } from "./MapServiceFunctions";
-import { MassrouteNewPoint, SendSocketCreateWay } from "./MapServiceFunctions";
+import { SendSocketCreateWay } from "./MapServiceFunctions";
 import { SendSocketCreatePoint } from "./MapServiceFunctions";
 import { SendSocketDeletePoint } from "./MapServiceFunctions";
 
 import { styleSetPoint, styleTypography } from "./MainMapStyle";
 import { styleApp01, styleModalEndMapGl, styleModalMenu } from "./MainMapStyle";
-import { styleModalEnd, styleSetInf } from "./MainMapStyle";
 
 import { Pointer } from "./../App";
 
@@ -48,7 +48,7 @@ let flagPusk = false;
 let flagRoute = false;
 let flagBind = false;
 let flagDemo = false;
-let chNewCoord = 1;
+//let chNewCoord = 1;
 let activeRoute: any;
 let newPointCoord: any = 0;
 let soobError = "";
@@ -214,7 +214,7 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
     }
   };
 
-  const [zoom, setZoom] = React.useState<number>(9.5);
+  const [zoom, setZoom] = React.useState<number>(10);
   let mapState: any = {
     center: pointCenter,
     zoom,
@@ -455,73 +455,21 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
     };
 
     const MakeNewPoint = (coords: any) => {
-      massdk.push(MapssdkNewPoint(homeRegion, coords, chNewCoord++));
-      massroute.vertexes.push(
-        MassrouteNewPoint(homeRegion, coords, chNewCoord++)
-      );
-      dispatch(massdkCreate(massdk));
-      dispatch(massrouteCreate(massroute));
+      // massdk.push(MapssdkNewPoint(homeRegion, coords, chNewCoord));
+      // massroute.vertexes.push(
+      //   MassrouteNewPoint(homeRegion, coords, chNewCoord)
+      // );
+      // dispatch(massdkCreate(massdk));
+      // dispatch(massrouteCreate(massroute));
       let aa = coordinates;
       aa.push(coords);
       setCoordinates(aa);
-      let coor = CodingCoord(coords);
-      SendSocketCreatePoint(debugging, props.ws, coor, chNewCoord);
-      //setSize(window.innerWidth + Math.random());
+      let coor: string = CodingCoord(coords);
+      let adress: string = massroute.vertexes[massroute.vertexes.length - 1].name;
+      SendSocketCreatePoint(debugging, props.ws, coor, adress);
     };
 
-    const MapCreatePointVertex = (props: {
-      setOpen: any;
-      coord: number;
-      createPoint: any;
-    }) => {
-      const [openSet, setOpenSet] = React.useState(true);
-      const [openSetPoint, setOpenSetPoint] = React.useState(false);
-      const [openSetVertex, setOpenSetVertex] = React.useState(false);
-      const handleCloseSet = (event: any, reason: string) => {
-        if (reason !== "backdropClick") setOpenSet(false);
-      };
-
-      const handleCloseSetEnd = () => {
-        props.setOpen(false);
-        setOpenSet(false);
-      };
-
-      const handleClose = (mode: number) => {
-        if (mode === 1) {
-          setOpenSetPoint(true);
-        }
-        // props.createPoint(props.coord);
-        // handleCloseSetEnd();
-      };
-
-      const MapCreatePoint = () => {
-        return (<h1>kuku</h1>)
-      }
-
-      return (
-        <Modal open={openSet} onClose={handleCloseSet} hideBackdrop>
-          <>
-            <Box sx={styleSetInf}>
-              <Button sx={styleModalEnd} onClick={handleCloseSetEnd}>
-                <b>&#10006;</b>
-              </Button>
-              <Box sx={{ textAlign: "center" }}>
-                <Typography variant="h6">Что создаём?</Typography>
-                <br />
-                <Button sx={styleModalMenu} onClick={() => handleClose(1)}>
-                  Точку
-                </Button>
-                &nbsp;
-                <Button sx={styleModalMenu} onClick={() => handleClose(2)}>
-                  Перекрёсток
-                </Button>
-              </Box>
-            </Box>
-            {openSetPoint && <MapCreatePoint />}
-          </>
-        </Modal>
-      );
-    };
+    const MakeNewVertex = (coords: any) => {};
 
     return (
       <YMaps
@@ -538,7 +486,6 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
               mapp.current = ref;
               mapp.current.events.add("contextmenu", function (e: any) {
                 // нажата правая кнопка мыши (создание новой точки)
-                //if (mapp.current.hint) MakeNewPoint(e.get("coords"));
                 if (mapp.current.hint) {
                   newPointCoord = e.get("coords");
                   setOpenSetCreate(true);
@@ -573,7 +520,8 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
                   idx,
                   pointAaIndex,
                   pointBbIndex,
-                  massdk
+                  massdk,
+                  massroute
                 )}
                 modules={["geoObject.addon.balloon", "geoObject.addon.hint"]}
                 onClick={() => OnPlacemarkClickPoint(idx)}
@@ -616,8 +564,10 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
           {openSetCreate && (
             <MapCreatePointVertex
               setOpen={setOpenSetCreate}
+              region={homeRegion}
               coord={newPointCoord}
               createPoint={MakeNewPoint}
+              createVertex={MakeNewVertex}
             />
           )}
         </Map>
@@ -643,6 +593,8 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
       </Button>
     );
   };
+
+  console.log("Massroute:", massroute);
 
   return (
     <Grid container sx={{ height: "99.5vh" }}>

@@ -1,16 +1,29 @@
 import * as React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { massdkCreate, massrouteCreate } from "./../../redux/actions";
 
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
+import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 
-import { styleSet, styleInpKnop, styleSetAdress } from "./../MainMapStyle";
-import { styleBoxForm } from "./../MainMapStyle";
+import { MapssdkNewPoint, MassrouteNewPoint } from "./../MapServiceFunctions";
 
-const MapInputAdress = (props: { iPoint: number; setOpen: any }) => {
+import { styleModalEnd, styleSetInf, styleModalMenu } from "./../MainMapStyle";
+import { styleSetAdress, styleBoxForm, styleInpKnop } from "./../MainMapStyle";
+import { styleSet } from "./../MainMapStyle";
+
+let chNewCoord = 1;
+
+const MapCreatePoint = (props: {
+  setOpen: any;
+  region: number;
+  coord: any;
+  createPoint: any;
+  //   createVertex: any;
+}) => {
   //== Piece of Redux ======================================
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;
@@ -20,15 +33,15 @@ const MapInputAdress = (props: { iPoint: number; setOpen: any }) => {
     const { massrouteReducer } = state;
     return massrouteReducer.massroute;
   });
+  const dispatch = useDispatch();
   //========================================================
+
   const [openSetAdress, setOpenSetAdress] = React.useState(true);
 
-  const [valuen, setValuen] = React.useState(
-    massdk[props.iPoint].nameCoordinates
-  );
-  // const handleCloseSetEr = (event: any, reason: string) => {
-  //   if (reason !== "backdropClick") setOpenSetAdress(false);
-  // };
+  //========================================================
+  let valueN = "Новая точка " + String(chNewCoord);
+  let aa = valueN;
+  const [valuen, setValuen] = React.useState(aa);
 
   const handleKey = (event: any) => {
     if (event.key === "Enter") event.preventDefault();
@@ -36,18 +49,29 @@ const MapInputAdress = (props: { iPoint: number; setOpen: any }) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValuen(event.target.value);
+    aa = event.target.value;
+    console.log("valueName:", aa, valuen);
+    setOpenSetAdress(true);
   };
 
   const handleCloseSetAdr = () => {
-    massdk[props.iPoint].nameCoordinates = valuen;
-    massroute.vertexes[props.iPoint].name = valuen;
-    props.setOpen(false);
+    // massdk.push(MapssdkNewPoint(props.region, props.coord, valuen));
+    // massroute.vertexes.push(
+    //   MassrouteNewPoint(props.region, props.coord, valuen)
+    // );
+    // dispatch(massdkCreate(massdk));
+    // dispatch(massrouteCreate(massroute));
+    // props.setOpen(false);
+    setOpenSetAdress(false);
+  };
+
+  const handleCloseSetAdress = () => {
     setOpenSetAdress(false);
   };
 
   return (
     <Box>
-      <Modal open={openSetAdress} onClose={handleCloseSetAdr} hideBackdrop>
+      <Modal open={openSetAdress} onClose={handleCloseSetAdress} hideBackdrop>
         <Grid item container sx={styleSetAdress}>
           <Grid item xs={9.5} sx={{ border: 0 }}>
             <Box sx={styleSet}>
@@ -85,4 +109,4 @@ const MapInputAdress = (props: { iPoint: number; setOpen: any }) => {
   );
 };
 
-export default MapInputAdress;
+export default MapCreatePoint;

@@ -6,7 +6,7 @@ import { Vertex } from "./../interfaceRoute";
 export const MapssdkNewPoint = (
   homeRegion: number,
   coords: any,
-  chNewCoord: number
+  name: string
 ) => {
   let masskPoint: Pointer = {
     ID: 0,
@@ -19,7 +19,7 @@ export const MapssdkNewPoint = (
 
   masskPoint.ID = 0;
   masskPoint.coordinates = coords;
-  masskPoint.nameCoordinates = "Новая точка " + String(chNewCoord);
+  masskPoint.nameCoordinates = name;
   masskPoint.region = homeRegion;
   masskPoint.area = 0;
   masskPoint.newCoordinates = 1;
@@ -29,7 +29,7 @@ export const MapssdkNewPoint = (
 export const MassrouteNewPoint = (
   homeRegion: number,
   coords: any,
-  chNewCoord: number
+  name: string
 ) => {
   let masskPoint: Vertex = {
     region: 0,
@@ -44,7 +44,7 @@ export const MassrouteNewPoint = (
   masskPoint.area = 0;
   masskPoint.id = 0;
   masskPoint.dgis = CodingCoord(coords);
-  masskPoint.name = "Новая точка " + String(chNewCoord);
+  masskPoint.name = name;
   masskPoint.scale = 0;
   return masskPoint;
 };
@@ -68,7 +68,7 @@ export const RecordMassRoute = (
     time: 0,
   };
 
-console.log('toCross:',toCross)
+  console.log("toCross:", toCross);
 
   masskRoute.region = Number(fromCross.pointAaRegin);
   masskRoute.sourceArea = Number(fromCross.pointAaArea);
@@ -83,7 +83,7 @@ console.log('toCross:',toCross)
       activeRoute.properties.get("distance").value
     );
   }
-  console.log('masskRoute:',masskRoute)
+  console.log("masskRoute:", masskRoute);
   return masskRoute;
 };
 
@@ -135,11 +135,19 @@ export const getPointOptions = (
   index: number,
   pointAaIndex: number,
   pointBbIndex: number,
-  massdk: any
+  massdk: any,
+  massroute: any
 ) => {
-  let colorBalloon = "islands#violetStretchyIcon";
-  if (massdk[index].newCoordinates > 0)
-    colorBalloon = "islands#darkOrangeStretchyIcon";
+  //let colorBalloon = "islands#violetStretchyIcon";
+  let colorBalloon = "islands#violetCircleDotIcon";
+  if (massroute.vertexes[index].area === 0) {
+    colorBalloon = "islands#violetCircleIcon";
+    if (massdk[index].newCoordinates > 0)
+      colorBalloon = "islands#darkOrangeCircleIcon";
+  } else {
+    if (massdk[index].newCoordinates > 0)
+      colorBalloon = "islands#darkOrangeCircleDotIcon";
+  }
   if (index === pointAaIndex) colorBalloon = "islands#redStretchyIcon";
   if (index === pointBbIndex) colorBalloon = "islands#darkBlueStretchyIcon";
   return {
@@ -196,7 +204,7 @@ export const SendSocketCreatePoint = (
   debugging: boolean,
   ws: WebSocket,
   codCoord: string,
-  chNewCoord: number
+  adress: string,
 ) => {
   const handleSendOpen = () => {
     if (!debugging) {
@@ -206,7 +214,7 @@ export const SendSocketCreatePoint = (
             type: "createPoint",
             data: {
               position: codCoord,
-              name: "Новая точка " + String(chNewCoord - 1),
+              name: adress,
             },
           })
         );
@@ -244,12 +252,6 @@ export const SendSocketCreateWay = (
   ws: WebSocket,
   fromCr: any,
   toCr: any,
-  // regfrom: string,
-  // areafrom: string,
-  // idfrom: number,
-  // regto: string,
-  // areato: string,
-  // idto: number,
   activeRoute: any
 ) => {
   const handleSendOpen = () => {
