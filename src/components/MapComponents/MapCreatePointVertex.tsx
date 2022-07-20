@@ -1,23 +1,24 @@
 import * as React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { massdkCreate, massrouteCreate } from "./../../redux/actions";
+//import { useDispatch, useSelector } from "react-redux";
+//import { massdkCreate, massrouteCreate } from "./../../redux/actions";
 
-import Grid from "@mui/material/Grid";
+//import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
+//import TextField from "@mui/material/TextField";
 
-import { MapssdkNewPoint, MassrouteNewPoint } from "./../MapServiceFunctions";
+//import { MapssdkNewPoint, MassrouteNewPoint } from "./../MapServiceFunctions";
 
 import MapCreatePoint from "./MapCreatePoint";
+import MapCreateVertex from "./MapCreateVertex";
 
-import { styleModalEnd, styleSetInf, styleModalMenu } from "./../MainMapStyle";
-import { styleSetAdress, styleBoxForm, styleInpKnop } from "./../MainMapStyle";
-import { styleSet } from "./../MainMapStyle";
+import { styleModalEnd, styleModalMenu } from "./../MainMapStyle";
+// import { styleSetAdress, styleBoxForm, styleInpKnop } from "./../MainMapStyle";
+// import { styleSet } from "./../MainMapStyle";
 
-let chNewCoord = 1;
+//let chNewCoord = 1;
 
 const MapCreatePointVertex = (props: {
   setOpen: any;
@@ -27,18 +28,18 @@ const MapCreatePointVertex = (props: {
   createVertex: any;
 }) => {
   //== Piece of Redux ======================================
-  let massdk = useSelector((state: any) => {
-    const { massdkReducer } = state;
-    return massdkReducer.massdk;
-  });
-  let massroute = useSelector((state: any) => {
-    const { massrouteReducer } = state;
-    return massrouteReducer.massroute;
-  });
-  const dispatch = useDispatch();
+  // let massdk = useSelector((state: any) => {
+  //   const { massdkReducer } = state;
+  //   return massdkReducer.massdk;
+  // });
+  // let massroute = useSelector((state: any) => {
+  //   const { massrouteReducer } = state;
+  //   return massrouteReducer.massroute;
+  // });
+  // const dispatch = useDispatch();
   //========================================================
 
-  const styleSetV = {
+  const styleSet = {
     position: "absolute",
     marginTop: "18vh",
     marginLeft: "27vh",
@@ -54,7 +55,7 @@ const MapCreatePointVertex = (props: {
   const [openSet, setOpenSet] = React.useState(true);
   const [openSetPoint, setOpenSetPoint] = React.useState(false);
   const [openSetVert, setOpenSetVert] = React.useState(false);
-  const [openSetAdress, setOpenSetAdress] = React.useState(true);
+  //const [openSetAdress, setOpenSetAdress] = React.useState(true);
 
   const handleCloseSet = (event: any, reason: string) => {
     if (reason !== "backdropClick") setOpenSet(false);
@@ -64,9 +65,9 @@ const MapCreatePointVertex = (props: {
   //   if (reason !== "backdropClick") setOpenSetPoint(false);
   // };
 
-  const handleCloseSetVert = (event: any, reason: string) => {
-    if (reason !== "backdropClick") setOpenSetVert(false);
-  };
+  // const handleCloseSetVert = (event: any, reason: string) => {
+  //   if (reason !== "backdropClick") setOpenSetVert(false);
+  // };
 
   const handleCloseSetEnd = () => {
     props.setOpen(false);
@@ -77,9 +78,9 @@ const MapCreatePointVertex = (props: {
   //   setOpenSetPoint(false);
   // };
 
-  const handleCloseSetVertEnd = () => {
-    setOpenSetVert(false);
-  };
+  // const handleCloseSetVertEnd = () => {
+  //   setOpenSetVert(false);
+  // };
 
   const handleClose = (mode: number) => {
     if (mode === 1) {
@@ -95,41 +96,41 @@ const MapCreatePointVertex = (props: {
   //   handleCloseSetEnd();
   // };
 
-  const handleCloseVertex = (mode: number) => {
-    props.createPoint(props.coord);
-    handleCloseSetEnd();
-  };
+  // const handleCloseVertex = (mode: number) => {
+  //   props.createPoint(props.coord);
+  //   handleCloseSetEnd();
+  // };
 
   //========================================================
-  let valueN = "Новая точка " + String(chNewCoord);
-  let aa = valueN;
-  const [valuen, setValuen] = React.useState(aa);
+  // let valueN = "Новая точка " + String(chNewCoord);
+  // let aa = valueN;
+  // const [valuen, setValuen] = React.useState(aa);
 
-  const handleKey = (event: any) => {
-    if (event.key === "Enter") event.preventDefault();
-  };
+  // const handleKey = (event: any) => {
+  //   if (event.key === "Enter") event.preventDefault();
+  // };
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValuen(event.target.value);
-    aa = event.target.value;
-    console.log("valueName:", aa, valuen);
-    setOpenSetAdress(true);
-  };
+  // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setValuen(event.target.value);
+  //   aa = event.target.value;
+  //   console.log("valueName:", aa, valuen);
+  //   setOpenSetAdress(true);
+  // };
 
-  const handleCloseSetAdr = () => {
-    massdk.push(MapssdkNewPoint(props.region, props.coord, valuen));
-    massroute.vertexes.push(
-      MassrouteNewPoint(props.region, props.coord, valuen)
-    );
-    dispatch(massdkCreate(massdk));
-    dispatch(massrouteCreate(massroute));
-    props.setOpen(false);
-    setOpenSetAdress(false);
-  };
+  // const handleCloseSetAdr = () => {
+  //   massdk.push(MapssdkNewPoint(props.region, props.coord, valuen));
+  //   massroute.vertexes.push(
+  //     MassrouteNewPoint(props.region, props.coord, valuen)
+  //   );
+  //   dispatch(massdkCreate(massdk));
+  //   dispatch(massrouteCreate(massroute));
+  //   props.setOpen(false);
+  //   setOpenSetAdress(false);
+  // };
 
-  const handleCloseSetAdress = () => {
-    setOpenSetAdress(false);
-  };
+  // const handleCloseSetAdress = () => {
+  //   setOpenSetAdress(false);
+  // };
 
   // const MapCreatePointt = () => {
   //   return (
@@ -172,37 +173,37 @@ const MapCreatePointVertex = (props: {
   //   );
   // };
 
-  const MapCreateVertex = () => {
-    return (
-      <Modal open={openSetVert} onClose={handleCloseSetVert} hideBackdrop>
-        <>
-          <Box sx={styleSetV}>
-            <Button sx={styleModalEnd} onClick={handleCloseSetVertEnd}>
-              <b>&#10006;</b>
-            </Button>
-            <Box sx={{ textAlign: "center" }}>
-              <Typography variant="h6">Что создаём?</Typography>
-              <br />
-              <Button sx={styleModalMenu} onClick={() => handleCloseVertex(1)}>
-                Точку
-              </Button>
-              &nbsp;
-              <Button sx={styleModalMenu} onClick={() => handleCloseVertex(2)}>
-                Vertex
-              </Button>
-            </Box>
-          </Box>
-        </>
-      </Modal>
-    );
-  };
+  // const MapCreateVertex = () => {
+  //   return (
+  //     <Modal open={openSetVert} onClose={handleCloseSetVert} hideBackdrop>
+  //       <>
+  //         <Box sx={styleSetV}>
+  //           <Button sx={styleModalEnd} onClick={handleCloseSetVertEnd}>
+  //             <b>&#10006;</b>
+  //           </Button>
+  //           <Box sx={{ textAlign: "center" }}>
+  //             <Typography variant="h6">Что создаём?</Typography>
+  //             <br />
+  //             <Button sx={styleModalMenu} onClick={() => handleCloseVertex(1)}>
+  //               Точку
+  //             </Button>
+  //             &nbsp;
+  //             <Button sx={styleModalMenu} onClick={() => handleCloseVertex(2)}>
+  //               Vertex
+  //             </Button>
+  //           </Box>
+  //         </Box>
+  //       </>
+  //     </Modal>
+  //   );
+  // };
 
   console.log("!!!");
 
   return (
     <Modal open={openSet} onClose={handleCloseSet} hideBackdrop>
       <>
-        <Box sx={styleSetInf}>
+        <Box sx={styleSet}>
           <Button sx={styleModalEnd} onClick={handleCloseSetEnd}>
             <b>&#10006;</b>
           </Button>
@@ -218,15 +219,24 @@ const MapCreatePointVertex = (props: {
             </Button>
           </Box>
         </Box>
-        {openSetPoint && <MapCreatePoint setOpen={setOpenSet}
-              region={props.region}
-              coord={props.coord}
-              createPoint={props.createPoint} />}
-        {openSetVert && <MapCreateVertex />}
+        {openSetPoint && (
+          <MapCreatePoint
+            //setOpen={setOpenSet}
+            region={props.region}
+            coord={props.coord}
+            createPoint={props.createPoint}
+          />
+        )}
+        {openSetVert && (
+          <MapCreateVertex
+            region={props.region}
+            coord={props.coord}
+            createPoint={props.createPoint}
+          />
+        )}
       </>
     </Modal>
   );
 };
 
 export default MapCreatePointVertex;
-

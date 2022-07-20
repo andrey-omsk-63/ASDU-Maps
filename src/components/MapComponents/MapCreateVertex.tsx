@@ -7,19 +7,35 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
 
 import { MapssdkNewPoint, MassrouteNewPoint } from "./../MapServiceFunctions";
 
-import { styleSetAdress, styleBoxForm, styleInpKnop } from "./../MainMapStyle";
-import { styleSet } from "./../MainMapStyle";
+import { styleSetAdress, styleInpKnop } from "./../MainMapStyle";
 
-let chNewCoord = 1;
-
-const MapCreatePoint = (props: {
+const MapCreateVertex = (props: {
   region: number;
   coord: any;
   createPoint: any;
 }) => {
+  const styleSet = {
+    width: "230px",
+    maxHeight: "3px",
+    minHeight: "3px",
+    bgcolor: "#FAFAFA",
+    boxShadow: 14,
+    textAlign: "center",
+    p: 1.5,
+  };
+
+  const styleBoxForm = {
+    "& > :not(style)": {
+      marginTop: "-13px",
+      marginLeft: "-12px",
+      width: "253px",
+    },
+  };
+
   //== Piece of Redux ======================================
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;
@@ -29,34 +45,58 @@ const MapCreatePoint = (props: {
     const { massrouteReducer } = state;
     return massrouteReducer.massroute;
   });
+  const map = useSelector((state: any) => {
+    const { mapReducer } = state;
+    return mapReducer.map;
+  });
   const dispatch = useDispatch();
   //========================================================
+  let homeRegion = map.dateMap.regionInfo[props.region];
+  let dat = map.dateMap.areaInfo[homeRegion];
+  let massKey = [];
+  let massDat = [];
+  const currencies: any = [];
+  for (let key in dat) {
+    massKey.push(key);
+    massDat.push(dat[key]);
+  }
+  for (let i = 0; i < massKey.length; i++) {
+    let maskCurrencies = {
+      value: "",
+      label: "",
+    };
+    maskCurrencies.value = massKey[i];
+    maskCurrencies.label = massDat[i];
+    currencies.push(maskCurrencies);
+  }
+
+  console.log("currencies:", currencies);
 
   const [openSetAdress, setOpenSetAdress] = React.useState(true);
-  let valueN = "Новая точка " + String(chNewCoord);
-  let aa = valueN;
-  const [valuen, setValuen] = React.useState("Новая точка " + String(chNewCoord));
-
+  const [currency, setCurrency] = React.useState(massKey[0]);
+  
   const handleKey = (event: any) => {
     if (event.key === "Enter") event.preventDefault();
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValuen(event.target.value);
-    aa = event.target.value;
-    console.log("valueName:", aa, valuen);
+    setCurrency(event.target.value);
+    console.log("setCurrency:", event.target.value, currency);
     setOpenSetAdress(true);
   };
 
   const handleCloseSetAdr = () => {
-    massdk.push(MapssdkNewPoint(props.region, props.coord, valuen, 0));
+    let adr = 'Новый перекрёсток'
+    massdk.push(
+      MapssdkNewPoint(props.region, props.coord, adr, Number(currency))
+    );
     massroute.vertexes.push(
-      MassrouteNewPoint(props.region, props.coord, valuen, 0)
+      MassrouteNewPoint(props.region, props.coord, adr, Number(currency))
     );
     dispatch(massdkCreate(massdk));
     dispatch(massrouteCreate(massroute));
     setOpenSetAdress(false);
-    props.createPoint(props.coord)
+    props.createPoint(props.coord);
   };
 
   const handleCloseSetAdress = () => {
@@ -76,15 +116,23 @@ const MapCreatePoint = (props: {
                 autoComplete="off"
               >
                 <TextField
+                  select
                   size="small"
                   onKeyPress={handleKey} //отключение Enter
                   inputProps={{ style: { fontSize: 13.3 } }}
-                  value={valuen}
+                  InputLabelProps={{ style: { fontSize: 13.3 } }}
+                  value={currency}
                   onChange={handleChange}
                   variant="standard"
-                  helperText="Введите адрес новой точки"
+                  helperText="Введите район"
                   color="secondary"
-                />
+                >
+                  {currencies.map((option: any) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
               </Box>
             </Box>
           </Grid>
@@ -105,4 +153,4 @@ const MapCreatePoint = (props: {
   );
 };
 
-export default MapCreatePoint;
+export default MapCreateVertex;

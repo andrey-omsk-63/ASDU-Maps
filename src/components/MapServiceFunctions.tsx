@@ -6,7 +6,8 @@ import { Vertex } from "./../interfaceRoute";
 export const MapssdkNewPoint = (
   homeRegion: number,
   coords: any,
-  name: string
+  name: string,
+  area: number
 ) => {
   let masskPoint: Pointer = {
     ID: 0,
@@ -21,7 +22,7 @@ export const MapssdkNewPoint = (
   masskPoint.coordinates = coords;
   masskPoint.nameCoordinates = name;
   masskPoint.region = homeRegion;
-  masskPoint.area = 0;
+  masskPoint.area = area;
   masskPoint.newCoordinates = 1;
   return masskPoint;
 };
@@ -29,7 +30,8 @@ export const MapssdkNewPoint = (
 export const MassrouteNewPoint = (
   homeRegion: number,
   coords: any,
-  name: string
+  name: string,
+  area: number
 ) => {
   let masskPoint: Vertex = {
     region: 0,
@@ -41,7 +43,7 @@ export const MassrouteNewPoint = (
   };
 
   masskPoint.region = homeRegion;
-  masskPoint.area = 0;
+  masskPoint.area = area;
   masskPoint.id = 0;
   masskPoint.dgis = CodingCoord(coords);
   masskPoint.name = name;
@@ -311,6 +313,35 @@ export const SendSocketDeleteWay = (
                 area: toCr.pointBbArea,
                 id: toCr.pointBbID,
               },
+            },
+          })
+        );
+      } else {
+        setTimeout(() => {
+          handleSendOpen();
+        }, 1000);
+      }
+    }
+  };
+  handleSendOpen();
+};
+
+export const SendSocketCreateVertex = (
+  debugging: boolean,
+  ws: WebSocket,
+  region: number,
+  area: number,
+  ID: number,
+) => {
+  const handleSendOpen = () => {
+    if (!debugging) {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(
+          JSON.stringify({
+            type: "createPoint",
+            data: {
+              position: codCoord,
+              name: adress,
             },
           })
         );

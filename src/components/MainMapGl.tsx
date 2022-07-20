@@ -29,6 +29,7 @@ import { getMassMultiRouteInOptions } from "./MapServiceFunctions";
 import { getPointData, getPointOptions } from "./MapServiceFunctions";
 import { SendSocketCreateWay } from "./MapServiceFunctions";
 import { SendSocketCreatePoint } from "./MapServiceFunctions";
+import { SendSocketCreateVertex } from "./MapServiceFunctions";
 import { SendSocketDeletePoint } from "./MapServiceFunctions";
 
 import { styleSetPoint, styleTypography } from "./MainMapStyle";
@@ -48,7 +49,6 @@ let flagPusk = false;
 let flagRoute = false;
 let flagBind = false;
 let flagDemo = false;
-//let chNewCoord = 1;
 let activeRoute: any;
 let newPointCoord: any = 0;
 let soobError = "";
@@ -103,7 +103,6 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
   const [coordinates, setCoordinates] = React.useState<Array<Array<number>>>([
     [],
   ]); // массив координат
-
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(massroute).length) {
     if (props.region) homeRegion = props.region;
@@ -294,7 +293,6 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
         fromCross.pointAaRegin = massdk[index].region.toString();
         fromCross.pointAaArea = massdk[index].area.toString();
         fromCross.pointAaID = massdk[index].ID;
-        //fromCross.pointAcod = CodingCoord(pointA);
         MakeСollectionRoute();
         flagPusk = true;
         setSize(window.innerWidth + Math.random());
@@ -312,7 +310,6 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
             toCross.pointBbRegin = massdk[index].region.toString();
             toCross.pointBbArea = massdk[index].area.toString();
             toCross.pointBbID = massdk[index].ID;
-            //toCross.pointBcod = CodingCoord(pointB);
             MakeRoute();
             if (DoublRoute(massroute.ways, pointAa, pointBb)) {
               soobError = "Дубликатная связь";
@@ -455,18 +452,16 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
     };
 
     const MakeNewPoint = (coords: any) => {
-      // massdk.push(MapssdkNewPoint(homeRegion, coords, chNewCoord));
-      // massroute.vertexes.push(
-      //   MassrouteNewPoint(homeRegion, coords, chNewCoord)
-      // );
-      // dispatch(massdkCreate(massdk));
-      // dispatch(massrouteCreate(massroute));
-      let aa = coordinates;
-      aa.push(coords);
-      setCoordinates(aa);
       let coor: string = CodingCoord(coords);
-      let adress: string = massroute.vertexes[massroute.vertexes.length - 1].name;
-      SendSocketCreatePoint(debugging, props.ws, coor, adress);
+      let areaVertex = massroute.vertexes[massroute.vertexes.length - 1].area;
+      let adress = massroute.vertexes[massroute.vertexes.length - 1].name;
+      coordinates.push(coords);
+      if (areaVertex) {
+        SendSocketCreateVertex(debugging, props.ws, homeRegion, areaVertex, 0);
+      } else {
+        SendSocketCreatePoint(debugging, props.ws, coor, adress);
+      }
+      setOpenSetCreate(false);
     };
 
     const MakeNewVertex = (coords: any) => {};
@@ -595,6 +590,7 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
   };
 
   console.log("Massroute:", massroute);
+  console.log("Massdk:", massdk);
 
   return (
     <Grid container sx={{ height: "99.5vh" }}>
