@@ -452,12 +452,15 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
     };
 
     const MakeNewPoint = (coords: any) => {
+      console.log("!!!!!Massroute:", massroute.vertexes);
+      console.log("!!!!!Massdk:", massdk);
       let coor: string = CodingCoord(coords);
-      let areaVertex = massroute.vertexes[massroute.vertexes.length - 1].area;
+      let areaV = massroute.vertexes[massroute.vertexes.length - 1].area;
+      let idV = massroute.vertexes[massroute.vertexes.length - 1].id;
       let adress = massroute.vertexes[massroute.vertexes.length - 1].name;
       coordinates.push(coords);
-      if (areaVertex) {
-        SendSocketCreateVertex(debugging, props.ws, homeRegion, areaVertex, 0);
+      if (areaV) {
+        SendSocketCreateVertex(debugging, props.ws, homeRegion, areaV, idV);
       } else {
         SendSocketCreatePoint(debugging, props.ws, coor, adress);
       }

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { massdkCreate, massrouteCreate } from "./../../redux/actions";
+//import { massdkCreate, massrouteCreate } from "./../../redux/actions";
 
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -9,7 +9,8 @@ import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 
-import { MapssdkNewPoint, MassrouteNewPoint } from "./../MapServiceFunctions";
+//import { MapssdkNewPoint, MassrouteNewPoint } from "./../MapServiceFunctions";
+import MapCreateVertexInpID from "./MapCreateVertexInpID";
 
 import { styleSetAdress, styleInpKnop } from "./../MainMapStyle";
 
@@ -69,10 +70,9 @@ const MapCreateVertex = (props: {
     maskCurrencies.label = massDat[i];
     currencies.push(maskCurrencies);
   }
-
-  console.log("currencies:", currencies);
-
+  
   const [openSetAdress, setOpenSetAdress] = React.useState(true);
+  const [openSetID, setOpenSetID] = React.useState(false);
   const [currency, setCurrency] = React.useState(massKey[0]);
   
   const handleKey = (event: any) => {
@@ -86,69 +86,106 @@ const MapCreateVertex = (props: {
   };
 
   const handleCloseSetAdr = () => {
-    let adr = 'Новый перекрёсток'
-    massdk.push(
-      MapssdkNewPoint(props.region, props.coord, adr, Number(currency))
-    );
-    massroute.vertexes.push(
-      MassrouteNewPoint(props.region, props.coord, adr, Number(currency))
-    );
-    dispatch(massdkCreate(massdk));
-    dispatch(massrouteCreate(massroute));
-    setOpenSetAdress(false);
-    props.createPoint(props.coord);
+    // let adr = 'Новый перекрёсток'
+    // massdk.push(
+    //   MapssdkNewPoint(props.region, props.coord, adr, Number(currency))
+    // );
+    // massroute.vertexes.push(
+    //   MassrouteNewPoint(props.region, props.coord, adr, Number(currency))
+    // );
+    // dispatch(massdkCreate(massdk));
+    // dispatch(massrouteCreate(massroute));
+    // setOpenSetAdress(false);
+    // props.createPoint(props.coord);
+    setOpenSetID(true);
+    //setOpenSetAdress(false);
   };
 
+  // const handleCloseSetID = () => {
+  //   // let adr = 'Новый перекрёсток'
+  //   // massdk.push(
+  //   //   MapssdkNewPoint(props.region, props.coord, adr, Number(currency))
+  //   // );
+  //   // massroute.vertexes.push(
+  //   //   MassrouteNewPoint(props.region, props.coord, adr, Number(currency))
+  //   // );
+  //   // dispatch(massdkCreate(massdk));
+  //   // dispatch(massrouteCreate(massroute));
+  //   // setOpenSetAdress(false);
+  //   // props.createPoint(props.coord);
+  //   setOpenSetID(true);
+  //   setOpenSetAdress(false);
+  // };
+
   const handleCloseSetAdress = () => {
+    setOpenSetID(true);
     setOpenSetAdress(false);
   };
+
+  // const handleChangeID = (event: any) => {
+  //   let valueInp = event.target.value.replace(/^0+/, "");
+  //   // if (valueInp > maxi) valueInp = maxi;
+  //   // if (valueInp < 0) valueInp = 0;
+  //   // if (event.target.value === '') valueInp = 0;
+  //   setValuen(valueInp);
+  // };
 
   return (
     <Box>
       <Modal open={openSetAdress} onClose={handleCloseSetAdress} hideBackdrop>
-        <Grid item container sx={styleSetAdress}>
-          <Grid item xs={9.5} sx={{ border: 0 }}>
-            <Box sx={styleSet}>
-              <Box
-                component="form"
-                sx={styleBoxForm}
-                noValidate
-                autoComplete="off"
-              >
-                <TextField
-                  select
-                  size="small"
-                  onKeyPress={handleKey} //отключение Enter
-                  inputProps={{ style: { fontSize: 13.3 } }}
-                  InputLabelProps={{ style: { fontSize: 13.3 } }}
-                  value={currency}
-                  onChange={handleChange}
-                  variant="standard"
-                  helperText="Введите район"
-                  color="secondary"
+        <>
+          <Grid item container sx={styleSetAdress}>
+            <Grid item xs={9.5} sx={{ border: 0 }}>
+              <Box sx={styleSet}>
+                <Box
+                  component="form"
+                  sx={styleBoxForm}
+                  noValidate
+                  autoComplete="off"
                 >
-                  {currencies.map((option: any) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
+                  <TextField
+                    select
+                    size="small"
+                    onKeyPress={handleKey} //отключение Enter
+                    // inputProps={{ style: { fontSize: 13.3 } }}
+                    // InputLabelProps={{ style: { fontSize: 13.3 } }}
+                    value={currency}
+                    onChange={handleChange}
+                    variant="standard"
+                    helperText="Введите район"
+                    color="secondary"
+                  >
+                    {currencies.map((option: any) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Box>
               </Box>
-            </Box>
+            </Grid>
+            <Grid item xs sx={{ border: 0 }}>
+              <Box>
+                <Button
+                  sx={styleInpKnop}
+                  variant="contained"
+                  onClick={handleCloseSetAdress}
+                >
+                  Ввод
+                </Button>
+              </Box>
+            </Grid>
           </Grid>
-          <Grid item xs sx={{ border: 0 }}>
-            <Box>
-              <Button
-                sx={styleInpKnop}
-                variant="contained"
-                onClick={handleCloseSetAdr}
-              >
-                Ввод
-              </Button>
-            </Box>
-          </Grid>
-        </Grid>
+        </>
       </Modal>
+      {openSetID && (
+        <MapCreateVertexInpID
+          region={props.region}
+          coord={props.coord}
+          area={currency}
+          createPoint={props.createPoint}
+        />
+      )}
     </Box>
   );
 };

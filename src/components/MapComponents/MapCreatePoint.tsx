@@ -35,7 +35,9 @@ const MapCreatePoint = (props: {
   const [openSetAdress, setOpenSetAdress] = React.useState(true);
   let valueN = "Новая точка " + String(chNewCoord);
   let aa = valueN;
-  const [valuen, setValuen] = React.useState("Новая точка " + String(chNewCoord));
+  const [valuen, setValuen] = React.useState(
+    "Новая точка " + String(chNewCoord)
+  );
 
   const handleKey = (event: any) => {
     if (event.key === "Enter") event.preventDefault();
@@ -49,14 +51,14 @@ const MapCreatePoint = (props: {
   };
 
   const handleCloseSetAdr = () => {
-    massdk.push(MapssdkNewPoint(props.region, props.coord, valuen, 0));
+    massdk.push(MapssdkNewPoint(props.region, props.coord, valuen, 0, 0));
     massroute.vertexes.push(
-      MassrouteNewPoint(props.region, props.coord, valuen, 0)
+      MassrouteNewPoint(props.region, props.coord, valuen, 0, 0)
     );
     dispatch(massdkCreate(massdk));
     dispatch(massrouteCreate(massroute));
     setOpenSetAdress(false);
-    props.createPoint(props.coord)
+    props.createPoint(props.coord);
   };
 
   const handleCloseSetAdress = () => {

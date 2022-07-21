@@ -1,5 +1,6 @@
 //import * as React from "react";
 
+import { PinDropSharp } from "@mui/icons-material";
 import { Pointer, Router } from "./../App";
 import { Vertex } from "./../interfaceRoute";
 
@@ -7,7 +8,8 @@ export const MapssdkNewPoint = (
   homeRegion: number,
   coords: any,
   name: string,
-  area: number
+  area: number,
+  id: number,
 ) => {
   let masskPoint: Pointer = {
     ID: 0,
@@ -18,7 +20,7 @@ export const MapssdkNewPoint = (
     newCoordinates: 0,
   };
 
-  masskPoint.ID = 0;
+  masskPoint.ID = id;
   masskPoint.coordinates = coords;
   masskPoint.nameCoordinates = name;
   masskPoint.region = homeRegion;
@@ -31,7 +33,8 @@ export const MassrouteNewPoint = (
   homeRegion: number,
   coords: any,
   name: string,
-  area: number
+  area: number,
+  id: number,
 ) => {
   let masskPoint: Vertex = {
     region: 0,
@@ -44,7 +47,7 @@ export const MassrouteNewPoint = (
 
   masskPoint.region = homeRegion;
   masskPoint.area = area;
-  masskPoint.id = 0;
+  masskPoint.id = id;
   masskPoint.dgis = CodingCoord(coords);
   masskPoint.name = name;
   masskPoint.scale = 0;
@@ -338,10 +341,11 @@ export const SendSocketCreateVertex = (
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
-            type: "createPoint",
+            type: "createVertex",
             data: {
-              position: codCoord,
-              name: adress,
+              region: region.toString(),
+              area: area.toString(),
+              id: ID
             },
           })
         );

@@ -172,34 +172,7 @@ const MapCreatePointVertex = (props: {
   //     </Box>
   //   );
   // };
-
-  // const MapCreateVertex = () => {
-  //   return (
-  //     <Modal open={openSetVert} onClose={handleCloseSetVert} hideBackdrop>
-  //       <>
-  //         <Box sx={styleSetV}>
-  //           <Button sx={styleModalEnd} onClick={handleCloseSetVertEnd}>
-  //             <b>&#10006;</b>
-  //           </Button>
-  //           <Box sx={{ textAlign: "center" }}>
-  //             <Typography variant="h6">Что создаём?</Typography>
-  //             <br />
-  //             <Button sx={styleModalMenu} onClick={() => handleCloseVertex(1)}>
-  //               Точку
-  //             </Button>
-  //             &nbsp;
-  //             <Button sx={styleModalMenu} onClick={() => handleCloseVertex(2)}>
-  //               Vertex
-  //             </Button>
-  //           </Box>
-  //         </Box>
-  //       </>
-  //     </Modal>
-  //   );
-  // };
-
-  console.log("!!!");
-
+   
   return (
     <Modal open={openSet} onClose={handleCloseSet} hideBackdrop>
       <>
