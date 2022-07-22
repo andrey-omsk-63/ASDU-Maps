@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { massrouteCreate } from './../../redux/actions';
+import { massrouteCreate } from "./../../redux/actions";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -15,7 +15,8 @@ const MapPointDataError = (props: {
   sErr: string;
   setOpen: any;
   debugging: boolean;
-  ws: WebSocket;
+  //ws: WebSocket;
+  ws: any;
   fromCross: any;
   toCross: any;
 }) => {
@@ -55,12 +56,13 @@ const MapPointDataError = (props: {
     for (let i = 0; i < massroute.ways.length; i++) {
       if (
         props.fromCross.pointAaRegin === massroute.ways[i].region.toString() &&
-        props.fromCross.pointAaArea === massroute.ways[i].sourceArea.toString() &&
+        props.fromCross.pointAaArea ===
+          massroute.ways[i].sourceArea.toString() &&
         props.fromCross.pointAaID === massroute.ways[i].sourceID &&
         props.toCross.pointBbID === massroute.ways[i].targetID &&
         props.toCross.pointBbArea === massroute.ways[i].targetArea.toString()
       )
-      index = i;
+        index = i;
     }
     massroute.ways.splice(index, 1);
     dispatch(massrouteCreate(massroute));
@@ -68,7 +70,7 @@ const MapPointDataError = (props: {
 
   const handleClose = (mode: number) => {
     if (mode === 1) {
-      DeleteWay()
+      DeleteWay();
       SendSocketDeleteWay(
         props.debugging,
         props.ws,
@@ -78,7 +80,7 @@ const MapPointDataError = (props: {
     }
     handleCloseSetEndEr();
   };
-  
+
   return (
     <Modal open={openSetEr} onClose={handleCloseSetEr} hideBackdrop>
       <Box sx={styleSetInf}>

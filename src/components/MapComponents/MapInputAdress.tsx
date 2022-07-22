@@ -65,7 +65,7 @@ const MapInputAdress = (props: { iPoint: number; setOpen: any }) => {
                   onChange={handleChange}
                   variant="standard"
                   helperText="Отредактируйте адрес"
-                  color="secondary"
+                  
                 />
               </Box>
             </Box>

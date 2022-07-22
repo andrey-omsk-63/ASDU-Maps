@@ -16,6 +16,7 @@ import { styleSet } from "./../MainMapStyle";
 let chNewCoord = 1;
 
 const MapCreatePoint = (props: {
+  setOpen: any;
   region: number;
   coord: any;
   createPoint: any;
@@ -62,6 +63,7 @@ const MapCreatePoint = (props: {
   };
 
   const handleCloseSetAdress = () => {
+    props.setOpen(false)
     setOpenSetAdress(false);
   };
 

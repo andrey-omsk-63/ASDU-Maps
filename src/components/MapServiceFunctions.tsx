@@ -1,6 +1,3 @@
-//import * as React from "react";
-
-import { PinDropSharp } from "@mui/icons-material";
 import { Pointer, Router } from "./../App";
 import { Vertex } from "./../interfaceRoute";
 

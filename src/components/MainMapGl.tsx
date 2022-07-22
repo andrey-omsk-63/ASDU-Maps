@@ -452,8 +452,8 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
     };
 
     const MakeNewPoint = (coords: any) => {
-      console.log("!!!!!Massroute:", massroute.vertexes);
-      console.log("!!!!!Massdk:", massdk);
+      console.log("!!!!!Massroute:");
+     
       let coor: string = CodingCoord(coords);
       let areaV = massroute.vertexes[massroute.vertexes.length - 1].area;
       let idV = massroute.vertexes[massroute.vertexes.length - 1].id;
@@ -466,8 +466,6 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
       }
       setOpenSetCreate(false);
     };
-
-    const MakeNewVertex = (coords: any) => {};
 
     return (
       <YMaps
@@ -565,7 +563,6 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
               region={homeRegion}
               coord={newPointCoord}
               createPoint={MakeNewPoint}
-              createVertex={MakeNewVertex}
             />
           )}
         </Map>
