@@ -1,26 +1,31 @@
-import * as React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { massdkCreate, massrouteCreate } from './../../redux/actions';
+import * as React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { massdkCreate, massrouteCreate } from "./../../redux/actions";
 
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Modal from '@mui/material/Modal';
-import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Modal from "@mui/material/Modal";
+import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
 
-import { MapssdkNewPoint, MassrouteNewPoint } from './../MapServiceFunctions';
-import MapPointDataError from './MapPointDataError';
+import { MapssdkNewPoint, MassrouteNewPoint } from "./../MapServiceFunctions";
+import MapPointDataError from "./MapPointDataError";
 
-import { styleInpKnop, styleSetAdrAreaID } from './../MainMapStyle';
-import { styleSetAdrArea, styleSetAdrID } from './../MainMapStyle';
-import { styleSetArea, styleSetID } from './../MainMapStyle';
-import { styleBoxFormArea, styleBoxFormID } from './../MainMapStyle';
+import { styleInpKnop, styleSetAdrAreaID } from "./../MainMapStyle";
+import { styleSetAdrArea, styleSetAdrID } from "./../MainMapStyle";
+import { styleSetArea, styleSetID } from "./../MainMapStyle";
+import { styleBoxFormArea, styleBoxFormID } from "./../MainMapStyle";
 
-let soobErr = '';
-let adrV = '';
+let soobErr = "";
+let adrV = "";
 
-const MapCreateVertex = (props: { setOpen: any; region: number; coord: any; createPoint: any }) => {
+const MapCreateVertex = (props: {
+  setOpen: any;
+  region: number;
+  coord: any;
+  createPoint: any;
+}) => {
   //== Piece of Redux ======================================
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;
@@ -47,8 +52,8 @@ const MapCreateVertex = (props: { setOpen: any; region: number; coord: any; crea
   }
   for (let i = 0; i < massKey.length; i++) {
     let maskCurrencies = {
-      value: '',
-      label: '',
+      value: "",
+      label: "",
     };
     maskCurrencies.value = massKey[i];
     maskCurrencies.label = massDat[i];
@@ -61,19 +66,19 @@ const MapCreateVertex = (props: { setOpen: any; region: number; coord: any; crea
   const [openSetErr, setOpenSetErr] = React.useState(false);
 
   const handleKey = (event: any) => {
-    if (event.key === 'Enter') event.preventDefault();
+    if (event.key === "Enter") event.preventDefault();
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrency(event.target.value);
-    console.log('setCurrency:', event.target.value, currency);
+    console.log("setCurrency:", event.target.value, currency);
     setOpenSetAdress(true);
   };
 
   const handleChangeID = (event: any) => {
-    let valueInp = event.target.value.replace(/^0+/, '');
+    let valueInp = event.target.value.replace(/^0+/, "");
     if (Number(valueInp) < 0) valueInp = 0;
-    if (valueInp === '') valueInp = 0;
+    if (valueInp === "") valueInp = 0;
     valueInp = Math.trunc(Number(valueInp)).toString();
     //console.log('valueInp:', typeof valueInp, valueInp);
     setValuen(valueInp);
@@ -93,7 +98,7 @@ const MapCreateVertex = (props: { setOpen: any; region: number; coord: any; crea
         massroute.vertexes[i].id === Number(valuen)
       ) {
         doublAreaID = false;
-        soobErr = 'Дубликатная запись ключ: Регион_Pайон_ID';
+        soobErr = "Дубликатная запись ключ: Регион_Pайон_ID";
         setOpenSetErr(true);
       }
     }
@@ -102,35 +107,45 @@ const MapCreateVertex = (props: { setOpen: any; region: number; coord: any; crea
 
   const CheckAvailVertex = () => {
     let availVertex = false;
-    console.log('!!!map:', map.dateMap.tflight[0].area.num === Number(valuen));
     for (let i = 0; i < map.dateMap.tflight.length; i++) {
       if (
         map.dateMap.tflight[i].region.num === props.region.toString() &&
         map.dateMap.tflight[i].area.num === currency &&
         map.dateMap.tflight[i].ID === Number(valuen)
       ) {
-        console.log('£££££');
         availVertex = true;
         adrV = map.dateMap.tflight[i].description;
         break;
       }
     }
     if (!availVertex) {
-      soobErr = 'Нет информации по данному перекрёстку';
+      soobErr = "Нет информации по данному перекрёстку";
       setOpenSetErr(true);
     }
     return availVertex;
   };
 
-  const handleCloseSetID = () => {
-    console.log('valuen:', typeof valuen, valuen);
+  const handleClose = () => {
+    console.log("valuen:", typeof valuen, valuen);
     if (CheckAvailVertex()) {
       if (CheckDoublAreaID()) {
         massdk.push(
-          MapssdkNewPoint(props.region, props.coord, adrV, Number(currency), Number(valuen)),
+          MapssdkNewPoint(
+            props.region,
+            props.coord,
+            adrV,
+            Number(currency),
+            Number(valuen)
+          )
         );
         massroute.vertexes.push(
-          MassrouteNewPoint(props.region, props.coord, adrV, Number(currency), Number(valuen)),
+          MassrouteNewPoint(
+            props.region,
+            props.coord,
+            adrV,
+            Number(currency),
+            Number(valuen)
+          )
         );
         dispatch(massdkCreate(massdk));
         dispatch(massrouteCreate(massroute));
@@ -143,7 +158,12 @@ const MapCreateVertex = (props: { setOpen: any; region: number; coord: any; crea
   const InputArea = () => {
     return (
       <Box sx={styleSetArea}>
-        <Box component="form" sx={styleBoxFormArea} noValidate autoComplete="off">
+        <Box
+          component="form"
+          sx={styleBoxFormArea}
+          noValidate
+          autoComplete="off"
+        >
           <TextField
             select
             size="small"
@@ -152,7 +172,8 @@ const MapCreateVertex = (props: { setOpen: any; region: number; coord: any; crea
             onChange={handleChange}
             variant="standard"
             helperText="Введите район"
-            color="secondary">
+            color="secondary"
+          >
             {currencies.map((option: any) => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}
@@ -177,7 +198,12 @@ const MapCreateVertex = (props: { setOpen: any; region: number; coord: any; crea
             <Grid item container sx={styleSetAdrID}>
               <Grid item xs={9.5}>
                 <Box sx={styleSetID}>
-                  <Box component="form" sx={styleBoxFormID} noValidate autoComplete="off">
+                  <Box
+                    component="form"
+                    sx={styleBoxFormID}
+                    noValidate
+                    autoComplete="off"
+                  >
                     <TextField
                       size="small"
                       onKeyPress={handleKey} //отключение Enter
@@ -193,11 +219,9 @@ const MapCreateVertex = (props: { setOpen: any; region: number; coord: any; crea
                 </Box>
               </Grid>
               <Grid item xs>
-                <Box>
-                  <Button sx={styleInpKnop} variant="contained" onClick={handleCloseSetID}>
-                    Ввод
-                  </Button>
-                </Box>
+                <Button sx={styleInpKnop} onClick={handleClose}>
+                  Ввод
+                </Button>
               </Grid>
             </Grid>
           </Grid>
