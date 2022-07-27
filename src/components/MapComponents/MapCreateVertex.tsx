@@ -229,10 +229,11 @@ const MapCreateVertex = (props: {
             <MapPointDataError
               sErr={soobErr}
               setOpen={setOpenSetErr}
-              debugging={false}
+              debug={false}
               ws={{}}
               fromCross={0}
               toCross={0}
+              activeRoute={0}
             />
           )}
         </Grid>
