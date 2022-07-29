@@ -42,7 +42,7 @@ export interface Router {
   ltarget: number;
   starts: string;
   stops: string;
-  length: number;
+  lenght: number;
   time: number;
 }
 export let massRoute: Router[] = [];
@@ -90,8 +90,8 @@ const App = () => {
     WS = new WebSocket(host);
     flagOpenWS = false;
     let pageUrl = new URL(window.location.href);
-    homeRegion = pageUrl.searchParams.get("Region");
-    console.log("WS:", WS);
+    homeRegion = Number(pageUrl.searchParams.get("Region"));
+    console.log("WS:",homeRegion, WS);
   }
 
   React.useEffect(() => {

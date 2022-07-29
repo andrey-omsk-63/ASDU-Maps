@@ -1,5 +1,5 @@
 import { Pointer, Router } from "./../App";
-import { Vertex } from "./../interfaceRoute";
+import { Vertex, Way } from "./../interfaceRoute";
 
 export const MapssdkNewPoint = (
   homeRegion: number,
@@ -66,7 +66,7 @@ export const RecordMassRoute = (
     ltarget: 0,
     starts: "",
     stops: "",
-    length: 0,
+    lenght: 0,
     time: 0,
   };
 
@@ -81,7 +81,7 @@ export const RecordMassRoute = (
   masskRoute.stops = toCross.pointBcod;
   if (activeRoute) {
     masskRoute.time = Math.round(activeRoute.properties.get("duration").value);
-    masskRoute.length = Math.round(
+    masskRoute.lenght = Math.round(
       activeRoute.properties.get("distance").value
     );
   }
@@ -290,7 +290,7 @@ export const SendSocketDeleteVertex = (
     if (!debugging) {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
-          JSON.stringify({ type: "deletePoint", data: { region, area, id } })
+          JSON.stringify({ type: "deleteVertex", data: { region, area, id } })
         );
       } else {
         setTimeout(() => {
@@ -310,7 +310,7 @@ export const SendSocketCreateWay = (
   activeRoute: any
 ) => {
   const handleSendOpen = () => {
-    console.log('SendSocketCreateWay')
+    console.log("SendSocketCreateWay");
     if (!debugging) {
       let lengthRoute = Math.round(
         activeRoute.properties.get("distance").value
@@ -351,7 +351,7 @@ export const SendSocketDeleteWay = (
   toCr: any
 ) => {
   const handleSendOpen = () => {
-    console.log('SendSocketDeleteWay')
+    console.log("SendSocketDeleteWay");
     if (!debugging) {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
@@ -389,7 +389,7 @@ export const SendSocketCreateWayFromPoint = (
   activeRoute: any
 ) => {
   const handleSendOpen = () => {
-    console.log('SendSocketCreateWayFromPoint')
+    console.log("SendSocketCreateWayFromPoint");
     if (!debugging) {
       let lengthRoute = Math.round(
         activeRoute.properties.get("distance").value
@@ -427,11 +427,8 @@ export const SendSocketDeleteWayFromPoint = (
   lengthRoute: number
 ) => {
   const handleSendOpen = () => {
-    console.log('SendSocketDeleteWayFromPoint', lengthRoute)
+    console.log("SendSocketDeleteWayFromPoint", lengthRoute);
     if (!debugging) {
-      // let lengthRoute = Math.round(
-      //   activeRoute.properties.get("distance").value
-      // );
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
@@ -465,7 +462,7 @@ export const SendSocketCreateWayToPoint = (
   activeRoute: any
 ) => {
   const handleSendOpen = () => {
-    console.log('SendSocketCreateWayToPoint:',activeRoute)
+    console.log("SendSocketCreateWayToPoint:", activeRoute);
     if (!debugging) {
       let lengthRoute = Math.round(
         activeRoute.properties.get("distance").value
@@ -503,11 +500,8 @@ export const SendSocketDeleteWayToPoint = (
   lengthRoute: number
 ) => {
   const handleSendOpen = () => {
-    console.log('SendSocketDeleteWayToPoint:',lengthRoute)
+    console.log("SendSocketDeleteWayToPoint:", lengthRoute);
     if (!debugging) {
-      // let lengthRoute = Math.round(
-      //   activeRoute.properties.get("distance").value
-      //);
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
@@ -531,6 +525,52 @@ export const SendSocketDeleteWayToPoint = (
     }
   };
   handleSendOpen();
+};
+//==================================================
+export const SocketDeleteWay = (debugging: boolean, WS: WebSocket, ways: Way) => {
+  let fromCross: any = {
+    pointAaRegin: "",
+    pointAaArea: "",
+    pointAaID: 0,
+    pointAcod: "",
+  };
+  let toCross: any = {
+    pointBbRegin: "",
+    pointBbArea: "",
+    pointBbID: 0,
+    pointBcod: "",
+  };
+  let lengthRoute = ways.lenght;
+
+  fromCross.pointAaRegin = ways.region.toString();
+  fromCross.pointAaArea = ways.sourceArea.toString();
+  fromCross.pointAaID = ways.sourceID;
+  fromCross.pointAcod = ways.starts;
+  toCross.pointBbRegin = ways.region.toString();
+  toCross.pointBbArea = ways.targetArea.toString();
+  toCross.pointBbID = ways.targetID;
+  toCross.pointBcod = ways.stops;
+  if (ways.sourceArea === 0) {
+    SendSocketDeleteWayFromPoint(
+      debugging,
+      WS,
+      fromCross,
+      toCross,
+      lengthRoute
+    );
+  } else {
+    if (ways.targetArea === 0) {
+      SendSocketDeleteWayToPoint(
+        debugging,
+        WS,
+        fromCross,
+        toCross,
+        lengthRoute
+      );
+    } else {
+      SendSocketDeleteWay(debugging, WS, fromCross, toCross);
+    }
+  }
 };
 
 //=== костыль ======================================

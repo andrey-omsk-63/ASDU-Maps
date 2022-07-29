@@ -71,7 +71,7 @@ const MapCreateVertex = (props: {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrency(event.target.value);
-    console.log("setCurrency:", event.target.value, currency);
+    //console.log("setCurrency:", event.target.value, currency);
     setOpenSetAdress(true);
   };
 
@@ -80,7 +80,6 @@ const MapCreateVertex = (props: {
     if (Number(valueInp) < 0) valueInp = 0;
     if (valueInp === "") valueInp = 0;
     valueInp = Math.trunc(Number(valueInp)).toString();
-    //console.log('valueInp:', typeof valueInp, valueInp);
     setValuen(valueInp);
   };
 
@@ -91,12 +90,19 @@ const MapCreateVertex = (props: {
 
   const CheckDoublAreaID = () => {
     let doublAreaID = true;
+    console.log("type region", typeof props.region)
+    console.log('##:',props.region,Number(currency),Number(valuen))
+    console.log('#reion:',massroute.vertexes[0].region,props.region,massroute.vertexes[0].region === props.region)
+    console.log('#area:',massroute.vertexes[0].area === Number(currency))
+    console.log('#id:',massroute.vertexes[0].id === Number(valuen))
+
     for (let i = 0; i < massroute.vertexes.length; i++) {
       if (
         massroute.vertexes[i].region === props.region &&
         massroute.vertexes[i].area === Number(currency) &&
         massroute.vertexes[i].id === Number(valuen)
       ) {
+        console.log("22222222", i);
         doublAreaID = false;
         soobErr = "Дубликатная запись ключ: Регион_Pайон_ID";
         setOpenSetErr(true);
@@ -113,12 +119,14 @@ const MapCreateVertex = (props: {
         map.dateMap.tflight[i].area.num === currency &&
         map.dateMap.tflight[i].ID === Number(valuen)
       ) {
+        console.log("!!!!!!!", i);
         availVertex = true;
         adrV = map.dateMap.tflight[i].description;
         break;
       }
     }
     if (!availVertex) {
+      console.log("?????????");
       soobErr = "Нет информации по данному перекрёстку";
       setOpenSetErr(true);
     }
@@ -126,7 +134,6 @@ const MapCreateVertex = (props: {
   };
 
   const handleClose = () => {
-    console.log("valuen:", typeof valuen, valuen);
     if (CheckAvailVertex()) {
       if (CheckDoublAreaID()) {
         massdk.push(
