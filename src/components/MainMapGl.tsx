@@ -101,9 +101,9 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
   const [openSet, setOpenSet] = React.useState(false);
   const [openSetAdress, setOpenSetAdress] = React.useState(false);
   const [openSetCreate, setOpenSetCreate] = React.useState(false);
-  const [flagRoute, setFlagRoute] = React.useState(false);
   const [flagDemo, setFlagDemo] = React.useState(false);
   const [flagPusk, setFlagPusk] = React.useState(false);
+  const [flagRoute, setFlagRoute] = React.useState(false);
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(massroute).length) {
     if (props.region) homeRegion = props.region;
@@ -250,7 +250,6 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
 
     const addRoute = (ymaps: any) => {
       const multiRoute = new ymaps.multiRouter.MultiRoute(
-        // getReferencePoints(pointAA, pointBB),
         getReferencePoints(pointAa, pointBb),
         getMultiRouteOptions()
       );
@@ -389,10 +388,10 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
                 toCross.pointBbRegin = massdk[pointBbIndex].region.toString();
                 toCross.pointBbArea = massdk[pointBbIndex].area.toString();
                 toCross.pointBbID = massdk[pointBbIndex].ID;
-                setFlagRoute(true);
                 if (DoublRoute(massroute.ways, pointAa, pointBb)) {
                   SoobOpenSetEr("Дубликатная связь");
                 }
+                setFlagRoute(true);
                 setOpenSet(false);
               }
             }
@@ -643,4 +642,4 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
 
 export default MainMap;
 
-// <MapGl ws={props.ws} pointa={pointA} pointb={pointB} />
+
