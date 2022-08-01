@@ -90,11 +90,16 @@ const MapCreateVertex = (props: {
 
   const CheckDoublAreaID = () => {
     let doublAreaID = true;
-    console.log("type region", typeof props.region)
-    console.log('##:',props.region,Number(currency),Number(valuen))
-    console.log('#reion:',massroute.vertexes[0].region,props.region,massroute.vertexes[0].region === props.region)
-    console.log('#area:',massroute.vertexes[0].area === Number(currency))
-    console.log('#id:',massroute.vertexes[0].id === Number(valuen))
+    console.log("type region", typeof props.region);
+    console.log("##:", props.region, Number(currency), Number(valuen));
+    console.log(
+      "#reion:",
+      massroute.vertexes[0].region,
+      props.region,
+      massroute.vertexes[0].region === props.region
+    );
+    console.log("#area:", massroute.vertexes[0].area === Number(currency));
+    console.log("#id:", massroute.vertexes[0].id === Number(valuen));
 
     for (let i = 0; i < massroute.vertexes.length; i++) {
       if (
@@ -194,7 +199,12 @@ const MapCreateVertex = (props: {
 
   return (
     <Box>
-      <Modal open={openSetAdress} onClose={handleCloseSetAdress} hideBackdrop>
+      <Modal
+        open={openSetAdress}
+        onClose={handleCloseSetAdress}
+        disableEnforceFocus
+        hideBackdrop
+      >
         <Grid item container sx={styleSetAdrAreaID}>
           <Grid item>
             <Grid item container sx={styleSetAdrArea}>

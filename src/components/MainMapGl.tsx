@@ -53,6 +53,7 @@ let flagBind = false;
 let activeRoute: any;
 let newPointCoord: any = 0;
 let soobError = "";
+//let openSet = false;
 
 let zoom = 10;
 let homeRegion = 0;
@@ -98,12 +99,13 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
   const [openSetInf, setOpenSetInf] = React.useState(false);
   const [openSetEr, setOpenSetEr] = React.useState(false);
   const [openSetBind, setOpenSetBind] = React.useState(false);
-  const [openSet, setOpenSet] = React.useState(false);
-  const [openSetAdress, setOpenSetAdress] = React.useState(false);
-  const [openSetCreate, setOpenSetCreate] = React.useState(false);
   const [flagDemo, setFlagDemo] = React.useState(false);
   const [flagPusk, setFlagPusk] = React.useState(false);
   const [flagRoute, setFlagRoute] = React.useState(false);
+  const [trigger, setTrigger] = React.useState(false);
+  // const setOpenSet = (mode: boolean) => {
+  //   openSet = mode;
+  // }
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(massroute).length) {
     if (props.region) homeRegion = props.region;
@@ -141,15 +143,19 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
     dispatch(massrouteCreate(massroute));
   }
   //========================================================
+  const DelCollectionRoutes = () => {
+    coordStart = [];
+    coordStop = [];
+    coordStartIn = [];
+    coordStopIn = [];
+  };
+
   const ZeroRoute = (mode: boolean) => {
     pointAa = 0;
     pointBb = 0;
     pointAaIndex = -1;
     pointBbIndex = -1;
-    coordStart = [];
-    coordStop = [];
-    coordStartIn = [];
-    coordStopIn = [];
+    DelCollectionRoutes();
     flagBind = false;
     setFlagRoute(false);
     setFlagPusk(mode);
@@ -203,6 +209,19 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
     ZeroRoute(mode);
   };
 
+  const MakeСollectionRoute = () => {
+    for (let i = 0; i < massroute.ways.length; i++) {
+      if (massroute.ways[i].starts === CodingCoord(pointAa)) {
+        coordStop.push(DecodingCoord(massroute.ways[i].stops)); // исходящие связи
+        coordStart.push(pointAa);
+      }
+      if (massroute.ways[i].stops === CodingCoord(pointAa)) {
+        coordStartIn.push(DecodingCoord(massroute.ways[i].starts)); // входящие связи
+        coordStopIn.push(pointAa);
+      }
+    }
+  };
+
   const PressMenuButton = (mode: number) => {
     switch (mode) {
       case 3: // режим включения Demo сети связей
@@ -221,7 +240,9 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
         pointAaIndex = pointBbIndex;
         pointBbIndex = pa;
         ChangeCross();
-        setFlagRoute(true);
+        DelCollectionRoutes();
+        MakeСollectionRoute();
+        setTrigger(!trigger);
         break;
       case 21: // сохранение связи
         MakeRecordMassRoute(false);
@@ -241,12 +262,14 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
   let mapState: any = {
     center: pointCenter,
     zoom,
-    //searchControlProvider: "yandex#search",
     yandexMapDisablePoiInteractivity: true,
   };
-
+//========================================================
   const MapGl = () => {
     const mapp = React.useRef<any>(null);
+    const [openSet, setOpenSet] = React.useState(false);
+    const [openSetCreate, setOpenSetCreate] = React.useState(false);
+    const [openSetAdress, setOpenSetAdress] = React.useState(false);
 
     const addRoute = (ymaps: any) => {
       const multiRoute = new ymaps.multiRouter.MultiRoute(
@@ -285,19 +308,6 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
       multiRoute.model.events.add("requestsuccess", function () {
         activeRoute = multiRoute.getActiveRoute();
       });
-    };
-
-    const MakeСollectionRoute = () => {
-      for (let i = 0; i < massroute.ways.length; i++) {
-        if (massroute.ways[i].starts === CodingCoord(pointAa)) {
-          coordStop.push(DecodingCoord(massroute.ways[i].stops)); // исходящие связи
-          coordStart.push(pointAa);
-        }
-        if (massroute.ways[i].stops === CodingCoord(pointAa)) {
-          coordStartIn.push(DecodingCoord(massroute.ways[i].starts)); // входящие связи
-          coordStopIn.push(pointAa);
-        }
-      }
     };
 
     const OnPlacemarkClickPoint = (index: number) => {
@@ -368,8 +378,10 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
               fromCross.pointAaRegin = massdk[pointAaIndex].region.toString();
               fromCross.pointAaArea = massdk[pointAaIndex].area.toString();
               fromCross.pointAaID = massdk[pointAaIndex].ID;
-              setFlagRoute(true);
+              DelCollectionRoutes();
+              MakeСollectionRoute();
               setOpenSet(false);
+              //setTrigger(!trigger);
             }
             break;
           case 2: // Конечная точка
@@ -391,8 +403,8 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
                 if (DoublRoute(massroute.ways, pointAa, pointBb)) {
                   SoobOpenSetEr("Дубликатная связь");
                 }
-                setFlagRoute(true);
                 setOpenSet(false);
+                //setTrigger(!trigger);
               }
             }
             break;
@@ -419,10 +431,7 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
               massroute.ways.splice(0, massroute.ways.length); // massroute = [];
               massroute.ways = massRouteRab;
               if (flagDemo) massRoute = massroute.ways;
-              coordStart = []; // удаление колекции связей
-              coordStop = [];
-              coordStartIn = [];
-              coordStopIn = [];
+              DelCollectionRoutes(); // удаление колекции связей
               massdk.splice(indexPoint, 1); // удаление самой точки
               massroute.vertexes.splice(indexPoint, 1);
               dispatch(massdkCreate(massdk));
@@ -508,18 +517,36 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
     const PlacemarkDo = () => {
       let pAaI = pointAaIndex;
       let pBbI = pointBbIndex;
+
+      const DoPlacemarkDo = (props: { coordinate: any; idx: number }) => {
+        const MemoPlacemarkDo = React.useMemo(
+          () => (
+            <Placemark
+              key={props.idx}
+              geometry={props.coordinate}
+              properties={getPointData(props.idx, pAaI, pBbI, massdk)}
+              options={getPointOptions(
+                props.idx,
+                pAaI,
+                pBbI,
+                massdk,
+                massroute
+              )}
+              modules={["geoObject.addon.balloon", "geoObject.addon.hint"]}
+              onClick={() => OnPlacemarkClickPoint(props.idx)}
+            />
+          ),
+          [props.coordinate, props.idx]
+        );
+
+        return MemoPlacemarkDo;
+      };
+
       return (
         <>
           {flagOpen &&
             coordinates.map((coordinate, idx) => (
-              <Placemark
-                key={idx}
-                geometry={coordinate}
-                properties={getPointData(idx, pAaI, pBbI, massdk)}
-                options={getPointOptions(idx, pAaI, pBbI, massdk, massroute)}
-                modules={["geoObject.addon.balloon", "geoObject.addon.hint"]}
-                onClick={() => OnPlacemarkClickPoint(idx)}
-              />
+              <DoPlacemarkDo key={idx} coordinate={coordinate} idx={idx} />
             ))}
         </>
       );
@@ -612,7 +639,6 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
       </Button>
     );
   };
-
   console.log("Massroute:", massroute);
   console.log("Massdk:", massdk);
 
@@ -641,5 +667,3 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
 };
 
 export default MainMap;
-
-

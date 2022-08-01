@@ -15,7 +15,12 @@ const MapRouteBind = (props: { setOpen: any }) => {
   };
 
   return (
-    <Modal open={openSetBind} onClose={handleCloseSetEndBind} hideBackdrop>
+    <Modal
+      open={openSetBind}
+      onClose={handleCloseSetEndBind}
+      disableEnforceFocus
+      hideBackdrop
+    >
       <Box sx={styleSetInf}>
         <Button sx={styleModalEnd} onClick={handleCloseSetEndBind}>
           <b>&#10006;</b>

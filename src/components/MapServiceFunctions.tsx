@@ -69,9 +69,7 @@ export const RecordMassRoute = (
     lenght: 0,
     time: 0,
   };
-
-  console.log("toCross:", toCross);
-
+  
   masskRoute.region = Number(fromCross.pointAaRegin);
   masskRoute.sourceArea = Number(fromCross.pointAaArea);
   masskRoute.sourceID = fromCross.pointAaID;

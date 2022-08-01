@@ -63,13 +63,18 @@ const MapCreatePoint = (props: {
   };
 
   const handleCloseSetAdress = () => {
-    props.setOpen(false)
+    props.setOpen(false);
     setOpenSetAdress(false);
   };
 
   return (
     <Box>
-      <Modal open={openSetAdress} onClose={handleCloseSetAdress} hideBackdrop>
+      <Modal
+        open={openSetAdress}
+        onClose={handleCloseSetAdress}
+        disableEnforceFocus
+        hideBackdrop
+      >
         <Grid item container sx={styleSetAdress}>
           <Grid item xs={9.5} sx={{ border: 0 }}>
             <Box sx={styleSet}>

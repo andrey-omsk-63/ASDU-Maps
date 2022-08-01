@@ -135,7 +135,7 @@ const App = () => {
           console.log("data_default:", data);
       }
     };
-  }, [WS, dispatch, massdk]);
+  }, [dispatch, massdk]);
 
   //для отладки
   if (WS.url === "wss://localhost:3000/W" && flagOpen) {

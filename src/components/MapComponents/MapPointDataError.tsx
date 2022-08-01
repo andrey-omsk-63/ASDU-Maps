@@ -107,7 +107,7 @@ const MapPointDataError = (props: {
   };
 
   return (
-    <Modal open={openSetEr} onClose={handleCloseSetEnd} hideBackdrop>
+    <Modal open={openSetEr} onClose={handleCloseSetEnd} disableEnforceFocus hideBackdrop>
       <Box sx={styleSetInf}>
         <Button sx={styleModalEnd} onClick={handleCloseSetEnd}>
           <b>&#10006;</b>

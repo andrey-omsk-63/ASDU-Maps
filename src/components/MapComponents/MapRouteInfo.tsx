@@ -31,7 +31,14 @@ const MapRouteInfo = (props: {
     console.log("1111", props.activeRoute.properties.get("duration"));
   }
   return (
-    <Modal open={openSetInf} onClose={handleCloseSetEndInf} hideBackdrop>
+    <Modal
+      open={openSetInf}
+      onClose={handleCloseSetEndInf}
+      disableEnforceFocus
+      hideBackdrop
+      aria-labelledby="child-modal-title"
+      aria-describedby="child-modal-description"
+    >
       <Box sx={styleSetInf}>
         <Button sx={styleModalEnd} onClick={handleCloseSetEndInf}>
           <b>&#10006;</b>

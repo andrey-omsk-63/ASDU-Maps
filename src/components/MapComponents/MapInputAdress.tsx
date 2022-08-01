@@ -47,7 +47,12 @@ const MapInputAdress = (props: { iPoint: number; setOpen: any }) => {
 
   return (
     <Box>
-      <Modal open={openSetAdress} onClose={handleCloseSetAdr} hideBackdrop>
+      <Modal
+        open={openSetAdress}
+        onClose={handleCloseSetAdr}
+        disableEnforceFocus
+        hideBackdrop
+      >
         <Grid item container sx={styleSetAdress}>
           <Grid item xs={9.5} sx={{ border: 0 }}>
             <Box sx={styleSet}>
@@ -65,7 +70,6 @@ const MapInputAdress = (props: { iPoint: number; setOpen: any }) => {
                   onChange={handleChange}
                   variant="standard"
                   helperText="Отредактируйте адрес"
-                  
                 />
               </Box>
             </Box>

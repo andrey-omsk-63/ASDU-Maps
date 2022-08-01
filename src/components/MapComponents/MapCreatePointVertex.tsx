@@ -53,7 +53,12 @@ const MapCreatePointVertex = (props: {
 
   return (
     <>
-      <Modal open={openSet} onClose={handleCloseSet} hideBackdrop>
+      <Modal
+        open={openSet}
+        onClose={handleCloseSet}
+        disableEnforceFocus
+        hideBackdrop
+      >
         <>
           <Box sx={styleSet}>
             <Button sx={styleModalEnd} onClick={handleCloseSetEnd}>
