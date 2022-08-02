@@ -9,7 +9,7 @@ import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 
 import { YMaps, Map, Placemark, FullscreenControl } from "react-yandex-maps";
-import { GeolocationControl } from "react-yandex-maps";
+import { GeolocationControl, YMapsApi } from "react-yandex-maps";
 import { RulerControl, SearchControl } from "react-yandex-maps";
 import { TrafficControl, TypeSelector, ZoomControl } from "react-yandex-maps";
 
@@ -227,10 +227,35 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
       case 3: // режим включения Demo сети связей
         massRoute = massroute.ways;
         setFlagDemo(true);
+        if (ymaps) addRoute(ymaps);
         break;
       case 6: // режим отмены Demo сети связей
+        let massPolyRoute: any = []; // cеть связей
+        console.log("1flagDemo", flagDemo);
+        if (ymaps) {
+          for (let i = 0; i < massRoute.length; i++) {
+            massPolyRoute[i] = new ymaps.Polyline(
+              [
+                DecodingCoord(massRoute[i].starts),
+                DecodingCoord(massRoute[i].stops),
+              ],
+              { balloonContent: "Ломаная линия" },
+              {
+                //routeVisible: false,
+                strokeVisible: false,
+                // balloonCloseButton: false,
+                // strokeColor: "#1A9165",
+                // strokeWidth: 2,
+              }
+            );
+            console.log("!!!!!!!!!!!!!!!!!!!!");
+            mapp.current.geoObjects.add(massPolyRoute[i]);
+          }
+        }
+
         massRoute = [];
         setFlagDemo(false);
+        //if (ymaps) addRoute(ymaps);
         break;
       case 12: // реверс связи
         let pa = pointAa;
@@ -242,7 +267,7 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
         ChangeCross();
         DelCollectionRoutes();
         MakeСollectionRoute();
-        setTrigger(!trigger);
+        if (ymaps) addRoute(ymaps);
         break;
       case 21: // сохранение связи
         MakeRecordMassRoute(false);
@@ -252,7 +277,8 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
         setOpenSetBind(true);
         break;
       case 69: // инфа о связе
-        if (activeRoute) setOpenSetInf(true);
+        //if (activeRoute)
+        setOpenSetInf(true);
         break;
       case 77: // удаление связи
         ZeroRoute(false);
@@ -264,345 +290,232 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
     zoom,
     yandexMapDisablePoiInteractivity: true,
   };
-//========================================================
-  const MapGl = () => {
-    const mapp = React.useRef<any>(null);
-    const [openSet, setOpenSet] = React.useState(false);
-    const [openSetCreate, setOpenSetCreate] = React.useState(false);
-    const [openSetAdress, setOpenSetAdress] = React.useState(false);
+  //========================================================
+  //const MapGl = () => {
+  const mapp = React.useRef<any>(null);
+  const [openSet, setOpenSet] = React.useState(false);
+  const [openSetCreate, setOpenSetCreate] = React.useState(false);
+  const [openSetAdress, setOpenSetAdress] = React.useState(false);
+  const [ymaps, setYmaps] = React.useState<YMapsApi | null>(null);
 
-    const addRoute = (ymaps: any) => {
-      const multiRoute = new ymaps.multiRouter.MultiRoute(
-        getReferencePoints(pointAa, pointBb),
-        getMultiRouteOptions()
+  const addRoute = (ymaps: any) => {
+    //multiRoute.options.set('routeVisible', false);
+    const multiRoute = new ymaps.multiRouter.MultiRoute(
+      getReferencePoints(pointAa, pointBb),
+      getMultiRouteOptions()
+    );
+    let massPolyRoute: any = []; // cеть связей
+    console.log("1flagDemo", flagDemo);
+    for (let i = 0; i < massRoute.length; i++) {
+      massPolyRoute[i] = new ymaps.Polyline(
+        [DecodingCoord(massRoute[i].starts), DecodingCoord(massRoute[i].stops)],
+        { balloonContent: "Ломаная линия" },
+        getMassPolyRouteOptions()
       );
-      let massPolyRoute: any = []; // cеть связей
-      for (let i = 0; i < massRoute.length; i++) {
-        massPolyRoute[i] = new ymaps.Polyline(
-          [
-            DecodingCoord(massRoute[i].starts),
-            DecodingCoord(massRoute[i].stops),
-          ],
-          { balloonContent: "Ломаная линия" },
-          getMassPolyRouteOptions()
-        );
-        mapp.current.geoObjects.add(massPolyRoute[i]);
-      }
-      let massMultiRoute: any = []; // исходящие связи
-      for (let i = 0; i < coordStart.length; i++) {
-        massMultiRoute[i] = new ymaps.multiRouter.MultiRoute(
-          getReferencePoints(coordStart[i], coordStop[i]),
-          getMassMultiRouteOptions()
-        );
-        mapp.current.geoObjects.add(massMultiRoute[i]);
-      }
-      let massMultiRouteIn: any = []; // входящие связи
-      for (let i = 0; i < coordStartIn.length; i++) {
-        massMultiRouteIn[i] = new ymaps.multiRouter.MultiRoute(
-          getReferencePoints(coordStartIn[i], coordStopIn[i]),
-          getMassMultiRouteInOptions()
-        );
-        mapp.current.geoObjects.add(massMultiRouteIn[i]);
-      }
-      mapp.current.geoObjects.add(multiRoute); // основная связь
-      multiRoute.model.events.add("requestsuccess", function () {
-        activeRoute = multiRoute.getActiveRoute();
-      });
-    };
+      mapp.current.geoObjects.add(massPolyRoute[i]);
+    }
+    let massMultiRoute: any = []; // исходящие связи
+    for (let i = 0; i < coordStart.length; i++) {
+      massMultiRoute[i] = new ymaps.multiRouter.MultiRoute(
+        getReferencePoints(coordStart[i], coordStop[i]),
+        getMassMultiRouteOptions()
+      );
+      mapp.current.geoObjects.add(massMultiRoute[i]);
+    }
+    let massMultiRouteIn: any = []; // входящие связи
+    for (let i = 0; i < coordStartIn.length; i++) {
+      massMultiRouteIn[i] = new ymaps.multiRouter.MultiRoute(
+        getReferencePoints(coordStartIn[i], coordStopIn[i]),
+        getMassMultiRouteInOptions()
+      );
+      mapp.current.geoObjects.add(massMultiRouteIn[i]);
+    }
+    mapp.current.geoObjects.add(multiRoute); // основная связь
+    multiRoute.model.events.add("requestsuccess", function () {
+      activeRoute = multiRoute.getActiveRoute();
+    });
+  };
 
-    const OnPlacemarkClickPoint = (index: number) => {
-      if (pointAa === 0) {
-        pointAaIndex = index; // начальная точка
-        pointAa = [massdk[index].coordinates[0], massdk[index].coordinates[1]];
-        fromCross.pointAaRegin = massdk[index].region.toString();
-        fromCross.pointAaArea = massdk[index].area.toString();
-        fromCross.pointAaID = massdk[index].ID;
-        MakeСollectionRoute();
-        setFlagPusk(true);
-      } else {
-        if (pointBb === 0) {
-          if (pointAaIndex === index) {
-            SoobOpenSetEr("Начальная и конечная точки совпадают");
+  const OnPlacemarkClickPoint = (index: number) => {
+    if (pointAa === 0) {
+      pointAaIndex = index; // начальная точка
+      pointAa = [massdk[index].coordinates[0], massdk[index].coordinates[1]];
+      fromCross.pointAaRegin = massdk[index].region.toString();
+      fromCross.pointAaArea = massdk[index].area.toString();
+      fromCross.pointAaID = massdk[index].ID;
+      MakeСollectionRoute();
+      setFlagPusk(true);
+      if (ymaps) addRoute(ymaps);
+    } else {
+      if (pointBb === 0) {
+        if (pointAaIndex === index) {
+          SoobOpenSetEr("Начальная и конечная точки совпадают");
+        } else {
+          pointBbIndex = index; // конечная точка
+          if (
+            massroute.vertexes[pointAaIndex].area === 0 &&
+            massroute.vertexes[pointBbIndex].area === 0
+          ) {
+            pointBbIndex = 0; // конечная точка
+            SoobOpenSetEr("Связь между двумя точками создовать нельзя");
           } else {
-            pointBbIndex = index; // конечная точка
+            pointBb = [
+              massdk[index].coordinates[0],
+              massdk[index].coordinates[1],
+            ];
+            toCross.pointBbRegin = massdk[index].region.toString();
+            toCross.pointBbArea = massdk[index].area.toString();
+            toCross.pointBbID = massdk[index].ID;
+            if (DoublRoute(massroute.ways, pointAa, pointBb)) {
+              SoobOpenSetEr("Дубликатная связь");
+              ZeroRoute(false);
+            } else {
+              setFlagRoute(true);
+              if (ymaps) addRoute(ymaps);
+            }
+          }
+        }
+      } else {
+        indexPoint = index;
+        setOpenSet(true); // в меню работы с точками
+      }
+    }
+  };
+
+  const ModalPressBalloon = () => {
+    const [openSetErBall, setOpenSetErBall] = React.useState(false);
+    let pointRoute: any = 0;
+    let soobDel = "Удаление точки";
+    if (indexPoint >= 0 && indexPoint < massdk.length) {
+      if (massdk[indexPoint].area) soobDel = "Удаление перекрёстка";
+      pointRoute = [
+        massdk[indexPoint].coordinates[0],
+        massdk[indexPoint].coordinates[1],
+      ];
+    }
+
+    const handleClose = (param: number) => {
+      switch (param) {
+        case 1: // Начальная точка
+          if (pointBbIndex === indexPoint) {
+            soobError = "Начальная и конечная точки совпадают";
+            setOpenSetErBall(true);
+          } else {
+            pointAaIndex = indexPoint;
+            pointAa = pointRoute;
+            fromCross.pointAaRegin = massdk[pointAaIndex].region.toString();
+            fromCross.pointAaArea = massdk[pointAaIndex].area.toString();
+            fromCross.pointAaID = massdk[pointAaIndex].ID;
+            DelCollectionRoutes();
+            MakeСollectionRoute();
+            setOpenSet(false);
+            if (ymaps) addRoute(ymaps);
+          }
+          break;
+        case 2: // Конечная точка
+          if (pointAaIndex === indexPoint) {
+            soobError = "Начальная и конечная точки совпадают";
+            setOpenSetErBall(true);
+          } else {
             if (
               massroute.vertexes[pointAaIndex].area === 0 &&
-              massroute.vertexes[pointBbIndex].area === 0
+              massroute.vertexes[indexPoint].area === 0
             ) {
-              pointBbIndex = 0; // конечная точка
               SoobOpenSetEr("Связь между двумя точками создовать нельзя");
             } else {
-              pointBb = [
-                massdk[index].coordinates[0],
-                massdk[index].coordinates[1],
-              ];
-              toCross.pointBbRegin = massdk[index].region.toString();
-              toCross.pointBbArea = massdk[index].area.toString();
-              toCross.pointBbID = massdk[index].ID;
+              pointBbIndex = indexPoint;
+              pointBb = pointRoute;
+              toCross.pointBbRegin = massdk[pointBbIndex].region.toString();
+              toCross.pointBbArea = massdk[pointBbIndex].area.toString();
+              toCross.pointBbID = massdk[pointBbIndex].ID;
               if (DoublRoute(massroute.ways, pointAa, pointBb)) {
                 SoobOpenSetEr("Дубликатная связь");
-                ZeroRoute(false);
-              } else {
-                setFlagRoute(true);
               }
+              setOpenSet(false);
+              if (ymaps) addRoute(ymaps);
             }
           }
-        } else {
-          indexPoint = index;
-          setOpenSet(true); // в меню работы с точками
-        }
-      }
-    };
-
-    const ModalPressBalloon = () => {
-      const [openSetErBall, setOpenSetErBall] = React.useState(false);
-      let pointRoute: any = 0;
-      let soobDel = "Удаление точки";
-      if (indexPoint >= 0 && indexPoint < massdk.length) {
-        if (massdk[indexPoint].area) soobDel = "Удаление перекрёстка";
-        pointRoute = [
-          massdk[indexPoint].coordinates[0],
-          massdk[indexPoint].coordinates[1],
-        ];
-      }
-
-      const handleClose = (param: number) => {
-        switch (param) {
-          case 1: // Начальная точка
-            if (pointBbIndex === indexPoint) {
-              soobError = "Начальная и конечная точки совпадают";
-              setOpenSetErBall(true);
-            } else {
-              pointAaIndex = indexPoint;
-              pointAa = pointRoute;
-              fromCross.pointAaRegin = massdk[pointAaIndex].region.toString();
-              fromCross.pointAaArea = massdk[pointAaIndex].area.toString();
-              fromCross.pointAaID = massdk[pointAaIndex].ID;
-              DelCollectionRoutes();
-              MakeСollectionRoute();
-              setOpenSet(false);
-              //setTrigger(!trigger);
-            }
-            break;
-          case 2: // Конечная точка
-            if (pointAaIndex === indexPoint) {
-              soobError = "Начальная и конечная точки совпадают";
-              setOpenSetErBall(true);
-            } else {
+          break;
+        case 3: // Удаление точки
+          if (pointAaIndex === indexPoint || pointBbIndex === indexPoint) {
+            soobError = "Начальную и конечную точки связи удалять нельзя";
+            setOpenSetErBall(true);
+          } else {
+            let massRouteRab: any = []; // удаление из массива сети связей
+            let coordPoint = massroute.vertexes[indexPoint].dgis;
+            let idPoint = massroute.vertexes[indexPoint].id;
+            let regionV = massroute.vertexes[indexPoint].region.toString();
+            let areaV = massroute.vertexes[indexPoint].area.toString();
+            for (let i = 0; i < massroute.ways.length; i++) {
               if (
-                massroute.vertexes[pointAaIndex].area === 0 &&
-                massroute.vertexes[indexPoint].area === 0
+                coordPoint !== massroute.ways[i].starts &&
+                coordPoint !== massroute.ways[i].stops
               ) {
-                SoobOpenSetEr("Связь между двумя точками создовать нельзя");
+                massRouteRab.push(massroute.ways[i]);
               } else {
-                pointBbIndex = indexPoint;
-                pointBb = pointRoute;
-                toCross.pointBbRegin = massdk[pointBbIndex].region.toString();
-                toCross.pointBbArea = massdk[pointBbIndex].area.toString();
-                toCross.pointBbID = massdk[pointBbIndex].ID;
-                if (DoublRoute(massroute.ways, pointAa, pointBb)) {
-                  SoobOpenSetEr("Дубликатная связь");
-                }
-                setOpenSet(false);
-                //setTrigger(!trigger);
+                SocketDeleteWay(debugging, WS, massroute.ways[i]);
               }
             }
-            break;
-          case 3: // Удаление точки
-            if (pointAaIndex === indexPoint || pointBbIndex === indexPoint) {
-              soobError = "Начальную и конечную точки связи удалять нельзя";
-              setOpenSetErBall(true);
+            massroute.ways.splice(0, massroute.ways.length); // massroute = [];
+            massroute.ways = massRouteRab;
+            if (flagDemo) massRoute = massroute.ways;
+            DelCollectionRoutes(); // удаление колекции связей
+            massdk.splice(indexPoint, 1); // удаление самой точки
+            massroute.vertexes.splice(indexPoint, 1);
+            dispatch(massdkCreate(massdk));
+            dispatch(massrouteCreate(massroute));
+            let oldPointAa = coordinates[pointAaIndex];
+            let oldPointBb = coordinates[pointBbIndex];
+            coordinates.splice(indexPoint, 1);
+            for (let i = 0; i < coordinates.length; i++) {
+              if (coordinates[i] === oldPointAa) pointAaIndex = i;
+              if (coordinates[i] === oldPointBb) pointBbIndex = i;
+            }
+            if (areaV === "0") {
+              SendSocketDeletePoint(debugging, WS, idPoint);
             } else {
-              let massRouteRab: any = []; // удаление из массива сети связей
-              let coordPoint = massroute.vertexes[indexPoint].dgis;
-              let idPoint = massroute.vertexes[indexPoint].id;
-              let regionV = massroute.vertexes[indexPoint].region.toString();
-              let areaV = massroute.vertexes[indexPoint].area.toString();
-              for (let i = 0; i < massroute.ways.length; i++) {
-                if (
-                  coordPoint !== massroute.ways[i].starts &&
-                  coordPoint !== massroute.ways[i].stops
-                ) {
-                  massRouteRab.push(massroute.ways[i]);
-                } else {
-                  SocketDeleteWay(debugging, WS, massroute.ways[i]);
-                }
-              }
-              massroute.ways.splice(0, massroute.ways.length); // massroute = [];
-              massroute.ways = massRouteRab;
-              if (flagDemo) massRoute = massroute.ways;
-              DelCollectionRoutes(); // удаление колекции связей
-              massdk.splice(indexPoint, 1); // удаление самой точки
-              massroute.vertexes.splice(indexPoint, 1);
-              dispatch(massdkCreate(massdk));
-              dispatch(massrouteCreate(massroute));
-              let oldPointAa = coordinates[pointAaIndex];
-              let oldPointBb = coordinates[pointBbIndex];
-              coordinates.splice(indexPoint, 1);
-              for (let i = 0; i < coordinates.length; i++) {
-                if (coordinates[i] === oldPointAa) pointAaIndex = i;
-                if (coordinates[i] === oldPointBb) pointBbIndex = i;
-              }
-              if (areaV === "0") {
-                SendSocketDeletePoint(debugging, WS, idPoint);
-              } else {
-                SendSocketDeleteVertex(debugging, WS, regionV, areaV, idPoint);
-              }
-              setOpenSet(false);
+              SendSocketDeleteVertex(debugging, WS, regionV, areaV, idPoint);
             }
-            break;
-          case 4: // Редактирование адреса
-            setOpenSetAdress(true);
-        }
-      };
-
-      const StrokaPressBalloon = (soob: string, mode: number) => {
-        return (
-          <Button sx={styleModalMenu} onClick={() => handleClose(mode)}>
-            <b>{soob}</b>
-          </Button>
-        );
-      };
-
-      return (
-        <Modal open={openSet} onClose={() => setOpenSet(false)} hideBackdrop>
-          <Box sx={styleSetPoint}>
-            <Button sx={styleModalEndMapGl} onClick={() => setOpenSet(false)}>
-              <b>&#10006;</b>
-            </Button>
-            <Box sx={{ marginTop: 2, textAlign: "center" }}>
-              {StrokaPressBalloon(soobDel, 3)}
-              {StrokaPressBalloon("Редактирование адреса", 4)}
-            </Box>
-            <Typography variant="h6" sx={styleTypography}>
-              Перестроение связи:
-            </Typography>
-            <Box sx={{ textAlign: "center" }}>
-              {StrokaPressBalloon("Начальная точка", 1)}
-              {StrokaPressBalloon("Конечная точка", 2)}
-            </Box>
-            {openSetAdress && (
-              <MapInputAdress iPoint={indexPoint} setOpen={setOpenSetAdress} />
-            )}
-            {openSetErBall && (
-              <MapPointDataError
-                sErr={soobError}
-                setOpen={setOpenSetErBall}
-                debug={debugging}
-                ws={WS}
-                fromCross={fromCross}
-                toCross={toCross}
-                activeRoute={activeRoute}
-              />
-            )}
-          </Box>
-        </Modal>
-      );
-    };
-
-    const MakeNewPoint = (coords: any) => {
-      let coor: string = CodingCoord(coords);
-      let areaV = massroute.vertexes[massroute.vertexes.length - 1].area;
-      let idV = massroute.vertexes[massroute.vertexes.length - 1].id;
-      let adress = massroute.vertexes[massroute.vertexes.length - 1].name;
-      coordinates.push(coords);
-      if (areaV) {
-        SendSocketCreateVertex(debugging, WS, homeRegion, areaV, idV);
-      } else {
-        SendSocketCreatePoint(debugging, WS, coor, adress);
-      }
-      setOpenSetCreate(false);
-    };
-
-    const PlacemarkDo = () => {
-      let pAaI = pointAaIndex;
-      let pBbI = pointBbIndex;
-
-      const DoPlacemarkDo = (props: { coordinate: any; idx: number }) => {
-        const MemoPlacemarkDo = React.useMemo(
-          () => (
-            <Placemark
-              key={props.idx}
-              geometry={props.coordinate}
-              properties={getPointData(props.idx, pAaI, pBbI, massdk)}
-              options={getPointOptions(
-                props.idx,
-                pAaI,
-                pBbI,
-                massdk,
-                massroute
-              )}
-              modules={["geoObject.addon.balloon", "geoObject.addon.hint"]}
-              onClick={() => OnPlacemarkClickPoint(props.idx)}
-            />
-          ),
-          [props.coordinate, props.idx]
-        );
-
-        return MemoPlacemarkDo;
-      };
-
-      return (
-        <>
-          {flagOpen &&
-            coordinates.map((coordinate, idx) => (
-              <DoPlacemarkDo key={idx} coordinate={coordinate} idx={idx} />
-            ))}
-        </>
-      );
-    };
-
-    const InstanceRefDo = (ref: React.Ref<any>) => {
-      if (ref) {
-        mapp.current = ref;
-        mapp.current.events.add("contextmenu", function (e: any) {
-          // нажата правая кнопка мыши (создание новой точки)
-          if (mapp.current.hint) {
-            newPointCoord = e.get("coords");
-            setOpenSetCreate(true);
+            setOpenSet(false);
           }
-        });
-        mapp.current.events.add("mousedown", function (e: any) {
-          // нажата левая/правая кнопка мыши 0, 1 или 2 в зависимости от того, какая кнопка мыши нажата (В IE значение может быть от 0 до 7).
-          pointCenter = mapp.current.getCenter();
-        });
-        mapp.current.events.add(["boundschange"], function () {
-          pointCenter = mapp.current.getCenter();
-          zoom = mapp.current.getZoom(); // покрутили колёсико мыши
-        });
+          break;
+        case 4: // Редактирование адреса
+          setOpenSetAdress(true);
       }
+    };
+
+    const StrokaPressBalloon = (soob: string, mode: number) => {
+      return (
+        <Button sx={styleModalMenu} onClick={() => handleClose(mode)}>
+          <b>{soob}</b>
+        </Button>
+      );
     };
 
     return (
-      <YMaps
-        query={{
-          apikey: "65162f5f-2d15-41d1-a881-6c1acf34cfa1",
-          lang: "ru_RU",
-        }}
-      >
-        <Map
-          modules={["multiRouter.MultiRoute", "Polyline"]}
-          state={mapState}
-          instanceRef={(ref) => InstanceRefDo(ref)}
-          onLoad={addRoute}
-          width={"99.8%"}
-          height={"97%"}
-        >
-          {/* сервисы Яндекса */}
-          <FullscreenControl />
-          <GeolocationControl options={{ float: "left" }} />
-          <RulerControl options={{ float: "right" }} />
-          <SearchControl options={searchControl} />
-          <TrafficControl options={{ float: "right" }} />
-          <TypeSelector options={{ float: "right" }} />
-          <ZoomControl options={{ float: "right" }} />
-          {/* служебные компоненты */}
-          <PlacemarkDo />
-          <ModalPressBalloon />
-          {openSetEr && (
+      <Modal open={openSet} onClose={() => setOpenSet(false)} hideBackdrop>
+        <Box sx={styleSetPoint}>
+          <Button sx={styleModalEndMapGl} onClick={() => setOpenSet(false)}>
+            <b>&#10006;</b>
+          </Button>
+          <Box sx={{ marginTop: 2, textAlign: "center" }}>
+            {StrokaPressBalloon(soobDel, 3)}
+            {StrokaPressBalloon("Редактирование адреса", 4)}
+          </Box>
+          <Typography variant="h6" sx={styleTypography}>
+            Перестроение связи:
+          </Typography>
+          <Box sx={{ textAlign: "center" }}>
+            {StrokaPressBalloon("Начальная точка", 1)}
+            {StrokaPressBalloon("Конечная точка", 2)}
+          </Box>
+          {openSetAdress && (
+            <MapInputAdress iPoint={indexPoint} setOpen={setOpenSetAdress} />
+          )}
+          {openSetErBall && (
             <MapPointDataError
               sErr={soobError}
-              setOpen={setOpenSetEr}
+              setOpen={setOpenSetErBall}
               debug={debugging}
               ws={WS}
               fromCross={fromCross}
@@ -610,27 +523,138 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
               activeRoute={activeRoute}
             />
           )}
-          {openSetInf && (
-            <MapRouteInfo
-              activeRoute={activeRoute}
-              name1={massdk[pointAaIndex].nameCoordinates}
-              name2={massdk[pointBbIndex].nameCoordinates}
-              setOpen={setOpenSetInf}
-            />
-          )}
-          {openSetBind && <MapRouteBind setOpen={setOpenSetBind} />}
-          {openSetCreate && (
-            <MapCreatePointVertex
-              setOpen={setOpenSetCreate}
-              region={homeRegion}
-              coord={newPointCoord}
-              createPoint={MakeNewPoint}
-            />
-          )}
-        </Map>
-      </YMaps>
+        </Box>
+      </Modal>
     );
   };
+
+  const MakeNewPoint = (coords: any) => {
+    let coor: string = CodingCoord(coords);
+    let areaV = massroute.vertexes[massroute.vertexes.length - 1].area;
+    let idV = massroute.vertexes[massroute.vertexes.length - 1].id;
+    let adress = massroute.vertexes[massroute.vertexes.length - 1].name;
+    coordinates.push(coords);
+    if (areaV) {
+      SendSocketCreateVertex(debugging, WS, homeRegion, areaV, idV);
+    } else {
+      SendSocketCreatePoint(debugging, WS, coor, adress);
+    }
+    setOpenSetCreate(false);
+  };
+
+  const PlacemarkDo = () => {
+    let pAaI = pointAaIndex;
+    let pBbI = pointBbIndex;
+
+    const DoPlacemarkDo = (props: { coordinate: any; idx: number }) => {
+      const MemoPlacemarkDo = React.useMemo(
+        () => (
+          <Placemark
+            key={props.idx}
+            geometry={props.coordinate}
+            properties={getPointData(props.idx, pAaI, pBbI, massdk)}
+            options={getPointOptions(props.idx, pAaI, pBbI, massdk, massroute)}
+            modules={["geoObject.addon.balloon", "geoObject.addon.hint"]}
+            onClick={() => OnPlacemarkClickPoint(props.idx)}
+          />
+        ),
+        [props.coordinate, props.idx]
+      );
+
+      return MemoPlacemarkDo;
+    };
+
+    return (
+      <>
+        {flagOpen &&
+          coordinates.map((coordinate, idx) => (
+            <DoPlacemarkDo key={idx} coordinate={coordinate} idx={idx} />
+          ))}
+      </>
+    );
+  };
+
+  const InstanceRefDo = (ref: React.Ref<any>) => {
+    if (ref) {
+      console.log("1ymaps:", ymaps);
+      mapp.current = ref;
+      //if (ymaps) addRoute(ymaps);
+      mapp.current.events.add("contextmenu", function (e: any) {
+        // нажата правая кнопка мыши (создание новой точки)
+        if (mapp.current.hint) {
+          newPointCoord = e.get("coords");
+          setOpenSetCreate(true);
+        }
+      });
+      mapp.current.events.add("mousedown", function (e: any) {
+        // нажата левая/правая кнопка мыши 0, 1 или 2 в зависимости от того, какая кнопка мыши нажата (В IE значение может быть от 0 до 7).
+        pointCenter = mapp.current.getCenter();
+      });
+      mapp.current.events.add(["boundschange"], function () {
+        pointCenter = mapp.current.getCenter();
+        zoom = mapp.current.getZoom(); // покрутили колёсико мыши
+      });
+    }
+  };
+
+  // return (
+  // <YMaps
+  //   query={{
+  //     apikey: "65162f5f-2d15-41d1-a881-6c1acf34cfa1",
+  //     lang: "ru_RU",
+  //   }}
+  // >
+  //   <Map
+  //     modules={["multiRouter.MultiRoute", "Polyline"]}
+  //     state={mapState}
+  //     instanceRef={(ref) => InstanceRefDo(ref)}
+  //     onLoad={(ref) => addRoute(ref)}
+  //     width={"99.8%"}
+  //     height={"97%"}
+  //   >
+  //     {/* сервисы Яндекса */}
+  //     <FullscreenControl />
+  //     <GeolocationControl options={{ float: "left" }} />
+  //     <RulerControl options={{ float: "right" }} />
+  //     <SearchControl options={searchControl} />
+  //     <TrafficControl options={{ float: "right" }} />
+  //     <TypeSelector options={{ float: "right" }} />
+  //     <ZoomControl options={{ float: "right" }} />
+  //     {/* служебные компоненты */}
+  //     <PlacemarkDo />
+  //     <ModalPressBalloon />
+  //     {openSetEr && (
+  //       <MapPointDataError
+  //         sErr={soobError}
+  //         setOpen={setOpenSetEr}
+  //         debug={debugging}
+  //         ws={WS}
+  //         fromCross={fromCross}
+  //         toCross={toCross}
+  //         activeRoute={activeRoute}
+  //       />
+  //     )}
+  //     {openSetInf && (
+  //       <MapRouteInfo
+  //         activeRoute={activeRoute}
+  //         name1={massdk[pointAaIndex].nameCoordinates}
+  //         name2={massdk[pointBbIndex].nameCoordinates}
+  //         setOpen={setOpenSetInf}
+  //       />
+  //     )}
+  //     {openSetBind && <MapRouteBind setOpen={setOpenSetBind} />}
+  //     {openSetCreate && (
+  //       <MapCreatePointVertex
+  //         setOpen={setOpenSetCreate}
+  //         region={homeRegion}
+  //         coord={newPointCoord}
+  //         createPoint={MakeNewPoint}
+  //       />
+  //     )}
+  //   </Map>
+  // </YMaps>
+  // );
+  //};
 
   const StrokaMenuGlob = (soob: string, mode: number) => {
     return (
@@ -639,6 +663,7 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
       </Button>
     );
   };
+
   console.log("Massroute:", massroute);
   console.log("Massdk:", massdk);
 
@@ -661,7 +686,66 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
       )}
       {!flagDemo && <>{StrokaMenuGlob("Demo сети", 3)}</>}
       {flagDemo && <>{StrokaMenuGlob("Конец Demo", 6)}</>}
-      {Object.keys(massroute).length && <MapGl />}
+      {Object.keys(massroute).length && (
+        <YMaps
+          query={{
+            apikey: "65162f5f-2d15-41d1-a881-6c1acf34cfa1",
+            lang: "ru_RU",
+          }}
+        >
+          <Map
+            modules={["multiRouter.MultiRoute", "Polyline"]}
+            state={mapState}
+            instanceRef={(ref) => InstanceRefDo(ref)}
+            //onLoad={addRoute}
+            onLoad={(ref) => {
+              if (ref) setYmaps(ref);
+            }}
+            width={"99.8%"}
+            height={"97%"}
+          >
+            {/* сервисы Яндекса */}
+            <FullscreenControl />
+            <GeolocationControl options={{ float: "left" }} />
+            <RulerControl options={{ float: "right" }} />
+            <SearchControl options={searchControl} />
+            <TrafficControl options={{ float: "right" }} />
+            <TypeSelector options={{ float: "right" }} />
+            <ZoomControl options={{ float: "right" }} />
+            {/* служебные компоненты */}
+            <PlacemarkDo />
+            <ModalPressBalloon />
+            {openSetEr && (
+              <MapPointDataError
+                sErr={soobError}
+                setOpen={setOpenSetEr}
+                debug={debugging}
+                ws={WS}
+                fromCross={fromCross}
+                toCross={toCross}
+                activeRoute={activeRoute}
+              />
+            )}
+            {openSetInf && (
+              <MapRouteInfo
+                activeRoute={activeRoute}
+                name1={massdk[pointAaIndex].nameCoordinates}
+                name2={massdk[pointBbIndex].nameCoordinates}
+                setOpen={setOpenSetInf}
+              />
+            )}
+            {openSetBind && <MapRouteBind setOpen={setOpenSetBind} />}
+            {openSetCreate && (
+              <MapCreatePointVertex
+                setOpen={setOpenSetCreate}
+                region={homeRegion}
+                coord={newPointCoord}
+                createPoint={MakeNewPoint}
+              />
+            )}
+          </Map>
+        </YMaps>
+      )}
     </Grid>
   );
 };

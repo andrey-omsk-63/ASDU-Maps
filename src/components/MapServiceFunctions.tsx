@@ -175,7 +175,7 @@ export const getMassPolyRouteOptions = () => {
   return {
     balloonCloseButton: false,
     strokeColor: "#1A9165",
-    strokeWidth: 3,
+    strokeWidth: 2,
   };
 };
 
