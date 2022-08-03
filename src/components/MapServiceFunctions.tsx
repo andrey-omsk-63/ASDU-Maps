@@ -152,6 +152,7 @@ export const getPointOptions = (
   if (index === pointBbIndex) colorBalloon = "islands#darkBlueStretchyIcon";
   return {
     preset: colorBalloon,
+    //iconSize: [50, 50],
   };
 };
 

@@ -26,7 +26,6 @@ const MapPointDataError = (props: {
   activeRoute: any;
 }) => {
   const WS = props.ws;
-  console.log("activeRoute:", props.activeRoute);
   //== Piece of Redux =======================================
   // let massdk = useSelector((state: any) => {
   //   const { massdkReducer } = state;
@@ -49,10 +48,7 @@ const MapPointDataError = (props: {
   };
 
   const [openSetEr, setOpenSetEr] = React.useState(true);
-  // const handleCloseSetEr = (event: any, reason: string) => {
-  //   if (reason !== 'backdropClick') setOpenSetEr(false);
-  // };
-
+ 
   const handleCloseSetEnd = () => {
     props.setOpen(false);
     setOpenSetEr(false);

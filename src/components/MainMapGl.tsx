@@ -53,7 +53,6 @@ let flagBind = false;
 let activeRoute: any;
 let newPointCoord: any = 0;
 let soobError = "";
-//let openSet = false;
 
 let zoom = 10;
 let homeRegion = 0;
@@ -102,10 +101,12 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
   const [flagDemo, setFlagDemo] = React.useState(false);
   const [flagPusk, setFlagPusk] = React.useState(false);
   const [flagRoute, setFlagRoute] = React.useState(false);
-  const [trigger, setTrigger] = React.useState(false);
-  // const setOpenSet = (mode: boolean) => {
-  //   openSet = mode;
-  // }
+  const [openSet, setOpenSet] = React.useState(false);
+  const [openSetCreate, setOpenSetCreate] = React.useState(false);
+  const [openSetAdress, setOpenSetAdress] = React.useState(false);
+  const [ymaps, setYmaps] = React.useState<YMapsApi | null>(null);
+  const mapp = React.useRef<any>(null);
+
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(massroute).length) {
     if (props.region) homeRegion = props.region;
@@ -220,6 +221,7 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
         coordStopIn.push(pointAa);
       }
     }
+    if (ymaps) addRoute(ymaps);
   };
 
   const PressMenuButton = (mode: number) => {
@@ -230,32 +232,9 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
         if (ymaps) addRoute(ymaps);
         break;
       case 6: // режим отмены Demo сети связей
-        let massPolyRoute: any = []; // cеть связей
-        console.log("1flagDemo", flagDemo);
-        if (ymaps) {
-          for (let i = 0; i < massRoute.length; i++) {
-            massPolyRoute[i] = new ymaps.Polyline(
-              [
-                DecodingCoord(massRoute[i].starts),
-                DecodingCoord(massRoute[i].stops),
-              ],
-              { balloonContent: "Ломаная линия" },
-              {
-                //routeVisible: false,
-                strokeVisible: false,
-                // balloonCloseButton: false,
-                // strokeColor: "#1A9165",
-                // strokeWidth: 2,
-              }
-            );
-            console.log("!!!!!!!!!!!!!!!!!!!!");
-            mapp.current.geoObjects.add(massPolyRoute[i]);
-          }
-        }
-
         massRoute = [];
         setFlagDemo(false);
-        //if (ymaps) addRoute(ymaps);
+        if (ymaps) addRoute(ymaps);
         break;
       case 12: // реверс связи
         let pa = pointAa;
@@ -267,10 +246,10 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
         ChangeCross();
         DelCollectionRoutes();
         MakeСollectionRoute();
-        if (ymaps) addRoute(ymaps);
         break;
       case 21: // сохранение связи
         MakeRecordMassRoute(false);
+        if (ymaps) addRoute(ymaps);
         break;
       case 33: // привязка направлений
         flagBind = true;
@@ -280,32 +259,15 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
         //if (activeRoute)
         setOpenSetInf(true);
         break;
-      case 77: // удаление связи
+      case 77: // удаление связи / отмена назначений
         ZeroRoute(false);
+        if (ymaps) addRoute(ymaps);
     }
   };
 
-  let mapState: any = {
-    center: pointCenter,
-    zoom,
-    yandexMapDisablePoiInteractivity: true,
-  };
-  //========================================================
-  //const MapGl = () => {
-  const mapp = React.useRef<any>(null);
-  const [openSet, setOpenSet] = React.useState(false);
-  const [openSetCreate, setOpenSetCreate] = React.useState(false);
-  const [openSetAdress, setOpenSetAdress] = React.useState(false);
-  const [ymaps, setYmaps] = React.useState<YMapsApi | null>(null);
-
   const addRoute = (ymaps: any) => {
-    //multiRoute.options.set('routeVisible', false);
-    const multiRoute = new ymaps.multiRouter.MultiRoute(
-      getReferencePoints(pointAa, pointBb),
-      getMultiRouteOptions()
-    );
+    mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
     let massPolyRoute: any = []; // cеть связей
-    console.log("1flagDemo", flagDemo);
     for (let i = 0; i < massRoute.length; i++) {
       massPolyRoute[i] = new ymaps.Polyline(
         [DecodingCoord(massRoute[i].starts), DecodingCoord(massRoute[i].stops)],
@@ -330,6 +292,10 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
       );
       mapp.current.geoObjects.add(massMultiRouteIn[i]);
     }
+    const multiRoute = new ymaps.multiRouter.MultiRoute(
+      getReferencePoints(pointAa, pointBb),
+      getMultiRouteOptions()
+    );
     mapp.current.geoObjects.add(multiRoute); // основная связь
     multiRoute.model.events.add("requestsuccess", function () {
       activeRoute = multiRoute.getActiveRoute();
@@ -345,7 +311,6 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
       fromCross.pointAaID = massdk[index].ID;
       MakeСollectionRoute();
       setFlagPusk(true);
-      if (ymaps) addRoute(ymaps);
     } else {
       if (pointBb === 0) {
         if (pointAaIndex === index) {
@@ -371,8 +336,8 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
               ZeroRoute(false);
             } else {
               setFlagRoute(true);
-              if (ymaps) addRoute(ymaps);
             }
+            if (ymaps) addRoute(ymaps);
           }
         }
       } else {
@@ -409,7 +374,6 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
             DelCollectionRoutes();
             MakeСollectionRoute();
             setOpenSet(false);
-            if (ymaps) addRoute(ymaps);
           }
           break;
         case 2: // Конечная точка
@@ -477,6 +441,7 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
               SendSocketDeleteVertex(debugging, WS, regionV, areaV, idPoint);
             }
             setOpenSet(false);
+            if (ymaps) addRoute(ymaps);
           }
           break;
         case 4: // Редактирование адреса
@@ -560,7 +525,6 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
         ),
         [props.coordinate, props.idx]
       );
-
       return MemoPlacemarkDo;
     };
 
@@ -576,19 +540,15 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
 
   const InstanceRefDo = (ref: React.Ref<any>) => {
     if (ref) {
-      console.log("1ymaps:", ymaps);
       mapp.current = ref;
-      //if (ymaps) addRoute(ymaps);
       mapp.current.events.add("contextmenu", function (e: any) {
-        // нажата правая кнопка мыши (создание новой точки)
         if (mapp.current.hint) {
-          newPointCoord = e.get("coords");
+          newPointCoord = e.get("coords"); // нажата правая кнопка мыши (созд-е новой точки)
           setOpenSetCreate(true);
         }
       });
       mapp.current.events.add("mousedown", function (e: any) {
-        // нажата левая/правая кнопка мыши 0, 1 или 2 в зависимости от того, какая кнопка мыши нажата (В IE значение может быть от 0 до 7).
-        pointCenter = mapp.current.getCenter();
+        pointCenter = mapp.current.getCenter(); // нажата левая/правая кнопка мыши 0, 1 или 2 в зависимости от того, какая кнопка мыши нажата (В IE значение может быть от 0 до 7).
       });
       mapp.current.events.add(["boundschange"], function () {
         pointCenter = mapp.current.getCenter();
@@ -596,65 +556,6 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
       });
     }
   };
-
-  // return (
-  // <YMaps
-  //   query={{
-  //     apikey: "65162f5f-2d15-41d1-a881-6c1acf34cfa1",
-  //     lang: "ru_RU",
-  //   }}
-  // >
-  //   <Map
-  //     modules={["multiRouter.MultiRoute", "Polyline"]}
-  //     state={mapState}
-  //     instanceRef={(ref) => InstanceRefDo(ref)}
-  //     onLoad={(ref) => addRoute(ref)}
-  //     width={"99.8%"}
-  //     height={"97%"}
-  //   >
-  //     {/* сервисы Яндекса */}
-  //     <FullscreenControl />
-  //     <GeolocationControl options={{ float: "left" }} />
-  //     <RulerControl options={{ float: "right" }} />
-  //     <SearchControl options={searchControl} />
-  //     <TrafficControl options={{ float: "right" }} />
-  //     <TypeSelector options={{ float: "right" }} />
-  //     <ZoomControl options={{ float: "right" }} />
-  //     {/* служебные компоненты */}
-  //     <PlacemarkDo />
-  //     <ModalPressBalloon />
-  //     {openSetEr && (
-  //       <MapPointDataError
-  //         sErr={soobError}
-  //         setOpen={setOpenSetEr}
-  //         debug={debugging}
-  //         ws={WS}
-  //         fromCross={fromCross}
-  //         toCross={toCross}
-  //         activeRoute={activeRoute}
-  //       />
-  //     )}
-  //     {openSetInf && (
-  //       <MapRouteInfo
-  //         activeRoute={activeRoute}
-  //         name1={massdk[pointAaIndex].nameCoordinates}
-  //         name2={massdk[pointBbIndex].nameCoordinates}
-  //         setOpen={setOpenSetInf}
-  //       />
-  //     )}
-  //     {openSetBind && <MapRouteBind setOpen={setOpenSetBind} />}
-  //     {openSetCreate && (
-  //       <MapCreatePointVertex
-  //         setOpen={setOpenSetCreate}
-  //         region={homeRegion}
-  //         coord={newPointCoord}
-  //         createPoint={MakeNewPoint}
-  //       />
-  //     )}
-  //   </Map>
-  // </YMaps>
-  // );
-  //};
 
   const StrokaMenuGlob = (soob: string, mode: number) => {
     return (
@@ -664,28 +565,17 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
     );
   };
 
+  let mapState: any = {
+    center: pointCenter,
+    zoom,
+    yandexMapDisablePoiInteractivity: true,
+  };
+
   console.log("Massroute:", massroute);
   console.log("Massdk:", massdk);
 
   return (
-    <Grid container sx={{ height: "99.5vh" }}>
-      {flagPusk && !flagBind && <>{StrokaMenuGlob("Отмена назначений", 77)}</>}
-      {flagPusk && flagRoute && !flagBind && (
-        <>
-          {StrokaMenuGlob("Привязка направлен", 33)}
-          {StrokaMenuGlob("Реверс связи", 12)}
-          {StrokaMenuGlob("Информ о связи", 69)}
-        </>
-      )}
-      {flagPusk && flagRoute && flagBind && (
-        <>
-          {StrokaMenuGlob("Сохранить связь", 21)}
-          {StrokaMenuGlob("Отменить связь", 77)}
-          {StrokaMenuGlob("Информ о связи", 69)}
-        </>
-      )}
-      {!flagDemo && <>{StrokaMenuGlob("Demo сети", 3)}</>}
-      {flagDemo && <>{StrokaMenuGlob("Конец Demo", 6)}</>}
+    <Grid container sx={{ border: 0, height: "99.9vh" }}>
       {Object.keys(massroute).length && (
         <YMaps
           query={{
@@ -697,7 +587,6 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
             modules={["multiRouter.MultiRoute", "Polyline"]}
             state={mapState}
             instanceRef={(ref) => InstanceRefDo(ref)}
-            //onLoad={addRoute}
             onLoad={(ref) => {
               if (ref) setYmaps(ref);
             }}
@@ -746,6 +635,23 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
           </Map>
         </YMaps>
       )}
+      {flagPusk && !flagBind && <>{StrokaMenuGlob("Отмена назначений", 77)}</>}
+      {flagPusk && flagRoute && !flagBind && (
+        <>
+          {StrokaMenuGlob("Привязка направлен", 33)}
+          {StrokaMenuGlob("Реверс связи", 12)}
+          {StrokaMenuGlob("Информ о связи", 69)}
+        </>
+      )}
+      {flagPusk && flagRoute && flagBind && (
+        <>
+          {StrokaMenuGlob("Сохранить связь", 21)}
+          {StrokaMenuGlob("Отменить связь", 77)}
+          {StrokaMenuGlob("Информ о связи", 69)}
+        </>
+      )}
+      {!flagDemo && <>{StrokaMenuGlob("Demo сети", 3)}</>}
+      {flagDemo && <>{StrokaMenuGlob("Конец Demo", 6)}</>}
     </Grid>
   );
 };
