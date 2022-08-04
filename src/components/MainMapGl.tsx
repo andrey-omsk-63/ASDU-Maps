@@ -101,6 +101,7 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
   const [flagDemo, setFlagDemo] = React.useState(false);
   const [flagPusk, setFlagPusk] = React.useState(false);
   const [flagRoute, setFlagRoute] = React.useState(false);
+  const [revers, setRevers] = React.useState(false);
   const [openSet, setOpenSet] = React.useState(false);
   const [openSetCreate, setOpenSetCreate] = React.useState(false);
   const [openSetAdress, setOpenSetAdress] = React.useState(false);
@@ -160,6 +161,7 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
     flagBind = false;
     setFlagRoute(false);
     setFlagPusk(mode);
+    if (ymaps) addRoute(ymaps); // перерисовка связей
   };
 
   const ChangeCross = () => {
@@ -190,7 +192,6 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
 
   const MakeRecordMassRoute = (mode: boolean) => {
     let aRou = activeRoute;
-
     fromCross.pointAcod = CodingCoord(pointAa);
     toCross.pointBcod = CodingCoord(pointBb);
     if (DoublRoute(massroute.ways, pointAa, pointBb)) {
@@ -211,6 +212,7 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
   };
 
   const MakeСollectionRoute = () => {
+    DelCollectionRoutes();
     for (let i = 0; i < massroute.ways.length; i++) {
       if (massroute.ways[i].starts === CodingCoord(pointAa)) {
         coordStop.push(DecodingCoord(massroute.ways[i].stops)); // исходящие связи
@@ -221,7 +223,7 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
         coordStopIn.push(pointAa);
       }
     }
-    if (ymaps) addRoute(ymaps);
+    if (ymaps) addRoute(ymaps); // перерисовка связей
   };
 
   const PressMenuButton = (mode: number) => {
@@ -229,12 +231,12 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
       case 3: // режим включения Demo сети связей
         massRoute = massroute.ways;
         setFlagDemo(true);
-        if (ymaps) addRoute(ymaps);
+        if (ymaps) addRoute(ymaps); // перерисовка связей
         break;
       case 6: // режим отмены Demo сети связей
         massRoute = [];
         setFlagDemo(false);
-        if (ymaps) addRoute(ymaps);
+        if (ymaps) addRoute(ymaps); // перерисовка связей
         break;
       case 12: // реверс связи
         let pa = pointAa;
@@ -244,25 +246,26 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
         pointAaIndex = pointBbIndex;
         pointBbIndex = pa;
         ChangeCross();
-        DelCollectionRoutes();
         MakeСollectionRoute();
+        setRevers(!revers);
         break;
       case 21: // сохранение связи
         MakeRecordMassRoute(false);
-        if (ymaps) addRoute(ymaps);
         break;
       case 33: // привязка направлений
         flagBind = true;
         setOpenSetBind(true);
         break;
       case 69: // инфа о связе
-        //if (activeRoute)
         setOpenSetInf(true);
         break;
       case 77: // удаление связи / отмена назначений
         ZeroRoute(false);
-        if (ymaps) addRoute(ymaps);
     }
+  };
+
+  const UpdateAddRoute = () => {
+    if (ymaps) addRoute(ymaps); // перерисовка связей
   };
 
   const addRoute = (ymaps: any) => {
@@ -336,8 +339,8 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
               ZeroRoute(false);
             } else {
               setFlagRoute(true);
+              if (ymaps) addRoute(ymaps); // перерисовка связей
             }
-            if (ymaps) addRoute(ymaps);
           }
         }
       } else {
@@ -371,7 +374,6 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
             fromCross.pointAaRegin = massdk[pointAaIndex].region.toString();
             fromCross.pointAaArea = massdk[pointAaIndex].area.toString();
             fromCross.pointAaID = massdk[pointAaIndex].ID;
-            DelCollectionRoutes();
             MakeСollectionRoute();
             setOpenSet(false);
           }
@@ -396,7 +398,7 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
                 SoobOpenSetEr("Дубликатная связь");
               }
               setOpenSet(false);
-              if (ymaps) addRoute(ymaps);
+              if (ymaps) addRoute(ymaps); // перерисовка связей
             }
           }
           break;
@@ -441,7 +443,7 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
               SendSocketDeleteVertex(debugging, WS, regionV, areaV, idPoint);
             }
             setOpenSet(false);
-            if (ymaps) addRoute(ymaps);
+            if (ymaps) addRoute(ymaps); // перерисовка связей
           }
           break;
         case 4: // Редактирование адреса
@@ -486,6 +488,7 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
               fromCross={fromCross}
               toCross={toCross}
               activeRoute={activeRoute}
+              update={UpdateAddRoute}
             />
           )}
         </Box>
@@ -572,10 +575,27 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
   };
 
   console.log("Massroute:", massroute);
-  console.log("Massdk:", massdk);
 
   return (
     <Grid container sx={{ border: 0, height: "99.9vh" }}>
+      {flagPusk && !flagBind && <>{StrokaMenuGlob("Отмена назначений", 77)}</>}
+      {flagPusk && flagRoute && !flagBind && (
+        <>
+          {StrokaMenuGlob("Привязка направлен", 33)}
+          {revers && <>{StrokaMenuGlob("Реверс связи", 12)}</>}
+          {!revers && <>{StrokaMenuGlob("Реверc связи", 12)}</>}
+          {StrokaMenuGlob("Информ о связи", 69)}
+        </>
+      )}
+      {flagPusk && flagRoute && flagBind && (
+        <>
+          {StrokaMenuGlob("Сохранить связь", 21)}
+          {StrokaMenuGlob("Отменить связь", 77)}
+          {StrokaMenuGlob("Информ о связи", 69)}
+        </>
+      )}
+      {!flagDemo && <>{StrokaMenuGlob("Demo сети", 3)}</>}
+      {flagDemo && <>{StrokaMenuGlob("Конец Demo", 6)}</>}
       {Object.keys(massroute).length && (
         <YMaps
           query={{
@@ -613,6 +633,7 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
                 fromCross={fromCross}
                 toCross={toCross}
                 activeRoute={activeRoute}
+                update={UpdateAddRoute}
               />
             )}
             {openSetInf && (
@@ -635,23 +656,6 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
           </Map>
         </YMaps>
       )}
-      {flagPusk && !flagBind && <>{StrokaMenuGlob("Отмена назначений", 77)}</>}
-      {flagPusk && flagRoute && !flagBind && (
-        <>
-          {StrokaMenuGlob("Привязка направлен", 33)}
-          {StrokaMenuGlob("Реверс связи", 12)}
-          {StrokaMenuGlob("Информ о связи", 69)}
-        </>
-      )}
-      {flagPusk && flagRoute && flagBind && (
-        <>
-          {StrokaMenuGlob("Сохранить связь", 21)}
-          {StrokaMenuGlob("Отменить связь", 77)}
-          {StrokaMenuGlob("Информ о связи", 69)}
-        </>
-      )}
-      {!flagDemo && <>{StrokaMenuGlob("Demo сети", 3)}</>}
-      {flagDemo && <>{StrokaMenuGlob("Конец Demo", 6)}</>}
     </Grid>
   );
 };

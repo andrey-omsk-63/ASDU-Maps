@@ -69,7 +69,7 @@ export const RecordMassRoute = (
     lenght: 0,
     time: 0,
   };
-  
+
   masskRoute.region = Number(fromCross.pointAaRegin);
   masskRoute.sourceArea = Number(fromCross.pointAaArea);
   masskRoute.sourceID = fromCross.pointAaID;
@@ -152,7 +152,6 @@ export const getPointOptions = (
   if (index === pointBbIndex) colorBalloon = "islands#darkBlueStretchyIcon";
   return {
     preset: colorBalloon,
-    //iconSize: [50, 50],
   };
 };
 
@@ -526,7 +525,11 @@ export const SendSocketDeleteWayToPoint = (
   handleSendOpen();
 };
 //==================================================
-export const SocketDeleteWay = (debugging: boolean, WS: WebSocket, ways: Way) => {
+export const SocketDeleteWay = (
+  debugging: boolean,
+  WS: WebSocket,
+  ways: Way
+) => {
   let fromCross: any = {
     pointAaRegin: "",
     pointAaArea: "",

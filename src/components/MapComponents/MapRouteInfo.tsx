@@ -28,7 +28,6 @@ const MapRouteInfo = (props: {
       " (" +
       Math.round(props.activeRoute.properties.get("duration").value) +
       " сек)";
-    console.log("1111", props.activeRoute.properties.get("duration"));
   }
   return (
     <Modal

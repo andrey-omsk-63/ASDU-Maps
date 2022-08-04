@@ -46,8 +46,8 @@ const MapCreatePoint = (props: {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValuen(event.target.value);
-    aa = event.target.value;
-    console.log("valueName:", aa, valuen);
+    // aa = event.target.value;
+    // console.log("valueName:", aa, valuen);
     setOpenSetAdress(true);
   };
 

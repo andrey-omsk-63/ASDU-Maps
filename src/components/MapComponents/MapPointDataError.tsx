@@ -24,6 +24,7 @@ const MapPointDataError = (props: {
   fromCross: any;
   toCross: any;
   activeRoute: any;
+  update: any;
 }) => {
   const WS = props.ws;
   //== Piece of Redux =======================================
@@ -72,6 +73,7 @@ const MapPointDataError = (props: {
     }
     massroute.ways.splice(index, 1);
     dispatch(massrouteCreate(massroute));
+    props.update()
   };
 
   const handleClose = (mode: number) => {

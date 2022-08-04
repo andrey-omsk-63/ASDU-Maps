@@ -4,10 +4,11 @@ body {
   height: 100%;
   width: 100%;
   /* background-color: #024492; */
-  /* background: linear-gradient(45deg, #57741D, #024492); */
+  background: linear-gradient(45deg, #57741D, #024492); 
   background: linear-gradient(45deg, #b7c182, #0083d0);
 
   /* background: url(./imagJournal.jpg); */
+  /* background-color: #DAF0C5; */
 
   background-repeat: no-repeat;
   background-position: center center;

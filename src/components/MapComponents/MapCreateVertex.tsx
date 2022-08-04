@@ -90,24 +90,13 @@ const MapCreateVertex = (props: {
 
   const CheckDoublAreaID = () => {
     let doublAreaID = true;
-    console.log("type region", typeof props.region);
-    console.log("##:", props.region, Number(currency), Number(valuen));
-    console.log(
-      "#reion:",
-      massroute.vertexes[0].region,
-      props.region,
-      massroute.vertexes[0].region === props.region
-    );
-    console.log("#area:", massroute.vertexes[0].area === Number(currency));
-    console.log("#id:", massroute.vertexes[0].id === Number(valuen));
-
+    
     for (let i = 0; i < massroute.vertexes.length; i++) {
       if (
         massroute.vertexes[i].region === props.region &&
         massroute.vertexes[i].area === Number(currency) &&
         massroute.vertexes[i].id === Number(valuen)
       ) {
-        console.log("22222222", i);
         doublAreaID = false;
         soobErr = "Дубликатная запись ключ: Регион_Pайон_ID";
         setOpenSetErr(true);
@@ -251,6 +240,7 @@ const MapCreateVertex = (props: {
               fromCross={0}
               toCross={0}
               activeRoute={0}
+              update={0}
             />
           )}
         </Grid>
