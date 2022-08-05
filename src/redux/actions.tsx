@@ -4,6 +4,7 @@ import {
   //COMM_CREATE,
   MASSDK_CREATE,
   MASSROUTE_CREATE,
+  COORDINATES_CREATE,
 } from "./types";
 
 //import { DateRPU } from './../interfaceRPU.d';
@@ -11,6 +12,7 @@ import { DateMAP } from "./../interfaceMAP.d";
 import { DateRoute } from './../interfaceRoute.d';
 //import { Tflight } from './../interfaceMAP.d';
 import { Pointer } from "./../App";
+//import { Coordinates } from './../App';
 //import { Router } from "./../App";
 
 // export function incrementLikes() {
@@ -51,5 +53,12 @@ export function massrouteCreate(massRouter: DateRoute) {
   return {
     type: MASSROUTE_CREATE,
     data: massRouter,
+  };
+}
+
+export function coordinatesCreate(Coordinates: Array<Array<number>>) {
+  return {
+    type: COORDINATES_CREATE,
+    data: Coordinates,
   };
 }

@@ -34,8 +34,6 @@ const MapCreatePoint = (props: {
   //========================================================
 
   const [openSetAdress, setOpenSetAdress] = React.useState(true);
-  let valueN = "Новая точка " + String(chNewCoord);
-  let aa = valueN;
   const [valuen, setValuen] = React.useState(
     "Новая точка " + String(chNewCoord)
   );
@@ -46,8 +44,6 @@ const MapCreatePoint = (props: {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValuen(event.target.value);
-    // aa = event.target.value;
-    // console.log("valueName:", aa, valuen);
     setOpenSetAdress(true);
   };
 

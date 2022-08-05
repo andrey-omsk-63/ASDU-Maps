@@ -3,8 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   mapCreate,
   massrouteCreate,
+  coordinatesCreate,
   //commCreate,
-  // massdkCreate
+  massdkCreate,
 } from "./redux/actions";
 
 import Grid from "@mui/material/Grid";
@@ -15,7 +16,6 @@ import Typography from "@mui/material/Typography";
 
 //import MainMap from "./components/MainMapGl";
 import MainMap from "./components/MainMapGl";
-import MapPointDataError from "./components/MapComponents/MapPointDataError";
 import { styleModalEnd, styleSetInf } from "./components/MainMapStyle";
 //import { CenterCoord } from "./components/MapServiceFunctions";
 
@@ -53,12 +53,14 @@ export interface Router {
   time: number;
 }
 export let massRoute: Router[] = [];
+export let Coordinates: Array<Array<number>> = []; // массив координат
 
 let flagOpen = true;
 let flagOpenWS = true;
 //let flagWS = true;
 let WS: any = null;
 let homeRegion: any = "";
+let soob = "";
 
 const App = () => {
   //== Piece of Redux ======================================
@@ -74,11 +76,16 @@ const App = () => {
   // });
   //console.log("map_App:", map);
 
-  const massdk = useSelector((state: any) => {
+  let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;
     return massdkReducer.massdk;
   });
-  //console.log("massdk_App:", massdk);
+
+  let coordinates = useSelector((state: any) => {
+    const { coordinatesReducer } = state;
+    return coordinatesReducer.coordinates;
+  });
+  console.log("coordinates_App:", coordinates);
 
   const dispatch = useDispatch();
   //========================================================
@@ -122,24 +129,80 @@ const App = () => {
       console.log("пришло:", allData.type, data);
       switch (allData.type) {
         case "mapInfo":
-          console.log("mapInfo:", data);
           dateMapGl = data;
           dispatch(mapCreate(dateMapGl));
           break;
         case "graphInfo":
-          console.log("graphInfo:", data);
-          //setDateRouteGl(data);
           dateRouteGl = data;
-          //flagRoute = 1; // успешное прочтение
           dispatch(massrouteCreate(dateRouteGl));
           break;
         case "createPoint":
           if (data.status) {
             dateRouteGl.vertexes[dateRouteGl.vertexes.length - 1].id = data.id;
             massdk[massdk.length - 1].ID = data.id;
+          } else {
+            dateRouteGl.vertexes.splice(dateRouteGl.vertexes.length - 1, 1);
+            massdk.splice(massdk.length - 1, 1);
+            coordinates.splice(coordinates.length - 1, 1);
+            soob = "Произошла ошибка при создании точки";
+            setOpenSetErr(true);
+            dispatch(coordinatesCreate(coordinates));
+          }
+          dispatch(massrouteCreate(dateRouteGl));
+          dispatch(massdkCreate(massdk));
+          break;
+        case "createVertex":
+          if (!data.status) {
+            dateRouteGl.vertexes.splice(dateRouteGl.vertexes.length - 1, 1);
+            massdk.splice(massdk.length - 1, 1);
+            coordinates.splice(coordinates.length - 1, 1);
+            soob = "Произошла ошибка при создании перекрёстка";
+            setOpenSetErr(true);
+            dispatch(coordinatesCreate(coordinates));
+            dispatch(massrouteCreate(dateRouteGl));
+            dispatch(massdkCreate(massdk));
+          }
+          break;
+        case "createWay":
+          if (!data.status) {
+            soob =
+              "Произошла ошибка при создании связи перекрёстка (район:" +
+              data.fromCross.area +
+              " ID:" +
+              data.fromCross.id +
+              ") c перекрёстком (район:" +
+              data.toCross.area +
+              " ID:" +
+              data.toCross.id +
+              ")";
+            dateRouteGl.ways.splice(dateRouteGl.ways.length - 1, 1);
             dispatch(massrouteCreate(dateRouteGl));
             setOpenSetErr(true);
-          } else {
+          }
+          break;
+        case "createWayToPoint":
+          if (!data.status) {
+            soob =
+              "Произошла ошибка при создании связи перекрёстка (район:" +
+              data.fromCross.area +
+              " ID:" +
+              data.fromCross.id +
+              ") c точкой";
+            dateRouteGl.ways.splice(dateRouteGl.ways.length - 1, 1);
+            dispatch(massrouteCreate(dateRouteGl));
+            setOpenSetErr(true);
+          }
+          break;
+        case "createWayFromPoint":
+          if (data.status) {
+            soob =
+              "Произошла ошибка при создании связи точки с перекрёстком (район:" +
+              data.toCross.area +
+              " ID:" +
+              data.toCross.id +
+              ")";
+            dateRouteGl.ways.splice(dateRouteGl.ways.length - 1, 1);
+            dispatch(massrouteCreate(dateRouteGl));
             setOpenSetErr(true);
           }
           break;
@@ -147,20 +210,18 @@ const App = () => {
           console.log("data_default:", data);
       }
     };
-  }, [dispatch, massdk]);
+  }, [dispatch, massdk, coordinates]);
 
-  console.log("openSetErr:", openSetErr);
-  
   const AppSocketError = (props: { sErr: string; setOpen: any }) => {
-    const [openSetEr, setOpenSetEr] = React.useState(true);
+    const [openSet, setOpenSet] = React.useState(true);
 
     const handleClose = () => {
       props.setOpen(false);
-      setOpenSetEr(false);
+      setOpenSet(false);
     };
 
     return (
-      <Modal open={openSetEr} onClose={handleClose} hideBackdrop>
+      <Modal open={openSet} onClose={handleClose} hideBackdrop>
         <Box sx={styleSetInf}>
           <Button sx={styleModalEnd} onClick={handleClose}>
             <b>&#10006;</b>
@@ -185,24 +246,11 @@ const App = () => {
     dispatch(massrouteCreate(dateRouteGl));
   }
 
-  let soob = "Произошёл косяк";
-
   return (
     <Grid container sx={{ height: "100vh", width: "100%", bgcolor: "#E9F5D8" }}>
       <Grid item xs>
-        {openSetErr && (
-          <MapPointDataError
-            sErr={soob}
-            setOpen={setOpenSetErr}
-            debug={false}
-            ws={{}}
-            fromCross={0}
-            toCross={0}
-            activeRoute={0}
-            update={0}
-          />
-        )}
-        <MainMap ws={WS} region={homeRegion} />
+        {openSetErr && <AppSocketError sErr={soob} setOpen={setOpenSetErr} />}
+        <MainMap ws={WS} region={homeRegion} sErr={soob} />
       </Grid>
     </Grid>
   );

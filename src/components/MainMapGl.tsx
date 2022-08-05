@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { massdkCreate, massrouteCreate } from "./../redux/actions";
+import { coordinatesCreate } from "./../redux/actions";
 
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -40,7 +41,7 @@ import { styleApp01, styleModalEndMapGl, styleModalMenu } from "./MainMapStyle";
 
 import { Pointer } from "./../App";
 
-let coordinates: Array<Array<number>> = []; // массив координат
+//let coordinates: Array<Array<number>> = []; // массив координат
 let coordStart: any = []; // рабочий массив коллекции входящих связей
 let coordStop: any = []; // рабочий массив коллекции входящих связей
 let coordStartIn: any = []; // рабочий массив коллекции исходящих связей
@@ -53,6 +54,7 @@ let flagBind = false;
 let activeRoute: any;
 let newPointCoord: any = 0;
 let soobError = "";
+let oldsErr = "";
 
 let zoom = 10;
 let homeRegion = 0;
@@ -77,7 +79,8 @@ let toCross: any = {
   pointBcod: "",
 };
 
-const MainMap = (props: { ws: WebSocket; region: any }) => {
+const MainMap = (props: { ws: WebSocket; region: any; sErr: string }) => {
+  console.log('props.sErr:',props.sErr)
   const WS = props.ws;
   if (WS.url === "wss://localhost:3000/W") debugging = true;
   //== Piece of Redux =======================================
@@ -88,6 +91,10 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
     return massrouteReducer.massroute;
+  });
+  let coordinates = useSelector((state: any) => {
+    const { coordinatesReducer } = state;
+    return coordinatesReducer.coordinates;
   });
   const map = useSelector((state: any) => {
     const { mapReducer } = state;
@@ -143,8 +150,11 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
     flagOpen = true;
     dispatch(massdkCreate(massdk));
     dispatch(massrouteCreate(massroute));
+    dispatch(coordinatesCreate(coordinates));
   }
   //========================================================
+  
+
   const DelCollectionRoutes = () => {
     coordStart = [];
     coordStop = [];
@@ -534,7 +544,7 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
     return (
       <>
         {flagOpen &&
-          coordinates.map((coordinate, idx) => (
+          coordinates.map((coordinate: any, idx: any) => (
             <DoPlacemarkDo key={idx} coordinate={coordinate} idx={idx} />
           ))}
       </>
@@ -575,6 +585,14 @@ const MainMap = (props: { ws: WebSocket; region: any }) => {
   };
 
   console.log("Massroute:", massroute);
+  console.log("Massdk:", massdk);
+
+  if (props.sErr) {
+    if (props.sErr !== oldsErr) {
+      if (ymaps) addRoute(ymaps); // перерисовка связей
+      oldsErr = props.sErr;
+    }
+  }
 
   return (
     <Grid container sx={{ border: 0, height: "99.9vh" }}>
