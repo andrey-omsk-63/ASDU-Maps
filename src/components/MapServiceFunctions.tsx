@@ -575,6 +575,76 @@ export const SocketDeleteWay = (
   }
 };
 
+//=== SoobErrorSocket ==============================
+
+export const SoobErrorCreateWay = (data: any) => {
+  let soob =
+    "Произошла ошибка при создании связи перекрёстка (район:" +
+    data.fromCross.area +
+    " ID:" +
+    data.fromCross.id +
+    ") c перекрёстком (район:" +
+    data.toCross.area +
+    " ID:" +
+    data.toCross.id +
+    ")";
+  return soob;
+};
+
+export const SoobErrorDeleteWay = (data: any) => {
+  let soob =
+    "Произошла ошибка при удалении связи перекрёстка (район:" +
+    data.fromCross.area +
+    " ID:" +
+    data.fromCross.id +
+    ") c перекрёстком (район:" +
+    data.toCross.area +
+    " ID:" +
+    data.toCross.id +
+    ")";
+  return soob;
+};
+
+export const SoobErrorCreateWayToPoint = (data: any) => {
+  let soob =
+    "Произошла ошибка при создании связи перекрёстка (район:" +
+    data.fromCross.area +
+    " ID:" +
+    data.fromCross.id +
+    ") c точкой";
+  return soob;
+};
+
+export const SoobErrorDeleteWayToPoint = (data: any) => {
+  let soob =
+    "Произошла ошибка при удалении связи перекрёстка (район:" +
+    data.fromCross.area +
+    " ID:" +
+    data.fromCross.id +
+    ") c точкой";
+  return soob;
+};
+
+export const SoobErrorCreateWayFromPoint = (data: any) => {
+  let soob =
+    "Произошла ошибка при создании связи точки с перекрёстком (район:" +
+    data.toCross.area +
+    " ID:" +
+    data.toCross.id +
+    ")";
+  return soob;
+};
+
+export const SoobErrorDeleteWayFromPoint = (data: any) => {
+  let soob =
+    "Произошла ошибка при удалении связи точки с перекрёстком (район:" +
+    data.toCross.area +
+    " ID:" +
+    data.toCross.id +
+    ")";
+  return soob;
+};
+
 //=== костыль ======================================
 let a0 = {
   region: 0,

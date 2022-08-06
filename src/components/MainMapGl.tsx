@@ -80,7 +80,7 @@ let toCross: any = {
 };
 
 const MainMap = (props: { ws: WebSocket; region: any; sErr: string }) => {
-  console.log('props.sErr:',props.sErr)
+  console.log("props.sErr:", props.sErr);
   const WS = props.ws;
   if (WS.url === "wss://localhost:3000/W") debugging = true;
   //== Piece of Redux =======================================
@@ -153,7 +153,6 @@ const MainMap = (props: { ws: WebSocket; region: any; sErr: string }) => {
     dispatch(coordinatesCreate(coordinates));
   }
   //========================================================
-  
 
   const DelCollectionRoutes = () => {
     coordStart = [];
@@ -274,10 +273,6 @@ const MainMap = (props: { ws: WebSocket; region: any; sErr: string }) => {
     }
   };
 
-  const UpdateAddRoute = () => {
-    if (ymaps) addRoute(ymaps); // перерисовка связей
-  };
-
   const addRoute = (ymaps: any) => {
     mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
     let massPolyRoute: any = []; // cеть связей
@@ -313,6 +308,10 @@ const MainMap = (props: { ws: WebSocket; region: any; sErr: string }) => {
     multiRoute.model.events.add("requestsuccess", function () {
       activeRoute = multiRoute.getActiveRoute();
     });
+  };
+
+  const UpdateAddRoute = () => {
+    if (ymaps) addRoute(ymaps); // перерисовка связей
   };
 
   const OnPlacemarkClickPoint = (index: number) => {
@@ -587,11 +586,9 @@ const MainMap = (props: { ws: WebSocket; region: any; sErr: string }) => {
   console.log("Massroute:", massroute);
   console.log("Massdk:", massdk);
 
-  if (props.sErr) {
-    if (props.sErr !== oldsErr) {
-      if (ymaps) addRoute(ymaps); // перерисовка связей
-      oldsErr = props.sErr;
-    }
+  if (props.sErr && props.sErr !== oldsErr) {
+    if (ymaps) addRoute(ymaps); // перерисовка связей
+    oldsErr = props.sErr;
   }
 
   return (

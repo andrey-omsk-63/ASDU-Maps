@@ -4,20 +4,21 @@ import {
   mapCreate,
   massrouteCreate,
   coordinatesCreate,
-  //commCreate,
   massdkCreate,
 } from "./redux/actions";
 
 import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
-import Typography from "@mui/material/Typography";
 
-//import MainMap from "./components/MainMapGl";
 import MainMap from "./components/MainMapGl";
-import { styleModalEnd, styleSetInf } from "./components/MainMapStyle";
-//import { CenterCoord } from "./components/MapServiceFunctions";
+import AppSocketError from "./AppSocketError";
+import {
+  SoobErrorCreateWay,
+  SoobErrorDeleteWay,
+  SoobErrorCreateWayToPoint,
+  SoobErrorDeleteWayToPoint,
+  SoobErrorCreateWayFromPoint,
+  SoobErrorDeleteWayFromPoint,
+} from "./components/MapServiceFunctions";
 
 //import { DateMAP } from './interfaceMAP.d';
 //import { DateRoute } from "./interfaceRoute.d";
@@ -27,7 +28,6 @@ import { dataRoute } from "./otladkaRoutes";
 
 export let dateMapGl: any;
 export let dateRouteGl: any;
-//export let dateRouteGl: dataRoute;
 
 export interface Pointer {
   ID: number;
@@ -89,8 +89,6 @@ const App = () => {
 
   const dispatch = useDispatch();
   //========================================================
-  //const [dateRouteGl, setDateRouteGl] = React.useState<DateRoute>({} as DateRoute);
-
   //const host = "wss://192.168.115.25/mapW";
   //const host = "wss://192.168.115.25/user/andrey_omsk/graphManageW";
   const host =
@@ -151,6 +149,12 @@ const App = () => {
           dispatch(massrouteCreate(dateRouteGl));
           dispatch(massdkCreate(massdk));
           break;
+        case "deletePoint":
+          if (!data.status) {
+            soob = "Произошла ошибка при удалении точки";
+            setOpenSetErr(true);
+          }
+          break;
         case "createVertex":
           if (!data.status) {
             dateRouteGl.vertexes.splice(dateRouteGl.vertexes.length - 1, 1);
@@ -163,46 +167,52 @@ const App = () => {
             dispatch(massdkCreate(massdk));
           }
           break;
+        case "deleteVertex":
+          if (!data.status) {
+            soob = "Произошла ошибка при удалении перекрёстка";
+            setOpenSetErr(true);
+          }
+          break;
         case "createWay":
           if (!data.status) {
-            soob =
-              "Произошла ошибка при создании связи перекрёстка (район:" +
-              data.fromCross.area +
-              " ID:" +
-              data.fromCross.id +
-              ") c перекрёстком (район:" +
-              data.toCross.area +
-              " ID:" +
-              data.toCross.id +
-              ")";
+            soob = SoobErrorCreateWay(data);
             dateRouteGl.ways.splice(dateRouteGl.ways.length - 1, 1);
             dispatch(massrouteCreate(dateRouteGl));
+            setOpenSetErr(true);
+          }
+          break;
+        case "deleteWay":
+          if (!data.status) {
+            soob = SoobErrorDeleteWay(data);
             setOpenSetErr(true);
           }
           break;
         case "createWayToPoint":
           if (!data.status) {
-            soob =
-              "Произошла ошибка при создании связи перекрёстка (район:" +
-              data.fromCross.area +
-              " ID:" +
-              data.fromCross.id +
-              ") c точкой";
+            soob = SoobErrorCreateWayToPoint(data);
             dateRouteGl.ways.splice(dateRouteGl.ways.length - 1, 1);
             dispatch(massrouteCreate(dateRouteGl));
             setOpenSetErr(true);
           }
           break;
+        case "deleteWayToPoint":
+          if (!data.status) {
+            soob = SoobErrorDeleteWayToPoint(data);
+            setOpenSetErr(true);
+          }
+          break;
         case "createWayFromPoint":
-          if (data.status) {
-            soob =
-              "Произошла ошибка при создании связи точки с перекрёстком (район:" +
-              data.toCross.area +
-              " ID:" +
-              data.toCross.id +
-              ")";
+          if (!data.status) {
+            soob = SoobErrorCreateWayFromPoint(data);
+            console.log('soob:',soob)
             dateRouteGl.ways.splice(dateRouteGl.ways.length - 1, 1);
             dispatch(massrouteCreate(dateRouteGl));
+            setOpenSetErr(true);
+          }
+          break;
+        case "deleteWayFromPoint":
+          if (!data.status) {
+            soob = SoobErrorDeleteWayFromPoint(data);
             setOpenSetErr(true);
           }
           break;
@@ -212,34 +222,11 @@ const App = () => {
     };
   }, [dispatch, massdk, coordinates]);
 
-  const AppSocketError = (props: { sErr: string; setOpen: any }) => {
-    const [openSet, setOpenSet] = React.useState(true);
-
-    const handleClose = () => {
-      props.setOpen(false);
-      setOpenSet(false);
-    };
-
-    return (
-      <Modal open={openSet} onClose={handleClose} hideBackdrop>
-        <Box sx={styleSetInf}>
-          <Button sx={styleModalEnd} onClick={handleClose}>
-            <b>&#10006;</b>
-          </Button>
-          <Typography variant="h6" sx={{ textAlign: "center", color: "red" }}>
-            {props.sErr}
-          </Typography>
-        </Box>
-      </Modal>
-    );
-  };
-
   //для отладки
   if (WS.url === "wss://localhost:3000/W" && flagOpen) {
     console.log("РЕЖИМ ОТЛАДКИ!!!");
     dateMapGl = dataMap;
     dispatch(mapCreate(dateMapGl));
-    //setDateRouteGl(dataRoute.data);
     dateRouteGl = dataRoute.data;
     flagOpen = false;
     console.log("@@@dateRouteGl", dateRouteGl);
