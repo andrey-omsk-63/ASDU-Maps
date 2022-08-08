@@ -80,7 +80,6 @@ let toCross: any = {
 };
 
 const MainMap = (props: { ws: WebSocket; region: any; sErr: string }) => {
-  console.log("props.sErr:", props.sErr);
   const WS = props.ws;
   if (WS.url === "wss://localhost:3000/W") debugging = true;
   //== Piece of Redux =======================================
@@ -170,7 +169,7 @@ const MainMap = (props: { ws: WebSocket; region: any; sErr: string }) => {
     flagBind = false;
     setFlagRoute(false);
     setFlagPusk(mode);
-    if (ymaps) addRoute(ymaps); // перерисовка связей
+    ymaps && addRoute(ymaps); // перерисовка связей
   };
 
   const ChangeCross = () => {
@@ -232,7 +231,37 @@ const MainMap = (props: { ws: WebSocket; region: any; sErr: string }) => {
         coordStopIn.push(pointAa);
       }
     }
-    if (ymaps) addRoute(ymaps); // перерисовка связей
+    ymaps && addRoute(ymaps); // перерисовка связей
+  };
+
+  const SendSocketGetSvg = (
+    debugging: boolean,
+    ws: WebSocket,
+    region: number,
+    area: number,
+    ID: number
+  ) => {
+    const handleSendOpen = () => {
+      if (!debugging) {
+        if (ws.readyState === WebSocket.OPEN) {
+          ws.send(
+            JSON.stringify({
+              type: "createVertex",
+              data: {
+                region: region.toString(),
+                area: area.toString(),
+                id: ID,
+              },
+            })
+          );
+        } else {
+          setTimeout(() => {
+            handleSendOpen();
+          }, 1000);
+        }
+      }
+    };
+    handleSendOpen();
   };
 
   const PressMenuButton = (mode: number) => {
@@ -240,12 +269,12 @@ const MainMap = (props: { ws: WebSocket; region: any; sErr: string }) => {
       case 3: // режим включения Demo сети связей
         massRoute = massroute.ways;
         setFlagDemo(true);
-        if (ymaps) addRoute(ymaps); // перерисовка связей
+        ymaps && addRoute(ymaps); // перерисовка связей
         break;
       case 6: // режим отмены Demo сети связей
         massRoute = [];
         setFlagDemo(false);
-        if (ymaps) addRoute(ymaps); // перерисовка связей
+        ymaps && addRoute(ymaps); // перерисовка связей
         break;
       case 12: // реверс связи
         let pa = pointAa;
@@ -254,14 +283,22 @@ const MainMap = (props: { ws: WebSocket; region: any; sErr: string }) => {
         pa = pointAaIndex;
         pointAaIndex = pointBbIndex;
         pointBbIndex = pa;
-        ChangeCross();
-        MakeСollectionRoute();
-        setRevers(!revers);
+        if (DoublRoute(massroute.ways, pointAa, pointBb)) {
+          SoobOpenSetEr("Дубликатная связь");
+          ZeroRoute(false);
+        } else {
+          ChangeCross();
+          MakeСollectionRoute();
+          setRevers(!revers);
+        }
         break;
       case 21: // сохранение связи
         MakeRecordMassRoute(false);
         break;
       case 33: // привязка направлений
+        let areaV = massroute.vertexes[pointAaIndex].area;
+        let idV = massroute.vertexes[pointAaIndex].id;
+        SendSocketGetSvg(debugging, WS, homeRegion, areaV, idV);
         flagBind = true;
         setOpenSetBind(true);
         break;
@@ -311,7 +348,7 @@ const MainMap = (props: { ws: WebSocket; region: any; sErr: string }) => {
   };
 
   const UpdateAddRoute = () => {
-    if (ymaps) addRoute(ymaps); // перерисовка связей
+    ymaps && addRoute(ymaps); // перерисовка связей
   };
 
   const OnPlacemarkClickPoint = (index: number) => {
@@ -348,7 +385,7 @@ const MainMap = (props: { ws: WebSocket; region: any; sErr: string }) => {
               ZeroRoute(false);
             } else {
               setFlagRoute(true);
-              if (ymaps) addRoute(ymaps); // перерисовка связей
+              ymaps && addRoute(ymaps); // перерисовка связей
             }
           }
         }
@@ -407,7 +444,7 @@ const MainMap = (props: { ws: WebSocket; region: any; sErr: string }) => {
                 SoobOpenSetEr("Дубликатная связь");
               }
               setOpenSet(false);
-              if (ymaps) addRoute(ymaps); // перерисовка связей
+              ymaps && addRoute(ymaps); // перерисовка связей
             }
           }
           break;
@@ -452,7 +489,7 @@ const MainMap = (props: { ws: WebSocket; region: any; sErr: string }) => {
               SendSocketDeleteVertex(debugging, WS, regionV, areaV, idPoint);
             }
             setOpenSet(false);
-            if (ymaps) addRoute(ymaps); // перерисовка связей
+            ymaps && addRoute(ymaps); // перерисовка связей
           }
           break;
         case 4: // Редактирование адреса
@@ -584,10 +621,10 @@ const MainMap = (props: { ws: WebSocket; region: any; sErr: string }) => {
   };
 
   console.log("Massroute:", massroute);
-  console.log("Massdk:", massdk);
+  //console.log("Massdk:", massdk);
 
   if (props.sErr && props.sErr !== oldsErr) {
-    if (ymaps) addRoute(ymaps); // перерисовка связей
+    ymaps && addRoute(ymaps); // перерисовка связей
     oldsErr = props.sErr;
   }
 
@@ -623,7 +660,7 @@ const MainMap = (props: { ws: WebSocket; region: any; sErr: string }) => {
             state={mapState}
             instanceRef={(ref) => InstanceRefDo(ref)}
             onLoad={(ref) => {
-              if (ref) setYmaps(ref);
+              ref && setYmaps(ref);
             }}
             width={"99.8%"}
             height={"97%"}

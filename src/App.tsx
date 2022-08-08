@@ -105,7 +105,7 @@ const App = () => {
     flagOpenWS = false;
     let pageUrl = new URL(window.location.href);
     homeRegion = Number(pageUrl.searchParams.get("Region"));
-    console.log("WS:", homeRegion, WS);
+    console.log("homeRegion+WS:", homeRegion, WS);
   }
 
   React.useEffect(() => {
