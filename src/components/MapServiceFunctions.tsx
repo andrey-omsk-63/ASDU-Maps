@@ -1,17 +1,17 @@
-import { Pointer, Router } from "./../App";
-import { Vertex, Way } from "./../interfaceRoute";
+import { Pointer, Router } from './../App';
+import { Vertex, Way } from './../interfaceRoute';
 
 export const MapssdkNewPoint = (
   homeRegion: number,
   coords: any,
   name: string,
   area: number,
-  id: number
+  id: number,
 ) => {
   let masskPoint: Pointer = {
     ID: 0,
     coordinates: [],
-    nameCoordinates: "",
+    nameCoordinates: '',
     region: 0,
     area: 0,
     newCoordinates: 0,
@@ -31,17 +31,15 @@ export const MassrouteNewPoint = (
   coords: any,
   name: string,
   area: number,
-  id: number
+  id: number,
 ) => {
   let masskPoint: Vertex = {
     region: 0,
     area: 0,
     id: 0,
-    dgis: "",
+    dgis: '',
     scale: 0,
-    lin: [],
-    lout: [],
-    name: "",
+    name: '',
   };
 
   masskPoint.region = homeRegion;
@@ -53,11 +51,16 @@ export const MassrouteNewPoint = (
   return masskPoint;
 };
 
-export const RecordMassRoute = (
-  fromCross: any,
-  toCross: any,
-  activeRoute: any
-) => {
+  masskPoint.region = homeRegion;
+  masskPoint.area = area;
+  masskPoint.id = id;
+  masskPoint.dgis = CodingCoord(coords);
+  masskPoint.name = name;
+  masskPoint.scale = 0;
+  return masskPoint;
+};
+
+export const RecordMassRoute = (fromCross: any, toCross: any, activeRoute: any) => {
   let masskRoute: Router = {
     region: 0,
     sourceArea: 0,
@@ -66,8 +69,8 @@ export const RecordMassRoute = (
     targetID: 0,
     lsource: 0,
     ltarget: 0,
-    starts: "",
-    stops: "",
+    starts: '',
+    stops: '',
     lenght: 0,
     time: 0,
   };
@@ -80,21 +83,19 @@ export const RecordMassRoute = (
   masskRoute.starts = fromCross.pointAcod;
   masskRoute.stops = toCross.pointBcod;
   if (activeRoute) {
-    masskRoute.time = Math.round(activeRoute.properties.get("duration").value);
-    masskRoute.lenght = Math.round(
-      activeRoute.properties.get("distance").value
-    );
+    masskRoute.time = Math.round(activeRoute.properties.get('duration').value);
+    masskRoute.lenght = Math.round(activeRoute.properties.get('distance').value);
   }
-  console.log("masskRoute:", masskRoute);
+  console.log('masskRoute:', masskRoute);
   return masskRoute;
 };
 
 export const DecodingCoord = (coord: string) => {
-  return coord.split(",").map(Number);
+  return coord.split(',').map(Number);
 };
 
 export const CodingCoord = (coord: Array<number>) => {
-  return String(coord[0]) + "," + String(coord[1]);
+  return String(coord[0]) + ',' + String(coord[1]);
 };
 
 export const DoublRoute = (massroute: any, pointA: any, pointB: any) => {
@@ -102,8 +103,7 @@ export const DoublRoute = (massroute: any, pointA: any, pointB: any) => {
   let pointAcod = CodingCoord(pointA);
   let pointBcod = CodingCoord(pointB);
   for (let i = 0; i < massroute.length; i++) {
-    if (massroute[i].starts === pointAcod && massroute[i].stops === pointBcod)
-      flDubl = true;
+    if (massroute[i].starts === pointAcod && massroute[i].stops === pointBcod) flDubl = true;
   }
   return flDubl;
 };
@@ -122,13 +122,13 @@ export const getPointData = (
   index: number,
   pointAaIndex: number,
   pointBbIndex: number,
-  massdk: any
+  massdk: any,
 ) => {
-  let textBalloon = "";
-  if (index === pointAaIndex) textBalloon = "Начало";
-  if (index === pointBbIndex) textBalloon = "Конец";
+  let textBalloon = '';
+  if (index === pointAaIndex) textBalloon = 'Начало';
+  if (index === pointBbIndex) textBalloon = 'Конец';
   return {
-    hintContent: "ID:" + massdk[index].ID + " " + massdk[index].nameCoordinates, //balloonContent: PressBalloon(index), iconCaption: textBalloon,
+    hintContent: 'ID:' + massdk[index].ID + ' ' + massdk[index].nameCoordinates, //balloonContent: PressBalloon(index), iconCaption: textBalloon,
     iconContent: textBalloon,
   };
 };
@@ -138,20 +138,18 @@ export const getPointOptions = (
   pointAaIndex: number,
   pointBbIndex: number,
   massdk: any,
-  massroute: any
+  massroute: any,
 ) => {
   //let colorBalloon = "islands#violetStretchyIcon";
-  let colorBalloon = "islands#violetCircleDotIcon";
+  let colorBalloon = 'islands#violetCircleDotIcon';
   if (massroute.vertexes[index].area === 0) {
-    colorBalloon = "islands#violetCircleIcon";
-    if (massdk[index].newCoordinates > 0)
-      colorBalloon = "islands#darkOrangeCircleIcon";
+    colorBalloon = 'islands#violetCircleIcon';
+    if (massdk[index].newCoordinates > 0) colorBalloon = 'islands#darkOrangeCircleIcon';
   } else {
-    if (massdk[index].newCoordinates > 0)
-      colorBalloon = "islands#darkOrangeCircleDotIcon";
+    if (massdk[index].newCoordinates > 0) colorBalloon = 'islands#darkOrangeCircleDotIcon';
   }
-  if (index === pointAaIndex) colorBalloon = "islands#redStretchyIcon";
-  if (index === pointBbIndex) colorBalloon = "islands#darkBlueStretchyIcon";
+  if (index === pointAaIndex) colorBalloon = 'islands#redStretchyIcon';
+  if (index === pointBbIndex) colorBalloon = 'islands#darkBlueStretchyIcon';
   return {
     preset: colorBalloon,
   };
@@ -176,7 +174,7 @@ export const getMultiRouteOptions = () => {
 export const getMassPolyRouteOptions = () => {
   return {
     balloonCloseButton: false,
-    strokeColor: "#1A9165",
+    strokeColor: '#1A9165',
     strokeWidth: 2,
   };
 };
@@ -184,18 +182,18 @@ export const getMassPolyRouteOptions = () => {
 export const getMassMultiRouteOptions = () => {
   return {
     balloonCloseButton: false,
-    routeStrokeStyle: "dot",
-    strokeColor: "#1A9165",
-    routeActiveStrokeWidth: 3,
+    routeStrokeStyle: 'dot',
+    strokeColor: '#1A9165',
+    routeActiveStrokeWidth: 2,
     routeStrokeWidth: 0,
   };
 };
 
 export const getMassMultiRouteInOptions = () => {
   return {
-    routeActiveStrokeWidth: 3,
-    routeStrokeStyle: "dot",
-    routeActiveStrokeColor: "#E91427",
+    routeActiveStrokeWidth: 2,
+    routeStrokeStyle: 'dot',
+    routeActiveStrokeColor: '#E91427',
     routeStrokeWidth: 0,
   };
 };
@@ -206,19 +204,19 @@ export const SendSocketCreatePoint = (
   debugging: boolean,
   ws: WebSocket,
   codCoord: string,
-  adress: string
+  adress: string,
 ) => {
   const handleSendOpen = () => {
     if (!debugging) {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
-            type: "createPoint",
+            type: 'createPoint',
             data: {
               position: codCoord,
               name: adress,
             },
-          })
+          }),
         );
       } else {
         setTimeout(() => {
@@ -230,15 +228,11 @@ export const SendSocketCreatePoint = (
   handleSendOpen();
 };
 
-export const SendSocketDeletePoint = (
-  debugging: boolean,
-  ws: WebSocket,
-  id: number
-) => {
+export const SendSocketDeletePoint = (debugging: boolean, ws: WebSocket, id: number) => {
   const handleSendOpen = () => {
     if (!debugging) {
       if (ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify({ type: "deletePoint", data: { id } }));
+        ws.send(JSON.stringify({ type: 'deletePoint', data: { id } }));
       } else {
         setTimeout(() => {
           handleSendOpen();
@@ -254,20 +248,20 @@ export const SendSocketCreateVertex = (
   ws: WebSocket,
   region: number,
   area: number,
-  ID: number
+  ID: number,
 ) => {
   const handleSendOpen = () => {
     if (!debugging) {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
-            type: "createVertex",
+            type: 'createVertex',
             data: {
               region: region.toString(),
               area: area.toString(),
               id: ID,
             },
-          })
+          }),
         );
       } else {
         setTimeout(() => {
@@ -284,14 +278,12 @@ export const SendSocketDeleteVertex = (
   ws: WebSocket,
   region: string,
   area: string,
-  id: number
+  id: number,
 ) => {
   const handleSendOpen = () => {
     if (!debugging) {
       if (ws.readyState === WebSocket.OPEN) {
-        ws.send(
-          JSON.stringify({ type: "deleteVertex", data: { region, area, id } })
-        );
+        ws.send(JSON.stringify({ type: 'deleteVertex', data: { region, area, id } }));
       } else {
         setTimeout(() => {
           handleSendOpen();
@@ -307,18 +299,16 @@ export const SendSocketCreateWay = (
   ws: WebSocket,
   fromCr: any,
   toCr: any,
-  activeRoute: any
+  activeRoute: any,
 ) => {
   const handleSendOpen = () => {
-    console.log("SendSocketCreateWay");
+    console.log('SendSocketCreateWay');
     if (!debugging) {
-      let lengthRoute = Math.round(
-        activeRoute.properties.get("distance").value
-      );
+      let lengthRoute = Math.round(activeRoute.properties.get('distance').value);
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
-            type: "createWay",
+            type: 'createWay',
             data: {
               fromCross: {
                 region: fromCr.pointAaRegin,
@@ -332,7 +322,7 @@ export const SendSocketCreateWay = (
               },
               length: lengthRoute,
             },
-          })
+          }),
         );
       } else {
         setTimeout(() => {
@@ -344,19 +334,14 @@ export const SendSocketCreateWay = (
   handleSendOpen();
 };
 
-export const SendSocketDeleteWay = (
-  debugging: boolean,
-  ws: WebSocket,
-  fromCr: any,
-  toCr: any
-) => {
+export const SendSocketDeleteWay = (debugging: boolean, ws: WebSocket, fromCr: any, toCr: any) => {
   const handleSendOpen = () => {
-    console.log("SendSocketDeleteWay");
+    console.log('SendSocketDeleteWay');
     if (!debugging) {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
-            type: "deleteWay",
+            type: 'deleteWay',
             data: {
               fromCross: {
                 region: fromCr.pointAaRegin,
@@ -369,7 +354,7 @@ export const SendSocketDeleteWay = (
                 id: toCr.pointBbID,
               },
             },
-          })
+          }),
         );
       } else {
         setTimeout(() => {
@@ -386,18 +371,16 @@ export const SendSocketCreateWayFromPoint = (
   ws: WebSocket,
   fromCr: any,
   toCr: any,
-  activeRoute: any
+  activeRoute: any,
 ) => {
   const handleSendOpen = () => {
-    console.log("SendSocketCreateWayFromPoint");
+    console.log('SendSocketCreateWayFromPoint');
     if (!debugging) {
-      let lengthRoute = Math.round(
-        activeRoute.properties.get("distance").value
-      );
+      let lengthRoute = Math.round(activeRoute.properties.get('distance').value);
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
-            type: "createWayFromPoint",
+            type: 'createWayFromPoint',
             data: {
               fromPoint: fromCr.pointAaID,
               toCross: {
@@ -407,7 +390,7 @@ export const SendSocketCreateWayFromPoint = (
               },
               length: lengthRoute,
             },
-          })
+          }),
         );
       } else {
         setTimeout(() => {
@@ -424,15 +407,15 @@ export const SendSocketDeleteWayFromPoint = (
   ws: WebSocket,
   fromCr: any,
   toCr: any,
-  lengthRoute: number
+  lengthRoute: number,
 ) => {
   const handleSendOpen = () => {
-    console.log("SendSocketDeleteWayFromPoint", lengthRoute);
+    console.log('SendSocketDeleteWayFromPoint', lengthRoute);
     if (!debugging) {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
-            type: "deleteWayFromPoint",
+            type: 'deleteWayFromPoint',
             data: {
               fromPoint: fromCr.pointAaID,
               toCross: {
@@ -442,7 +425,7 @@ export const SendSocketDeleteWayFromPoint = (
               },
               length: lengthRoute,
             },
-          })
+          }),
         );
       } else {
         setTimeout(() => {
@@ -459,18 +442,16 @@ export const SendSocketCreateWayToPoint = (
   ws: WebSocket,
   fromCr: any,
   toCr: any,
-  activeRoute: any
+  activeRoute: any,
 ) => {
   const handleSendOpen = () => {
-    console.log("SendSocketCreateWayToPoint:", activeRoute);
+    console.log('SendSocketCreateWayToPoint:', activeRoute);
     if (!debugging) {
-      let lengthRoute = Math.round(
-        activeRoute.properties.get("distance").value
-      );
+      let lengthRoute = Math.round(activeRoute.properties.get('distance').value);
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
-            type: "createWayToPoint",
+            type: 'createWayToPoint',
             data: {
               fromCross: {
                 region: fromCr.pointAaRegin,
@@ -480,7 +461,7 @@ export const SendSocketCreateWayToPoint = (
               toPoint: toCr.pointBbID,
               length: lengthRoute,
             },
-          })
+          }),
         );
       } else {
         setTimeout(() => {
@@ -497,15 +478,15 @@ export const SendSocketDeleteWayToPoint = (
   ws: WebSocket,
   fromCr: any,
   toCr: any,
-  lengthRoute: number
+  lengthRoute: number,
 ) => {
   const handleSendOpen = () => {
-    console.log("SendSocketDeleteWayToPoint:", lengthRoute);
+    console.log('SendSocketDeleteWayToPoint:', lengthRoute);
     if (!debugging) {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
-            type: "deleteWayToPoint",
+            type: 'deleteWayToPoint',
             data: {
               fromCross: {
                 region: fromCr.pointAaRegin,
@@ -515,7 +496,7 @@ export const SendSocketDeleteWayToPoint = (
               toPoint: toCr.pointBbID,
               length: lengthRoute,
             },
-          })
+          }),
         );
       } else {
         setTimeout(() => {
@@ -527,22 +508,18 @@ export const SendSocketDeleteWayToPoint = (
   handleSendOpen();
 };
 //==================================================
-export const SocketDeleteWay = (
-  debugging: boolean,
-  WS: WebSocket,
-  ways: Way
-) => {
+export const SocketDeleteWay = (debugging: boolean, WS: WebSocket, ways: Way) => {
   let fromCross: any = {
-    pointAaRegin: "",
-    pointAaArea: "",
+    pointAaRegin: '',
+    pointAaArea: '',
     pointAaID: 0,
-    pointAcod: "",
+    pointAcod: '',
   };
   let toCross: any = {
-    pointBbRegin: "",
-    pointBbArea: "",
+    pointBbRegin: '',
+    pointBbArea: '',
     pointBbID: 0,
-    pointBcod: "",
+    pointBcod: '',
   };
   let lengthRoute = ways.lenght;
 
@@ -555,22 +532,10 @@ export const SocketDeleteWay = (
   toCross.pointBbID = ways.targetID;
   toCross.pointBcod = ways.stops;
   if (ways.sourceArea === 0) {
-    SendSocketDeleteWayFromPoint(
-      debugging,
-      WS,
-      fromCross,
-      toCross,
-      lengthRoute
-    );
+    SendSocketDeleteWayFromPoint(debugging, WS, fromCross, toCross, lengthRoute);
   } else {
     if (ways.targetArea === 0) {
-      SendSocketDeleteWayToPoint(
-        debugging,
-        WS,
-        fromCross,
-        toCross,
-        lengthRoute
-      );
+      SendSocketDeleteWayToPoint(debugging, WS, fromCross, toCross, lengthRoute);
     } else {
       SendSocketDeleteWay(debugging, WS, fromCross, toCross);
     }
@@ -581,140 +546,140 @@ export const SocketDeleteWay = (
 
 export const SoobErrorCreateWay = (data: any) => {
   let soob =
-    "Произошла ошибка при создании связи перекрёстка (район:" +
+    'Произошла ошибка при создании связи перекрёстка (район:' +
     data.fromCross.area +
-    " ID:" +
+    ' ID:' +
     data.fromCross.id +
-    ") c перекрёстком (район:" +
+    ') c перекрёстком (район:' +
     data.toCross.area +
-    " ID:" +
+    ' ID:' +
     data.toCross.id +
-    ")";
+    ')';
   return soob;
 };
 
 export const SoobErrorDeleteWay = (data: any) => {
   let soob =
-    "Произошла ошибка при удалении связи перекрёстка (район:" +
+    'Произошла ошибка при удалении связи перекрёстка (район:' +
     data.fromCross.area +
-    " ID:" +
+    ' ID:' +
     data.fromCross.id +
-    ") c перекрёстком (район:" +
+    ') c перекрёстком (район:' +
     data.toCross.area +
-    " ID:" +
+    ' ID:' +
     data.toCross.id +
-    ")";
+    ')';
   return soob;
 };
 
 export const SoobErrorCreateWayToPoint = (data: any) => {
   let soob =
-    "Произошла ошибка при создании связи перекрёстка (район:" +
+    'Произошла ошибка при создании связи перекрёстка (район:' +
     data.fromCross.area +
-    " ID:" +
+    ' ID:' +
     data.fromCross.id +
-    ") c точкой";
+    ') c точкой';
   return soob;
 };
 
 export const SoobErrorDeleteWayToPoint = (data: any) => {
   let soob =
-    "Произошла ошибка при удалении связи перекрёстка (район:" +
+    'Произошла ошибка при удалении связи перекрёстка (район:' +
     data.fromCross.area +
-    " ID:" +
+    ' ID:' +
     data.fromCross.id +
-    ") c точкой";
+    ') c точкой';
   return soob;
 };
 
 export const SoobErrorCreateWayFromPoint = (data: any) => {
   let soob =
-    "Произошла ошибка при создании связи точки с перекрёстком (район:" +
+    'Произошла ошибка при создании связи точки с перекрёстком (район:' +
     data.toCross.area +
-    " ID:" +
+    ' ID:' +
     data.toCross.id +
-    ")";
+    ')';
   return soob;
 };
 
 export const SoobErrorDeleteWayFromPoint = (data: any) => {
   let soob =
-    "Произошла ошибка при удалении связи точки с перекрёстком (район:" +
+    'Произошла ошибка при удалении связи точки с перекрёстком (район:' +
     data.toCross.area +
-    " ID:" +
+    ' ID:' +
     data.toCross.id +
-    ")";
+    ')';
   return soob;
 };
 
 //=== костыль ======================================
 let a0 = {
   region: 0,
-  starts: "55.7276995,36.8193915",
-  stops: "55.69928816060674,37.39474443074465",
+  starts: '55.7276995,36.8193915',
+  stops: '55.69928816060674,37.39474443074465',
   length: 56425,
   time: 2792,
 };
 let a1 = {
   region: 0,
-  starts: "55.7276995,36.8193915",
-  stops: "55.60238311111584,36.483017680936115",
+  starts: '55.7276995,36.8193915',
+  stops: '55.60238311111584,36.483017680936115',
   length: 30452,
   time: 1790,
 };
 let a2 = {
   region: 0,
-  starts: "55.7276995,36.8193915",
-  stops: "55.62968055298542,37.021400723452174",
+  starts: '55.7276995,36.8193915',
+  stops: '55.62968055298542,37.021400723452174',
   length: 22476,
   time: 1430,
 };
 let a3 = {
   region: 0,
-  starts: "55.62968055298542,37.021400723452174",
-  stops: "55.69928816060674,37.39474443074465",
+  starts: '55.62968055298542,37.021400723452174',
+  stops: '55.69928816060674,37.39474443074465',
   length: 31326,
   time: 1808,
 };
 let a4 = {
   region: 0,
-  starts: "55.69928816060674,37.39474443074465",
-  stops: "55.905786101735075,37.7174511711464",
+  starts: '55.69928816060674,37.39474443074465',
+  stops: '55.905786101735075,37.7174511711464',
   length: 46435,
   time: 2667,
 };
 let a5 = {
   region: 0,
-  starts: "55.69928816060674,37.39474443074465",
-  stops: "55.913241655910504,37.8378230903432",
+  starts: '55.69928816060674,37.39474443074465',
+  stops: '55.913241655910504,37.8378230903432',
   length: 50578,
   time: 2600,
 };
 let a6 = {
   region: 0,
-  starts: "55.913241655910504,37.8378230903432",
-  stops: "55.905786101735075,37.7174511711464",
+  starts: '55.913241655910504,37.8378230903432',
+  stops: '55.905786101735075,37.7174511711464',
   length: 11600,
   time: 1174,
 };
 let a7 = {
   region: 0,
-  starts: "55.69928816060674,37.39474443074465",
-  stops: "55.65943211246696,37.92773938370481",
+  starts: '55.69928816060674,37.39474443074465',
+  stops: '55.65943211246696,37.92773938370481',
   length: 47717,
   time: 2627,
 };
 let a8 = {
   region: 0,
-  starts: "55.65619605179316,38.10076639140717",
-  stops: "55.408054,36.7174221",
+  starts: '55.65619605179316,38.10076639140717',
+  stops: '55.408054,36.7174221',
   length: 112201,
   time: 6766,
 };
 let a9 = {
   region: 0,
-  starts: "55.60238311111584,36.483017680936115",
-  stops: "55.7276995,36.8193915",
+  starts: '55.60238311111584,36.483017680936115',
+  stops: '55.7276995,36.8193915',
   length: 32653,
   time: 1924,
 };
