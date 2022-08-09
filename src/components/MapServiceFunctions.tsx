@@ -33,6 +33,7 @@ export const MassrouteNewPoint = (
   area: number,
   id: number
 ) => {  
+  
   let masskPoint: Vertex = {
     region: 0,
     area: 0,
