@@ -39,6 +39,8 @@ export const MassrouteNewPoint = (
     id: 0,
     dgis: "",
     scale: 0,
+    lin: [],
+    lout: [],
     name: "",
   };
 

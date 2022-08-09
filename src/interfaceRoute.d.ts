@@ -15,6 +15,8 @@ export interface Vertex {
     id:     number;
     dgis:   string;
     scale:  number;
+    lin:    number[];
+    lout:   number[];
     name:   string;
 }
 

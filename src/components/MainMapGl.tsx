@@ -238,8 +238,10 @@ const MainMap = (props: { ws: WebSocket; region: any; sErr: string }) => {
     debugging: boolean,
     ws: WebSocket,
     region: number,
-    area: number,
-    ID: number
+    areaIn: number,
+    idIn: number,
+    areaOn: number,
+    idOn: number
   ) => {
     const handleSendOpen = () => {
       if (!debugging) {
@@ -247,11 +249,18 @@ const MainMap = (props: { ws: WebSocket; region: any; sErr: string }) => {
           ws.send(
             JSON.stringify({
               type: "createVertex",
-              data: {
-                region: region.toString(),
-                area: area.toString(),
-                id: ID,
-              },
+              data: [
+                {
+                  region: region.toString(),
+                  area: areaIn.toString(),
+                  id: idIn,
+                },
+                {
+                  region: region.toString(),
+                  area: areaOn.toString(),
+                  id: idOn,
+                },
+              ],
             })
           );
         } else {
@@ -296,9 +305,11 @@ const MainMap = (props: { ws: WebSocket; region: any; sErr: string }) => {
         MakeRecordMassRoute(false);
         break;
       case 33: // привязка направлений
-        let areaV = massroute.vertexes[pointAaIndex].area;
-        let idV = massroute.vertexes[pointAaIndex].id;
-        SendSocketGetSvg(debugging, WS, homeRegion, areaV, idV);
+        let arIn = massroute.vertexes[pointAaIndex].area;
+        let idIn = massroute.vertexes[pointAaIndex].id;
+        let arOn = massroute.vertexes[pointBbIndex].area;
+        let idOn = massroute.vertexes[pointBbIndex].id;
+        SendSocketGetSvg(debugging, WS, homeRegion, arIn, idIn, arOn, idOn);
         flagBind = true;
         setOpenSetBind(true);
         break;
