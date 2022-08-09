@@ -47,6 +47,7 @@ let coordStop: any = []; // рабочий массив коллекции вх�
 let coordStartIn: any = []; // рабочий массив коллекции исходящих связей
 let coordStopIn: any = []; // рабочий массив коллекции исходящих связей
 let massRoute: any = []; // рабочий массив сети связей
+let masSvg = ["", ""];
 
 let debugging = false;
 let flagOpen = false;
@@ -55,6 +56,7 @@ let activeRoute: any;
 let newPointCoord: any = 0;
 let soobError = "";
 let oldsErr = "";
+let propsSvg: any = true;
 
 let zoom = 10;
 let homeRegion = 0;
@@ -79,9 +81,16 @@ let toCross: any = {
   pointBcod: "",
 };
 
-const MainMap = (props: { ws: WebSocket; region: any; sErr: string }) => {
+const MainMap = (props: {
+  ws: WebSocket;
+  region: any;
+  sErr: string;
+  svg: any;
+  setSvg: any;
+}) => {
   const WS = props.ws;
   if (WS.url === "wss://localhost:3000/W") debugging = true;
+  if (!debugging) propsSvg = props.svg;
   //== Piece of Redux =======================================
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;
@@ -248,19 +257,21 @@ const MainMap = (props: { ws: WebSocket; region: any; sErr: string }) => {
         if (ws.readyState === WebSocket.OPEN) {
           ws.send(
             JSON.stringify({
-              type: "createVertex",
-              data: [
-                {
-                  region: region.toString(),
-                  area: areaIn.toString(),
-                  id: idIn,
-                },
-                {
-                  region: region.toString(),
-                  area: areaOn.toString(),
-                  id: idOn,
-                },
-              ],
+              type: "getSvg",
+              data: {
+                devices: [
+                  {
+                    region: region.toString(),
+                    area: areaIn.toString(),
+                    id: idIn,
+                  },
+                  {
+                    region: region.toString(),
+                    area: areaOn.toString(),
+                    id: idOn,
+                  },
+                ],
+              },
             })
           );
         } else {
@@ -639,6 +650,24 @@ const MainMap = (props: { ws: WebSocket; region: any; sErr: string }) => {
     oldsErr = props.sErr;
   }
 
+  if (props.svg) {
+    let keySvg =
+      homeRegion.toString() +
+      "-" +
+      massroute.vertexes[pointAaIndex].area.toString() +
+      "-" +
+      massroute.vertexes[pointAaIndex].id.toString();
+    masSvg[0] = props.svg[keySvg];
+    keySvg =
+      homeRegion.toString() +
+      "-" +
+      massroute.vertexes[pointBbIndex].area.toString() +
+      "-" +
+      massroute.vertexes[pointBbIndex].id.toString();
+    masSvg[1] = props.svg[keySvg];
+    console.log("masSvg:", masSvg);
+  }
+
   return (
     <Grid container sx={{ border: 0, height: "99.9vh" }}>
       {flagPusk && !flagBind && <>{StrokaMenuGlob("Отмена назначений", 77)}</>}
@@ -707,7 +736,14 @@ const MainMap = (props: { ws: WebSocket; region: any; sErr: string }) => {
                 setOpen={setOpenSetInf}
               />
             )}
-            {openSetBind && <MapRouteBind setOpen={setOpenSetBind} />}
+            {openSetBind && propsSvg && (
+              <MapRouteBind
+                debug={debugging}
+                setOpen={setOpenSetBind}
+                svg={masSvg}
+                setSvg={props.setSvg}
+              />
+            )}
             {openSetCreate && (
               <MapCreatePointVertex
                 setOpen={setOpenSetCreate}
