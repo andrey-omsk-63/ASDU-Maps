@@ -650,15 +650,26 @@ const MainMap = (props: {
     oldsErr = props.sErr;
   }
 
-  if (props.svg) {
+  const RecevKeySvg = (recMassroute: any) => {
     let keySvg =
-      homeRegion.toString() +
+      recMassroute.region.toString() +
       "-" +
-      massroute.vertexes[pointAaIndex].area.toString() +
+      recMassroute.area.toString() +
       "-" +
-      massroute.vertexes[pointAaIndex].id.toString();
-    masSvg[0] = props.svg[keySvg];
-    keySvg =
+      recMassroute.id.toString();
+    return keySvg;
+  };
+
+  if (props.svg) {
+    // let keySvg =
+    //   homeRegion.toString() +
+    //   "-" +
+    //   massroute.vertexes[pointAaIndex].area.toString() +
+    //   "-" +
+    //   massroute.vertexes[pointAaIndex].id.toString();
+    // masSvg[0] = props.svg[keySvg];
+    masSvg[0] = props.svg[RecevKeySvg(massroute.vertexes[pointAaIndex])];
+    let keySvg =
       homeRegion.toString() +
       "-" +
       massroute.vertexes[pointBbIndex].area.toString() +

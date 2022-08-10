@@ -84,10 +84,10 @@ const MapRouteBind = (props: { debug: boolean; setOpen: any; svg: Array<string>;
             <br />
           </Box>
         </Box>
-        <Grid container sx={{ border: 1, marginTop: '38vh', height: heightImg }}>
-          <Grid item xs={0.25} sx={{ border: 2 }}></Grid>
+        <Grid container sx={{ border: 0, marginTop: '38vh', height: heightImg }}>
+          <Grid item xs={0.25} sx={{ border: 0 }}></Grid>
           <Grid item xs={4} sx={styleSetImg}>
-            {/* {props.debug && <>{AppIconAsdu()}</>} */}
+            {props.debug && <>{AppIconAsdu()}</>}
             {!props.debug && <>{ExampleComponent(0)}</>}
           </Grid>
           <Grid item xs={3.5} sx={{ border: 0 }}></Grid>
