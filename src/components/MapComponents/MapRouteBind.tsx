@@ -76,6 +76,7 @@ const MapRouteBind = (props: { debug: boolean; setOpen: any; svg: Array<string>;
           <Button sx={styleModalEnd} onClick={handleCloseSetEndBind}>
             <b>&#10006;</b>
           </Button>
+          
           <Box sx={{ textAlign: 'center' }}>
             <br />
             <br />
@@ -84,6 +85,7 @@ const MapRouteBind = (props: { debug: boolean; setOpen: any; svg: Array<string>;
             <br />
           </Box>
         </Box>
+
         <Grid container sx={{ border: 0, marginTop: '38vh', height: heightImg }}>
           <Grid item xs={0.25} sx={{ border: 0 }}></Grid>
           <Grid item xs={4} sx={styleSetImg}>
