@@ -85,7 +85,7 @@ const App = () => {
     const { coordinatesReducer } = state;
     return coordinatesReducer.coordinates;
   });
-  console.log("coordinates_App:", coordinates);
+  //console.log("coordinates_App:", coordinates);
 
   const dispatch = useDispatch();
   //========================================================
@@ -221,10 +221,9 @@ const App = () => {
           if (!data.status) {
             soob = "Ошибка при получении изображений перекрёстков";
             setOpenSetErr(true);
-          } else {
-            setSvg(data.svg);
-            console.log("Svg:", svg);
           }
+          setSvg(data.svg);
+          console.log("Svg:", svg);
           break;
         default:
           console.log("data_default:", data);

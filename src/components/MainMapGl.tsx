@@ -32,7 +32,7 @@ import { SendSocketCreatePoint } from "./MapServiceFunctions";
 import { SendSocketCreateVertex } from "./MapServiceFunctions";
 import { SendSocketDeletePoint } from "./MapServiceFunctions";
 import { SendSocketDeleteVertex } from "./MapServiceFunctions";
-import { SendSocketCreateWay } from "./MapServiceFunctions";
+import { SendSocketCreateWay, SendSocketGetSvg } from "./MapServiceFunctions";
 import { SendSocketCreateWayFromPoint } from "./MapServiceFunctions";
 import { SendSocketCreateWayToPoint } from "./MapServiceFunctions";
 
@@ -242,48 +242,7 @@ const MainMap = (props: {
     }
     ymaps && addRoute(ymaps); // перерисовка связей
   };
-
-  const SendSocketGetSvg = (
-    debugging: boolean,
-    ws: WebSocket,
-    region: number,
-    areaIn: number,
-    idIn: number,
-    areaOn: number,
-    idOn: number
-  ) => {
-    const handleSendOpen = () => {
-      if (!debugging) {
-        if (ws.readyState === WebSocket.OPEN) {
-          ws.send(
-            JSON.stringify({
-              type: "getSvg",
-              data: {
-                devices: [
-                  {
-                    region: region.toString(),
-                    area: areaIn.toString(),
-                    id: idIn,
-                  },
-                  {
-                    region: region.toString(),
-                    area: areaOn.toString(),
-                    id: idOn,
-                  },
-                ],
-              },
-            })
-          );
-        } else {
-          setTimeout(() => {
-            handleSendOpen();
-          }, 1000);
-        }
-      }
-    };
-    handleSendOpen();
-  };
-
+  
   const PressMenuButton = (mode: number) => {
     switch (mode) {
       case 3: // режим включения Demo сети связей

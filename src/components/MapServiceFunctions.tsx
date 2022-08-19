@@ -526,6 +526,47 @@ export const SendSocketDeleteWayToPoint = (
   };
   handleSendOpen();
 };
+
+export const SendSocketGetSvg = (
+  debugging: boolean,
+  ws: WebSocket,
+  region: number,
+  areaIn: number,
+  idIn: number,
+  areaOn: number,
+  idOn: number
+) => {
+  const handleSendOpen = () => {
+    if (!debugging) {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(
+          JSON.stringify({
+            type: "getSvg",
+            data: {
+              devices: [
+                {
+                  region: region.toString(),
+                  area: areaIn.toString(),
+                  id: idIn,
+                },
+                {
+                  region: region.toString(),
+                  area: areaOn.toString(),
+                  id: idOn,
+                },
+              ],
+            },
+          })
+        );
+      } else {
+        setTimeout(() => {
+          handleSendOpen();
+        }, 1000);
+      }
+    }
+  };
+  handleSendOpen();
+};
 //==================================================
 export const SocketDeleteWay = (
   debugging: boolean,
