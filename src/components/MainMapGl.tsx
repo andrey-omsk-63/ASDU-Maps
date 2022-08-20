@@ -47,7 +47,7 @@ let coordStop: any = []; // рабочий массив коллекции вх�
 let coordStartIn: any = []; // рабочий массив коллекции исходящих связей
 let coordStopIn: any = []; // рабочий массив коллекции исходящих связей
 let massRoute: any = []; // рабочий массив сети связей
-let masSvg = ["", ""];
+let masSvg: any = ["", ""];
 
 let debugging = false;
 let flagOpen = false;
@@ -56,7 +56,7 @@ let activeRoute: any;
 let newPointCoord: any = 0;
 let soobError = "";
 let oldsErr = "";
-let propsSvg: any = true;
+//let propsSvg: any = true;
 
 let zoom = 10;
 let homeRegion = 0;
@@ -88,9 +88,10 @@ const MainMap = (props: {
   svg: any;
   setSvg: any;
 }) => {
+  console.log('PROPS.svg:',props.svg)
   const WS = props.ws;
   if (WS.url === "wss://localhost:3000/W") debugging = true;
-  if (!debugging) propsSvg = props.svg;
+  //if (!debugging) propsSvg = props.svg;
   //== Piece of Redux =======================================
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;
@@ -619,23 +620,21 @@ const MainMap = (props: {
     return keySvg;
   };
 
-  if (props.svg) {
-    // let keySvg =
-    //   homeRegion.toString() +
-    //   "-" +
-    //   massroute.vertexes[pointAaIndex].area.toString() +
-    //   "-" +
-    //   massroute.vertexes[pointAaIndex].id.toString();
-    // masSvg[0] = props.svg[keySvg];
-    masSvg[0] = props.svg[RecevKeySvg(massroute.vertexes[pointAaIndex])];
-    let keySvg =
-      homeRegion.toString() +
-      "-" +
-      massroute.vertexes[pointBbIndex].area.toString() +
-      "-" +
-      massroute.vertexes[pointBbIndex].id.toString();
-    masSvg[1] = props.svg[keySvg];
-    console.log("masSvg:", masSvg);
+  masSvg = ["", ""];
+  if (!debugging) {
+    if (props.svg) {
+      masSvg[0] = props.svg[RecevKeySvg(massroute.vertexes[pointAaIndex])];
+      let keySvg =
+        homeRegion.toString() +
+        "-" +
+        massroute.vertexes[pointBbIndex].area.toString() +
+        "-" +
+        massroute.vertexes[pointBbIndex].id.toString();
+      masSvg[1] = props.svg[keySvg];
+      console.log("masSvg:", masSvg);
+    } else {
+      masSvg = null;
+    }
   }
 
   return (
@@ -706,7 +705,9 @@ const MainMap = (props: {
                 setOpen={setOpenSetInf}
               />
             )}
-            {openSetBind && propsSvg && (
+            {openSetBind && 
+            // propsSvg && 
+            (
               <MapRouteBind
                 debug={debugging}
                 setOpen={setOpenSetBind}
