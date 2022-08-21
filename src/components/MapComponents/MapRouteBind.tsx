@@ -132,19 +132,17 @@ const MapRouteBind = (props: {
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       setCurrency(event.target.value);
       if (mode) {
-        massBind[1] = Number(event.target.value);
+        massBind[1] = massDat[Number(event.target.value)];
+        //console.log('!!!!!!', massDat[Number(event.target.value)]);
       } else {
-        massBind[0] = Number(event.target.value);
+        massBind[0] = massDat[Number(event.target.value)];
       }
-      //massBind[mode] = Number(event.target.value);
-
-      //setOpenSetAdress(true);
     };
 
     let dat = massroute.vertexes[props.idxA].lout;
     if (mode) dat = massroute.vertexes[props.idxB].lin;
     let massKey = [];
-    let massDat = [];
+    let massDat: any[] = [];
     const currencies: any = [];
     for (let key in dat) {
       massKey.push(key);
@@ -188,22 +186,35 @@ const MapRouteBind = (props: {
 
   console.log(' massBind:', massBind);
 
+  const styleApp01 = {
+    fontSize: 14,
+    border: '2px solid #000',
+    bgcolor: 'background.paper',
+    width: 120,
+    maxHeight: '24px',
+    minHeight: '24px',
+    borderColor: 'primary.main',
+    borderRadius: 2,
+    color: 'black',
+    textTransform: 'unset !important',
+  };
+
   return (
     <Modal open={openSetBind} onClose={handleCloseSetEndBind} disableEnforceFocus hideBackdrop>
       <>
-        <Box sx={styleSetInf}>
+        {/* <Box sx={styleSetInf}>
           <Button sx={styleModalEnd} onClick={handleCloseSetEndBind}>
             <b>&#10006;</b>
           </Button>
 
           <Box sx={{ textAlign: 'center' }}>
             <br />
-            {/* <br /> */}
+            <br />
             <b>Здесь будет привязка направления</b>
-            {/* <br /> <br /> */}
+            <br /> <br />
             <br />
           </Box>
-        </Box>
+        </Box> */}
 
         <Grid container sx={{ marginTop: '33vh', height: 24, width: '100%' }}>
           <Grid item xs={0.25}></Grid>
@@ -213,7 +224,17 @@ const MapRouteBind = (props: {
           <Grid item xs={0.5}>
             {InputNapr(0)}
           </Grid>
-          <Grid item xs={3.5}></Grid>
+
+          <Grid item xs={3.5} sx={{ border: 0 }}>
+            {massBind[0] && massBind[1] && (
+              <Box sx={{ textAlign: 'center' }}>
+                <Button variant="contained" sx={styleApp01} onClick={handleCloseSetEndBind}>
+                  <b>Привязываем</b>
+                </Button>
+              </Box>
+            )}
+          </Grid>
+
           <Grid item xs={3.5} sx={{ bgcolor: '#FAFAFA', opacity: 0.7, textAlign: 'right' }}>
             <b>№ входящего направления:</b>
           </Grid>
