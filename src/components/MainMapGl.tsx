@@ -201,7 +201,8 @@ const MainMap = (props: { ws: WebSocket; region: any; sErr: string; svg: any; se
     setOpenSetEr(true);
   };
 
-  const MakeRecordMassRoute = (mode: boolean) => {
+  const MakeRecordMassRoute = (mode: boolean, mass: any) => {
+    console.log('MASS_MakeRecordMassRoute', mass);
     let aRou = activeRoute;
     fromCross.pointAcod = CodingCoord(pointAa);
     toCross.pointBcod = CodingCoord(pointBb);
@@ -266,7 +267,7 @@ const MainMap = (props: { ws: WebSocket; region: any; sErr: string; svg: any; se
         }
         break;
       case 21: // сохранение связи
-        MakeRecordMassRoute(false);
+        MakeRecordMassRoute(false, 0);
         break;
       case 33: // привязка направлений
         let arIn = massroute.vertexes[pointAaIndex].area;
@@ -697,6 +698,7 @@ const MainMap = (props: { ws: WebSocket; region: any; sErr: string; svg: any; se
                 setSvg={props.setSvg}
                 idxA={pointAaIndex}
                 idxB={pointBbIndex}
+                func={MakeRecordMassRoute}
               />
             )}
             {openSetCreate && (

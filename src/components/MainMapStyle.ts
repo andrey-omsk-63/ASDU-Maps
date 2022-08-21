@@ -189,3 +189,40 @@ export const styleBoxFormID = {
     width: '253px',
   },
 };
+//=== RouteBind =======================================================
+export const styleSetNapr = {
+  width: '17px',
+  maxHeight: '3px',
+  minHeight: '3px',
+  bgcolor: '#FAFAFA',
+  boxShadow: 3,
+  marginLeft: 'auto',
+  p: 1.5,
+};
+
+export const styleBoxFormNapr = {
+  '& > :not(style)': {
+    marginTop: '-8px',
+    marginLeft: '-8px',
+    width: '40px',
+  },
+};
+
+export const styleAppBind = {
+  fontSize: 14,
+  border: '2px solid #000',
+  bgcolor: 'background.paper',
+  width: 120,
+  maxHeight: '27px',
+  minHeight: '27px',
+  borderColor: 'primary.main',
+  borderRadius: 2,
+  color: 'black',
+  textTransform: 'unset !important',
+};
+
+export const styleBind01 = {
+  bgcolor: '#FAFAFA',
+  opacity: 0.7,
+  textAlign: 'right',
+};

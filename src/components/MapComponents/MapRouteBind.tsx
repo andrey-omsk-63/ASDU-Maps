@@ -8,7 +8,8 @@ import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 
-import { styleModalEnd, styleSetInf, styleSetImg } from './../MainMapStyle';
+import { styleSetImg, styleSetNapr, styleBoxFormNapr } from './../MainMapStyle';
+import { styleAppBind, styleBind01 } from './../MainMapStyle';
 
 let massBind = [0, 0];
 let OldIdxA = 0;
@@ -21,6 +22,7 @@ const MapRouteBind = (props: {
   setSvg: any;
   idxA: number;
   idxB: number;
+  func: any;
 }) => {
   //== Piece of Redux ======================================
   // let massdk = useSelector((state: any) => {
@@ -67,10 +69,11 @@ const MapRouteBind = (props: {
     return svgPipa;
   };
 
-  const handleCloseSetEndBind = () => {
+  const handleClose = () => {
     props.setOpen(false);
     setOpenSetBind(false);
     props.setSvg(null);
+    props.func(false, massBind);
   };
 
   const ExampleComponent = (idx: number) => {
@@ -106,37 +109,20 @@ const MapRouteBind = (props: {
     masSvg[1] = ReplaceInSvg(1);
   }
 
-  const styleSetArea = {
-    width: '17px',
-    maxHeight: '3px',
-    minHeight: '3px',
-    bgcolor: '#FAFAFA',
-    boxShadow: 3,
-    marginLeft: 'auto',
-    p: 1.5,
-  };
-  const styleBoxFormArea = {
-    '& > :not(style)': {
-      marginTop: '-8px',
-      marginLeft: '-8px',
-      width: '40px',
-    },
-  };
-  //========================================================
-
   const InputNapr = (mode: number) => {
     const handleKey = (event: any) => {
       if (event.key === 'Enter') event.preventDefault();
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setCurrency(event.target.value);
+      setCurrency(Number(event.target.value));
       if (mode) {
         massBind[1] = massDat[Number(event.target.value)];
-        //console.log('!!!!!!', massDat[Number(event.target.value)]);
       } else {
         massBind[0] = massDat[Number(event.target.value)];
       }
+      console.log('!!!!!:', Number(event.target.value), massBind);
+      setTrigger(!trigger);
     };
 
     let dat = massroute.vertexes[props.idxA].lout;
@@ -158,11 +144,13 @@ const MapRouteBind = (props: {
       currencies.push(maskCurrencies);
     }
 
-    const [currency, setCurrency] = React.useState(massKey[0]);
+    //const [currency, setCurrency] = React.useState(massKey[0]);
+    const [currency, setCurrency] = React.useState(massBind[mode]);
+    const [trigger, setTrigger] = React.useState(true);
 
     return (
-      <Box sx={styleSetArea}>
-        <Box component="form" sx={styleBoxFormArea} noValidate autoComplete="off">
+      <Box sx={styleSetNapr}>
+        <Box component="form" sx={styleBoxFormNapr} noValidate autoComplete="off">
           <TextField
             select
             size="small"
@@ -171,7 +159,6 @@ const MapRouteBind = (props: {
             onChange={handleChange}
             InputProps={{ style: { fontSize: 14 } }}
             variant="standard"
-            //helperText="Введите район"
             color="secondary">
             {currencies.map((option: any) => (
               <MenuItem key={option.value} value={option.value} sx={{ fontSize: 14 }}>
@@ -186,56 +173,29 @@ const MapRouteBind = (props: {
 
   console.log(' massBind:', massBind);
 
-  const styleApp01 = {
-    fontSize: 14,
-    border: '2px solid #000',
-    bgcolor: 'background.paper',
-    width: 120,
-    maxHeight: '24px',
-    minHeight: '24px',
-    borderColor: 'primary.main',
-    borderRadius: 2,
-    color: 'black',
-    textTransform: 'unset !important',
-  };
-
   return (
-    <Modal open={openSetBind} onClose={handleCloseSetEndBind} disableEnforceFocus hideBackdrop>
+    <Modal open={openSetBind} onClose={handleClose} disableEnforceFocus hideBackdrop>
       <>
-        {/* <Box sx={styleSetInf}>
-          <Button sx={styleModalEnd} onClick={handleCloseSetEndBind}>
-            <b>&#10006;</b>
-          </Button>
-
-          <Box sx={{ textAlign: 'center' }}>
-            <br />
-            <br />
-            <b>Здесь будет привязка направления</b>
-            <br /> <br />
-            <br />
-          </Box>
-        </Box> */}
-
         <Grid container sx={{ marginTop: '33vh', height: 24, width: '100%' }}>
           <Grid item xs={0.25}></Grid>
-          <Grid item xs={3.5} sx={{ bgcolor: '#FAFAFA', opacity: 0.7, textAlign: 'right' }}>
+          <Grid item xs={3.5} sx={styleBind01}>
             <b>№ исходящего направления:</b>
           </Grid>
           <Grid item xs={0.5}>
             {InputNapr(0)}
           </Grid>
 
-          <Grid item xs={3.5} sx={{ border: 0 }}>
-            {massBind[0] && massBind[1] && (
+          <Grid item xs={3.5}>
+            {massBind[0] > 0 && massBind[1] > 0 && (
               <Box sx={{ textAlign: 'center' }}>
-                <Button variant="contained" sx={styleApp01} onClick={handleCloseSetEndBind}>
+                <Button variant="contained" sx={styleAppBind} onClick={handleClose}>
                   <b>Привязываем</b>
                 </Button>
               </Box>
             )}
           </Grid>
 
-          <Grid item xs={3.5} sx={{ bgcolor: '#FAFAFA', opacity: 0.7, textAlign: 'right' }}>
+          <Grid item xs={3.5} sx={styleBind01}>
             <b>№ входящего направления:</b>
           </Grid>
           <Grid item xs={0.5}>
@@ -244,17 +204,17 @@ const MapRouteBind = (props: {
         </Grid>
 
         <Grid container sx={{ marginTop: '1vh', height: heightImg }}>
-          <Grid item xs={0.25} sx={{ border: 0 }}></Grid>
+          <Grid item xs={0.25}></Grid>
           <Grid item xs={4} sx={styleSetImg}>
             {otlOrKosyk && <>{AppIconAsdu()}</>}
             {!otlOrKosyk && <>{ExampleComponent(0)}</>}
           </Grid>
-          <Grid item xs={3.5} sx={{ border: 0 }}></Grid>
+          <Grid item xs={3.5}></Grid>
           <Grid item xs={4} sx={styleSetImg}>
             {otlOrKosyk && <>{AppIconAsdu()}</>}
             {!otlOrKosyk && <>{ExampleComponent(1)}</>}
           </Grid>
-          <Grid item xs={0.25} sx={{ border: 0 }}></Grid>
+          <Grid item xs={0.25}></Grid>
         </Grid>
       </>
     </Modal>
