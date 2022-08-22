@@ -628,7 +628,8 @@ const MainMap = (props: { ws: WebSocket; region: any; sErr: string; svg: any; se
       {flagPusk && !flagBind && <>{StrokaMenuGlob('Отмена назначений', 77)}</>}
       {flagPusk && flagRoute && !flagBind && (
         <>
-          {StrokaMenuGlob('Привязка направлен', 33)}
+          {/* {StrokaMenuGlob('Привязка направлен', 33)} */}
+          {StrokaMenuGlob('Сохранить связь', 33)}
           {revers && <>{StrokaMenuGlob('Реверс связи', 12)}</>}
           {!revers && <>{StrokaMenuGlob('Реверc связи', 12)}</>}
           {StrokaMenuGlob('Информ о связи', 69)}
@@ -636,7 +637,7 @@ const MainMap = (props: { ws: WebSocket; region: any; sErr: string; svg: any; se
       )}
       {flagPusk && flagRoute && flagBind && (
         <>
-          {StrokaMenuGlob('Сохранить связь', 21)}
+          {StrokaMenuGlob('Сохранить связь', 33)}
           {StrokaMenuGlob('Отменить связь', 77)}
           {StrokaMenuGlob('Информ о связи', 69)}
         </>
