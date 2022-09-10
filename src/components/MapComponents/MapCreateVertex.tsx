@@ -108,14 +108,12 @@ const MapCreateVertex = (props: { setOpen: any; region: number; coord: any; crea
         map.dateMap.tflight[i].area.num === currency &&
         map.dateMap.tflight[i].ID === Number(valuen)
       ) {
-        console.log('!!!!!!!', i);
         availVertex = true;
         adrV = map.dateMap.tflight[i].description;
         break;
       }
     }
     if (!availVertex) {
-      console.log('?????????');
       soobErr = 'Нет информации по данному перекрёстку';
       setOpenSetErr(true);
     }

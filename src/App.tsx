@@ -57,7 +57,6 @@ export let Coordinates: Array<Array<number>> = []; // массив коорди�
 
 let flagOpen = true;
 let flagOpenWS = true;
-//let flagWS = true;
 let WS: any = null;
 let homeRegion: any = "";
 let soob = "";
