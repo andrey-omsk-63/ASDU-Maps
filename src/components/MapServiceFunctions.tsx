@@ -307,10 +307,11 @@ export const SendSocketCreateWay = (
   ws: WebSocket,
   fromCr: any,
   toCr: any,
-  activeRoute: any
+  massBind: Array<number>,
+  activeRoute: any,
 ) => {
   const handleSendOpen = () => {
-    console.log("SendSocketCreateWay");
+    console.log("SendSocketCreateWay",massBind);
     if (!debugging) {
       let lengthRoute = Math.round(
         activeRoute.properties.get("distance").value
@@ -330,6 +331,8 @@ export const SendSocketCreateWay = (
                 area: toCr.pointBbArea,
                 id: toCr.pointBbID,
               },
+              lsource: massBind[0],
+              ltarget: massBind[1],
               length: lengthRoute,
             },
           })
@@ -386,10 +389,11 @@ export const SendSocketCreateWayFromPoint = (
   ws: WebSocket,
   fromCr: any,
   toCr: any,
+  massBind: Array<number>,
   activeRoute: any
 ) => {
   const handleSendOpen = () => {
-    console.log("SendSocketCreateWayFromPoint");
+    console.log("SendSocketCreateWayFromPoint",massBind);
     if (!debugging) {
       let lengthRoute = Math.round(
         activeRoute.properties.get("distance").value
@@ -405,6 +409,8 @@ export const SendSocketCreateWayFromPoint = (
                 area: toCr.pointBbArea,
                 id: toCr.pointBbID,
               },
+              lsource: massBind[0],
+              ltarget: massBind[1],
               length: lengthRoute,
             },
           })
@@ -459,10 +465,11 @@ export const SendSocketCreateWayToPoint = (
   ws: WebSocket,
   fromCr: any,
   toCr: any,
+  massBind: Array<number>,
   activeRoute: any
 ) => {
   const handleSendOpen = () => {
-    console.log("SendSocketCreateWayToPoint:", activeRoute);
+    console.log("SendSocketCreateWayToPoint:", massBind);
     if (!debugging) {
       let lengthRoute = Math.round(
         activeRoute.properties.get("distance").value
@@ -478,6 +485,8 @@ export const SendSocketCreateWayToPoint = (
                 id: fromCr.pointAaID,
               },
               toPoint: toCr.pointBbID,
+              lsource: massBind[0],
+              ltarget: massBind[1],
               length: lengthRoute,
             },
           })
@@ -688,75 +697,3 @@ export const SoobErrorDeleteWayFromPoint = (data: any) => {
   return soob;
 };
 
-//=== костыль ======================================
-let a0 = {
-  region: 0,
-  starts: "55.7276995,36.8193915",
-  stops: "55.69928816060674,37.39474443074465",
-  length: 56425,
-  time: 2792,
-};
-let a1 = {
-  region: 0,
-  starts: "55.7276995,36.8193915",
-  stops: "55.60238311111584,36.483017680936115",
-  length: 30452,
-  time: 1790,
-};
-let a2 = {
-  region: 0,
-  starts: "55.7276995,36.8193915",
-  stops: "55.62968055298542,37.021400723452174",
-  length: 22476,
-  time: 1430,
-};
-let a3 = {
-  region: 0,
-  starts: "55.62968055298542,37.021400723452174",
-  stops: "55.69928816060674,37.39474443074465",
-  length: 31326,
-  time: 1808,
-};
-let a4 = {
-  region: 0,
-  starts: "55.69928816060674,37.39474443074465",
-  stops: "55.905786101735075,37.7174511711464",
-  length: 46435,
-  time: 2667,
-};
-let a5 = {
-  region: 0,
-  starts: "55.69928816060674,37.39474443074465",
-  stops: "55.913241655910504,37.8378230903432",
-  length: 50578,
-  time: 2600,
-};
-let a6 = {
-  region: 0,
-  starts: "55.913241655910504,37.8378230903432",
-  stops: "55.905786101735075,37.7174511711464",
-  length: 11600,
-  time: 1174,
-};
-let a7 = {
-  region: 0,
-  starts: "55.69928816060674,37.39474443074465",
-  stops: "55.65943211246696,37.92773938370481",
-  length: 47717,
-  time: 2627,
-};
-let a8 = {
-  region: 0,
-  starts: "55.65619605179316,38.10076639140717",
-  stops: "55.408054,36.7174221",
-  length: 112201,
-  time: 6766,
-};
-let a9 = {
-  region: 0,
-  starts: "55.60238311111584,36.483017680936115",
-  stops: "55.7276995,36.8193915",
-  length: 32653,
-  time: 1924,
-};
-export let massOtladka = [a0, a1, a2, a3, a4, a5, a6, a7, a8, a9];

@@ -239,6 +239,7 @@ export const styleBind02 = {
 };
 
 export const styleBind03 = {
+  marginTop: -2,
   bgcolor: "background.paper",
   opacity: 0.7,
 };

@@ -59,12 +59,12 @@ const MapRouteBind = (props: {
 
   if (!massroute.vertexes[props.idxA].area) {
     haveSvgA = false;
-    massBind[0] = 1;
+    massBind[0] = 0;
   }
 
   if (!massroute.vertexes[props.idxB].area) {
     haveSvgB = false;
-    massBind[1] = 2;
+    massBind[1] = 0;
   }
 
   const ReplaceInSvg = (idx: number) => {
@@ -82,18 +82,18 @@ const MapRouteBind = (props: {
     return svgPipa;
   };
 
-  const handleClose = () => {
+  const handleClose = (mode: number) => {
     props.setOpen(false);
     setOpenSetBind(false);
     props.setSvg(null);
-    props.func(false, massBind);
+    if (mode) props.func(false, massBind);
   };
 
-  const handleCloseKirdik = () => {
-    props.setOpen(false);
-    setOpenSetBind(false);
-    props.setSvg(null);
-  };
+  // const handleCloseKirdik = () => {
+  //   props.setOpen(false);
+  //   setOpenSetBind(false);
+  //   props.setSvg(null);
+  // };
 
   const ExampleComponent = (idx: number) => {
     return (
@@ -203,6 +203,45 @@ const MapRouteBind = (props: {
     masSvg[1] = ReplaceInSvg(1);
   }
 
+  const StrokaMenu = (soob: string, mode: number) => {
+    const styleAppBind = {
+      fontSize: 14,
+      marginRight: 0.1,
+      border: "2px solid #000",
+      bgcolor: "background.paper",
+      width: (soob.length + 8) * 7,
+      maxHeight: "21px",
+      minHeight: "21px",
+      borderColor: "primary.main",
+      borderRadius: 2,
+      color: "black",
+      textTransform: "unset !important",
+    };
+
+    return (
+      <Button
+        variant="contained"
+        sx={styleAppBind}
+        onClick={() => handleClose(mode)}
+      >
+        <b>{soob}</b>
+      </Button>
+    );
+  };
+
+  const Inputer = (soob: string, mode: number) => {
+    return (
+      <>
+        <Grid item xs={3.5} sx={styleBind01}>
+          <b>{soob}</b>&nbsp;
+        </Grid>
+        <Grid item xs={0.5}>
+          {InputDirect(mode)}
+        </Grid>
+      </>
+    );
+  };
+
   console.log(" massBind:", massBind);
 
   return (
@@ -217,52 +256,23 @@ const MapRouteBind = (props: {
         <Grid container sx={{ marginTop: "6vh", height: 24, width: "100%" }}>
           <Grid item xs={0.25}></Grid>
           {!haveSvgA && <Grid item xs={4}></Grid>}
-          {haveSvgA && (
-            <>
-              <Grid item xs={3.5} sx={styleBind01}>
-                <b>№ исходящего направления:</b>&nbsp;
-              </Grid>
-              <Grid item xs={0.5}>
-                {InputDirect(0)}
-              </Grid>
-            </>
-          )}
+          {haveSvgA && <>{Inputer("№ исходящего направления:", 0)}</>}
 
           <Grid item xs={3.5}>
-            {massBind[0] > 0 && massBind[1] > 0 ? (
+            {(massBind[0] && massBind[1]) ||
+            (!haveSvgA && massBind[1]) ||
+            (!haveSvgB && massBind[0]) ? (
               <Box sx={{ textAlign: "center" }}>
-                <Button
-                  variant="contained"
-                  sx={styleAppBind}
-                  onClick={handleClose}
-                >
-                  <b>Привязываем</b>
-                </Button>
+                {StrokaMenu("Отмена", 0)}
+                {StrokaMenu("Привязываем", 1)}
               </Box>
             ) : (
-              <Box sx={{ textAlign: "center" }}>
-                <Button
-                  variant="contained"
-                  sx={styleAppBind}
-                  onClick={handleCloseKirdik}
-                >
-                  <b>Прервать привязку</b>
-                </Button>
-              </Box>
+              <Box sx={{ textAlign: "center" }}>{StrokaMenu("Отмена", 0)}</Box>
             )}
           </Grid>
 
           {!haveSvgB && <Grid item xs={4}></Grid>}
-          {haveSvgB && (
-            <>
-              <Grid item xs={3.5} sx={styleBind01}>
-                <b>№ входящего направления:</b>&nbsp;
-              </Grid>
-              <Grid item xs={0.5} sx={{ border: 0 }}>
-                {InputDirect(1)}
-              </Grid>
-            </>
-          )}
+          {haveSvgB && <>{Inputer("№ входящего направления:", 1)}</>}
         </Grid>
 
         <Grid container sx={{ marginTop: "1vh", height: heightImg }}>

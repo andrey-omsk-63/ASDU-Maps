@@ -260,26 +260,3 @@ const App = () => {
 
 export default App;
 
-// if (flagRoute === 1) {
-//   console.log("dateRouteGl:", dateRouteGl);
-//   // проверка/удаление дубликатных связей
-//   let dateRouteRab: any = [];
-//   let flagDubl = false;
-//   for (let i = 0; i < dateRouteGl.ways.length; i++) {
-//     for (let j = 0; j < dateRouteRab.length; j++) {
-//       if (
-//         dateRouteRab[j].starts === dateRouteGl.ways[i].starts &&
-//         dateRouteRab[j].stops === dateRouteGl.ways[i].stops
-//       )
-//         flagDubl = true;
-//     }
-//     if (!flagDubl) dateRouteRab.push(dateRouteGl.ways[i]);
-//     flagDubl = false;
-//   }
-//   dateRouteGl.ways.splice(0, dateRouteGl.ways.length);
-//   dateRouteGl.ways = dateRouteRab;
-//   dispatch(massrouteCreate(dateRouteGl));
-//   flagRoute = 2;
-//   //setSize(window.innerWidth + Math.random());
-// }
-//console.log("dateRouteGl:", dateRouteGl);
