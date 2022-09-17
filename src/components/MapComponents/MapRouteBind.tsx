@@ -9,7 +9,7 @@ import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 
 import { styleSetImg, styleSetNapr, styleBoxFormNapr } from "./../MainMapStyle";
-import { styleAppBind, styleBind01, styleBind02 } from "./../MainMapStyle";
+import { styleBind01, styleBind02 } from "./../MainMapStyle";
 import { styleBind03 } from "./../MainMapStyle";
 
 let massBind = [0, 0];

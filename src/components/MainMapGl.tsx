@@ -19,6 +19,7 @@ import MapInputAdress from "./MapComponents/MapInputAdress";
 import MapPointDataError from "./MapComponents/MapPointDataError";
 import MapRouteBind from "./MapComponents/MapRouteBind";
 import MapCreatePointVertex from "./MapComponents/MapCreatePointVertex";
+import MapRouteProtokol from "./MapComponents/MapRouteProtokol";
 
 import { RecordMassRoute, SocketDeleteWay } from "./MapServiceFunctions";
 import { DecodingCoord, CodingCoord } from "./MapServiceFunctions";
@@ -48,6 +49,7 @@ let coordStartIn: any = []; // рабочий массив коллекции и
 let coordStopIn: any = []; // рабочий массив коллекции исходящих связей
 let massRoute: any = []; // рабочий массив сети связей
 let masSvg: any = ["", ""];
+let massPro: Array<number> = [] // рабочий массив протокола созданных связей
 
 let debugging = false;
 let flagOpen = false;
@@ -112,9 +114,11 @@ const MainMap = (props: {
   const dispatch = useDispatch();
   //===========================================================
   const [openSetInf, setOpenSetInf] = React.useState(false);
+  const [openSetPro, setOpenSetPro] = React.useState(false);
   const [openSetEr, setOpenSetEr] = React.useState(false);
   const [openSetBind, setOpenSetBind] = React.useState(false);
   const [flagDemo, setFlagDemo] = React.useState(false);
+  const [flagPro, setFlagPro] = React.useState(false);
   const [flagPusk, setFlagPusk] = React.useState(false);
   const [flagRoute, setFlagRoute] = React.useState(false);
   const [revers, setRevers] = React.useState(false);
@@ -227,6 +231,8 @@ const MainMap = (props: {
           SendSocketCreateWay(debug, WS, fromCross, toCross, mass, aRou);
         }
       }
+      setFlagPro(true); //включение протокола
+      massPro.push(massroute.ways.length - 1);
     }
     ZeroRoute(mode);
   };
@@ -276,6 +282,9 @@ const MainMap = (props: {
         break;
       case 21: // сохранение связи
         MakeRecordMassRoute(false, 0);
+        break;
+      case 24: // включение протокола
+        setOpenSetPro(true);
         break;
       case 33: // привязка направлений
         let arIn = massroute.vertexes[pointAaIndex].area;
@@ -670,9 +679,9 @@ const MainMap = (props: {
         </>
       )}
       {!flagDemo && <>{StrokaMenuGlob("Demo сети", 3)}</>}
-      {!flagDemo && <>{StrokaMenuGlob("Протокол", 24)}</>}
+      {flagPro && <>{StrokaMenuGlob("Протокол", 24)}</>}
       {flagDemo && <>{StrokaMenuGlob("Откл Demo", 6)}</>}
-      {flagDemo && <>{StrokaMenuGlob("Откл протокола", 27)}</>}
+      {/* {flagPro && <>{StrokaMenuGlob("Откл протокола", 27)}</>} */}
       {Object.keys(massroute).length && (
         <YMaps
           query={{
@@ -701,6 +710,7 @@ const MainMap = (props: {
             {/* служебные компоненты */}
             <PlacemarkDo />
             <ModalPressBalloon />
+            {openSetPro && <MapRouteProtokol massPro={massPro} setOpen={setOpenSetPro} />}
             {openSetEr && (
               <MapPointDataError
                 sErr={soobError}

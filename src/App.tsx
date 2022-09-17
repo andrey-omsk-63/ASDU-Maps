@@ -224,7 +224,7 @@ const App = () => {
           } else {
             setSvg(data.svg);
           }
-          console.log("SVG:", svg, data.svg);
+          console.log("Пришло SVG:", svg, data.svg);
           break;
         default:
           console.log("data_default:", data);
