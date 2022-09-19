@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { massrouteCreate } from "./../../redux/actions";
+import { massrouteCreate, massrouteproCreate } from "./../../redux/actions";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -35,6 +35,10 @@ const MapPointDataError = (props: {
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
     return massrouteReducer.massroute;
+  });
+  let massroutepro = useSelector((state: any) => {
+    const { massrouteproReducer } = state;
+    return massrouteproReducer.massroutepro;
   });
   // const map = useSelector((state: any) => {
   //   const { mapReducer } = state;
@@ -73,6 +77,8 @@ const MapPointDataError = (props: {
     }
     massroute.ways.splice(index, 1);
     dispatch(massrouteCreate(massroute));
+    massroutepro.ways.splice(index, 1);
+    dispatch(massrouteproCreate(massroute));
     props.update()
   };
 

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   mapCreate,
   massrouteCreate,
+  massrouteproCreate,
   coordinatesCreate,
   massdkCreate,
 } from "./redux/actions";
@@ -28,6 +29,7 @@ import { dataRoute } from "./otladkaRoutes";
 
 export let dateMapGl: any;
 export let dateRouteGl: any;
+export let dateRouteProGl: any;
 
 export interface Pointer {
   ID: number;
@@ -51,8 +53,10 @@ export interface Router {
   stops: string;
   lenght: number;
   time: number;
+  //newRec: boolean;
 }
 export let massRoute: Router[] = [];
+export let massRoutePro: Router[] = [];
 export let Coordinates: Array<Array<number>> = []; // массив координат
 
 let flagOpen = true;
@@ -131,8 +135,10 @@ const App = () => {
           dispatch(mapCreate(dateMapGl));
           break;
         case "graphInfo":
-          dateRouteGl = data;
+          dateRouteGl = { ...data };
+          dateRouteProGl = { ...data };
           dispatch(massrouteCreate(dateRouteGl));
+          dispatch(massrouteproCreate(dateRouteProGl));
           break;
         case "createPoint":
           if (data.status) {
@@ -177,6 +183,8 @@ const App = () => {
           if (!data.status) {
             soob = SoobErrorCreateWay(data);
             dateRouteGl.ways.splice(dateRouteGl.ways.length - 1, 1);
+            dateRouteProGl.ways.splice(dateRouteGl.ways.length - 1, 1);
+            dispatch(massrouteproCreate(dateRouteProGl));
             dispatch(massrouteCreate(dateRouteGl));
             setOpenSetErr(true);
           }
@@ -192,6 +200,8 @@ const App = () => {
             soob = SoobErrorCreateWayToPoint(data);
             dateRouteGl.ways.splice(dateRouteGl.ways.length - 1, 1);
             dispatch(massrouteCreate(dateRouteGl));
+            dateRouteProGl.ways.splice(dateRouteGl.ways.length - 1, 1);
+            dispatch(massrouteproCreate(dateRouteProGl));
             setOpenSetErr(true);
           }
           break;
@@ -207,6 +217,8 @@ const App = () => {
             console.log("soob:", soob);
             dateRouteGl.ways.splice(dateRouteGl.ways.length - 1, 1);
             dispatch(massrouteCreate(dateRouteGl));
+            dateRouteProGl.ways.splice(dateRouteGl.ways.length - 1, 1);
+            dispatch(massrouteproCreate(dateRouteProGl));
             setOpenSetErr(true);
           }
           break;
@@ -236,10 +248,14 @@ const App = () => {
     console.log("РЕЖИМ ОТЛАДКИ!!!");
     dateMapGl = dataMap;
     dispatch(mapCreate(dateMapGl));
-    dateRouteGl = dataRoute.data;
+    dateRouteGl = { ...dataRoute.data };
+    dateRouteProGl = { ...dataRoute.data };
+    // dateRouteProGl.vertexes = []
+    // dateRouteProGl.ways = []
     flagOpen = false;
     console.log("@@@dateRouteGl", dateRouteGl);
     dispatch(massrouteCreate(dateRouteGl));
+    dispatch(massrouteproCreate(dateRouteProGl));
   }
 
   return (
@@ -259,4 +275,3 @@ const App = () => {
 };
 
 export default App;
-

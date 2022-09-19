@@ -4,6 +4,7 @@ import {
   //COMM_CREATE,
   MASSDK_CREATE,
   MASSROUTE_CREATE,
+  MASSROUTEPRO_CREATE,
   COORDINATES_CREATE,
 } from "./types";
 
@@ -53,6 +54,13 @@ export function massrouteCreate(massRouter: DateRoute) {
   return {
     type: MASSROUTE_CREATE,
     data: massRouter,
+  };
+}
+
+export function massrouteproCreate(massRouterPro: DateRoute) {
+  return {
+    type: MASSROUTEPRO_CREATE,
+    data: massRouterPro,
   };
 }
 

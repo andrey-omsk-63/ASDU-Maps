@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 //import { commReducer } from './commReducer';
 import { massdkReducer } from './massdkReducer';
 import { massrouteReducer } from './massrouteReducer';
+import { massrouteproReducer } from './massrouteproReducer';
 import { mapReducer } from './mapReducer';
 import { coordinatesReducer } from './coordinatesReducer';
 
@@ -10,5 +11,6 @@ export const rootReducer = combineReducers({
   mapReducer,
   massdkReducer,
   massrouteReducer,
+  massrouteproReducer,
   coordinatesReducer,
 });

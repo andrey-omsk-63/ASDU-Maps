@@ -70,6 +70,7 @@ export const RecordMassRoute = (
     stops: "",
     lenght: 0,
     time: 0,
+    //newRec: true
   };
 
   masskRoute.region = Number(fromCross.pointAaRegin);

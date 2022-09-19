@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { massdkCreate, massrouteCreate } from "./../redux/actions";
-import { coordinatesCreate } from "./../redux/actions";
+import { coordinatesCreate, massrouteproCreate } from "./../redux/actions";
 
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -49,7 +49,6 @@ let coordStartIn: any = []; // рабочий массив коллекции и
 let coordStopIn: any = []; // рабочий массив коллекции исходящих связей
 let massRoute: any = []; // рабочий массив сети связей
 let masSvg: any = ["", ""];
-let massPro: Array<number> = [] // рабочий массив протокола созданных связей
 
 let debugging = false;
 let flagOpen = false;
@@ -102,6 +101,10 @@ const MainMap = (props: {
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
     return massrouteReducer.massroute;
+  });
+  let massroutepro = useSelector((state: any) => {
+    const { massrouteproReducer } = state;
+    return massrouteproReducer.massroutepro;
   });
   let coordinates = useSelector((state: any) => {
     const { coordinatesReducer } = state;
@@ -161,12 +164,15 @@ const MainMap = (props: {
       map.dateMap.boxPoint.point1.X
     );
     flagOpen = true;
+    massroutepro.points = []; // массив протоколов
+    massroutepro.vertexes = [];
+    massroutepro.ways = [];
     dispatch(massdkCreate(massdk));
     dispatch(massrouteCreate(massroute));
+    dispatch(massrouteproCreate(massroutepro));
     dispatch(coordinatesCreate(coordinates));
   }
   //========================================================
-
   const DelCollectionRoutes = () => {
     coordStart = [];
     coordStop = [];
@@ -222,6 +228,9 @@ const MainMap = (props: {
       SoobOpenSetEr("Дубликатная связь");
     } else {
       massroute.ways.push(RecordMassRoute(fromCross, toCross, aRou));
+      console.log("1massroutepro", massroutepro);
+      massroutepro.ways.push(RecordMassRoute(fromCross, toCross, aRou));
+      console.log("2massroutepro", massroutepro);
       if (massroute.vertexes[pointAaIndex].area === 0) {
         SendSocketCreateWayFromPoint(debug, WS, fromCross, toCross, mass, aRou);
       } else {
@@ -232,7 +241,6 @@ const MainMap = (props: {
         }
       }
       setFlagPro(true); //включение протокола
-      massPro.push(massroute.ways.length - 1);
     }
     ZeroRoute(mode);
   };
@@ -283,7 +291,7 @@ const MainMap = (props: {
       case 21: // сохранение связи
         MakeRecordMassRoute(false, 0);
         break;
-      case 24: // включение протокола
+      case 24: // вывод протокола
         setOpenSetPro(true);
         break;
       case 33: // привязка направлений
@@ -710,7 +718,7 @@ const MainMap = (props: {
             {/* служебные компоненты */}
             <PlacemarkDo />
             <ModalPressBalloon />
-            {openSetPro && <MapRouteProtokol massPro={massPro} setOpen={setOpenSetPro} />}
+            {openSetPro && <MapRouteProtokol setOpen={setOpenSetPro} />}
             {openSetEr && (
               <MapPointDataError
                 sErr={soobError}
