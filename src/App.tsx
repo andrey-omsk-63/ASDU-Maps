@@ -135,8 +135,11 @@ const App = () => {
           dispatch(mapCreate(dateMapGl));
           break;
         case "graphInfo":
-          dateRouteGl = { ...data };
-          dateRouteProGl = { ...data };
+          //pointRab = JSON.parse(JSON.stringify(maskpoint.pointForRedax));
+          //dateRouteGl = { ...data };
+          //dateRouteProGl = { ...data };
+          dateRouteGl = JSON.parse(JSON.stringify(data));
+          dateRouteProGl = JSON.parse(JSON.stringify(data));
           dispatch(massrouteCreate(dateRouteGl));
           dispatch(massrouteproCreate(dateRouteProGl));
           break;

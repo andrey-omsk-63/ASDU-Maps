@@ -1,12 +1,12 @@
-import * as React from 'react';
-import { useSelector } from 'react-redux';
+import * as React from "react";
+import { useSelector } from "react-redux";
 
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Modal from '@mui/material/Modal';
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Modal from "@mui/material/Modal";
 
-import { styleModalEnd } from './../MainMapStyle';
+import { styleModalEnd } from "./../MainMapStyle";
 
 const MapRouteProtokol = (props: { setOpen: any }) => {
   //== Piece of Redux =======================================
@@ -14,7 +14,7 @@ const MapRouteProtokol = (props: { setOpen: any }) => {
     const { massrouteproReducer } = state;
     return massrouteproReducer.massroutepro;
   });
-
+  //===========================================================
   const [openSetPro, setOpenSetPro] = React.useState(true);
 
   const handleCloseSetEndPro = () => {
@@ -23,9 +23,9 @@ const MapRouteProtokol = (props: { setOpen: any }) => {
   };
 
   let massPro = massroutepro.ways;
-  console.log('!!!', massroutepro.ways, massPro);
+  console.log("!!!", massroutepro.ways, massPro);
 
-  let massProtokol = [];
+  let massProtokol: any = [];
   let massArea: Array<number> = [];
   for (let i = 0; i < massPro.length; i++) {
     let flagAvail = false;
@@ -34,36 +34,64 @@ const MapRouteProtokol = (props: { setOpen: any }) => {
     }
     if (!flagAvail) massArea.push(massPro[i].sourceArea);
   }
-  console.log('MassArea', massArea);
-  // massArea = massArea.sort(function (a, b) {
-  //   return a - b;
-  // });
-  let massAreaSort = new Float64Array(massArea);
-  console.log('MassAreaSort', massAreaSort);
+  let massAreaSort = massArea.sort(function (a, b) {
+    return a - b;
+  });
+  //let massAreaSort = new Float64Array(massArea);
+  //massAreaSort = massAreaSort.sort(); // отсортированый массив подрайонов
+  console.log("MassAreaSort", massAreaSort);
 
-  massAreaSort = massAreaSort.sort(); // отсортированый массив подрайонов
   for (let i = 0; i < massAreaSort.length; i++) {
     let masSpis: any = [];
-    masSpis = massPro.filter((mass: { sourceArea: number }) => mass.sourceArea === massAreaSort[i]);
-    console.log('1MasSpis', i, masSpis);
+    masSpis = massPro.filter(
+      (mass: { sourceArea: number }) => mass.sourceArea === massAreaSort[i]
+    );
+
+    console.log("masSpis", i, masSpis);
+
     masSpis.sort((x: any, y: any) => x.sourceID - y.sourceID);
-    console.log('2MasSpis', i, masSpis);
-    massProtokol.push(masSpis);
+    for (let j = 0; j < masSpis.length; j++) {
+      massProtokol.push(masSpis[j]);
+    }
   }
-  console.log('MassProtokol', massProtokol);
+  console.log("1MassProtokol", massProtokol);
+  console.log("2MassProtokol", massProtokol, massProtokol[0].sourceArea);
 
   const styleSetInf = {
-    position: 'absolute',
-    marginTop: '15vh',
-    marginLeft: '33vh',
+    position: "relative",
+    marginTop: 10.5,
+    marginLeft: "auto",
+    marginRight: 3,
     width: 460,
-    bgcolor: 'background.paper',
-    opacity: 0.7,
-    border: '3px solid #000',
-    borderColor: 'primary.main',
+    bgcolor: "background.paper",
+    border: "3px solid #000",
+    borderColor: "primary.main",
     borderRadius: 2,
     boxShadow: 24,
     p: 1.5,
+  };
+
+  const StrokaProtokol = () => {
+    let resStr = [];
+    for (let i = 0; i < massProtokol.length; i++) {
+      resStr.push(
+        <Grid key={i} container>
+          <Grid item xs={6}>
+            &nbsp;&nbsp;Подрайон: <b>{massProtokol[i].sourceArea}</b>
+            &nbsp;ID:&nbsp;
+            <b>{massProtokol[i].sourceID}</b> Напр:&nbsp;
+            <b>{massProtokol[i].lsource}</b>
+          </Grid>
+          <Grid item xs={6}>
+            &nbsp;&nbsp;Подрайон: <b>{massProtokol[i].targetArea}</b>
+            &nbsp;ID:&nbsp;
+            <b>{massProtokol[i].targetID}</b> Напр:&nbsp;
+            <b>{massProtokol[i].ltarget}</b>
+          </Grid>
+        </Grid>
+      );
+    }
+    return resStr;
   };
 
   return (
@@ -72,27 +100,22 @@ const MapRouteProtokol = (props: { setOpen: any }) => {
         <Button sx={styleModalEnd} onClick={handleCloseSetEndPro}>
           <b>&#10006;</b>
         </Button>
-        <Box sx={{ textAlign: 'center' }}>
+        <Box sx={{ marginTop: -0.5, textAlign: "center" }}>
           <b>Протокол созданных связей:</b>
         </Box>
-        <Grid container sx={{ backgroundColor: '#D7F1C0' }}>
-          <Grid item xs={6} sx={{ border: 0, textAlign: 'center' }}>
-            <b>Исходящая часть</b>
+        <Box sx={{ marginTop: 0.5 }}>
+          <Grid container sx={{ bgcolor: "#C0E2C3" }}>
+            <Grid item xs={6} sx={{ border: 0, textAlign: "center" }}>
+              <b>Выход</b>
+            </Grid>
+            <Grid item xs={6} sx={{ border: 0, textAlign: "center" }}>
+              <b>Вход</b>
+            </Grid>
           </Grid>
-          <Grid item xs={6} sx={{ border: 0, textAlign: 'center' }}>
-            <b>Входящая часть</b>
-          </Grid>
-        </Grid>
-        <Grid container>
-          <Grid item xs={6}>
-            &nbsp;&nbsp;Подрайон: <b>{massroutepro.ways[0].sourceArea}</b> ID:&nbsp;
-            <b>{massroutepro.ways[0].sourceID}</b> Напр: <b>{massroutepro.ways[0].lsource}</b>
-          </Grid>
-          <Grid item xs={6}>
-            &nbsp;&nbsp;Подрайон: <b>{massroutepro.ways[0].targetArea}</b> ID:&nbsp;
-            <b>{massroutepro.ways[0].targetID}</b> Напр: <b>{massroutepro.ways[0].ltarget}</b>
-          </Grid>
-        </Grid>
+          <Box sx={{ border: 0,overflowX: "auto", height: "73vh" }}>
+            {StrokaProtokol()}
+          </Box>
+        </Box>
       </Box>
     </Modal>
   );

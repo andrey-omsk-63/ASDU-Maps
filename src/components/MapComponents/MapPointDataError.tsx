@@ -14,6 +14,7 @@ import { SendSocketDeleteWayToPoint } from "./../MapServiceFunctions";
 import { styleModalEnd, styleSetInf } from "./../MainMapStyle";
 
 let lengthRoute = 0;
+let index = -1;
 
 const MapPointDataError = (props: {
   sErr: string;
@@ -53,33 +54,35 @@ const MapPointDataError = (props: {
   };
 
   const [openSetEr, setOpenSetEr] = React.useState(true);
- 
+
   const handleCloseSetEnd = () => {
     props.setOpen(false);
     setOpenSetEr(false);
   };
 
   const DeleteWay = () => {
-    let index = -1;
-    for (let i = 0; i < massroute.ways.length; i++) {
+    massroute.ways.splice(index, 1); // удаление из базы
+    dispatch(massrouteCreate(massroute));
+
+    let idx = -1;  // удаление из протокола
+    for (let i = 0; i < massroutepro.ways.length; i++) {
       if (
-        props.fromCross.pointAaRegin === massroute.ways[i].region.toString() &&
+        props.fromCross.pointAaRegin ===
+          massroutepro.ways[i].region.toString() &&
         props.fromCross.pointAaArea ===
-          massroute.ways[i].sourceArea.toString() &&
-        props.fromCross.pointAaID === massroute.ways[i].sourceID &&
-        props.toCross.pointBbID === massroute.ways[i].targetID &&
-        props.toCross.pointBbArea === massroute.ways[i].targetArea.toString()
+          massroutepro.ways[i].sourceArea.toString() &&
+        props.fromCross.pointAaID === massroutepro.ways[i].sourceID &&
+        props.toCross.pointBbID === massroutepro.ways[i].targetID &&
+        props.toCross.pointBbArea === massroutepro.ways[i].targetArea.toString()
       ) {
-        index = i;
-        lengthRoute = massroute.ways[i].length;
-        console.log('lengthRoute:',lengthRoute,massroute.ways[i])
+        idx = i;
       }
     }
-    massroute.ways.splice(index, 1);
-    dispatch(massrouteCreate(massroute));
-    massroutepro.ways.splice(index, 1);
-    dispatch(massrouteproCreate(massroute));
-    props.update()
+    if (idx >= 0) {
+      massroutepro.ways.splice(idx, 1);
+      dispatch(massrouteproCreate(massroutepro));
+    }
+    props.update();
   };
 
   const handleClose = (mode: number) => {
@@ -110,8 +113,28 @@ const MapPointDataError = (props: {
     handleCloseSetEnd();
   };
 
+  index = -1;
+  for (let i = 0; i < massroute.ways.length; i++) {
+    if (
+      props.fromCross.pointAaRegin === massroute.ways[i].region.toString() &&
+      props.fromCross.pointAaArea === massroute.ways[i].sourceArea.toString() &&
+      props.fromCross.pointAaID === massroute.ways[i].sourceID &&
+      props.toCross.pointBbID === massroute.ways[i].targetID &&
+      props.toCross.pointBbArea === massroute.ways[i].targetArea.toString()
+    ) {
+      index = i;
+      lengthRoute = massroute.ways[i].length;
+      console.log("lengthRoute:", lengthRoute, massroute.ways[i]);
+    }
+  }
+
   return (
-    <Modal open={openSetEr} onClose={handleCloseSetEnd} disableEnforceFocus hideBackdrop>
+    <Modal
+      open={openSetEr}
+      onClose={handleCloseSetEnd}
+      disableEnforceFocus
+      hideBackdrop
+    >
       <Box sx={styleSetInf}>
         <Button sx={styleModalEnd} onClick={handleCloseSetEnd}>
           <b>&#10006;</b>
@@ -120,16 +143,32 @@ const MapPointDataError = (props: {
           {props.sErr}
         </Typography>
         {props.sErr === "Дубликатная связь" && (
-          <Box sx={{ textAlign: "center" }}>
-            <Typography variant="h6">Удалить исходную связь?</Typography>
-            <Button sx={styleModalMenu} onClick={() => handleClose(1)}>
-              Да
-            </Button>
-            &nbsp;
-            <Button sx={styleModalMenu} onClick={() => handleClose(2)}>
-              Нет
-            </Button>
-          </Box>
+          <>
+            <Box sx={{ textAlign: "left", marginLeft: 5 }}>
+              <b>Выход</b> &nbsp;Подрайон:{" "}
+              <b>{massroute.ways[index].targetArea}</b>
+              &nbsp;ID:&nbsp;
+              <b>{massroute.ways[index].sourceID}</b> Напр:&nbsp;
+              <b>{massroute.ways[index].lsource}</b>
+            </Box>
+            <Box sx={{ textAlign: "left", marginLeft: 5 }}>
+              <b>Вход</b> &nbsp;&nbsp;&nbsp;&nbsp;Подрайон:{" "}
+              <b>{massroute.ways[index].targetArea}</b>
+              &nbsp;ID:&nbsp;
+              <b>{massroute.ways[index].targetID}</b> Напр:&nbsp;
+              <b>{massroute.ways[index].ltarget}</b>
+            </Box>
+            <Box sx={{ textAlign: "center" }}>
+              <Typography variant="h6">Удалить исходную связь?</Typography>
+              <Button sx={styleModalMenu} onClick={() => handleClose(1)}>
+                Да
+              </Button>
+              &nbsp;
+              <Button sx={styleModalMenu} onClick={() => handleClose(2)}>
+                Нет
+              </Button>
+            </Box>
+          </>
         )}
       </Box>
     </Modal>
