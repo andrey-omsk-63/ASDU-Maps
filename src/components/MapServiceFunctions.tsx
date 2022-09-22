@@ -88,7 +88,6 @@ export const RecordMassRoute = (
       activeRoute.properties.get("distance").value
     );
   }
-  console.log("masskRoute:", masskRoute);
   return masskRoute;
 };
 
@@ -324,7 +323,6 @@ export const SendSocketCreateWay = (
   activeRoute: any
 ) => {
   const handleSendOpen = () => {
-    console.log("SendSocketCreateWay", massBind);
     if (!debugging) {
       let lengthRoute = Math.round(
         activeRoute.properties.get("distance").value

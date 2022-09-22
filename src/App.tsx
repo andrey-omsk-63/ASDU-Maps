@@ -135,11 +135,12 @@ const App = () => {
           dispatch(mapCreate(dateMapGl));
           break;
         case "graphInfo":
-          //pointRab = JSON.parse(JSON.stringify(maskpoint.pointForRedax));
-          //dateRouteGl = { ...data };
-          //dateRouteProGl = { ...data };
+          let pointRab = JSON.parse(JSON.stringify(data));
+          pointRab.points = []; // массив протоколов
+          pointRab.vertexes = [];
+          pointRab.ways = [];
           dateRouteGl = JSON.parse(JSON.stringify(data));
-          dateRouteProGl = JSON.parse(JSON.stringify(data));
+          dateRouteProGl = JSON.parse(JSON.stringify(pointRab));
           dispatch(massrouteCreate(dateRouteGl));
           dispatch(massrouteproCreate(dateRouteProGl));
           break;
@@ -239,7 +240,6 @@ const App = () => {
           } else {
             setSvg(data.svg);
           }
-          console.log("Пришло SVG:", svg, data.svg);
           break;
         default:
           console.log("data_default:", data);
@@ -253,8 +253,6 @@ const App = () => {
     dispatch(mapCreate(dateMapGl));
     dateRouteGl = { ...dataRoute.data };
     dateRouteProGl = { ...dataRoute.data };
-    // dateRouteProGl.vertexes = []
-    // dateRouteProGl.ways = []
     flagOpen = false;
     console.log("@@@dateRouteGl", dateRouteGl);
     dispatch(massrouteCreate(dateRouteGl));

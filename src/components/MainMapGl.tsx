@@ -42,7 +42,6 @@ import { styleModalEndMapGl, styleModalMenu } from "./MainMapStyle";
 
 import { Pointer } from "./../App";
 
-//let coordinates: Array<Array<number>> = []; // массив координат
 let coordStart: any = []; // рабочий массив коллекции входящих связей
 let coordStop: any = []; // рабочий массив коллекции входящих связей
 let coordStartIn: any = []; // рабочий массив коллекции исходящих связей
@@ -53,11 +52,11 @@ let masSvg: any = ["", ""];
 let debugging = false;
 let flagOpen = false;
 let flagBind = false;
+//let flagNullPro = false;
 let activeRoute: any;
 let newPointCoord: any = 0;
 let soobError = "";
 let oldsErr = "";
-//let propsSvg: any = true;
 
 let zoom = 10;
 let homeRegion = 0;
@@ -89,10 +88,8 @@ const MainMap = (props: {
   svg: any;
   setSvg: any;
 }) => {
-  console.log("PROPS.svg:", props.svg);
   const WS = props.ws;
   if (WS.url === "wss://localhost:3000/W") debugging = true;
-  //if (!debugging) propsSvg = props.svg;
   //== Piece of Redux =======================================
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;
@@ -171,7 +168,6 @@ const MainMap = (props: {
     dispatch(massrouteCreate(massroute));
     dispatch(massrouteproCreate(massroutepro));
     dispatch(coordinatesCreate(coordinates));
-    console.log("777777", massroutepro.ways);
   }
   //========================================================
   const DelCollectionRoutes = () => {
@@ -220,7 +216,6 @@ const MainMap = (props: {
   };
 
   const MakeRecordMassRoute = (mode: boolean, mass: any) => {
-    console.log("MASS_MakeRecordMassRoute", mass);
     let aRou = activeRoute;
     let debug = debugging;
     fromCross.pointAcod = CodingCoord(pointAa);
@@ -229,14 +224,10 @@ const MainMap = (props: {
       SoobOpenSetEr("Дубликатная связь");
     } else {
       let mask = RecordMassRoute(fromCross, toCross, mass, aRou);
-      console.log("111111", massroute.ways);
-      console.log("222222", massroutepro.ways);
       massroute.ways.push(mask);
       massroutepro.ways.push(mask);
       dispatch(massrouteCreate(massroute));
       dispatch(massrouteproCreate(massroutepro));
-      console.log("333333", massroute.ways);
-      console.log("444444", massroutepro.ways);
       if (massroute.vertexes[pointAaIndex].area === 0) {
         SendSocketCreateWayFromPoint(debug, WS, fromCross, toCross, mass, aRou);
       } else {
@@ -359,7 +350,6 @@ const MainMap = (props: {
   };
 
   const OnPlacemarkClickPoint = (index: number) => {
-    console.log("555555", massroutepro.ways);
     if (pointAa === 0) {
       pointAaIndex = index; // начальная точка
       pointAa = [massdk[index].coordinates[0], massdk[index].coordinates[1]];
@@ -641,9 +631,6 @@ const MainMap = (props: {
     yandexMapDisablePoiInteractivity: true,
   };
 
-  console.log("Massroute:", massroute);
-  //console.log("Massdk:", massdk);
-
   if (props.sErr && props.sErr !== oldsErr) {
     ymaps && addRoute(ymaps); // перерисовка связей
     oldsErr = props.sErr;
@@ -670,19 +657,16 @@ const MainMap = (props: {
         "-" +
         massroute.vertexes[pointBbIndex].id.toString();
       masSvg[1] = props.svg[keySvg];
-      console.log("masSvg:", masSvg);
     } else {
       masSvg = null;
     }
   }
-  console.log("888888", massroutepro.ways);
   
   return (
     <Grid container sx={{ border: 0, height: "99.9vh" }}>
       {flagPusk && !flagBind && <>{StrokaMenuGlob("Отмена назначений", 77)}</>}
       {flagPusk && flagRoute && !flagBind && (
         <>
-          {/* {StrokaMenuGlob('Привязка направлен', 33)} */}
           {StrokaMenuGlob("Сохранить связь", 33)}
           {revers && <>{StrokaMenuGlob("Реверс связи", 12)}</>}
           {!revers && <>{StrokaMenuGlob("Реверc связи", 12)}</>}
@@ -697,9 +681,8 @@ const MainMap = (props: {
         </>
       )}
       {!flagDemo && <>{StrokaMenuGlob("Demo сети", 3)}</>}
-      {flagPro && <>{StrokaMenuGlob("Протокол", 24)}</>}
       {flagDemo && <>{StrokaMenuGlob("Откл Demo", 6)}</>}
-      {/* {flagPro && <>{StrokaMenuGlob("Откл протокола", 27)}</>} */}
+      {flagPro && <>{StrokaMenuGlob("Протокол", 24)}</>}
       {Object.keys(massroute).length && (
         <YMaps
           query={{
@@ -744,13 +727,12 @@ const MainMap = (props: {
             {openSetInf && (
               <MapRouteInfo
                 activeRoute={activeRoute}
-                name1={massdk[pointAaIndex].nameCoordinates}
-                name2={massdk[pointBbIndex].nameCoordinates}
+                idxA={pointAaIndex}
+                idxB={pointBbIndex}
                 setOpen={setOpenSetInf}
               />
             )}
             {openSetBind && (
-              // propsSvg &&
               <MapRouteBind
                 debug={debugging}
                 setOpen={setOpenSetBind}

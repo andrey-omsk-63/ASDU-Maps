@@ -29,10 +29,6 @@ const MapPointDataError = (props: {
 }) => {
   const WS = props.ws;
   //== Piece of Redux =======================================
-  // let massdk = useSelector((state: any) => {
-  //   const { massdkReducer } = state;
-  //   return massdkReducer.massdk;
-  // });
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
     return massrouteReducer.massroute;
@@ -41,10 +37,6 @@ const MapPointDataError = (props: {
     const { massrouteproReducer } = state;
     return massrouteproReducer.massroutepro;
   });
-  // const map = useSelector((state: any) => {
-  //   const { mapReducer } = state;
-  //   return mapReducer.map;
-  // });
   const dispatch = useDispatch();
   //=========================================================
   const styleModalMenu = {
@@ -64,7 +56,7 @@ const MapPointDataError = (props: {
     massroute.ways.splice(index, 1); // удаление из базы
     dispatch(massrouteCreate(massroute));
 
-    let idx = -1;  // удаление из протокола
+    let idx = -1; // удаление из протокола
     for (let i = 0; i < massroutepro.ways.length; i++) {
       if (
         props.fromCross.pointAaRegin ===
@@ -123,7 +115,7 @@ const MapPointDataError = (props: {
       props.toCross.pointBbArea === massroute.ways[i].targetArea.toString()
     ) {
       index = i;
-      lengthRoute = massroute.ways[i].length;
+      lengthRoute = massroute.ways[i].lenght;
       console.log("lengthRoute:", lengthRoute, massroute.ways[i]);
     }
   }

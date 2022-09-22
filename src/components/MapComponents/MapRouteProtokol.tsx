@@ -23,7 +23,6 @@ const MapRouteProtokol = (props: { setOpen: any }) => {
   };
 
   let massPro = massroutepro.ways;
-  console.log("!!!", massroutepro.ways, massPro);
 
   let massProtokol: any = [];
   let massArea: Array<number> = [];
@@ -37,9 +36,6 @@ const MapRouteProtokol = (props: { setOpen: any }) => {
   let massAreaSort = massArea.sort(function (a, b) {
     return a - b;
   });
-  //let massAreaSort = new Float64Array(massArea);
-  //massAreaSort = massAreaSort.sort(); // отсортированый массив подрайонов
-  console.log("MassAreaSort", massAreaSort);
 
   for (let i = 0; i < massAreaSort.length; i++) {
     let masSpis: any = [];
@@ -47,16 +43,12 @@ const MapRouteProtokol = (props: { setOpen: any }) => {
       (mass: { sourceArea: number }) => mass.sourceArea === massAreaSort[i]
     );
 
-    console.log("masSpis", i, masSpis);
-
     masSpis.sort((x: any, y: any) => x.sourceID - y.sourceID);
     for (let j = 0; j < masSpis.length; j++) {
       massProtokol.push(masSpis[j]);
     }
   }
-  console.log("1MassProtokol", massProtokol);
-  console.log("2MassProtokol", massProtokol, massProtokol[0].sourceArea);
-
+  
   const styleSetInf = {
     position: "relative",
     marginTop: 10.5,
@@ -77,13 +69,13 @@ const MapRouteProtokol = (props: { setOpen: any }) => {
       resStr.push(
         <Grid key={i} container>
           <Grid item xs={6}>
-            &nbsp;&nbsp;Подрайон: <b>{massProtokol[i].sourceArea}</b>
+            &nbsp;&nbsp;Район: <b>{massProtokol[i].sourceArea}</b>
             &nbsp;ID:&nbsp;
             <b>{massProtokol[i].sourceID}</b> Напр:&nbsp;
             <b>{massProtokol[i].lsource}</b>
           </Grid>
           <Grid item xs={6}>
-            &nbsp;&nbsp;Подрайон: <b>{massProtokol[i].targetArea}</b>
+            &nbsp;&nbsp;Район: <b>{massProtokol[i].targetArea}</b>
             &nbsp;ID:&nbsp;
             <b>{massProtokol[i].targetID}</b> Напр:&nbsp;
             <b>{massProtokol[i].ltarget}</b>
@@ -112,7 +104,7 @@ const MapRouteProtokol = (props: { setOpen: any }) => {
               <b>Вход</b>
             </Grid>
           </Grid>
-          <Box sx={{ border: 0,overflowX: "auto", height: "73vh" }}>
+          <Box sx={{ border: 0, overflowX: "auto", height: "73vh" }}>
             {StrokaProtokol()}
           </Box>
         </Box>

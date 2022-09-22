@@ -26,25 +26,15 @@ const MapRouteBind = (props: {
   func: any;
 }) => {
   //== Piece of Redux ======================================
-  // let massdk = useSelector((state: any) => {
-  //   const { massdkReducer } = state;
-  //   return massdkReducer.massdk;
-  // });
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
     return massrouteReducer.massroute;
   });
-  // const map = useSelector((state: any) => {
-  //   const { mapReducer } = state;
-  //   return mapReducer.map;
-  // });
-  //const dispatch = useDispatch();
   //========================================================
   const [openSetBind, setOpenSetBind] = React.useState(true);
   let masSvg = ["", ""];
   let otlOrKosyk = props.debug;
   if (!props.svg) otlOrKosyk = true;
-  console.log("Props.svg:", props.svg, otlOrKosyk);
 
   let heightImg = window.innerWidth / 3.333;
   let widthHeight = heightImg.toString();
@@ -89,12 +79,6 @@ const MapRouteBind = (props: {
     if (mode) props.func(false, massBind);
   };
 
-  // const handleCloseKirdik = () => {
-  //   props.setOpen(false);
-  //   setOpenSetBind(false);
-  //   props.setSvg(null);
-  // };
-
   const ExampleComponent = (idx: number) => {
     return (
       <div>
@@ -138,7 +122,6 @@ const MapRouteBind = (props: {
       } else {
         massBind[0] = massDat[Number(event.target.value)];
       }
-      console.log("!!!!!:", Number(event.target.value), massBind);
       setTrigger(!trigger);
     };
 
@@ -241,8 +224,6 @@ const MapRouteBind = (props: {
       </>
     );
   };
-
-  console.log(" massBind:", massBind);
 
   return (
     <Modal open={openSetBind} onClose={handleClose} hideBackdrop>
