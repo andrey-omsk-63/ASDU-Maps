@@ -36,11 +36,11 @@ import { SendSocketDeleteVertex } from "./MapServiceFunctions";
 import { SendSocketCreateWay, SendSocketGetSvg } from "./MapServiceFunctions";
 import { SendSocketCreateWayFromPoint } from "./MapServiceFunctions";
 import { SendSocketCreateWayToPoint } from "./MapServiceFunctions";
+import { StrokaBalloon } from "./MapServiceFunctions";
+import { RecevKeySvg, StrokaMenuGlob, MasskPoint } from "./MapServiceFunctions";
 
 import { styleSetPoint, styleTypography, searchControl } from "./MainMapStyle";
-import { styleModalEndMapGl, styleModalMenu } from "./MainMapStyle";
-
-import { Pointer } from "./../App";
+import { styleModalEndMapGl } from "./MainMapStyle";
 
 let coordStart: any = []; // рабочий массив коллекции входящих связей
 let coordStop: any = []; // рабочий массив коллекции входящих связей
@@ -137,14 +137,7 @@ const MainMap = (props: {
       massroute.vertexes.push(massroute.points[i]);
     }
     for (let i = 0; i < massroute.vertexes.length; i++) {
-      let masskPoint: Pointer = {
-        ID: -1,
-        coordinates: [],
-        nameCoordinates: "",
-        region: 0,
-        area: 0,
-        newCoordinates: 0,
-      };
+      let masskPoint = MasskPoint();
       masskPoint.ID = massroute.vertexes[i].id;
       masskPoint.coordinates = DecodingCoord(massroute.vertexes[i].dgis);
       masskPoint.nameCoordinates = massroute.vertexes[i].name;
@@ -161,12 +154,8 @@ const MainMap = (props: {
       map.dateMap.boxPoint.point1.X
     );
     flagOpen = true;
-    massroutepro.points = []; // массив протоколов
-    massroutepro.vertexes = [];
-    massroutepro.ways = [];
     dispatch(massdkCreate(massdk));
     dispatch(massrouteCreate(massroute));
-    dispatch(massrouteproCreate(massroutepro));
     dispatch(coordinatesCreate(coordinates));
   }
   //========================================================
@@ -257,7 +246,7 @@ const MainMap = (props: {
     ymaps && addRoute(ymaps); // перерисовка связей
   };
 
-  const PressMenuButton = (mode: number) => {
+  const PressButton = (mode: number) => {
     switch (mode) {
       case 3: // режим включения Demo сети связей
         massRoute = massroute.ways;
@@ -495,14 +484,6 @@ const MainMap = (props: {
       }
     };
 
-    const StrokaPressBalloon = (soob: string, mode: number) => {
-      return (
-        <Button sx={styleModalMenu} onClick={() => handleClose(mode)}>
-          <b>{soob}</b>
-        </Button>
-      );
-    };
-
     return (
       <Modal open={openSet} onClose={() => setOpenSet(false)} hideBackdrop>
         <Box sx={styleSetPoint}>
@@ -510,15 +491,15 @@ const MainMap = (props: {
             <b>&#10006;</b>
           </Button>
           <Box sx={{ marginTop: 2, textAlign: "center" }}>
-            {StrokaPressBalloon(soobDel, 3)}
-            {StrokaPressBalloon("Редактирование адреса", 4)}
+            {StrokaBalloon(soobDel, handleClose, 3)}
+            {StrokaBalloon("Редактирование адреса", handleClose, 4)}
           </Box>
           <Typography variant="h6" sx={styleTypography}>
             Перестроение связи:
           </Typography>
-          <Box sx={{ textAlign: "center" }}>
-            {StrokaPressBalloon("Начальная точка", 1)}
-            {StrokaPressBalloon("Конечная точка", 2)}
+          <Box sx={{ marginTop: 1, textAlign: "center" }}>
+            {StrokaBalloon("Начальная точка", handleClose, 1)}
+            {StrokaBalloon("Конечная точка", handleClose, 2)}
           </Box>
           {openSetAdress && (
             <MapInputAdress iPoint={indexPoint} setOpen={setOpenSetAdress} />
@@ -566,7 +547,7 @@ const MainMap = (props: {
           <Placemark
             key={idx}
             geometry={props.coordinate}
-            properties={getPointData(idx, pAaI, pBbI, coordStop, massdk)}
+            properties={getPointData(idx, pAaI, pBbI, cStop, massdk)}
             options={getPointOptions(idx, pAaI, pBbI, massdk, massroute, cStop)}
             modules={["geoObject.addon.balloon", "geoObject.addon.hint"]}
             onClick={() => OnPlacemarkClickPoint(idx)}
@@ -605,26 +586,7 @@ const MainMap = (props: {
       });
     }
   };
-
-  const StrokaMenuGlob = (soob: string, mode: number) => {
-    const styleApp01 = {
-      fontSize: 14,
-      marginRight: 0.1,
-      width: (soob.length + 7) * 6.5,
-      maxHeight: "21px",
-      minHeight: "21px",
-      backgroundColor: "#D7F1C0",
-      color: "black",
-      textTransform: "unset !important",
-    };
-
-    return (
-      <Button sx={styleApp01} onClick={() => PressMenuButton(mode)}>
-        <b>{soob}</b>
-      </Button>
-    );
-  };
-
+  //========================================================
   let mapState: any = {
     center: pointCenter,
     zoom,
@@ -636,53 +598,38 @@ const MainMap = (props: {
     oldsErr = props.sErr;
   }
 
-  const RecevKeySvg = (recMassroute: any) => {
-    let keySvg =
-      recMassroute.region.toString() +
-      "-" +
-      recMassroute.area.toString() +
-      "-" +
-      recMassroute.id.toString();
-    return keySvg;
-  };
-
   masSvg = ["", ""];
   if (!debugging) {
     if (props.svg) {
       masSvg[0] = props.svg[RecevKeySvg(massroute.vertexes[pointAaIndex])];
-      let keySvg =
-        homeRegion.toString() +
-        "-" +
-        massroute.vertexes[pointBbIndex].area.toString() +
-        "-" +
-        massroute.vertexes[pointBbIndex].id.toString();
-      masSvg[1] = props.svg[keySvg];
+      masSvg[1] = props.svg[RecevKeySvg(massroute.vertexes[pointBbIndex])];
     } else {
       masSvg = null;
     }
   }
-  
+
   return (
     <Grid container sx={{ border: 0, height: "99.9vh" }}>
-      {flagPusk && !flagBind && <>{StrokaMenuGlob("Отмена назначений", 77)}</>}
+      {flagPusk && !flagBind && (
+        <>{StrokaMenuGlob("Отмена назначений", PressButton, 77)}</>
+      )}
       {flagPusk && flagRoute && !flagBind && (
         <>
-          {StrokaMenuGlob("Сохранить связь", 33)}
-          {revers && <>{StrokaMenuGlob("Реверс связи", 12)}</>}
-          {!revers && <>{StrokaMenuGlob("Реверc связи", 12)}</>}
-          {StrokaMenuGlob("Информ о связи", 69)}
+          {StrokaMenuGlob("Сохранить связь", PressButton, 33)}
+          {StrokaMenuGlob("Реверc связи", PressButton, 12)}
+          {StrokaMenuGlob("Информ о связи", PressButton, 69)}
         </>
       )}
       {flagPusk && flagRoute && flagBind && (
         <>
-          {StrokaMenuGlob("Сохранить связь", 33)}
-          {StrokaMenuGlob("Отменить связь", 77)}
-          {StrokaMenuGlob("Информ о связи", 69)}
+          {StrokaMenuGlob("Сохранить связь", PressButton, 33)}
+          {StrokaMenuGlob("Отменить связь", PressButton, 77)}
+          {StrokaMenuGlob("Информ о связи", PressButton, 69)}
         </>
       )}
-      {!flagDemo && <>{StrokaMenuGlob("Demo сети", 3)}</>}
-      {flagDemo && <>{StrokaMenuGlob("Откл Demo", 6)}</>}
-      {flagPro && <>{StrokaMenuGlob("Протокол", 24)}</>}
+      {!flagDemo && <>{StrokaMenuGlob("Demo сети", PressButton, 3)}</>}
+      {flagDemo && <>{StrokaMenuGlob("Откл Demo", PressButton, 6)}</>}
+      {flagPro && <>{StrokaMenuGlob("Протокол", PressButton, 24)}</>}
       {Object.keys(massroute).length && (
         <YMaps
           query={{

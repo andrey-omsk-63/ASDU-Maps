@@ -39,14 +39,7 @@ const MapRouteInfo = (props: {
       " сек)";
   }
   return (
-    <Modal
-      open={openSetInf}
-      onClose={handleCloseSetEndInf}
-      disableEnforceFocus
-      hideBackdrop
-      aria-labelledby="child-modal-title"
-      aria-describedby="child-modal-description"
-    >
+    <Modal open={openSetInf} onClose={handleCloseSetEndInf} hideBackdrop>
       <Box sx={styleSetInf}>
         <Button sx={styleModalEnd} onClick={handleCloseSetEndInf}>
           <b>&#10006;</b>

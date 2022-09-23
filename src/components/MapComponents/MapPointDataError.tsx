@@ -116,7 +116,6 @@ const MapPointDataError = (props: {
     ) {
       index = i;
       lengthRoute = massroute.ways[i].lenght;
-      console.log("lengthRoute:", lengthRoute, massroute.ways[i]);
     }
   }
 

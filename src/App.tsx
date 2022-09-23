@@ -253,6 +253,9 @@ const App = () => {
     dispatch(mapCreate(dateMapGl));
     dateRouteGl = { ...dataRoute.data };
     dateRouteProGl = { ...dataRoute.data };
+    dateRouteProGl.points = []; // массив протоколов
+    dateRouteProGl.vertexes = [];
+    dateRouteProGl.ways = [];
     flagOpen = false;
     console.log("@@@dateRouteGl", dateRouteGl);
     dispatch(massrouteCreate(dateRouteGl));

@@ -1,5 +1,9 @@
+import Button from "@mui/material/Button";
+
 import { Pointer, Router } from "./../App";
 import { Vertex, Way } from "./../interfaceRoute";
+
+import { styleModalMenu } from "./MainMapStyle";
 
 export const MapssdkNewPoint = (
   homeRegion: number,
@@ -706,4 +710,54 @@ export const SoobErrorDeleteWayFromPoint = (data: any) => {
     data.toCross.id +
     ")";
   return soob;
+};
+//=== Разное =======================================
+export const RecevKeySvg = (recMassroute: any) => {
+  let keySvg =
+    recMassroute.region.toString() +
+    "-" +
+    recMassroute.area.toString() +
+    "-" +
+    recMassroute.id.toString();
+  return keySvg;
+};
+
+export const StrokaMenuGlob = (soob: string, func: any, mode: number) => {
+  const styleApp01 = {
+    fontSize: 14,
+    marginRight: 0.1,
+    width: (soob.length + 7) * 6.5,
+    maxHeight: "21px",
+    minHeight: "21px",
+    backgroundColor: "#D7F1C0",
+    color: "black",
+    textTransform: "unset !important",
+  };
+
+  return (
+    <Button sx={styleApp01} onClick={() => func(mode)}>
+      <b>{soob}</b>
+    </Button>
+  );
+};
+
+export const StrokaBalloon = (soob: string, func: any, mode: number) => {
+  return (
+    <Button sx={styleModalMenu} onClick={() => func(mode)}>
+      <b>{soob}</b>
+    </Button>
+  );
+};
+
+export const MasskPoint = () => {
+  let masskPoint: Pointer = {
+    ID: -1,
+    coordinates: [],
+    nameCoordinates: "",
+    region: 0,
+    area: 0,
+    newCoordinates: 0,
+  };
+
+  return masskPoint;
 };
