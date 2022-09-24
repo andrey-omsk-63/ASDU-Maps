@@ -36,7 +36,7 @@ import { SendSocketDeleteVertex } from "./MapServiceFunctions";
 import { SendSocketCreateWay, SendSocketGetSvg } from "./MapServiceFunctions";
 import { SendSocketCreateWayFromPoint } from "./MapServiceFunctions";
 import { SendSocketCreateWayToPoint } from "./MapServiceFunctions";
-import { StrokaBalloon } from "./MapServiceFunctions";
+import { StrokaBalloon, ChangeCrossFunc } from "./MapServiceFunctions";
 import { RecevKeySvg, StrokaMenuGlob, MasskPoint } from "./MapServiceFunctions";
 
 import { styleSetPoint, styleTypography, searchControl } from "./MainMapStyle";
@@ -178,27 +178,6 @@ const MainMap = (props: {
     ymaps && addRoute(ymaps); // перерисовка связей
   };
 
-  const ChangeCross = () => {
-    let cross: any = {
-      Region: "",
-      Area: "",
-      ID: 0,
-      Cod: "",
-    };
-    cross.Region = fromCross.pointAaRegin;
-    cross.Area = fromCross.pointAaArea;
-    cross.ID = fromCross.pointAaID;
-    cross.Cod = fromCross.pointAcod;
-    fromCross.pointAaRegin = toCross.pointBbRegin;
-    fromCross.pointAaArea = toCross.pointBbArea;
-    fromCross.pointAaID = toCross.pointBbID;
-    fromCross.pointAcod = toCross.pointBcod;
-    toCross.pointBbRegin = cross.Region;
-    toCross.pointBbArea = cross.Area;
-    toCross.pointBbID = cross.ID;
-    toCross.pointBcod = cross.Cod;
-  };
-
   const SoobOpenSetEr = (soob: string) => {
     soobError = soob;
     setOpenSetEr(true);
@@ -269,7 +248,8 @@ const MainMap = (props: {
           SoobOpenSetEr("Дубликатная связь");
           ZeroRoute(false);
         } else {
-          ChangeCross();
+          let mass = ChangeCrossFunc(fromCross, toCross); // поменялось внутри func через ссылки React
+          console.log("Revers", mass, fromCross, toCross);
           MakeСollectionRoute();
           setRevers(!revers);
         }

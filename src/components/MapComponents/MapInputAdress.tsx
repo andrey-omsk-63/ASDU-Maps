@@ -26,10 +26,7 @@ const MapInputAdress = (props: { iPoint: number; setOpen: any }) => {
   const [valuen, setValuen] = React.useState(
     massdk[props.iPoint].nameCoordinates
   );
-  // const handleCloseSetEr = (event: any, reason: string) => {
-  //   if (reason !== "backdropClick") setOpenSetAdress(false);
-  // };
-
+  
   const handleKey = (event: any) => {
     if (event.key === "Enter") event.preventDefault();
   };

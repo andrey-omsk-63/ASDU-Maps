@@ -20,7 +20,6 @@ const MapPointDataError = (props: {
   sErr: string;
   setOpen: any;
   debug: boolean;
-  //ws: WebSocket;
   ws: any;
   fromCross: any;
   toCross: any;

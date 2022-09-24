@@ -18,7 +18,6 @@ export function massdkCreate(massDka: Pointer[] = []) {
 }
 
 export function mapCreate(dateMap: DateMAP) {
-  //export function mapCreate(dateMap: Tflight[]) {
   return {
     type: MAP_CREATE,
     data: { dateMap },
@@ -33,7 +32,6 @@ export function massrouteCreate(massRouter: DateRoute) {
 }
 
 export function massrouteproCreate(massRouterPro: DateRoute) {
-//export function massrouteproCreate(massRouterPro: any) {
   return {
     type: MASSROUTEPRO_CREATE,
     data: massRouterPro,

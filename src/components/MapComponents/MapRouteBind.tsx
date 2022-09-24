@@ -68,7 +68,6 @@ const MapRouteBind = (props: {
     for (let i = 0; i < 6; i++) {
       svgPipa = svgPipa.replace(ch, widthHeight);
     }
-    //console.log("svgPipa:", svgPipa);
     return svgPipa;
   };
 
@@ -93,8 +92,6 @@ const MapRouteBind = (props: {
         xmlns="http://www.w3.org/2000/svg"
         width={heightImg - 10}
         height={heightImg - 10}
-        // width={heightImg}
-        // height={heightImg}
         version="1"
         viewBox="0 0 91 54"
       >
@@ -144,7 +141,6 @@ const MapRouteBind = (props: {
       currencies.push(maskCurrencies);
     }
 
-    //const [currency, setCurrency] = React.useState(massKey[0]);
     const [currency, setCurrency] = React.useState(massBind[mode]);
     const [trigger, setTrigger] = React.useState(true);
 
