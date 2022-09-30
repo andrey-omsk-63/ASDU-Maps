@@ -55,7 +55,7 @@ const MapRouteInfo = (props: {
           {massdk[props.idxB].nameCoordinates} <br /> <br />
           <b>Длина связи:</b> {dlRoute1} м <br />
           <b>Время прохождения:</b> {tmRoute1} <br />
-          <b>Средняя скорость:</b> {sRoute1} км/ч <br /> 
+          <b>Средняя скорость прохождения:</b> {sRoute1} км/ч <br /> 
         </Box>
         {props.activeRoute && props.activeRoute.properties.get("blocked") && (
           <Box>Имеются участки с перекрытыми дорогами</Box>
