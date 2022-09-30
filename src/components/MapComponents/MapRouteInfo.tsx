@@ -29,15 +29,15 @@ const MapRouteInfo = (props: {
   };
   let dlRoute1 = 0;
   let tmRoute1 = "";
+  let sec = Math.round(props.activeRoute.properties.get("duration").value);
   if (props.activeRoute) {
     dlRoute1 = Math.round(props.activeRoute.properties.get("distance").value);
     let tm = props.activeRoute.properties.get("duration").text;
-    tmRoute1 =
-      tm.substring(0, tm.length - 1) +
-      " (" +
-      Math.round(props.activeRoute.properties.get("duration").value) +
-      " сек)";
+    tmRoute1 = tm.substring(0, tm.length - 1) + " (" + sec + " сек)";
   }
+  let sRoute1 = dlRoute1 / 1000 / sec * 3600;
+  sRoute1 = Math.round(sRoute1 * 10) / 10
+
   return (
     <Modal open={openSetInf} onClose={handleCloseSetEndInf} hideBackdrop>
       <Box sx={styleSetInf}>
@@ -55,6 +55,7 @@ const MapRouteInfo = (props: {
           {massdk[props.idxB].nameCoordinates} <br /> <br />
           <b>Длина связи:</b> {dlRoute1} м <br />
           <b>Время прохождения:</b> {tmRoute1} <br />
+          <b>Средняя скорость:</b> {sRoute1} км/ч <br /> 
         </Box>
         {props.activeRoute && props.activeRoute.properties.get("blocked") && (
           <Box>Имеются участки с перекрытыми дорогами</Box>
