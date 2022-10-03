@@ -257,7 +257,6 @@ const App = () => {
     dateRouteProGl.vertexes = [];
     dateRouteProGl.ways = [];
     flagOpen = false;
-    console.log("@@@dateRouteGl", dateRouteGl);
     dispatch(massrouteCreate(dateRouteGl));
     dispatch(massrouteproCreate(dateRouteProGl));
   }

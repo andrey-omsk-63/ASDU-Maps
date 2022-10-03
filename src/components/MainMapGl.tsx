@@ -20,6 +20,7 @@ import MapPointDataError from "./MapComponents/MapPointDataError";
 import MapRouteBind from "./MapComponents/MapRouteBind";
 import MapCreatePointVertex from "./MapComponents/MapCreatePointVertex";
 import MapRouteProtokol from "./MapComponents/MapRouteProtokol";
+import MapReversRoute from "./MapComponents/MapReversRoute";
 
 import { RecordMassRoute, SocketDeleteWay } from "./MapServiceFunctions";
 import { DecodingCoord, CodingCoord } from "./MapServiceFunctions";
@@ -52,12 +53,11 @@ let masSvg: any = ["", ""];
 let debugging = false;
 let flagOpen = false;
 let flagBind = false;
-//let flagNullPro = false;
+let flagRevers = false;
 let activeRoute: any;
 let newPointCoord: any = 0;
 let soobError = "";
 let oldsErr = "";
-
 let zoom = 10;
 let homeRegion = 0;
 let pointCenter: any = 0;
@@ -71,7 +71,6 @@ let fromCross: any = {
   pointAaID: 0,
   pointAcod: "",
 };
-
 let pointBb: any = 0;
 let pointBbIndex: number = -1;
 let toCross: any = {
@@ -125,6 +124,9 @@ const MainMap = (props: {
   const [openSet, setOpenSet] = React.useState(false);
   const [openSetCreate, setOpenSetCreate] = React.useState(false);
   const [openSetAdress, setOpenSetAdress] = React.useState(false);
+  const [openSetRevers, setOpenSetRevers] = React.useState(false);
+  const [makeRevers, setMakeRevers] = React.useState(false);
+  const [needRevers, setNeedRevers] = React.useState(false);
   const [ymaps, setYmaps] = React.useState<YMapsApi | null>(null);
   const mapp = React.useRef<any>(null);
 
@@ -207,7 +209,12 @@ const MainMap = (props: {
       }
       setFlagPro(true); //включение протокола
     }
-    ZeroRoute(mode);
+    if (flagRevers) {
+      setOpenSetRevers(true);
+      flagRevers = false;
+    } else {
+      ZeroRoute(mode);
+    }
   };
 
   const MakeСollectionRoute = () => {
@@ -225,6 +232,37 @@ const MainMap = (props: {
     ymaps && addRoute(ymaps); // перерисовка связей
   };
 
+  const ReversRoute = () => {
+    let noDoublRoute = true;
+    let pa = pointAa;
+    pointAa = pointBb;
+    pointBb = pa;
+    pa = pointAaIndex;
+    pointAaIndex = pointBbIndex;
+    pointBbIndex = pa;
+    if (DoublRoute(massroute.ways, pointAa, pointBb)) {
+      SoobOpenSetEr("Дубликатная связь");
+      ZeroRoute(false);
+      noDoublRoute = false;
+    } else {
+      let mass = ChangeCrossFunc(fromCross, toCross); // поменялось внутри func через ссылки React
+      console.log("Revers", mass);
+      MakeСollectionRoute();
+      setRevers(!revers);
+    }
+    return noDoublRoute;
+  };
+
+  const LinkBind = () => {
+    let arIn = massroute.vertexes[pointAaIndex].area;
+    let idIn = massroute.vertexes[pointAaIndex].id;
+    let arOn = massroute.vertexes[pointBbIndex].area;
+    let idOn = massroute.vertexes[pointBbIndex].id;
+    SendSocketGetSvg(debugging, WS, homeRegion, arIn, idIn, arOn, idOn);
+    flagBind = true;
+    setOpenSetBind(true);
+  };
+
   const PressButton = (mode: number) => {
     switch (mode) {
       case 3: // режим включения Demo сети связей
@@ -238,36 +276,23 @@ const MainMap = (props: {
         ymaps && addRoute(ymaps); // перерисовка связей
         break;
       case 12: // реверс связи
-        let pa = pointAa;
-        pointAa = pointBb;
-        pointBb = pa;
-        pa = pointAaIndex;
-        pointAaIndex = pointBbIndex;
-        pointBbIndex = pa;
-        if (DoublRoute(massroute.ways, pointAa, pointBb)) {
-          SoobOpenSetEr("Дубликатная связь");
-          ZeroRoute(false);
-        } else {
-          let mass = ChangeCrossFunc(fromCross, toCross); // поменялось внутри func через ссылки React
-          console.log("Revers", mass, fromCross, toCross);
-          MakeСollectionRoute();
-          setRevers(!revers);
-        }
-        break;
-      case 21: // сохранение связи
-        MakeRecordMassRoute(false, 0);
+        ReversRoute();
         break;
       case 24: // вывод протокола
         setOpenSetPro(true);
         break;
-      case 33: // привязка направлений
-        let arIn = massroute.vertexes[pointAaIndex].area;
-        let idIn = massroute.vertexes[pointAaIndex].id;
-        let arOn = massroute.vertexes[pointBbIndex].area;
-        let idOn = massroute.vertexes[pointBbIndex].id;
-        SendSocketGetSvg(debugging, WS, homeRegion, arIn, idIn, arOn, idOn);
-        flagBind = true;
-        setOpenSetBind(true);
+      case 33: // привязка направлений + сохранение связи
+        LinkBind();
+        flagRevers = true;
+        break;
+      case 35: // отказ от создания реверсной связи
+        flagRevers = false;
+        setMakeRevers(false);
+        ZeroRoute(false);
+        break;
+      case 36: // реверс связи + привязка направлений + сохранение связи
+        if (ReversRoute()) LinkBind();
+        setMakeRevers(false);
         break;
       case 69: // инфа о связе
         setOpenSetInf(true);
@@ -590,6 +615,8 @@ const MainMap = (props: {
 
   return (
     <Grid container sx={{ border: 0, height: "99.9vh" }}>
+      {makeRevers && needRevers && <>{PressButton(36)}</>}
+      {makeRevers && !needRevers && <>{PressButton(35)}</>}
       {flagPusk && !flagBind && (
         <>{StrokaMenuGlob("Отмена назначений", PressButton, 77)}</>
       )}
@@ -676,6 +703,13 @@ const MainMap = (props: {
                 region={homeRegion}
                 coord={newPointCoord}
                 createPoint={MakeNewPoint}
+              />
+            )}
+            {openSetRevers && (
+              <MapReversRoute
+                setOpen={setOpenSetRevers}
+                makeRevers={setMakeRevers}
+                needRevers={setNeedRevers}
               />
             )}
           </Map>
