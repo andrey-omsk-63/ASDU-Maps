@@ -123,12 +123,10 @@ export const CenterCoord = (aY: number, aX: number, bY: number, bX: number) => {
 };
 
 //=== Placemark =====================================
-//coordStop
 export const getPointData = (
   index: number,
   pointAaIndex: number,
   pointBbIndex: number,
-  coordStop: any,
   massdk: any
 ) => {
   let textBalloon = "";
@@ -146,9 +144,9 @@ export const getPointOptions = (
   pointBbIndex: number,
   massdk: any,
   massroute: any,
+  coordStart: any,
   coordStop: any
 ) => {
-  //let colorBalloon = "islands#violetStretchyIcon";
   let colorBalloon = "islands#violetCircleDotIcon";
   if (massroute.vertexes[index].area === 0) {
     colorBalloon = "islands#violetCircleIcon";
@@ -158,8 +156,14 @@ export const getPointOptions = (
     if (massdk[index].newCoordinates > 0)
       colorBalloon = "islands#darkOrangeCircleDotIcon";
   }
-  if (index === pointAaIndex) colorBalloon = "islands#redStretchyIcon";
-  if (index === pointBbIndex) colorBalloon = "islands#darkBlueStretchyIcon";
+  for (let i = 0; i < coordStart.length; i++) {
+    if (
+      massdk[index].coordinates[0] === coordStart[i][0] &&
+      massdk[index].coordinates[1] === coordStart[i][1]
+    ) {
+      colorBalloon = "islands#grayStretchyIcon";
+    }
+  }
   for (let i = 0; i < coordStop.length; i++) {
     if (
       massdk[index].coordinates[0] === coordStop[i][0] &&
@@ -168,6 +172,9 @@ export const getPointOptions = (
       colorBalloon = "islands#grayStretchyIcon";
     }
   }
+  if (index === pointAaIndex) colorBalloon = "islands#redStretchyIcon";
+  if (index === pointBbIndex) colorBalloon = "islands#darkBlueStretchyIcon";
+
   return {
     preset: colorBalloon,
   };
@@ -369,7 +376,6 @@ export const SendSocketDeleteWay = (
   toCr: any
 ) => {
   const handleSendOpen = () => {
-    console.log("SendSocketDeleteWay");
     if (!debugging) {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
@@ -780,7 +786,7 @@ export const ChangeCrossFunc = (fromCross: any, toCross: any) => {
   toCross.pointBbArea = cross.Area;
   toCross.pointBbID = cross.ID;
   toCross.pointBcod = cross.Cod;
-  let mass: any = []
+  let mass: any = [];
   mass.push(fromCross);
   mass.push(toCross);
   return mass;

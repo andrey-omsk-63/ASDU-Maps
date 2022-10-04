@@ -25,6 +25,7 @@ const MapRouteBind = (props: {
   idxB: number;
   func: any;
 }) => {
+  // console.log("idxA:", props.idxA, "idxB:", props.idxB);
   //== Piece of Redux ======================================
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
@@ -41,6 +42,7 @@ const MapRouteBind = (props: {
   let haveSvgA = true;
   let haveSvgB = true;
 
+  // console.log("OldIdxA:", OldIdxA, "OldIdxB:", OldIdxB);
   if (OldIdxA !== props.idxA || OldIdxB !== props.idxB) {
     massBind = [0, 0];
     OldIdxA = props.idxA;
@@ -72,6 +74,8 @@ const MapRouteBind = (props: {
   };
 
   const handleClose = (mode: number) => {
+    OldIdxA = 0;
+    OldIdxB = 0;
     props.setOpen(false);
     setOpenSetBind(false);
     props.setSvg(null);

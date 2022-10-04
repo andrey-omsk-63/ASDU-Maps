@@ -245,8 +245,7 @@ const MainMap = (props: {
       ZeroRoute(false);
       noDoublRoute = false;
     } else {
-      let mass = ChangeCrossFunc(fromCross, toCross); // поменялось внутри func через ссылки React
-      console.log("Revers", mass);
+      ChangeCrossFunc(fromCross, toCross); // поменялось внутри func через ссылки React
       MakeСollectionRoute();
       setRevers(!revers);
     }
@@ -545,20 +544,26 @@ const MainMap = (props: {
     let pBbI = pointBbIndex;
 
     const DoPlacemarkDo = (props: { coordinate: any; idx: number }) => {
-      let idx = props.idx;
-      let cStop = coordStop;
       const MemoPlacemarkDo = React.useMemo(
         () => (
           <Placemark
-            key={idx}
+            key={props.idx}
             geometry={props.coordinate}
-            properties={getPointData(idx, pAaI, pBbI, cStop, massdk)}
-            options={getPointOptions(idx, pAaI, pBbI, massdk, massroute, cStop)}
+            properties={getPointData(props.idx, pAaI, pBbI, massdk)}
+            options={getPointOptions(
+              props.idx,
+              pAaI,
+              pBbI,
+              massdk,
+              massroute,
+              coordStartIn,
+              coordStop
+            )}
             modules={["geoObject.addon.balloon", "geoObject.addon.hint"]}
-            onClick={() => OnPlacemarkClickPoint(idx)}
+            onClick={() => OnPlacemarkClickPoint(props.idx)}
           />
         ),
-        [props.coordinate, idx, cStop]
+        [props.coordinate, props.idx]
       );
       return MemoPlacemarkDo;
     };
