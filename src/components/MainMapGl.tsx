@@ -470,6 +470,7 @@ const MainMap = (props: {
             let oldPointAa = coordinates[pointAaIndex];
             let oldPointBb = coordinates[pointBbIndex];
             coordinates.splice(indexPoint, 1);
+            dispatch(coordinatesCreate(coordinates));
             for (let i = 0; i < coordinates.length; i++) {
               if (coordinates[i] === oldPointAa) pointAaIndex = i;
               if (coordinates[i] === oldPointBb) pointBbIndex = i;
@@ -531,6 +532,7 @@ const MainMap = (props: {
     let idV = massroute.vertexes[massroute.vertexes.length - 1].id;
     let adress = massroute.vertexes[massroute.vertexes.length - 1].name;
     coordinates.push(coords);
+    dispatch(coordinatesCreate(coordinates));
     if (areaV) {
       SendSocketCreateVertex(debugging, WS, homeRegion, areaV, idV);
     } else {
