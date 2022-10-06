@@ -53,7 +53,6 @@ export interface Router {
   stops: string;
   lenght: number;
   time: number;
-  //newRec: boolean;
 }
 export let massRoute: Router[] = [];
 export let massRoutePro: Router[] = [];
@@ -88,12 +87,9 @@ const App = () => {
     const { coordinatesReducer } = state;
     return coordinatesReducer.coordinates;
   });
-  //console.log("coordinates_App:", coordinates);
 
   const dispatch = useDispatch();
   //========================================================
-  //const host = "wss://192.168.115.25/mapW";
-  //const host = "wss://192.168.115.25/user/andrey_omsk/graphManageW";
   const host =
     "wss://" +
     window.location.host +
@@ -109,7 +105,7 @@ const App = () => {
     flagOpenWS = false;
     let pageUrl = new URL(window.location.href);
     homeRegion = Number(pageUrl.searchParams.get("Region"));
-    console.log("homeRegion+WS:", homeRegion, WS);
+    //console.log("homeRegion+WS:", homeRegion, WS);
   }
 
   React.useEffect(() => {

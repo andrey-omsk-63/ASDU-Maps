@@ -130,37 +130,6 @@ const MainMap = (props: {
   const [ymaps, setYmaps] = React.useState<YMapsApi | null>(null);
   const mapp = React.useRef<any>(null);
 
-  //=== инициализация ======================================
-  if (!flagOpen && Object.keys(massroute).length) {
-    if (props.region) homeRegion = props.region;
-    if (!props.region && massroute.vertexes.length)
-      homeRegion = massroute.vertexes[0].region;
-    for (let i = 0; i < massroute.points.length; i++) {
-      massroute.vertexes.push(massroute.points[i]);
-    }
-    for (let i = 0; i < massroute.vertexes.length; i++) {
-      let masskPoint = MasskPoint();
-      masskPoint.ID = massroute.vertexes[i].id;
-      masskPoint.coordinates = DecodingCoord(massroute.vertexes[i].dgis);
-      masskPoint.nameCoordinates = massroute.vertexes[i].name;
-      masskPoint.region = massroute.vertexes[i].region;
-      masskPoint.area = massroute.vertexes[i].area;
-      masskPoint.newCoordinates = 0;
-      massdk.push(masskPoint);
-      coordinates.push(DecodingCoord(massroute.vertexes[i].dgis));
-    }
-    pointCenter = CenterCoord(
-      map.dateMap.boxPoint.point0.Y,
-      map.dateMap.boxPoint.point0.X,
-      map.dateMap.boxPoint.point1.Y,
-      map.dateMap.boxPoint.point1.X
-    );
-    flagOpen = true;
-    dispatch(massdkCreate(massdk));
-    dispatch(massrouteCreate(massroute));
-    dispatch(coordinatesCreate(coordinates));
-  }
-  //========================================================
   const DelCollectionRoutes = () => {
     coordStart = [];
     coordStop = [];
@@ -598,6 +567,36 @@ const MainMap = (props: {
       });
     }
   };
+  //=== инициализация ======================================
+  if (!flagOpen && Object.keys(massroute).length) {
+    if (props.region) homeRegion = props.region;
+    if (!props.region && massroute.vertexes.length)
+      homeRegion = massroute.vertexes[0].region;
+    for (let i = 0; i < massroute.points.length; i++) {
+      massroute.vertexes.push(massroute.points[i]);
+    }
+    for (let i = 0; i < massroute.vertexes.length; i++) {
+      let masskPoint = MasskPoint();
+      masskPoint.ID = massroute.vertexes[i].id;
+      masskPoint.coordinates = DecodingCoord(massroute.vertexes[i].dgis);
+      masskPoint.nameCoordinates = massroute.vertexes[i].name;
+      masskPoint.region = massroute.vertexes[i].region;
+      masskPoint.area = massroute.vertexes[i].area;
+      masskPoint.newCoordinates = 0;
+      massdk.push(masskPoint);
+      coordinates.push(DecodingCoord(massroute.vertexes[i].dgis));
+    }
+    dispatch(massdkCreate(massdk));
+    dispatch(massrouteCreate(massroute));
+    dispatch(coordinatesCreate(coordinates));
+    pointCenter = CenterCoord(
+      map.dateMap.boxPoint.point0.Y,
+      map.dateMap.boxPoint.point0.X,
+      map.dateMap.boxPoint.point1.Y,
+      map.dateMap.boxPoint.point1.X
+    );
+    flagOpen = true;
+  }
   //========================================================
   let mapState: any = {
     center: pointCenter,

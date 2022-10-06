@@ -150,12 +150,7 @@ const MapRouteBind = (props: {
 
     return (
       <Box sx={styleSetNapr}>
-        <Box
-          component="form"
-          sx={styleBoxFormNapr}
-          noValidate
-          autoComplete="off"
-        >
+        <Box component="form" sx={styleBoxFormNapr}>
           <TextField
             select
             size="small"

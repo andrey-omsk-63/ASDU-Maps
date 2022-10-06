@@ -26,7 +26,7 @@ const MapInputAdress = (props: { iPoint: number; setOpen: any }) => {
   const [valuen, setValuen] = React.useState(
     massdk[props.iPoint].nameCoordinates
   );
-  
+
   const handleKey = (event: any) => {
     if (event.key === "Enter") event.preventDefault();
   };
@@ -44,21 +44,11 @@ const MapInputAdress = (props: { iPoint: number; setOpen: any }) => {
 
   return (
     <Box>
-      <Modal
-        open={openSetAdress}
-        onClose={handleCloseSetAdr}
-        disableEnforceFocus
-        hideBackdrop
-      >
+      <Modal open={openSetAdress} onClose={handleCloseSetAdr} hideBackdrop>
         <Grid item container sx={styleSetAdress}>
           <Grid item xs={9.5} sx={{ border: 0 }}>
             <Box sx={styleSet}>
-              <Box
-                component="form"
-                sx={styleBoxForm}
-                noValidate
-                autoComplete="off"
-              >
+              <Box component="form" sx={styleBoxForm}>
                 <TextField
                   size="small"
                   onKeyPress={handleKey} //отключение Enter

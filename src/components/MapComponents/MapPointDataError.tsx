@@ -129,13 +129,14 @@ const MapPointDataError = (props: {
         </Typography>
         {props.sErr === "Дубликатная связь" && (
           <>
-            <Box sx={{ textAlign: "left", marginLeft: 5 }}>
+            <Box sx={{ textAlign: "left", marginLeft: 5, marginTop: 1 }}>
               <b>Выход</b> &nbsp;Подрайон:{" "}
               <b>{massroute.ways[index].targetArea}</b>
               &nbsp;ID:&nbsp;
               <b>{massroute.ways[index].sourceID}</b> Напр:&nbsp;
               <b>{massroute.ways[index].lsource}</b>
             </Box>
+
             <Box sx={{ textAlign: "left", marginLeft: 5 }}>
               <b>Вход</b> &nbsp;&nbsp;&nbsp;&nbsp;Подрайон:{" "}
               <b>{massroute.ways[index].targetArea}</b>
@@ -143,7 +144,12 @@ const MapPointDataError = (props: {
               <b>{massroute.ways[index].targetID}</b> Напр:&nbsp;
               <b>{massroute.ways[index].ltarget}</b>
             </Box>
-            <Box sx={{ textAlign: "center" }}>
+
+            <Box sx={{ textAlign: "left", marginLeft: 5 }}>
+              <b> Длина связи: &nbsp; {massroute.ways[index].lenght} </b> м
+            </Box>
+
+            <Box sx={{ textAlign: "center", marginTop: 1 }}>
               <Typography variant="h6">Удалить исходную связь?</Typography>
               <Button sx={styleModalMenu} onClick={() => handleClose(1)}>
                 Да
