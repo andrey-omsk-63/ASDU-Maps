@@ -130,7 +130,7 @@ const MapPointDataError = (props: {
         {props.sErr === "Дубликатная связь" && (
           <>
             <Box sx={{ textAlign: "left", marginLeft: 5, marginTop: 1 }}>
-              <b>Выход</b> &nbsp;Подрайон:{" "}
+              <b>Выход</b> &nbsp;Район:{" "}
               <b>{massroute.ways[index].targetArea}</b>
               &nbsp;ID:&nbsp;
               <b>{massroute.ways[index].sourceID}</b> Напр:&nbsp;
@@ -138,7 +138,7 @@ const MapPointDataError = (props: {
             </Box>
 
             <Box sx={{ textAlign: "left", marginLeft: 5 }}>
-              <b>Вход</b> &nbsp;&nbsp;&nbsp;&nbsp;Подрайон:{" "}
+              <b>Вход</b> &nbsp;&nbsp;&nbsp;&nbsp;Район:{" "}
               <b>{massroute.ways[index].targetArea}</b>
               &nbsp;ID:&nbsp;
               <b>{massroute.ways[index].targetID}</b> Напр:&nbsp;

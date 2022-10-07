@@ -62,6 +62,7 @@ let zoom = 10;
 let homeRegion = 0;
 let pointCenter: any = 0;
 let indexPoint: number = -1;
+let dlRoute = 0;
 
 let pointAa: any = 0;
 let pointAaIndex: number = -1;
@@ -127,6 +128,7 @@ const MainMap = (props: {
   const [openSetRevers, setOpenSetRevers] = React.useState(false);
   const [makeRevers, setMakeRevers] = React.useState(false);
   const [needRevers, setNeedRevers] = React.useState(false);
+  //const [dlRoute, setDlRoute] = React.useState(0);
   const [ymaps, setYmaps] = React.useState<YMapsApi | null>(null);
   const mapp = React.useRef<any>(null);
 
@@ -304,8 +306,14 @@ const MainMap = (props: {
     mapp.current.geoObjects.add(multiRoute); // основная связь
     multiRoute.model.events.add("requestsuccess", function () {
       activeRoute = multiRoute.getActiveRoute();
+      if (activeRoute)
+        dlRoute=Math.round(activeRoute.properties.get("distance").value);
     });
   };
+
+  const SetDlRoute = (mode: number) => {
+    dlRoute = mode
+  }
 
   const UpdateAddRoute = () => {
     ymaps && addRoute(ymaps); // перерисовка связей
@@ -619,6 +627,8 @@ const MainMap = (props: {
     }
   }
 
+  console.log('MAIN_DlRoute:',dlRoute)
+
   return (
     <Grid container sx={{ border: 0, height: "99.9vh" }}>
       {makeRevers && needRevers && <>{PressButton(36)}</>}
@@ -690,6 +700,8 @@ const MainMap = (props: {
                 idxA={pointAaIndex}
                 idxB={pointBbIndex}
                 setOpen={setOpenSetInf}
+                dlRoute={dlRoute}
+                setDlRoute={SetDlRoute}
               />
             )}
             {openSetBind && (
