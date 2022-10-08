@@ -61,7 +61,7 @@ export const RecordMassRoute = (
   fromCross: any,
   toCross: any,
   massBind: Array<number>,
-  activeRoute: any
+  reqRoute: any
 ) => {
   let masskRoute: Router = {
     region: 0,
@@ -86,12 +86,9 @@ export const RecordMassRoute = (
   masskRoute.stops = toCross.pointBcod;
   masskRoute.lsource = massBind[0];
   masskRoute.ltarget = massBind[1];
-  if (activeRoute) {
-    masskRoute.time = Math.round(activeRoute.properties.get("duration").value);
-    masskRoute.lenght = Math.round(
-      activeRoute.properties.get("distance").value
-    );
-  }
+  masskRoute.lenght = reqRoute.dlRoute;
+  masskRoute.time = reqRoute.tmRoute;
+ 
   return masskRoute;
 };
 
@@ -331,13 +328,10 @@ export const SendSocketCreateWay = (
   fromCr: any,
   toCr: any,
   massBind: Array<number>,
-  activeRoute: any
+  reqRoute: any
 ) => {
   const handleSendOpen = () => {
     if (!debugging) {
-      let lengthRoute = Math.round(
-        activeRoute.properties.get("distance").value
-      );
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
@@ -355,7 +349,7 @@ export const SendSocketCreateWay = (
               },
               lsource: massBind[0],
               ltarget: massBind[1],
-              length: lengthRoute,
+              length: reqRoute.dlRoute,
             },
           })
         );
@@ -411,14 +405,11 @@ export const SendSocketCreateWayFromPoint = (
   fromCr: any,
   toCr: any,
   massBind: Array<number>,
-  activeRoute: any
+  reqRoute: any
 ) => {
   const handleSendOpen = () => {
     console.log("SendSocketCreateWayFromPoint", massBind);
     if (!debugging) {
-      let lengthRoute = Math.round(
-        activeRoute.properties.get("distance").value
-      );
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
@@ -432,7 +423,7 @@ export const SendSocketCreateWayFromPoint = (
               },
               lsource: massBind[0],
               ltarget: massBind[1],
-              length: lengthRoute,
+              length: reqRoute.dlRoute,
             },
           })
         );
@@ -487,14 +478,10 @@ export const SendSocketCreateWayToPoint = (
   fromCr: any,
   toCr: any,
   massBind: Array<number>,
-  activeRoute: any
+  reqRoute: any
 ) => {
   const handleSendOpen = () => {
-    console.log("SendSocketCreateWayToPoint:", massBind);
     if (!debugging) {
-      let lengthRoute = Math.round(
-        activeRoute.properties.get("distance").value
-      );
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
@@ -508,7 +495,7 @@ export const SendSocketCreateWayToPoint = (
               toPoint: toCr.pointBbID,
               lsource: massBind[0],
               ltarget: massBind[1],
-              length: lengthRoute,
+              length: reqRoute.dlRoute,
             },
           })
         );

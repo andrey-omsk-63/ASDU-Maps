@@ -118,6 +118,12 @@ const MapPointDataError = (props: {
     }
   }
 
+  let sRoute1 =
+    (massroute.ways[index].lenght / 1000 / massroute.ways[index].time) * 3600;
+    console.log('!!!!!!',massroute.ways[index])
+
+  sRoute1 = Math.round(sRoute1 * 10) / 10;
+
   return (
     <Modal open={openSetEr} onClose={handleCloseSetEnd} hideBackdrop>
       <Box sx={styleSetInf}>
@@ -129,7 +135,7 @@ const MapPointDataError = (props: {
         </Typography>
         {props.sErr === "Дубликатная связь" && (
           <>
-            <Box sx={{ textAlign: "left", marginLeft: 5, marginTop: 1 }}>
+            <Box sx={{ textAlign: "left", marginLeft: 3, marginTop: 1 }}>
               <b>Выход</b> &nbsp;Район:{" "}
               <b>{massroute.ways[index].targetArea}</b>
               &nbsp;ID:&nbsp;
@@ -137,7 +143,7 @@ const MapPointDataError = (props: {
               <b>{massroute.ways[index].lsource}</b>
             </Box>
 
-            <Box sx={{ textAlign: "left", marginLeft: 5 }}>
+            <Box sx={{ textAlign: "left", marginLeft: 3, marginTop: 1 }}>
               <b>Вход</b> &nbsp;&nbsp;&nbsp;&nbsp;Район:{" "}
               <b>{massroute.ways[index].targetArea}</b>
               &nbsp;ID:&nbsp;
@@ -145,12 +151,23 @@ const MapPointDataError = (props: {
               <b>{massroute.ways[index].ltarget}</b>
             </Box>
 
-            <Box sx={{ textAlign: "left", marginLeft: 5 }}>
-              <b> Длина связи: &nbsp; {massroute.ways[index].lenght} </b> м
+            <Box sx={{ textAlign: "left", marginLeft: 3, marginTop: 1 }}>
+              <b> Длина связи: &nbsp; </b> {massroute.ways[index].lenght} м
+            </Box>
+
+            <Box sx={{ textAlign: "left", marginLeft: 3, marginTop: 1 }}>
+              <b> Время прохождения: &nbsp; </b> {massroute.ways[index].time}{" "}
+              сек
+            </Box>
+
+            <Box sx={{ textAlign: "left", marginLeft: 3, marginTop: 1 }}>
+              <b> Средняя скорость прохождения: &nbsp; </b> {sRoute1} км/ч
             </Box>
 
             <Box sx={{ textAlign: "center", marginTop: 1 }}>
-              <Typography variant="h6">Удалить исходную связь?</Typography>
+              <Typography variant="h6" sx={{ color: "red" }}>
+                Удалить исходную связь?
+              </Typography>
               <Button sx={styleModalMenu} onClick={() => handleClose(1)}>
                 Да
               </Button>

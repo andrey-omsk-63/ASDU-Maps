@@ -37,7 +37,7 @@ export const styleSetInf = {
   position: "absolute",
   marginTop: "15vh",
   marginLeft: "24vh",
-  width: 340,
+  width: 380,
   bgcolor: "background.paper",
   border: "3px solid #000",
   borderColor: "primary.main",
