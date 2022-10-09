@@ -1,19 +1,15 @@
-import * as React from "react";
+import * as React from 'react';
 //import { useDispatch, useSelector } from "react-redux";
 //import { massrouteCreate, massrouteproCreate } from "./../../redux/actions";
 
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
-import Typography from "@mui/material/Typography";
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
+import Typography from '@mui/material/Typography';
 
-import { styleModalEnd, styleSetInf } from "./../MainMapStyle";
+import { styleModalEnd, styleSetInf } from './../MainMapStyle';
 
-const MapReversRoute = (props: { 
-  setOpen: any;
-  makeRevers: any;
-  needRevers: any;
- }) => {
+const MapReversRoute = (props: { setOpen: any; makeRevers: any; needRevers: any }) => {
   //== Piece of Redux =======================================
   // let massroute = useSelector((state: any) => {
   //   const { massrouteReducer } = state;
@@ -26,9 +22,10 @@ const MapReversRoute = (props: {
   // const dispatch = useDispatch();
   //=========================================================
   const styleModalMenu = {
-    backgroundColor: "#E6F5D6",
-    textTransform: "unset !important",
-    color: "black",
+    fontSize: 16,
+    backgroundColor: '#E6F5D6',
+    textTransform: 'unset !important',
+    color: 'black',
   };
 
   const [openSetEr, setOpenSetEr] = React.useState(true);
@@ -39,8 +36,8 @@ const MapReversRoute = (props: {
   };
 
   const handleClose = (mode: boolean) => {
-    props.makeRevers(true)
-    props.needRevers(mode)
+    props.makeRevers(true);
+    props.needRevers(mode);
     handleCloseSetEnd();
   };
 
@@ -50,15 +47,21 @@ const MapReversRoute = (props: {
         <Button sx={styleModalEnd} onClick={handleCloseSetEnd}>
           <b>&#10006;</b>
         </Button>
-        <Box sx={{ textAlign: "center" }}>
+        <Box sx={{ textAlign: 'center' }}>
           <Typography variant="h6">Создать реверсную связь?</Typography>
-          <Button sx={styleModalMenu} onClick={() => handleClose(true)}>
-            Да
-          </Button>
-          &nbsp;
-          <Button sx={styleModalMenu} onClick={() => handleClose(false)}>
-            Нет
-          </Button>
+          <Box>
+            <Button sx={styleModalMenu} onClick={() => handleClose(true)}>
+              Да, создать
+            </Button>
+          </Box>
+          <Box sx={{ marginTop: 0.5 }}>
+            <Button sx={styleModalMenu}>Создать с редактированием</Button>
+          </Box>
+          <Box sx={{ marginTop: 0.5 }}>
+            <Button sx={styleModalMenu} onClick={() => handleClose(false)}>
+              Нет, не создавать
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Modal>
