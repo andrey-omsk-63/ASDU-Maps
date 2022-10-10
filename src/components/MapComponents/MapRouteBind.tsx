@@ -41,8 +41,7 @@ const MapRouteBind = (props: {
   let widthHeight = heightImg.toString();
   let haveSvgA = true;
   let haveSvgB = true;
-
-  // console.log("OldIdxA:", OldIdxA, "OldIdxB:", OldIdxB);
+ 
   if (OldIdxA !== props.idxA || OldIdxB !== props.idxB) {
     massBind = [0, 0];
     OldIdxA = props.idxA;

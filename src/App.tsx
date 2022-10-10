@@ -19,7 +19,7 @@ import {
   SoobErrorDeleteWayToPoint,
   SoobErrorCreateWayFromPoint,
   SoobErrorDeleteWayFromPoint,
-} from "./components/MapServiceFunctions";
+} from "./components/MapSocketFunctions";
 
 //import { DateMAP } from './interfaceMAP.d';
 //import { DateRoute } from "./interfaceRoute.d";

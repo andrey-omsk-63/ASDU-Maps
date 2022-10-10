@@ -25,6 +25,7 @@ const MapRouteInfo = (props: {
   setOpen: any;
   reqRoute: any;
   setReqRoute: any;
+  needLinkBind: boolean;
 }) => {
   //== Piece of Redux ======================================
   let massdk = useSelector((state: any) => {
@@ -32,10 +33,8 @@ const MapRouteInfo = (props: {
     return massdkReducer.massdk;
   });
   //========================================================
-
   const styleSetArea = {
     width: "55px",
-    //marginTop: "-4px",
     maxHeight: "6px",
     minHeight: "6px",
     bgcolor: "#FFFBE5",
@@ -78,7 +77,7 @@ const MapRouteInfo = (props: {
   const handleClose = () => {
     maskRoute.dlRoute = Number(dlRoute1);
     maskRoute.tmRoute = Number(sec);
-    props.setReqRoute(maskRoute);
+    props.setReqRoute(maskRoute,props.needLinkBind);
     handleCloseSetEndInf();
   };
 

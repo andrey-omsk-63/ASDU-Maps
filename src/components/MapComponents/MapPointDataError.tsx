@@ -7,9 +7,9 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 
-import { SendSocketDeleteWay } from "./../MapServiceFunctions";
-import { SendSocketDeleteWayFromPoint } from "./../MapServiceFunctions";
-import { SendSocketDeleteWayToPoint } from "./../MapServiceFunctions";
+import { SendSocketDeleteWay } from "./../MapSocketFunctions";
+import { SendSocketDeleteWayFromPoint } from "./../MapSocketFunctions";
+import { SendSocketDeleteWayToPoint } from "./../MapSocketFunctions";
 
 import { styleModalEnd, styleSetInf } from "./../MainMapStyle";
 
@@ -120,7 +120,6 @@ const MapPointDataError = (props: {
 
   let sRoute1 =
     (massroute.ways[index].lenght / 1000 / massroute.ways[index].time) * 3600;
-    console.log('!!!!!!',massroute.ways[index])
 
   sRoute1 = Math.round(sRoute1 * 10) / 10;
 
