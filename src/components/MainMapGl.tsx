@@ -607,6 +607,8 @@ const MainMap = (props: {
   };
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(massroute).length) {
+    console.log('massroute.ways',massroute.ways)
+    
     if (props.region) homeRegion = props.region;
     if (!props.region && massroute.vertexes.length)
       homeRegion = massroute.vertexes[0].region;

@@ -10,9 +10,13 @@ import TextField from "@mui/material/TextField";
 import { styleModalEnd, styleSetInf } from "./../MainMapStyle";
 
 let dlRoute1 = 0;
+let dlRouteBegin = 0;
+let tmRoute1 = "";
 let flagSave = false;
 let sec = 0;
+let tmRouteBegin = 0;
 let sRoute1 = 0;
+let sRouteBegin = 0;
 let maskRoute: any = {
   dlRoute: 0,
   tmRoute: 0,
@@ -52,16 +56,19 @@ const MapRouteInfo = (props: {
   };
 
   const [openSetInf, setOpenSetInf] = React.useState(true);
-  let tmRoute1 = "";
+  //let tmRoute1 = "";
 
   if (dlRoute1 === 0) {
     maskRoute = props.reqRoute; // инициализация
     sec = maskRoute.tmRoute;
+    tmRouteBegin = maskRoute.tmRoute;
     dlRoute1 = maskRoute.dlRoute;
+    dlRouteBegin = maskRoute.dlRoute;
     sRoute1 = (dlRoute1 / 1000 / sec) * 3600;
     let sec2 = dlRoute1 / (sRoute1 / 3.6);
     tmRoute1 = Math.round(sec2 / 60) + " мин";
     sRoute1 = Math.round(sRoute1 * 10) / 10;
+    sRouteBegin = sRoute1;
   }
 
   const [valueDl, setValueDl] = React.useState(dlRoute1);
@@ -77,7 +84,7 @@ const MapRouteInfo = (props: {
   const handleClose = () => {
     maskRoute.dlRoute = Number(dlRoute1);
     maskRoute.tmRoute = Number(sec);
-    props.setReqRoute(maskRoute,props.needLinkBind);
+    props.setReqRoute(maskRoute, props.needLinkBind);
     handleCloseSetEndInf();
   };
 
@@ -161,12 +168,12 @@ const MapRouteInfo = (props: {
       fontSize: 14,
       marginRight: 0.1,
       border: "2px solid #000",
-      bgcolor: "background.paper",
+      bgcolor: "#E6F5D6",
       minWidth: "100px",
       maxWidth: "100px",
       maxHeight: "19px",
       minHeight: "19px",
-      borderColor: "primary.main",
+      borderColor: "#E6F5D6",
       borderRadius: 2,
       color: "black",
       textTransform: "unset !important",
@@ -238,6 +245,14 @@ const MapRouteInfo = (props: {
         </Box>
         {props.activeRoute && props.activeRoute.properties.get("blocked") && (
           <Box>Имеются участки с перекрытыми дорогами</Box>
+        )}
+        {flagSave && (
+          <Box sx={{ marginTop: 1 }}>
+            Исходная длина связи: {dlRouteBegin} м<br />
+            Исходное время прохождения: {tmRouteBegin} сек
+            <br />
+            Исходная скорость прохождения: {sRouteBegin}  км/ч
+          </Box>
         )}
       </Box>
     </Modal>

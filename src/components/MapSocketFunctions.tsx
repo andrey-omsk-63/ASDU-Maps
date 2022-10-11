@@ -129,7 +129,8 @@ export const SendSocketCreateWay = (
               },
               lsource: massBind[0],
               ltarget: massBind[1],
-              length: reqRoute.dlRoute,
+              lenght: reqRoute.dlRoute,
+              time: reqRoute.tmRoute,
             },
           })
         );
@@ -203,7 +204,8 @@ export const SendSocketCreateWayFromPoint = (
               },
               lsource: massBind[0],
               ltarget: massBind[1],
-              length: reqRoute.dlRoute,
+              lenght: reqRoute.dlRoute,
+              time: reqRoute.tmRoute,
             },
           })
         );
@@ -221,11 +223,10 @@ export const SendSocketDeleteWayFromPoint = (
   debugging: boolean,
   ws: WebSocket,
   fromCr: any,
-  toCr: any,
-  lengthRoute: number
+  toCr: any
+  // lengthRoute: number
 ) => {
   const handleSendOpen = () => {
-    console.log("SendSocketDeleteWayFromPoint", lengthRoute);
     if (!debugging) {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
@@ -238,7 +239,7 @@ export const SendSocketDeleteWayFromPoint = (
                 area: toCr.pointBbArea,
                 id: toCr.pointBbID,
               },
-              length: lengthRoute,
+              //lenght: lengthRoute,
             },
           })
         );
@@ -275,7 +276,8 @@ export const SendSocketCreateWayToPoint = (
               toPoint: toCr.pointBbID,
               lsource: massBind[0],
               ltarget: massBind[1],
-              length: reqRoute.dlRoute,
+              lenght: reqRoute.dlRoute,
+              time: reqRoute.tmRoute,
             },
           })
         );
@@ -293,11 +295,10 @@ export const SendSocketDeleteWayToPoint = (
   debugging: boolean,
   ws: WebSocket,
   fromCr: any,
-  toCr: any,
-  lengthRoute: number
+  toCr: any
+  // reqRoute: any
 ) => {
   const handleSendOpen = () => {
-    console.log("SendSocketDeleteWayToPoint:", lengthRoute);
     if (!debugging) {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
@@ -310,7 +311,7 @@ export const SendSocketDeleteWayToPoint = (
                 id: fromCr.pointAaID,
               },
               toPoint: toCr.pointBbID,
-              length: lengthRoute,
+              // lenght: reqRoute.dlRoute,
             },
           })
         );
@@ -382,7 +383,7 @@ export const SocketDeleteWay = (
     pointBbID: 0,
     pointBcod: "",
   };
-  let lengthRoute = ways.lenght;
+  //let lengthRoute = ways.lenght;
 
   fromCross.pointAaRegin = ways.region.toString();
   fromCross.pointAaArea = ways.sourceArea.toString();
@@ -393,22 +394,10 @@ export const SocketDeleteWay = (
   toCross.pointBbID = ways.targetID;
   toCross.pointBcod = ways.stops;
   if (ways.sourceArea === 0) {
-    SendSocketDeleteWayFromPoint(
-      debugging,
-      WS,
-      fromCross,
-      toCross,
-      lengthRoute
-    );
+    SendSocketDeleteWayFromPoint(debugging, WS, fromCross, toCross);
   } else {
     if (ways.targetArea === 0) {
-      SendSocketDeleteWayToPoint(
-        debugging,
-        WS,
-        fromCross,
-        toCross,
-        lengthRoute
-      );
+      SendSocketDeleteWayToPoint(debugging, WS, fromCross, toCross);
     } else {
       SendSocketDeleteWay(debugging, WS, fromCross, toCross);
     }
