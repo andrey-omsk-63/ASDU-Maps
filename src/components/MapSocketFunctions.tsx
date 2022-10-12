@@ -189,7 +189,6 @@ export const SendSocketCreateWayFromPoint = (
   reqRoute: any
 ) => {
   const handleSendOpen = () => {
-    console.log("SendSocketCreateWayFromPoint", massBind);
     if (!debugging) {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(

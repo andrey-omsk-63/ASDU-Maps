@@ -247,7 +247,7 @@ const MapRouteInfo = (props: {
           <Box>Имеются участки с перекрытыми дорогами</Box>
         )}
         {flagSave && (
-          <Box sx={{ marginTop: 1 }}>
+          <Box sx={{ fontSize: 12.5, marginTop: 1.5 }}>
             Исходная длина связи: {dlRouteBegin} м<br />
             Исходное время прохождения: {tmRouteBegin} сек
             <br />

@@ -183,6 +183,7 @@ const MainMap = (props: {
       }
       setFlagPro(true); //включение протокола
     }
+    console.log("###:", flagRevers, needRevers);
     if (flagRevers && needRevers !== 3) {
       setOpenSetRevers(true);
       flagRevers = false;
@@ -215,12 +216,12 @@ const MainMap = (props: {
     pa = pointAaIndex;
     pointAaIndex = pointBbIndex;
     pointBbIndex = pa;
+    ChangeCrossFunc(fromCross, toCross); // поменялось внутри func через ссылки React
     if (DoublRoute(massroute.ways, pointAa, pointBb)) {
       SoobOpenSetEr("Дубликатная связь");
       ZeroRoute(false);
       noDoublRoute = false;
     } else {
-      ChangeCrossFunc(fromCross, toCross); // поменялось внутри func через ссылки React
       MakeСollectionRoute();
       setRevers(!revers);
     }
@@ -281,12 +282,14 @@ const MainMap = (props: {
             }
           };
           ReadyRoute();
-        } 
+        }
         setMakeRevers(false);
         setNeedRevers(3);
         break;
       case 69: // редактирование связи
         setOpenSetInf(true);
+        console.log("696969:", needRevers);
+        setNeedRevers(0);
         break;
       case 77: // удаление связи / отмена назначений
         ZeroRoute(false);
@@ -607,8 +610,6 @@ const MainMap = (props: {
   };
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(massroute).length) {
-    console.log('massroute.ways',massroute.ways)
-    
     if (props.region) homeRegion = props.region;
     if (!props.region && massroute.vertexes.length)
       homeRegion = massroute.vertexes[0].region;
@@ -658,6 +659,8 @@ const MainMap = (props: {
       masSvg = null;
     }
   }
+
+  //console.log("makeRevers:", makeRevers, "needRevers:", needRevers);
 
   return (
     <Grid container sx={{ border: 0, height: "99.9vh" }}>

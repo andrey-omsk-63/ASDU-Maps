@@ -8,15 +8,22 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import MenuItem from "@mui/material/MenuItem";
 
 import { SendSocketDeleteWay } from "./../MapSocketFunctions";
 import { SendSocketDeleteWayFromPoint } from "./../MapSocketFunctions";
 import { SendSocketDeleteWayToPoint } from "./../MapSocketFunctions";
 
 import { styleModalEnd, styleSetInf } from "./../MainMapStyle";
+import { styleModalMenu, styleSetArea } from "./MapPointDataErrorStyle";
+import { styleBoxFormArea, styleBoxFormNapr } from "./MapPointDataErrorStyle";
+import { styleSetNapr, styleSave } from "./MapPointDataErrorStyle";
 
 let lengthRoute = 0;
 let index = -1;
+let onIdx = -1;
+let inIdx = -1;
+let massBind = [0, 0];
 
 let dlRoute1 = 0;
 let dlRouteBegin = 0;
@@ -25,6 +32,8 @@ let sec = 0;
 let tmRouteBegin = 0;
 let sRoute0 = 0;
 let sRouteBegin = 0;
+let onDirectBegin = 0;
+let inDirectBegin = 0;
 let tmRoute1 = "";
 let maskRoute: any = {
   dlRoute: 0,
@@ -42,6 +51,7 @@ const MapPointDataError = (props: {
   update: any;
 }) => {
   const WS = props.ws;
+
   //== Piece of Redux =======================================
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
@@ -53,35 +63,69 @@ const MapPointDataError = (props: {
   });
   const dispatch = useDispatch();
   //=========================================================
-  const styleModalMenu = {
-    marginTop: 0.5,
-    backgroundColor: "#E6F5D6",
-    textTransform: "unset !important",
-    color: "black",
-  };
+  // const styleModalMenu = {
+  //   marginTop: 0.5,
+  //   backgroundColor: "#E6F5D6",
+  //   textTransform: "unset !important",
+  //   color: "black",
+  // };
 
-  const styleSetArea = {
-    width: "55px",
-    maxHeight: "6px",
-    minHeight: "6px",
-    bgcolor: "#FFFBE5",
-    boxShadow: 3,
-    textAlign: "center",
-    p: 1,
-  };
+  // const styleSetArea = {
+  //   width: "55px",
+  //   maxHeight: "6px",
+  //   minHeight: "6px",
+  //   bgcolor: "#FFFBE5",
+  //   boxShadow: 3,
+  //   textAlign: "center",
+  //   p: 1,
+  // };
 
-  const styleBoxFormArea = {
-    "& > :not(style)": {
-      marginTop: "-8px",
-      marginLeft: "-10px",
-      width: "73px",
-    },
-  };
+  // const styleBoxFormArea = {
+  //   "& > :not(style)": {
+  //     marginTop: "-8px",
+  //     marginLeft: "-10px",
+  //     width: "73px",
+  //   },
+  // };
+
+  // const styleSetNapr = {
+  //   width: "12px",
+  //   maxHeight: "3px",
+  //   minHeight: "3px",
+  //   bgcolor: "#FFFBE5",
+  //   boxShadow: 3,
+  //   //marginLeft: "auto",
+  //   p: 1.5,
+  // };
+
+  // const styleBoxFormNapr = {
+  //   "& > :not(style)": {
+  //     marginTop: "-10px",
+  //     marginLeft: "-12px",
+  //     width: "36px",
+  //   },
+  // };
+
+  // const styleSave = {
+  //   fontSize: 14,
+  //   marginRight: 0.1,
+  //   border: "2px solid #000",
+  //   bgcolor: "#E6F5D6",
+  //   minWidth: "100px",
+  //   maxWidth: "100px",
+  //   maxHeight: "19px",
+  //   minHeight: "19px",
+  //   borderColor: "#E6F5D6",
+  //   borderRadius: 2,
+  //   color: "black",
+  //   textTransform: "unset !important",
+  // };
 
   const [openSetEr, setOpenSetEr] = React.useState(true);
 
   //=== инициализация ======================================
-  if (index < 0) {
+  if (index < 0 && props.sErr === "Дубликатная связь") {
+    //console.log("ini:", props.fromCross, props.toCross);
     for (let i = 0; i < massroute.ways.length; i++) {
       if (
         props.fromCross.pointAaRegin === massroute.ways[i].region.toString() &&
@@ -105,9 +149,29 @@ const MapPointDataError = (props: {
     let sec2 = 0;
     if (sRoute0) sec2 = dlRoute1 / (sRoute0 / 3.6);
     tmRoute1 = Math.round(sec2 / 60) + " мин";
-    console.log("0tmRoute1", tmRoute1);
     sRoute0 = Math.round(sRoute0 * 10) / 10;
     sRouteBegin = sRoute0;
+    onDirectBegin = massroute.ways[index].lsource;
+    inDirectBegin = massroute.ways[index].ltarget;
+    onIdx = -1;
+    inIdx = -1;
+    for (let i = 0; i < massroute.vertexes.length; i++) {
+      if (
+        massroute.vertexes[i].region === massroute.ways[index].region &&
+        massroute.vertexes[i].area === massroute.ways[index].sourceArea &&
+        massroute.vertexes[i].id === massroute.ways[index].sourceID
+      )
+        onIdx = i;
+      if (
+        massroute.vertexes[i].region === massroute.ways[index].region &&
+        massroute.vertexes[i].area === massroute.ways[index].targetArea &&
+        massroute.vertexes[i].id === massroute.ways[index].targetID
+      )
+        inIdx = i;
+    }
+
+    massBind[0] = massroute.vertexes[onIdx].lout.indexOf(onDirectBegin);
+    massBind[1] = massroute.vertexes[inIdx].lin.indexOf(inDirectBegin);
   }
 
   const handleCloseSetEnd = () => {
@@ -164,6 +228,7 @@ const MapPointDataError = (props: {
         }
       }
     }
+    index = -1;
     handleCloseSetEnd();
   };
 
@@ -255,27 +320,73 @@ const MapPointDataError = (props: {
   };
 
   const StrokaMenu = () => {
-    const styleSave = {
-      fontSize: 14,
-      marginRight: 0.1,
-      border: "2px solid #000",
-      bgcolor: "#E6F5D6",
-      //bgcolor: "background.paper",
-      minWidth: "100px",
-      maxWidth: "100px",
-      maxHeight: "19px",
-      minHeight: "19px",
-      // borderColor: "primary.main",
-      borderColor: "#E6F5D6",
-      borderRadius: 2,
-      color: "black",
-      textTransform: "unset !important",
-    };
-
     return (
       <Button variant="contained" sx={styleSave} onClick={() => handleClose()}>
         <b>Сохранить</b>
       </Button>
+    );
+  };
+
+  const InputDirect = (mode: number) => {
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      setCurrency(Number(event.target.value));
+      if (mode) {
+        massBind[1] = massDat[Number(event.target.value)];
+      } else {
+        massBind[0] = massDat[Number(event.target.value)];
+      }
+      flagSave = true;
+      setTrigger(!trigger);
+    };
+
+    let dat = massroute.vertexes[onIdx].lout;
+    if (mode) dat = massroute.vertexes[inIdx].lin;
+    let massKey = [];
+    let massDat: any[] = [];
+    const currencies: any = [];
+    for (let key in dat) {
+      massKey.push(key);
+      massDat.push(dat[key]);
+    }
+
+    for (let i = 0; i < massKey.length; i++) {
+      let maskCurrencies = {
+        value: "",
+        label: "",
+      };
+      maskCurrencies.value = massKey[i];
+      maskCurrencies.label = massDat[i];
+      currencies.push(maskCurrencies);
+    }
+
+    const [currency, setCurrency] = React.useState(massBind[mode]);
+    const [trigger, setTrigger] = React.useState(true);
+
+    return (
+      <Box sx={styleSetNapr}>
+        <Box component="form" sx={styleBoxFormNapr}>
+          <TextField
+            select
+            size="small"
+            onKeyPress={handleKey} //отключение Enter
+            value={currency}
+            onChange={handleChange}
+            InputProps={{ style: { fontSize: 14 } }}
+            variant="standard"
+            color="secondary"
+          >
+            {currencies.map((option: any) => (
+              <MenuItem
+                key={option.value}
+                value={option.value}
+                sx={{ fontSize: 14 }}
+              >
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Box>
+      </Box>
     );
   };
 
@@ -302,8 +413,11 @@ const MapPointDataError = (props: {
               <Grid item xs={1.9} sx={{ border: 0 }}>
                 ID: <b>{massroute.ways[index].sourceID}</b>
               </Grid>
+              <Grid item xs={1.5} sx={{ border: 0 }}>
+                Напр:
+              </Grid>
               <Grid item xs sx={{ border: 0 }}>
-                Напр: <b>{massroute.ways[index].lsource}</b>
+                {InputDirect(0)}
               </Grid>
             </Grid>
 
@@ -317,19 +431,13 @@ const MapPointDataError = (props: {
               <Grid item xs={1.9} sx={{ border: 0 }}>
                 ID: <b>{massroute.ways[index].targetID}</b>
               </Grid>
+              <Grid item xs={1.5} sx={{ border: 0 }}>
+                Напр:
+              </Grid>
               <Grid item xs sx={{ border: 0 }}>
-                Напр: <b>{massroute.ways[index].ltarget}</b>
+                {InputDirect(1)}
               </Grid>
             </Grid>
-
-            
-            {/* <Box sx={{ marginLeft: 1.5, marginTop: 1 }}>
-              <b>Вход</b> &nbsp;&nbsp;&nbsp;&nbsp;Район:{" "}
-              <b>{massroute.ways[index].targetArea}</b>
-              &nbsp;&nbsp;ID:&nbsp;
-              <b>{massroute.ways[index].targetID}&nbsp;</b> Напр:&nbsp;
-              <b>{massroute.ways[index].ltarget}</b>
-            </Box> */}
 
             <Grid container sx={{ marginLeft: 1.5, marginTop: 1 }}>
               <Grid item xs={3.5} sx={{ border: 0 }}>
@@ -371,7 +479,11 @@ const MapPointDataError = (props: {
             </Box>
 
             {flagSave && (
-              <Box sx={{ marginLeft: 1.5, marginTop: 1 }}>
+              <Box sx={{ fontSize: 12.5, marginLeft: 1.5, marginTop: 1 }}>
+                Исходное выходное направление: {onDirectBegin}
+                <br />
+                Исходное входное направление: {inDirectBegin}
+                <br />
                 Исходная длина связи: {dlRouteBegin} м<br />
                 Исходное время прохождения: {tmRouteBegin} сек
                 <br />
