@@ -125,7 +125,7 @@ const MapPointDataError = (props: {
 
   //=== инициализация ======================================
   if (index < 0 && props.sErr === "Дубликатная связь") {
-    //console.log("ini:", props.fromCross, props.toCross);
+    flagSave = false;
     for (let i = 0; i < massroute.ways.length; i++) {
       if (
         props.fromCross.pointAaRegin === massroute.ways[i].region.toString() &&
