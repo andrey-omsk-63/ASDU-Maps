@@ -73,6 +73,7 @@ const MapRouteBind = (props: {
   };
 
   const handleClose = (mode: number) => {
+    console.log('massBIND', massBind)
     OldIdxA = 0;
     OldIdxB = 0;
     props.setOpen(false);
@@ -125,8 +126,8 @@ const MapRouteBind = (props: {
       setTrigger(!trigger);
     };
 
-    let dat = massroute.vertexes[props.idxA].lout;
-    if (mode) dat = massroute.vertexes[props.idxB].lin;
+    let dat = massroute.vertexes[props.idxA].lin;
+    if (mode) dat = massroute.vertexes[props.idxB].lout;
     let massKey = [];
     let massDat: any[] = [];
     const currencies: any = [];

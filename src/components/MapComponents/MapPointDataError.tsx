@@ -13,6 +13,9 @@ import MenuItem from "@mui/material/MenuItem";
 import { SendSocketDeleteWay } from "./../MapSocketFunctions";
 import { SendSocketDeleteWayFromPoint } from "./../MapSocketFunctions";
 import { SendSocketDeleteWayToPoint } from "./../MapSocketFunctions";
+import { SendSocketCreateWay } from "./../MapSocketFunctions";
+import { SendSocketCreateWayFromPoint } from "./../MapSocketFunctions";
+import { SendSocketCreateWayToPoint } from "./../MapSocketFunctions";
 
 import { styleModalEnd, styleSetInf } from "./../MainMapStyle";
 import { styleModalMenu, styleSetArea } from "./MapPointDataErrorStyle";
@@ -21,9 +24,10 @@ import { styleSetNapr, styleSave } from "./MapPointDataErrorStyle";
 
 let lengthRoute = 0;
 let index = -1;
-let onIdx = -1;
+let fromIdx = -1;
 let inIdx = -1;
 let massBind = [0, 0];
+let massBindNew = [0, 0];
 
 let dlRoute1 = 0;
 let dlRouteBegin = 0;
@@ -32,12 +36,31 @@ let sec = 0;
 let tmRouteBegin = 0;
 let sRoute0 = 0;
 let sRouteBegin = 0;
-let onDirectBegin = 0;
+let fromDirectBegin = 0;
 let inDirectBegin = 0;
 let tmRoute1 = "";
-let maskRoute: any = {
-  dlRoute: 0,
-  tmRoute: 0,
+// let fromCros: any = {
+//   region: 0,
+//   area: 0,
+//   id: 0,
+// };
+// let toCros: any = {
+//   region: 0,
+//   area: 0,
+//   id: 0,
+// };
+let mask = {
+  region: 0,
+  sourceArea: 0,
+  sourceID: 0,
+  targetArea: 0,
+  targetID: 0,
+  lsource: 0,
+  ltarget: 0,
+  starts: "",
+  stops: "",
+  lenght: 0,
+  time: 0,
 };
 
 const MapPointDataError = (props: {
@@ -62,64 +85,6 @@ const MapPointDataError = (props: {
     return massrouteproReducer.massroutepro;
   });
   const dispatch = useDispatch();
-  //=========================================================
-  // const styleModalMenu = {
-  //   marginTop: 0.5,
-  //   backgroundColor: "#E6F5D6",
-  //   textTransform: "unset !important",
-  //   color: "black",
-  // };
-
-  // const styleSetArea = {
-  //   width: "55px",
-  //   maxHeight: "6px",
-  //   minHeight: "6px",
-  //   bgcolor: "#FFFBE5",
-  //   boxShadow: 3,
-  //   textAlign: "center",
-  //   p: 1,
-  // };
-
-  // const styleBoxFormArea = {
-  //   "& > :not(style)": {
-  //     marginTop: "-8px",
-  //     marginLeft: "-10px",
-  //     width: "73px",
-  //   },
-  // };
-
-  // const styleSetNapr = {
-  //   width: "12px",
-  //   maxHeight: "3px",
-  //   minHeight: "3px",
-  //   bgcolor: "#FFFBE5",
-  //   boxShadow: 3,
-  //   //marginLeft: "auto",
-  //   p: 1.5,
-  // };
-
-  // const styleBoxFormNapr = {
-  //   "& > :not(style)": {
-  //     marginTop: "-10px",
-  //     marginLeft: "-12px",
-  //     width: "36px",
-  //   },
-  // };
-
-  // const styleSave = {
-  //   fontSize: 14,
-  //   marginRight: 0.1,
-  //   border: "2px solid #000",
-  //   bgcolor: "#E6F5D6",
-  //   minWidth: "100px",
-  //   maxWidth: "100px",
-  //   maxHeight: "19px",
-  //   minHeight: "19px",
-  //   borderColor: "#E6F5D6",
-  //   borderRadius: 2,
-  //   color: "black",
-  //   textTransform: "unset !important",
-  // };
 
   const [openSetEr, setOpenSetEr] = React.useState(true);
 
@@ -141,6 +106,17 @@ const MapPointDataError = (props: {
         break;
       }
     }
+    // console.log("propscross:", props.fromCross, props.toCross);
+    // fromCros.region = massroute.ways[index].region;
+    // fromCros.area = massroute.ways[index].sourceArea;
+    // fromCros.id = massroute.ways[index].sourceID;
+    // toCros.region = massroute.ways[index].region;
+    // toCros.area = massroute.ways[index].targetArea;
+    // toCros.id = massroute.ways[index].targetID;
+    // console.log("cros:", fromCros, toCros);
+    mask = JSON.parse(JSON.stringify(massroute.ways[index]));
+    console.log("mask:", mask);
+
     sec = massroute.ways[index].time;
     tmRouteBegin = sec;
     dlRouteBegin = dlRoute1;
@@ -151,9 +127,9 @@ const MapPointDataError = (props: {
     tmRoute1 = Math.round(sec2 / 60) + " мин";
     sRoute0 = Math.round(sRoute0 * 10) / 10;
     sRouteBegin = sRoute0;
-    onDirectBegin = massroute.ways[index].lsource;
-    inDirectBegin = massroute.ways[index].ltarget;
-    onIdx = -1;
+    fromDirectBegin = massroute.ways[index].lsource; // выход
+    inDirectBegin = massroute.ways[index].ltarget; // вход
+    fromIdx = -1;
     inIdx = -1;
     for (let i = 0; i < massroute.vertexes.length; i++) {
       if (
@@ -161,17 +137,21 @@ const MapPointDataError = (props: {
         massroute.vertexes[i].area === massroute.ways[index].sourceArea &&
         massroute.vertexes[i].id === massroute.ways[index].sourceID
       )
-        onIdx = i;
+        fromIdx = i; // выход
       if (
         massroute.vertexes[i].region === massroute.ways[index].region &&
         massroute.vertexes[i].area === massroute.ways[index].targetArea &&
         massroute.vertexes[i].id === massroute.ways[index].targetID
       )
-        inIdx = i;
+        inIdx = i; // вход
     }
 
-    massBind[0] = massroute.vertexes[onIdx].lout.indexOf(onDirectBegin);
-    massBind[1] = massroute.vertexes[inIdx].lin.indexOf(inDirectBegin);
+    massBind[0] = massroute.vertexes[fromIdx].lin.indexOf(fromDirectBegin); // выход
+    massBind[1] = massroute.vertexes[inIdx].lout.indexOf(inDirectBegin); // вход
+    // massBindNew[0] = massroute.vertexes[fromIdx].lin[massBind[0]];
+    // massBindNew[1] = massroute.vertexes[inIdx].lout[massBind[1]];
+    massBindNew[0] = fromDirectBegin;
+    massBindNew[1] = inDirectBegin;
   }
 
   const handleCloseSetEnd = () => {
@@ -206,37 +186,81 @@ const MapPointDataError = (props: {
   };
 
   const handleCloseDel = (mode: number) => {
+    let deb = props.debug;
+    //let aRou = props.activeRoute;
     if (mode === 1) {
       DeleteWay();
       if (props.fromCross.pointAaArea === "0") {
-        SendSocketDeleteWayFromPoint(
-          props.debug,
-          WS,
-          props.fromCross,
-          props.toCross
-        );
+        SendSocketDeleteWayFromPoint(deb, WS, props.fromCross, props.toCross);
       } else {
         if (props.toCross.pointBbArea === "0") {
-          SendSocketDeleteWayToPoint(
-            props.debug,
-            WS,
-            props.fromCross,
-            props.toCross
-          );
+          SendSocketDeleteWayToPoint(deb, WS, props.fromCross, props.toCross);
         } else {
-          SendSocketDeleteWay(props.debug, WS, props.fromCross, props.toCross);
+          SendSocketDeleteWay(deb, WS, props.fromCross, props.toCross);
+          //SendSocketCreateWay(deb, WS, props.fromCross, props.toCross,,aRou);
         }
       }
     }
-    index = -1;
+    // index = -1;
     handleCloseSetEnd();
   };
 
   const handleClose = () => {
-    maskRoute.dlRoute = Number(dlRoute1);
-    maskRoute.tmRoute = Number(sec);
-    // props.setReqRoute(maskRoute,props.needLinkBind);
-    // handleCloseSetEndInf();
+    console.log("@@@", massBindNew, Number(dlRoute1), Number(sec));
+    let reqRoute: any = {
+      dlRoute: 0,
+      tmRoute: 0,
+    };
+
+    massroute.ways[index].lsource = massBindNew[0];
+    mask.lsource = massBindNew[0];
+    massroute.ways[index].ltarget = massBindNew[1];
+    mask.ltarget = massBindNew[1];
+    massroute.ways[index].lenght = Number(dlRoute1);
+    mask.lenght = Number(dlRoute1);
+    reqRoute.dlRoute = mask.lenght;
+    massroute.ways[index].time = Number(sec);
+    mask.time = Number(sec);
+    reqRoute.tmRoute = mask.time;
+    console.log("@@@", massroute.ways[index]);
+
+    if (
+      props.fromCross.pointAaArea !== "0" &&
+      props.toCross.pointBbArea !== "0"
+    ) {
+      console.log("Перекрёстки");
+    } else {
+      if (props.fromCross.pointAaArea === "0") {
+        console.log("Из точки");
+      } else {
+        console.log("B точку");
+      }
+    }
+
+    let deb = props.debug;
+    let aRou = reqRoute;
+    if (props.fromCross.pointAaArea === "0") {
+      if (props.fromCross.pointAaArea === "0") {
+        SendSocketDeleteWayFromPoint(deb, WS, props.fromCross, props.toCross);
+      } else {
+        if (props.toCross.pointBbArea === "0") {
+          SendSocketDeleteWayToPoint(deb, WS, props.fromCross, props.toCross);
+        } else {
+          SendSocketDeleteWay(deb, WS, props.fromCross, props.toCross);
+          SendSocketCreateWay(
+            deb,
+            WS,
+            props.fromCross,
+            props.toCross,
+            massBindNew,
+            aRou
+          );
+        }
+      }
+    }
+
+    dispatch(massrouteCreate(massroute));
+    handleCloseSetEnd();
   };
 
   const [valueDl, setValueDl] = React.useState(dlRoute1);
@@ -331,16 +355,17 @@ const MapPointDataError = (props: {
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       setCurrency(Number(event.target.value));
       if (mode) {
-        massBind[1] = massDat[Number(event.target.value)];
+        massBindNew[1] = massDat[Number(event.target.value)];
       } else {
-        massBind[0] = massDat[Number(event.target.value)];
+        massBindNew[0] = massDat[Number(event.target.value)];
       }
       flagSave = true;
+      console.log("MASSBIND", massBind);
       setTrigger(!trigger);
     };
 
-    let dat = massroute.vertexes[onIdx].lout;
-    if (mode) dat = massroute.vertexes[inIdx].lin;
+    let dat = massroute.vertexes[fromIdx].lin;
+    if (mode) dat = massroute.vertexes[inIdx].lout;
     let massKey = [];
     let massDat: any[] = [];
     const currencies: any = [];
@@ -392,6 +417,8 @@ const MapPointDataError = (props: {
 
   const [tmRoute2, setTmRoute2] = React.useState(tmRoute1);
 
+  //console.log('!!!!!!',props.fromCross.pointAaArea,props.fromCross)
+
   return (
     <Modal open={openSetEr} onClose={handleCloseSetEnd} hideBackdrop>
       <Box sx={styleSetInf}>
@@ -403,41 +430,45 @@ const MapPointDataError = (props: {
         </Typography>
         {props.sErr === "Дубликатная связь" && (
           <>
-            <Grid container sx={{ marginLeft: 1.5, marginTop: 1 }}>
-              <Grid item xs={1.9} sx={{ border: 0 }}>
-                <b>Выход</b>
+            {props.fromCross.pointAaArea !== "0" && (
+              <Grid container sx={{ marginLeft: 1.5, marginTop: 1 }}>
+                <Grid item xs={1.9} sx={{ border: 0 }}>
+                  <b>Выход</b>
+                </Grid>
+                <Grid item xs={2.8} sx={{ border: 0 }}>
+                  Район: <b>{massroute.ways[index].sourceArea}</b>
+                </Grid>
+                <Grid item xs={1.9} sx={{ border: 0 }}>
+                  ID: <b>{massroute.ways[index].sourceID}</b>
+                </Grid>
+                <Grid item xs={1.5} sx={{ border: 0 }}>
+                  Напр:
+                </Grid>
+                <Grid item xs sx={{ border: 0 }}>
+                  {InputDirect(0)}
+                </Grid>
               </Grid>
-              <Grid item xs={2.8} sx={{ border: 0 }}>
-                Район: <b>{massroute.ways[index].sourceArea}</b>
-              </Grid>
-              <Grid item xs={1.9} sx={{ border: 0 }}>
-                ID: <b>{massroute.ways[index].sourceID}</b>
-              </Grid>
-              <Grid item xs={1.5} sx={{ border: 0 }}>
-                Напр:
-              </Grid>
-              <Grid item xs sx={{ border: 0 }}>
-                {InputDirect(0)}
-              </Grid>
-            </Grid>
+            )}
 
-            <Grid container sx={{ marginLeft: 1.5, marginTop: 1 }}>
-              <Grid item xs={1.9} sx={{ border: 0 }}>
-                <b>Вход</b>
+            {props.toCross.pointBbArea !== "0" && (
+              <Grid container sx={{ marginLeft: 1.5, marginTop: 1 }}>
+                <Grid item xs={1.9} sx={{ border: 0 }}>
+                  <b>Вход</b>
+                </Grid>
+                <Grid item xs={2.8} sx={{ border: 0 }}>
+                  Район: <b>{massroute.ways[index].targetArea}</b>
+                </Grid>
+                <Grid item xs={1.9} sx={{ border: 0 }}>
+                  ID: <b>{massroute.ways[index].targetID}</b>
+                </Grid>
+                <Grid item xs={1.5} sx={{ border: 0 }}>
+                  Напр:
+                </Grid>
+                <Grid item xs sx={{ border: 0 }}>
+                  {InputDirect(1)}
+                </Grid>
               </Grid>
-              <Grid item xs={2.8} sx={{ border: 0 }}>
-                Район: <b>{massroute.ways[index].targetArea}</b>
-              </Grid>
-              <Grid item xs={1.9} sx={{ border: 0 }}>
-                ID: <b>{massroute.ways[index].targetID}</b>
-              </Grid>
-              <Grid item xs={1.5} sx={{ border: 0 }}>
-                Напр:
-              </Grid>
-              <Grid item xs sx={{ border: 0 }}>
-                {InputDirect(1)}
-              </Grid>
-            </Grid>
+            )}
 
             <Grid container sx={{ marginLeft: 1.5, marginTop: 1 }}>
               <Grid item xs={3.5} sx={{ border: 0 }}>
@@ -480,7 +511,7 @@ const MapPointDataError = (props: {
 
             {flagSave && (
               <Box sx={{ fontSize: 12.5, marginLeft: 1.5, marginTop: 1 }}>
-                Исходное выходное направление: {onDirectBegin}
+                Исходное выходное направление: {fromDirectBegin}
                 <br />
                 Исходное входное направление: {inDirectBegin}
                 <br />

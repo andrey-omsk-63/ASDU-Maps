@@ -30,6 +30,9 @@ import { getMassPolyRouteOptions } from "./MapServiceFunctions";
 import { getMassMultiRouteOptions } from "./MapServiceFunctions";
 import { getMassMultiRouteInOptions } from "./MapServiceFunctions";
 import { getPointData, getPointOptions } from "./MapServiceFunctions";
+import { StrokaBalloon, ChangeCrossFunc } from "./MapServiceFunctions";
+import { RecevKeySvg, StrokaMenuGlob, MasskPoint } from "./MapServiceFunctions";
+
 import { SendSocketCreatePoint, SocketDeleteWay } from "./MapSocketFunctions";
 import { SendSocketCreateVertex } from "./MapSocketFunctions";
 import { SendSocketDeletePoint } from "./MapSocketFunctions";
@@ -37,8 +40,6 @@ import { SendSocketDeleteVertex } from "./MapSocketFunctions";
 import { SendSocketCreateWay, SendSocketGetSvg } from "./MapSocketFunctions";
 import { SendSocketCreateWayFromPoint } from "./MapSocketFunctions";
 import { SendSocketCreateWayToPoint } from "./MapSocketFunctions";
-import { StrokaBalloon, ChangeCrossFunc } from "./MapServiceFunctions";
-import { RecevKeySvg, StrokaMenuGlob, MasskPoint } from "./MapServiceFunctions";
 
 import { styleSetPoint, styleTypography, searchControl } from "./MainMapStyle";
 import { styleModalEndMapGl } from "./MainMapStyle";
@@ -160,6 +161,7 @@ const MainMap = (props: {
   };
 
   const MakeRecordMassRoute = (mode: boolean, mass: any) => {
+    console.log("MASS", mass);
     let aRou = reqRoute;
     let debug = debugging;
     fromCross.pointAcod = CodingCoord(pointAa);
@@ -610,6 +612,9 @@ const MainMap = (props: {
   };
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(massroute).length) {
+    
+    console.log("WAY", massroute.ways);
+
     if (props.region) homeRegion = props.region;
     if (!props.region && massroute.vertexes.length)
       homeRegion = massroute.vertexes[0].region;
@@ -659,8 +664,6 @@ const MainMap = (props: {
       masSvg = null;
     }
   }
-
-  //console.log("makeRevers:", makeRevers, "needRevers:", needRevers);
 
   return (
     <Grid container sx={{ border: 0, height: "99.9vh" }}>
