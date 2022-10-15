@@ -529,7 +529,7 @@ const MainMap = (props: {
               ws={WS}
               fromCross={fromCross}
               toCross={toCross}
-              activeRoute={activeRoute}
+              // activeRoute={activeRoute}
               update={UpdateAddRoute}
             />
           )}
@@ -612,7 +612,7 @@ const MainMap = (props: {
   };
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(massroute).length) {
-    
+
     console.log("WAY", massroute.ways);
 
     if (props.region) homeRegion = props.region;
@@ -727,7 +727,7 @@ const MainMap = (props: {
                 ws={WS}
                 fromCross={fromCross}
                 toCross={toCross}
-                activeRoute={activeRoute}
+                // activeRoute={activeRoute}
                 update={UpdateAddRoute}
               />
             )}

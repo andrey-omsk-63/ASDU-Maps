@@ -25,9 +25,9 @@ import { styleSetNapr, styleSave } from "./MapPointDataErrorStyle";
 let lengthRoute = 0;
 let index = -1;
 let fromIdx = -1;
-let inIdx = -1;
-let massBind = [0, 0];
-let massBindNew = [0, 0];
+let onIdx = -1;
+let massBind = [-1, -1];
+let massBindNew = [-1, -1];
 
 let dlRoute1 = 0;
 let dlRouteBegin = 0;
@@ -39,29 +39,6 @@ let sRouteBegin = 0;
 let fromDirectBegin = 0;
 let inDirectBegin = 0;
 let tmRoute1 = "";
-// let fromCros: any = {
-//   region: 0,
-//   area: 0,
-//   id: 0,
-// };
-// let toCros: any = {
-//   region: 0,
-//   area: 0,
-//   id: 0,
-// };
-let mask = {
-  region: 0,
-  sourceArea: 0,
-  sourceID: 0,
-  targetArea: 0,
-  targetID: 0,
-  lsource: 0,
-  ltarget: 0,
-  starts: "",
-  stops: "",
-  lenght: 0,
-  time: 0,
-};
 
 const MapPointDataError = (props: {
   sErr: string;
@@ -70,11 +47,9 @@ const MapPointDataError = (props: {
   ws: any;
   fromCross: any;
   toCross: any;
-  activeRoute: any;
   update: any;
 }) => {
   const WS = props.ws;
-
   //== Piece of Redux =======================================
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
@@ -85,7 +60,6 @@ const MapPointDataError = (props: {
     return massrouteproReducer.massroutepro;
   });
   const dispatch = useDispatch();
-
   const [openSetEr, setOpenSetEr] = React.useState(true);
 
   //=== инициализация ======================================
@@ -106,17 +80,6 @@ const MapPointDataError = (props: {
         break;
       }
     }
-    // console.log("propscross:", props.fromCross, props.toCross);
-    // fromCros.region = massroute.ways[index].region;
-    // fromCros.area = massroute.ways[index].sourceArea;
-    // fromCros.id = massroute.ways[index].sourceID;
-    // toCros.region = massroute.ways[index].region;
-    // toCros.area = massroute.ways[index].targetArea;
-    // toCros.id = massroute.ways[index].targetID;
-    // console.log("cros:", fromCros, toCros);
-    mask = JSON.parse(JSON.stringify(massroute.ways[index]));
-    console.log("mask:", mask);
-
     sec = massroute.ways[index].time;
     tmRouteBegin = sec;
     dlRouteBegin = dlRoute1;
@@ -130,7 +93,7 @@ const MapPointDataError = (props: {
     fromDirectBegin = massroute.ways[index].lsource; // выход
     inDirectBegin = massroute.ways[index].ltarget; // вход
     fromIdx = -1;
-    inIdx = -1;
+    onIdx = -1;
     for (let i = 0; i < massroute.vertexes.length; i++) {
       if (
         massroute.vertexes[i].region === massroute.ways[index].region &&
@@ -143,13 +106,13 @@ const MapPointDataError = (props: {
         massroute.vertexes[i].area === massroute.ways[index].targetArea &&
         massroute.vertexes[i].id === massroute.ways[index].targetID
       )
-        inIdx = i; // вход
+        onIdx = i; // вход
     }
-
+    massBind = [-1, -1];
+    if (massroute.vertexes[fromIdx].area)
     massBind[0] = massroute.vertexes[fromIdx].lin.indexOf(fromDirectBegin); // выход
-    massBind[1] = massroute.vertexes[inIdx].lout.indexOf(inDirectBegin); // вход
-    // massBindNew[0] = massroute.vertexes[fromIdx].lin[massBind[0]];
-    // massBindNew[1] = massroute.vertexes[inIdx].lout[massBind[1]];
+    if (massroute.vertexes[onIdx].area)
+    massBind[1] = massroute.vertexes[onIdx].lout.indexOf(inDirectBegin); // вход
     massBindNew[0] = fromDirectBegin;
     massBindNew[1] = inDirectBegin;
   }
@@ -187,7 +150,6 @@ const MapPointDataError = (props: {
 
   const handleCloseDel = (mode: number) => {
     let deb = props.debug;
-    //let aRou = props.activeRoute;
     if (mode === 1) {
       DeleteWay();
       if (props.fromCross.pointAaArea === "0") {
@@ -197,69 +159,40 @@ const MapPointDataError = (props: {
           SendSocketDeleteWayToPoint(deb, WS, props.fromCross, props.toCross);
         } else {
           SendSocketDeleteWay(deb, WS, props.fromCross, props.toCross);
-          //SendSocketCreateWay(deb, WS, props.fromCross, props.toCross,,aRou);
         }
       }
     }
-    // index = -1;
     handleCloseSetEnd();
   };
 
   const handleClose = () => {
-    console.log("@@@", massBindNew, Number(dlRoute1), Number(sec));
     let reqRoute: any = {
       dlRoute: 0,
       tmRoute: 0,
     };
 
     massroute.ways[index].lsource = massBindNew[0];
-    mask.lsource = massBindNew[0];
     massroute.ways[index].ltarget = massBindNew[1];
-    mask.ltarget = massBindNew[1];
     massroute.ways[index].lenght = Number(dlRoute1);
-    mask.lenght = Number(dlRoute1);
-    reqRoute.dlRoute = mask.lenght;
+    reqRoute.dlRoute = Number(dlRoute1);
     massroute.ways[index].time = Number(sec);
-    mask.time = Number(sec);
-    reqRoute.tmRoute = mask.time;
-    console.log("@@@", massroute.ways[index]);
-
-    if (
-      props.fromCross.pointAaArea !== "0" &&
-      props.toCross.pointBbArea !== "0"
-    ) {
-      console.log("Перекрёстки");
-    } else {
-      if (props.fromCross.pointAaArea === "0") {
-        console.log("Из точки");
-      } else {
-        console.log("B точку");
-      }
-    }
-
-    let deb = props.debug;
-    let aRou = reqRoute;
-    if (props.fromCross.pointAaArea === "0") {
-      if (props.fromCross.pointAaArea === "0") {
-        SendSocketDeleteWayFromPoint(deb, WS, props.fromCross, props.toCross);
-      } else {
-        if (props.toCross.pointBbArea === "0") {
-          SendSocketDeleteWayToPoint(deb, WS, props.fromCross, props.toCross);
-        } else {
-          SendSocketDeleteWay(deb, WS, props.fromCross, props.toCross);
-          SendSocketCreateWay(
-            deb,
-            WS,
-            props.fromCross,
-            props.toCross,
-            massBindNew,
-            aRou
-          );
-        }
-      }
-    }
-
+    reqRoute.tmRoute = Number(sec);
     dispatch(massrouteCreate(massroute));
+    let deb = props.debug;
+    let frCr = props.fromCross;
+    let toCr = props.toCross;
+    if (props.fromCross.pointAaArea === "0") {
+      SendSocketDeleteWayFromPoint(deb, WS, frCr, toCr);
+      SendSocketCreateWayFromPoint(deb, WS, frCr, toCr, massBindNew, reqRoute);
+    } else {
+      if (props.toCross.pointBbArea === "0") {
+        SendSocketDeleteWayToPoint(deb, WS, frCr, props.toCross);
+        SendSocketCreateWayToPoint(deb, WS, frCr, toCr, massBindNew, reqRoute);
+      } else {
+        SendSocketDeleteWay(deb, WS, frCr, props.toCross);
+        SendSocketCreateWay(deb, WS, frCr, toCr, massBindNew, reqRoute);
+      }
+    }
     handleCloseSetEnd();
   };
 
@@ -360,12 +293,11 @@ const MapPointDataError = (props: {
         massBindNew[0] = massDat[Number(event.target.value)];
       }
       flagSave = true;
-      console.log("MASSBIND", massBind);
       setTrigger(!trigger);
     };
 
     let dat = massroute.vertexes[fromIdx].lin;
-    if (mode) dat = massroute.vertexes[inIdx].lout;
+    if (mode) dat = massroute.vertexes[onIdx].lout;
     let massKey = [];
     let massDat: any[] = [];
     const currencies: any = [];
@@ -373,7 +305,6 @@ const MapPointDataError = (props: {
       massKey.push(key);
       massDat.push(dat[key]);
     }
-
     for (let i = 0; i < massKey.length; i++) {
       let maskCurrencies = {
         value: "",
@@ -383,7 +314,6 @@ const MapPointDataError = (props: {
       maskCurrencies.label = massDat[i];
       currencies.push(maskCurrencies);
     }
-
     const [currency, setCurrency] = React.useState(massBind[mode]);
     const [trigger, setTrigger] = React.useState(true);
 
@@ -416,8 +346,6 @@ const MapPointDataError = (props: {
   };
 
   const [tmRoute2, setTmRoute2] = React.useState(tmRoute1);
-
-  //console.log('!!!!!!',props.fromCross.pointAaArea,props.fromCross)
 
   return (
     <Modal open={openSetEr} onClose={handleCloseSetEnd} hideBackdrop>

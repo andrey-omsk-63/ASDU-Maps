@@ -222,7 +222,7 @@ const MapCreateVertex = (props: {
               ws={{}}
               fromCross={0}
               toCross={0}
-              activeRoute={0}
+              //activeRoute={0}
               update={0}
             />
           )}
