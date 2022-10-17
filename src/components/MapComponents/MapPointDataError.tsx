@@ -63,8 +63,8 @@ const MapPointDataError = (props: {
   const [openSetEr, setOpenSetEr] = React.useState(true);
 
   //=== инициализация ======================================
+  if (index < 0) flagSave = false;
   if (index < 0 && props.sErr === "Дубликатная связь") {
-    flagSave = false;
     for (let i = 0; i < massroute.ways.length; i++) {
       if (
         props.fromCross.pointAaRegin === massroute.ways[i].region.toString() &&
@@ -110,9 +110,9 @@ const MapPointDataError = (props: {
     }
     massBind = [-1, -1];
     if (massroute.vertexes[fromIdx].area)
-    massBind[0] = massroute.vertexes[fromIdx].lin.indexOf(fromDirectBegin); // выход
+      massBind[0] = massroute.vertexes[fromIdx].lin.indexOf(fromDirectBegin); // выход
     if (massroute.vertexes[onIdx].area)
-    massBind[1] = massroute.vertexes[onIdx].lout.indexOf(inDirectBegin); // вход
+      massBind[1] = massroute.vertexes[onIdx].lout.indexOf(inDirectBegin); // вход
     massBindNew[0] = fromDirectBegin;
     massBindNew[1] = inDirectBegin;
   }
@@ -238,7 +238,7 @@ const MapPointDataError = (props: {
     }
   };
 
-  const InputerDl = () => {
+  const InputerDlTm = (value: any, func: any) => {
     return (
       <Box sx={styleSetArea}>
         <Box component="form" sx={styleBoxFormArea}>
@@ -246,28 +246,9 @@ const MapPointDataError = (props: {
             size="small"
             type="number"
             onKeyPress={handleKey} //отключение Enter
-            value={valueDl}
+            value={value}
             inputProps={{ style: { fontSize: 14.2 } }}
-            onChange={handleChangeDl}
-            variant="standard"
-            color="secondary"
-          />
-        </Box>
-      </Box>
-    );
-  };
-
-  const InputerTm = () => {
-    return (
-      <Box sx={styleSetArea}>
-        <Box component="form" sx={styleBoxFormArea}>
-          <TextField
-            size="small"
-            type="number"
-            onKeyPress={handleKey} //отключение Enter
-            value={valueTm}
-            inputProps={{ style: { fontSize: 14.2 } }}
-            onChange={handleChangeTm}
+            onChange={func}
             variant="standard"
             color="secondary"
           />
@@ -353,13 +334,20 @@ const MapPointDataError = (props: {
         <Button sx={styleModalEnd} onClick={handleCloseSetEnd}>
           <b>&#10006;</b>
         </Button>
-        <Typography variant="h6" sx={{ textAlign: "center", color: "red" }}>
-          {props.sErr}
-        </Typography>
+        {!flagSave && (
+          <Typography variant="h6" sx={{ textAlign: "center", color: "red" }}>
+            {props.sErr}
+          </Typography>
+        )}
+        {flagSave && (
+          <Typography variant="h6" sx={{ textAlign: "center" }}>
+            Редактирование параметров связи:
+          </Typography>
+        )}
         {props.sErr === "Дубликатная связь" && (
           <>
             {props.fromCross.pointAaArea !== "0" && (
-              <Grid container sx={{ marginLeft: 1.5, marginTop: 1 }}>
+              <Grid container sx={{ marginLeft: 1.5, marginTop: 1.2 }}>
                 <Grid item xs={1.9} sx={{ border: 0 }}>
                   <b>Выход</b>
                 </Grid>
@@ -369,8 +357,8 @@ const MapPointDataError = (props: {
                 <Grid item xs={1.9} sx={{ border: 0 }}>
                   ID: <b>{massroute.ways[index].sourceID}</b>
                 </Grid>
-                <Grid item xs={1.5} sx={{ border: 0 }}>
-                  Напр:
+                <Grid item xs={3.4} sx={{ border: 0 }}>
+                  Направление:
                 </Grid>
                 <Grid item xs sx={{ border: 0 }}>
                   {InputDirect(0)}
@@ -379,7 +367,7 @@ const MapPointDataError = (props: {
             )}
 
             {props.toCross.pointBbArea !== "0" && (
-              <Grid container sx={{ marginLeft: 1.5, marginTop: 1 }}>
+              <Grid container sx={{ marginLeft: 1.5, marginTop: 1.2 }}>
                 <Grid item xs={1.9} sx={{ border: 0 }}>
                   <b>Вход</b>
                 </Grid>
@@ -389,8 +377,8 @@ const MapPointDataError = (props: {
                 <Grid item xs={1.9} sx={{ border: 0 }}>
                   ID: <b>{massroute.ways[index].targetID}</b>
                 </Grid>
-                <Grid item xs={1.5} sx={{ border: 0 }}>
-                  Напр:
+                <Grid item xs={3.4} sx={{ border: 0 }}>
+                  Направление:
                 </Grid>
                 <Grid item xs sx={{ border: 0 }}>
                   {InputDirect(1)}
@@ -398,12 +386,12 @@ const MapPointDataError = (props: {
               </Grid>
             )}
 
-            <Grid container sx={{ marginLeft: 1.5, marginTop: 1 }}>
+            <Grid container sx={{ marginLeft: 1.5, marginTop: 1.2 }}>
               <Grid item xs={3.5} sx={{ border: 0 }}>
                 <b>Длина связи:</b>
               </Grid>
               <Grid item xs={2.3} sx={{ border: 0 }}>
-                {InputerDl()}
+                {InputerDlTm(valueDl, handleChangeDl)}
               </Grid>
               <Grid item xs={0.5} sx={{ border: 0 }}>
                 м
@@ -415,7 +403,7 @@ const MapPointDataError = (props: {
               )}
             </Grid>
 
-            <Grid container sx={{ marginLeft: 1.5, marginTop: 1 }}>
+            <Grid container sx={{ marginLeft: 1.5, marginTop: 1.5 }}>
               <Grid item xs={5.4} sx={{ border: 0 }}>
                 <b>Время прохождения:</b>
               </Grid>
@@ -426,19 +414,19 @@ const MapPointDataError = (props: {
                 (
               </Grid>
               <Grid item xs={2.3} sx={{ border: 0 }}>
-                {InputerTm()}
+                {InputerDlTm(valueTm, handleChangeTm)}
               </Grid>
               <Grid item xs sx={{ border: 0 }}>
                 сек)
               </Grid>
             </Grid>
 
-            <Box sx={{ marginLeft: 1.5, marginTop: 1 }}>
+            <Box sx={{ marginLeft: 1.5, marginTop: 1.5 }}>
               <b> Средняя скорость прохождения:</b>&nbsp;{sRoute0} км/ч
             </Box>
 
             {flagSave && (
-              <Box sx={{ fontSize: 12.5, marginLeft: 1.5, marginTop: 1 }}>
+              <Box sx={{ fontSize: 12.5, marginLeft: 1.5, marginTop: 1.5 }}>
                 Исходное выходное направление: {fromDirectBegin}
                 <br />
                 Исходное входное направление: {inDirectBegin}
@@ -450,18 +438,20 @@ const MapPointDataError = (props: {
               </Box>
             )}
 
-            <Box sx={{ textAlign: "center", marginTop: 1 }}>
-              <Typography variant="h6" sx={{ color: "red" }}>
-                Удалить исходную связь?
-              </Typography>
-              <Button sx={styleModalMenu} onClick={() => handleCloseDel(1)}>
-                Да
-              </Button>
-              &nbsp;
-              <Button sx={styleModalMenu} onClick={() => handleCloseDel(2)}>
-                Нет
-              </Button>
-            </Box>
+            {!flagSave && (
+              <Box sx={{ textAlign: "center", marginTop: 1.2 }}>
+                <Typography variant="h6" sx={{ color: "red" }}>
+                  Удалить исходную связь?
+                </Typography>
+                <Button sx={styleModalMenu} onClick={() => handleCloseDel(1)}>
+                  Да
+                </Button>
+                &nbsp;
+                <Button sx={styleModalMenu} onClick={() => handleCloseDel(2)}>
+                  Нет
+                </Button>
+              </Box>
+            )}
           </>
         )}
       </Box>

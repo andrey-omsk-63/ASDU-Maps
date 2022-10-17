@@ -73,7 +73,6 @@ const MapRouteBind = (props: {
   };
 
   const handleClose = (mode: number) => {
-    console.log('massBIND', massBind)
     OldIdxA = 0;
     OldIdxB = 0;
     props.setOpen(false);

@@ -161,7 +161,6 @@ const MainMap = (props: {
   };
 
   const MakeRecordMassRoute = (mode: boolean, mass: any) => {
-    console.log("MASS", mass);
     let aRou = reqRoute;
     let debug = debugging;
     fromCross.pointAcod = CodingCoord(pointAa);
@@ -185,7 +184,6 @@ const MainMap = (props: {
       }
       setFlagPro(true); //включение протокола
     }
-    console.log("###:", flagRevers, needRevers);
     if (flagRevers && needRevers !== 3) {
       setOpenSetRevers(true);
       flagRevers = false;
@@ -290,7 +288,6 @@ const MainMap = (props: {
         break;
       case 69: // редактирование связи
         setOpenSetInf(true);
-        console.log("696969:", needRevers);
         setNeedRevers(0);
         break;
       case 77: // удаление связи / отмена назначений
@@ -445,6 +442,7 @@ const MainMap = (props: {
               toCross.pointBbID = massdk[pointBbIndex].ID;
               if (DoublRoute(massroute.ways, pointAa, pointBb)) {
                 SoobOpenSetEr("Дубликатная связь");
+                ZeroRoute(false);
               }
               setOpenSet(false);
               ymaps && addRoute(ymaps); // перерисовка связей
@@ -529,7 +527,6 @@ const MainMap = (props: {
               ws={WS}
               fromCross={fromCross}
               toCross={toCross}
-              // activeRoute={activeRoute}
               update={UpdateAddRoute}
             />
           )}
@@ -612,9 +609,6 @@ const MainMap = (props: {
   };
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(massroute).length) {
-
-    console.log("WAY", massroute.ways);
-
     if (props.region) homeRegion = props.region;
     if (!props.region && massroute.vertexes.length)
       homeRegion = massroute.vertexes[0].region;
@@ -647,7 +641,7 @@ const MainMap = (props: {
   let mapState: any = {
     center: pointCenter,
     zoom,
-    yandexMapDisablePoiInteractivity: true,
+    //yandexMapDisablePoiInteractivity: true,
   };
 
   if (props.sErr && props.sErr !== oldsErr) {
@@ -727,7 +721,6 @@ const MainMap = (props: {
                 ws={WS}
                 fromCross={fromCross}
                 toCross={toCross}
-                // activeRoute={activeRoute}
                 update={UpdateAddRoute}
               />
             )}

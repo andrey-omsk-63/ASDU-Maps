@@ -1,5 +1,6 @@
 import * as React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { massdkCreate, massrouteCreate } from "./../../redux/actions";
 
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -20,6 +21,7 @@ const MapInputAdress = (props: { iPoint: number; setOpen: any }) => {
     const { massrouteReducer } = state;
     return massrouteReducer.massroute;
   });
+  const dispatch = useDispatch();
   //========================================================
   const [openSetAdress, setOpenSetAdress] = React.useState(true);
 
@@ -35,16 +37,23 @@ const MapInputAdress = (props: { iPoint: number; setOpen: any }) => {
     setValuen(event.target.value);
   };
 
-  const handleCloseSetAdr = () => {
-    massdk[props.iPoint].nameCoordinates = valuen;
-    massroute.vertexes[props.iPoint].name = valuen;
+  const handleCloseSet = () => {
     props.setOpen(false);
     setOpenSetAdress(false);
   };
 
+  const handleCloseSetAdr = () => {
+    console.log("Сохраняем!!!")
+    massdk[props.iPoint].nameCoordinates = valuen;
+    massroute.vertexes[props.iPoint].name = valuen;
+    dispatch(massdkCreate(massdk));
+    dispatch(massrouteCreate(massroute));
+    handleCloseSet();
+  };
+
   return (
     <Box>
-      <Modal open={openSetAdress} onClose={handleCloseSetAdr} hideBackdrop>
+      <Modal open={openSetAdress} onClose={handleCloseSet} hideBackdrop>
         <Grid item container sx={styleSetAdress}>
           <Grid item xs={9.5} sx={{ border: 0 }}>
             <Box sx={styleSet}>

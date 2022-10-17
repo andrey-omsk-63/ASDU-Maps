@@ -66,18 +66,6 @@ let soob = "";
 
 const App = () => {
   //== Piece of Redux ======================================
-  // const comm = useSelector((state: any) => {
-  //   const { commReducer } = state;
-  //   return commReducer.comm;
-  // });
-  // //console.log('comm_App:', comm);
-
-  // const map = useSelector((state: any) => {
-  //   const { mapReducer } = state;
-  //   return mapReducer.map;
-  // });
-  //console.log("map_App:", map);
-
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;
     return massdkReducer.massdk;
@@ -105,7 +93,6 @@ const App = () => {
     flagOpenWS = false;
     let pageUrl = new URL(window.location.href);
     homeRegion = Number(pageUrl.searchParams.get("Region"));
-    //console.log("homeRegion+WS:", homeRegion, WS);
   }
 
   React.useEffect(() => {
