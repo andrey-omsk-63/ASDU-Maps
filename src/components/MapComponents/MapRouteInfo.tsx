@@ -39,26 +39,8 @@ const MapRouteInfo = (props: {
     return massdkReducer.massdk;
   });
   //========================================================
-  // const styleSetArea = {
-  //   width: "55px",
-  //   maxHeight: "6px",
-  //   minHeight: "6px",
-  //   bgcolor: "#FFFBE5",
-  //   boxShadow: 3,
-  //   textAlign: "center",
-  //   p: 1,
-  // };
-
-  // const styleBoxFormArea = {
-  //   "& > :not(style)": {
-  //     marginTop: "-8px",
-  //     marginLeft: "-10px",
-  //     width: "73px",
-  //   },
-  // };
-
+  
   const [openSetInf, setOpenSetInf] = React.useState(true);
-  //let tmRoute1 = "";
 
   if (dlRoute1 === 0) {
     maskRoute = props.reqRoute; // инициализация
@@ -147,21 +129,6 @@ const MapRouteInfo = (props: {
   };
 
   const StrokaMenu = () => {
-    // const styleSave = {
-    //   fontSize: 14,
-    //   marginRight: 0.1,
-    //   border: "2px solid #000",
-    //   bgcolor: "#E6F5D6",
-    //   minWidth: "100px",
-    //   maxWidth: "100px",
-    //   maxHeight: "20px",
-    //   minHeight: "20px",
-    //   borderColor: "#E6F5D6",
-    //   borderRadius: 2,
-    //   color: "black",
-    //   textTransform: "unset !important",
-    // };
-
     return (
       <Button variant="contained" sx={styleSave} onClick={() => handleClose()}>
         <b>Сохранить</b>
@@ -194,7 +161,6 @@ const MapRouteInfo = (props: {
           </Grid>
           <Grid item xs={2.3} sx={{ border: 0 }}>
             {InputerDlTm(valueDl, handleChangeDl)}
-            {/* {InputerDl()} */}
           </Grid>
           <Grid item xs={0.5} sx={{ border: 0 }}>
             м
@@ -218,7 +184,6 @@ const MapRouteInfo = (props: {
           </Grid>
           <Grid item xs={2.3} sx={{ border: 0 }}>
             {InputerDlTm(valueTm, handleChangeTm)}
-            {/* {InputerTm()} */}
           </Grid>
           <Grid item xs sx={{ border: 0 }}>
             сек)
