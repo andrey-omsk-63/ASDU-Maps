@@ -391,7 +391,7 @@ const MainMap = (props: {
         }
       } else {
         indexPoint = index;
-        setOpenSet(true); // в меню работы с точками
+        setOpenSet(true); // переход в меню работы с точками
       }
     }
   };
