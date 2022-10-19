@@ -8,10 +8,18 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 
+import { SendSocketDeletePoint } from "./../MapSocketFunctions";
+import { SendSocketCreatePoint } from "./../MapSocketFunctions";
+
 import { styleSet, styleInpKnop, styleSetAdress } from "./../MainMapStyle";
 import { styleBoxForm } from "./../MainMapStyle";
 
-const MapInputAdress = (props: { iPoint: number; setOpen: any }) => {
+const MapChangeAdress = (props: {
+  debug: boolean;
+  ws: any;
+  iPoint: number;
+  setOpen: any;
+}) => {
   //== Piece of Redux ======================================
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;
@@ -34,7 +42,7 @@ const MapInputAdress = (props: { iPoint: number; setOpen: any }) => {
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValuen(event.target.value);
+    setValuen(event.target.value.trimStart()); // удаление пробелов в начале строки
   };
 
   const handleCloseSet = () => {
@@ -43,11 +51,38 @@ const MapInputAdress = (props: { iPoint: number; setOpen: any }) => {
   };
 
   const handleCloseSetAdr = () => {
-    console.log("Сохраняем!!!")
+    const handleSendOpen = () => {
+      if (!props.debug) {
+        if (props.ws.readyState === WebSocket.OPEN) {
+          props.ws.send(
+            JSON.stringify({
+              type: "createPoint",
+              data: {
+                position: coor,
+                name: valuen,
+                id: idPoint,
+              },
+            })
+          );
+        } else {
+          setTimeout(() => {
+            handleSendOpen();
+          }, 1000);
+        }
+      }
+    };
+
     massdk[props.iPoint].nameCoordinates = valuen;
     massroute.vertexes[props.iPoint].name = valuen;
     dispatch(massdkCreate(massdk));
     dispatch(massrouteCreate(massroute));
+    let coor = massroute.vertexes[props.iPoint].dgis;
+    let idPoint = massroute.vertexes[props.iPoint].id;
+
+    SendSocketDeletePoint(props.debug, props.ws, idPoint);
+    //SendSocketCreatePoint(deb, WS, coor, valuen);
+    handleSendOpen(); // создание новой точки со старым ID
+
     handleCloseSet();
   };
 
@@ -65,7 +100,7 @@ const MapInputAdress = (props: { iPoint: number; setOpen: any }) => {
                   value={valuen}
                   onChange={handleChange}
                   variant="standard"
-                  helperText="Отредактируйте адрес"
+                  helperText="Отредактируйте адрес точки"
                 />
               </Box>
             </Box>
@@ -87,4 +122,4 @@ const MapInputAdress = (props: { iPoint: number; setOpen: any }) => {
   );
 };
 
-export default MapInputAdress;
+export default MapChangeAdress;

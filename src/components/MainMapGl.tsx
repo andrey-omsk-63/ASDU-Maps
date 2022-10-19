@@ -15,7 +15,7 @@ import { RulerControl, SearchControl } from "react-yandex-maps";
 import { TrafficControl, TypeSelector, ZoomControl } from "react-yandex-maps";
 
 import MapRouteInfo from "./MapComponents/MapRouteInfo";
-import MapInputAdress from "./MapComponents/MapInputAdress";
+import MapChangeAdress from "./MapComponents/MapChangeAdress";
 import MapPointDataError from "./MapComponents/MapPointDataError";
 import MapRouteBind from "./MapComponents/MapRouteBind";
 import MapCreatePointVertex from "./MapComponents/MapCreatePointVertex";
@@ -352,6 +352,7 @@ const MainMap = (props: {
   };
 
   const OnPlacemarkClickPoint = (index: number) => {
+    console.log('index:',index)
     if (pointAa === 0) {
       pointAaIndex = index; // начальная точка
       pointAa = [massdk[index].coordinates[0], massdk[index].coordinates[1]];
@@ -400,8 +401,11 @@ const MainMap = (props: {
     const [openSetErBall, setOpenSetErBall] = React.useState(false);
     let pointRoute: any = 0;
     let soobDel = "Удаление точки";
+    let areaPoint = -1;
+    console.log("111111:",indexPoint,massdk)
+    if (indexPoint >= 0) areaPoint = massdk[indexPoint].area;
     if (indexPoint >= 0 && indexPoint < massdk.length) {
-      if (massdk[indexPoint].area) soobDel = "Удаление перекрёстка";
+      if (areaPoint) soobDel = "Удаление перекрёстка";
       pointRoute = [
         massdk[indexPoint].coordinates[0],
         massdk[indexPoint].coordinates[1],
@@ -449,7 +453,7 @@ const MainMap = (props: {
             }
           }
           break;
-        case 3: // Удаление точки
+        case 3: // Удаление точки/перекрёстка
           if (pointAaIndex === indexPoint || pointBbIndex === indexPoint) {
             soobError = "Начальную и конечную точки связи удалять нельзя";
             setOpenSetErBall(true);
@@ -473,7 +477,7 @@ const MainMap = (props: {
             massroute.ways = massRouteRab;
             if (flagDemo) massRoute = massroute.ways;
             DelCollectionRoutes(); // удаление колекции связей
-            massdk.splice(indexPoint, 1); // удаление самой точки
+            massdk.splice(indexPoint, 1); // удаление самой точки/перекрёстка
             massroute.vertexes.splice(indexPoint, 1);
             dispatch(massdkCreate(massdk));
             dispatch(massrouteCreate(massroute));
@@ -507,7 +511,9 @@ const MainMap = (props: {
           </Button>
           <Box sx={{ marginTop: 2, textAlign: "center" }}>
             {StrokaBalloon(soobDel, handleClose, 3)}
-            {StrokaBalloon("Редактирование адреса", handleClose, 4)}
+            {!areaPoint && (
+              <>{StrokaBalloon("Редактирование адреса", handleClose, 4)}</>
+            )}
           </Box>
           <Typography variant="h6" sx={styleTypography}>
             Перестроение связи:
@@ -517,7 +523,12 @@ const MainMap = (props: {
             {StrokaBalloon("Конечная точка", handleClose, 2)}
           </Box>
           {openSetAdress && (
-            <MapInputAdress iPoint={indexPoint} setOpen={setOpenSetAdress} />
+            <MapChangeAdress
+              debug={debugging}
+              ws={WS}
+              iPoint={indexPoint}
+              setOpen={setOpenSetAdress}
+            />
           )}
           {openSetErBall && (
             <MapPointDataError
@@ -609,6 +620,7 @@ const MainMap = (props: {
   };
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(massroute).length) {
+    console.log("massroute:", massroute);
     if (props.region) homeRegion = props.region;
     if (!props.region && massroute.vertexes.length)
       homeRegion = massroute.vertexes[0].region;

@@ -1,7 +1,28 @@
 export const dataRoute = {
   type: "graphInfo",
   data: {
-    points: [],
+    points: [
+      {
+        region: 1,
+        area: 0,
+        id: 2,
+        dgis: "55.80959863854593,36.50203540676172",
+        scale: 1,
+        lin: null,
+        lout: null,
+        name: "Новая точка 11111",
+      },
+      {
+        region: 1,
+        area: 0,
+        id: 1,
+        dgis: "55.78751716921771,36.39074389466697",
+        scale: 1,
+        lin: null,
+        lout: null,
+        name: "Новая точка 12345",
+      },
+    ],
     vertexes: [
       {
         region: 1,
