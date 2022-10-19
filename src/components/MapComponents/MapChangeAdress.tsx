@@ -1,25 +1,19 @@
-import * as React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { massdkCreate, massrouteCreate } from "./../../redux/actions";
+import * as React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { massdkCreate, massrouteCreate } from './../../redux/actions';
 
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
-import TextField from "@mui/material/TextField";
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
+import TextField from '@mui/material/TextField';
 
-import { SendSocketDeletePoint } from "./../MapSocketFunctions";
-import { SendSocketCreatePoint } from "./../MapSocketFunctions";
+import { SendSocketDeletePoint } from './../MapSocketFunctions';
 
-import { styleSet, styleInpKnop, styleSetAdress } from "./../MainMapStyle";
-import { styleBoxForm } from "./../MainMapStyle";
+import { styleSet, styleInpKnop, styleSetAdress } from './../MainMapStyle';
+import { styleBoxForm } from './../MainMapStyle';
 
-const MapChangeAdress = (props: {
-  debug: boolean;
-  ws: any;
-  iPoint: number;
-  setOpen: any;
-}) => {
+const MapChangeAdress = (props: { debug: boolean; ws: any; iPoint: number; setOpen: any }) => {
   //== Piece of Redux ======================================
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;
@@ -33,12 +27,10 @@ const MapChangeAdress = (props: {
   //========================================================
   const [openSetAdress, setOpenSetAdress] = React.useState(true);
 
-  const [valuen, setValuen] = React.useState(
-    massdk[props.iPoint].nameCoordinates
-  );
+  const [valuen, setValuen] = React.useState(massdk[props.iPoint].nameCoordinates);
 
   const handleKey = (event: any) => {
-    if (event.key === "Enter") event.preventDefault();
+    if (event.key === 'Enter') event.preventDefault();
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,13 +48,13 @@ const MapChangeAdress = (props: {
         if (props.ws.readyState === WebSocket.OPEN) {
           props.ws.send(
             JSON.stringify({
-              type: "createPoint",
+              type: 'createPoint',
               data: {
                 position: coor,
                 name: valuen,
                 id: idPoint,
               },
-            })
+            }),
           );
         } else {
           setTimeout(() => {
@@ -107,11 +99,7 @@ const MapChangeAdress = (props: {
           </Grid>
           <Grid item xs sx={{ border: 0 }}>
             <Box>
-              <Button
-                sx={styleInpKnop}
-                variant="contained"
-                onClick={handleCloseSetAdr}
-              >
+              <Button sx={styleInpKnop} variant="contained" onClick={handleCloseSetAdr}>
                 Ввод
               </Button>
             </Box>
