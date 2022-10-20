@@ -76,7 +76,6 @@ export const styleModalEndMapGl = {
   right: "-0%",
   maxHeight: "21px",
   minHeight: "21px",
-  //width: '2%',
   maxWidth: "2%",
   minWidth: "2%",
   color: "black",

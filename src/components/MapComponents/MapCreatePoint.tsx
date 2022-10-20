@@ -43,7 +43,7 @@ const MapCreatePoint = (props: {
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValuen(event.target.value);
+    setValuen(event.target.value.trimStart()); // удаление пробелов в начале строки
     setOpenSetAdress(true);
   };
 

@@ -382,7 +382,6 @@ export const SocketDeleteWay = (
     pointBbID: 0,
     pointBcod: "",
   };
-  //let lengthRoute = ways.lenght;
 
   fromCross.pointAaRegin = ways.region.toString();
   fromCross.pointAaArea = ways.sourceArea.toString();
