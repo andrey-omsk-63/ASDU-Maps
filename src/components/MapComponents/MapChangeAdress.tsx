@@ -123,7 +123,7 @@ const MapChangeAdress = (props: {
         SocketDeleteWay(props.debug, props.ws, massroute.ways[i]);
       }
     }
-    console.log("massWays:", massWays);
+    //console.log("massWays:", massWays);
     SendSocketDeletePoint(props.debug, props.ws, idPoint);
     //SendSocketCreatePoint(deb, WS, coor, valuen);
     handleSendOpen(); // создание новой точки со старым ID
