@@ -529,6 +529,7 @@ const MainMap = (props: {
               iPoint={indexPoint}
               setOpen={setOpenSetAdress}
               zeroRoute={ZeroRoute}
+              funcClose={setOpenSet}
             />
           )}
           {openSetErBall && (

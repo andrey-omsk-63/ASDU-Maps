@@ -41,6 +41,7 @@ const MapChangeAdress = (props: {
   iPoint: number;
   setOpen: any;
   zeroRoute: any;
+  funcClose: any;
 }) => {
   //== Piece of Redux ======================================
   let massdk = useSelector((state: any) => {
@@ -77,103 +78,105 @@ const MapChangeAdress = (props: {
   };
 
   const handleCloseSetAdr = () => {
-    const handleSendOpen = () => {
-      if (!props.debug) {
-        if (props.ws.readyState === WebSocket.OPEN) {
-          props.ws.send(
-            JSON.stringify({
-              type: "createPoint",
-              data: {
-                position: coor,
-                name: valuen,
-                id: idPoint,
-              },
-            })
-          );
-        } else {
-          setTimeout(() => {
-            handleSendOpen();
-          }, 1000);
+    if (massdk[props.iPoint].nameCoordinates !== valuen) {
+      const handleSendOpen = () => {
+        if (!props.debug) {
+          if (props.ws.readyState === WebSocket.OPEN) {
+            props.ws.send(
+              JSON.stringify({
+                type: "createPoint",
+                data: {
+                  position: coor,
+                  name: valuen,
+                  id: idPoint,
+                },
+              })
+            );
+          } else {
+            setTimeout(() => {
+              handleSendOpen();
+            }, 1000);
+          }
+        }
+      };
+
+      massdk[props.iPoint].nameCoordinates = valuen; // были изменения
+      massroute.vertexes[props.iPoint].name = valuen;
+      let recMassdk = massdk[props.iPoint];
+      let recMassroute = massroute.vertexes[props.iPoint];
+      let recCoordinates = coordinates[props.iPoint];
+      let coor = massroute.vertexes[props.iPoint].dgis;
+      let idPoint = massroute.vertexes[props.iPoint].id;
+
+      let massWays: any = [];
+      for (let i = 0; i < massroute.ways.length; i++) {
+        if (
+          !massroute.ways[i].sourceArea &&
+          massroute.ways[i].sourceID === idPoint
+        ) {
+          massWays.push(massroute.ways[i]);
+          SocketDeleteWay(props.debug, props.ws, massroute.ways[i]);
+        }
+        if (
+          !massroute.ways[i].targetArea &&
+          massroute.ways[i].targetID === idPoint
+        ) {
+          massWays.push(massroute.ways[i]);
+          SocketDeleteWay(props.debug, props.ws, massroute.ways[i]);
         }
       }
-    };
+      SendSocketDeletePoint(props.debug, props.ws, idPoint);
+      //SendSocketCreatePoint(deb, WS, coor, valuen);
+      handleSendOpen(); // создание новой точки со старым ID
 
-    massdk[props.iPoint].nameCoordinates = valuen;
-    massroute.vertexes[props.iPoint].name = valuen;
-    let recMassdk = massdk[props.iPoint];
-    let recMassroute = massroute.vertexes[props.iPoint];
-    let recCoordinates = coordinates[props.iPoint];
-    let coor = massroute.vertexes[props.iPoint].dgis;
-    let idPoint = massroute.vertexes[props.iPoint].id;
+      massdk.splice(props.iPoint, 1); // удаление самой точки
+      massroute.vertexes.splice(props.iPoint, 1);
+      coordinates.splice(props.iPoint, 1);
 
-    let massWays: any = [];
-    for (let i = 0; i < massroute.ways.length; i++) {
-      if (
-        !massroute.ways[i].sourceArea &&
-        massroute.ways[i].sourceID === idPoint
-      ) {
-        massWays.push(massroute.ways[i]);
-        SocketDeleteWay(props.debug, props.ws, massroute.ways[i]);
+      massdk.push(recMassdk); // пересоздание точки
+      massroute.vertexes.push(recMassroute);
+      coordinates.push(recCoordinates);
+
+      dispatch(massdkCreate(massdk));
+      dispatch(massrouteCreate(massroute));
+      dispatch(coordinatesCreate(coordinates));
+
+      for (let i = 0; i < massWays.length; i++) {
+        fromCross.pointAaRegin = massWays[i].region.toString(); // пересоздание связей
+        fromCross.pointAaArea = massWays[i].sourceArea.toString();
+        fromCross.pointAaID = massWays[i].sourceID;
+        fromCross.pointAcod = massWays[i].starts;
+        toCross.pointBbRegin = massWays[i].region.toString();
+        toCross.pointBbArea = massWays[i].targetArea.toString();
+        toCross.pointBbID = massWays[i].targetID;
+        toCross.pointBcod = massWays[i].stops;
+        massBind[0] = massWays[i].lsource;
+        massBind[1] = massWays[i].ltarget;
+        reqRoute.dlRoute = massWays[i].lenght;
+        reqRoute.tmRoute = massWays[i].time;
+        if (!massWays[i].sourceArea) {
+          SendSocketCreateWayFromPoint(
+            props.debug,
+            props.ws,
+            fromCross,
+            toCross,
+            massBind,
+            reqRoute
+          );
+        } else {
+          SendSocketCreateWayToPoint(
+            props.debug,
+            props.ws,
+            fromCross,
+            toCross,
+            massBind,
+            reqRoute
+          );
+        }
       }
-      if (
-        !massroute.ways[i].targetArea &&
-        massroute.ways[i].targetID === idPoint
-      ) {
-        massWays.push(massroute.ways[i]);
-        SocketDeleteWay(props.debug, props.ws, massroute.ways[i]);
-      }
+      props.zeroRoute(false); // очищение списка связей
+      props.funcClose(false); // закрытие меню работы с точками
     }
-    //console.log("massWays:", massWays);
-    SendSocketDeletePoint(props.debug, props.ws, idPoint);
-    //SendSocketCreatePoint(deb, WS, coor, valuen);
-    handleSendOpen(); // создание новой точки со старым ID
-
-    massdk.splice(props.iPoint, 1); // удаление самой точки
-    massroute.vertexes.splice(props.iPoint, 1);
-    coordinates.splice(props.iPoint, 1);
-
-    massdk.push(recMassdk); // пересоздание точки
-    massroute.vertexes.push(recMassroute);
-    coordinates.push(recCoordinates);
-
-    dispatch(massdkCreate(massdk));
-    dispatch(massrouteCreate(massroute));
-    dispatch(coordinatesCreate(coordinates));
-
-    for (let i = 0; i < massWays.length; i++) {
-      fromCross.pointAaRegin = massWays[i].region.toString(); // пересоздание связей
-      fromCross.pointAaArea = massWays[i].sourceArea.toString();
-      fromCross.pointAaID = massWays[i].sourceID;
-      fromCross.pointAcod = massWays[i].starts;
-      toCross.pointBbRegin = massWays[i].region.toString();
-      toCross.pointBbArea = massWays[i].targetArea.toString();
-      toCross.pointBbID = massWays[i].targetID;
-      toCross.pointBcod = massWays[i].stops;
-      massBind[0] = massWays[i].lsource;
-      massBind[1] = massWays[i].ltarget;
-      reqRoute.dlRoute = massWays[i].lenght;
-      reqRoute.tmRoute = massWays[i].time;
-      if (!massWays[i].sourceArea) {
-        SendSocketCreateWayFromPoint(
-          props.debug,
-          props.ws,
-          fromCross,
-          toCross,
-          massBind,
-          reqRoute
-        );
-      } else {
-        SendSocketCreateWayToPoint(
-          props.debug,
-          props.ws,
-          fromCross,
-          toCross,
-          massBind,
-          reqRoute
-        );
-      }
-    }
-    props.zeroRoute(false)
     handleCloseSet();
   };
 
