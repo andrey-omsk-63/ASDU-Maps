@@ -124,13 +124,19 @@ export const getPointData = (
   index: number,
   pointAaIndex: number,
   pointBbIndex: number,
-  massdk: any
+  massdk: any,
+  map: any
 ) => {
+  let cont3 = "";
+  if (massdk[index].area ) cont3 = ", " + map.dateMap.tflight[index].idevice
+  let cont1 = massdk[index].nameCoordinates + "<br/>";
+  let cont2 = "[" + massdk[index].region + ", " + massdk[index].area;
+  cont2 += ", " + massdk[index].ID + cont3 + "]";
   let textBalloon = "";
   if (index === pointAaIndex) textBalloon = "Начало";
   if (index === pointBbIndex) textBalloon = "Конец";
   return {
-    hintContent: "ID:" + massdk[index].ID + " " + massdk[index].nameCoordinates, //balloonContent: PressBalloon(index), iconCaption: textBalloon,
+    hintContent: cont1 + cont2,
     iconContent: textBalloon,
   };
 };
@@ -190,6 +196,7 @@ export const getMultiRouteOptions = () => {
     routeActiveStrokeWidth: 5,
     //routeActiveStrokeColor: "#224E1F",
     routeStrokeWidth: 1.5,
+    wayPointVisible: false,
   };
 };
 
@@ -208,6 +215,7 @@ export const getMassMultiRouteOptions = () => {
     strokeColor: "#1A9165",
     routeActiveStrokeWidth: 2,
     routeStrokeWidth: 0,
+    //wayPointVisible: false,
   };
 };
 

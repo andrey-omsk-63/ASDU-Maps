@@ -573,7 +573,7 @@ const MainMap = (props: {
           <Placemark
             key={props.idx}
             geometry={props.coordinate}
-            properties={getPointData(props.idx, pAaI, pBbI, massdk)}
+            properties={getPointData(props.idx, pAaI, pBbI, massdk, map)}
             options={getPointOptions(
               props.idx,
               pAaI,
