@@ -86,6 +86,9 @@ let toCross: any = {
   pointBcod: '',
 };
 
+let funcContex: any = null;
+let funcBound: any = null;
+
 const MainMap = (props: { ws: WebSocket; region: any; sErr: string; svg: any; setSvg: any }) => {
   const WS = props.ws;
   if (WS.url === 'wss://localhost:3000/W') debugging = true;
@@ -589,19 +592,23 @@ const MainMap = (props: { ws: WebSocket; region: any; sErr: string; svg: any; se
   const InstanceRefDo = (ref: React.Ref<any>) => {
     if (ref) {
       mapp.current = ref;
-      mapp.current.events.add('contextmenu', function (e: any) {
+      mapp.current.events.remove("contextmenu", funcContex);
+      funcContex = function (e: any) {
         if (mapp.current.hint) {
-          newPointCoord = e.get('coords'); // нажата правая кнопка мыши (созд-е новой точки)
+          newPointCoord = e.get('coords'); // нажата правая кнопка мыши
           setOpenSetCreate(true);
         }
-      });
-      mapp.current.events.add('mousedown', function (e: any) {
-        pointCenter = mapp.current.getCenter(); // нажата левая/правая кнопка мыши 0, 1 или 2 в зависимости от того, какая кнопка мыши нажата (В IE значение может быть от 0 до 7).
-      });
-      mapp.current.events.add(['boundschange'], function () {
+      };
+      mapp.current.events.add("contextmenu", funcContex);
+      // mapp.current.events.add('mousedown', function (e: any) {
+      //   pointCenter = mapp.current.getCenter(); // нажата левая/правая кнопка мыши 0, 1 или 2 в зависимости от того, какая кнопка мыши нажата (В IE значение может быть от 0 до 7).
+      // });
+      mapp.current.events.remove("boundschange", funcBound);
+      funcBound = function () {
         pointCenter = mapp.current.getCenter();
         zoom = mapp.current.getZoom(); // покрутили колёсико мыши
-      });
+      };
+      mapp.current.events.add("boundschange", funcBound);
     }
   };
   //=== инициализация ======================================
