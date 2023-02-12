@@ -1,19 +1,19 @@
-import * as React from "react";
-import { useSelector } from "react-redux";
+import * as React from 'react';
+import { useSelector } from 'react-redux';
 
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
-import TextField from "@mui/material/TextField";
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
+import TextField from '@mui/material/TextField';
 
-import { styleModalEnd, styleSetInf } from "./../MainMapStyle";
-import { styleBoxFormArea, styleSetArea } from "./MapPointDataErrorStyle";
-import { styleSave } from "./MapPointDataErrorStyle";
+import { styleModalEnd, styleSetInf } from './../MainMapStyle';
+import { styleBoxFormArea, styleSetArea } from './MapPointDataErrorStyle';
+import { styleSave } from './MapPointDataErrorStyle';
 
 let dlRoute1 = 0;
 let dlRouteBegin = 0;
-let tmRoute1 = "";
+let tmRoute1 = '';
 let flagSave = false;
 let sec = 0;
 let tmRouteBegin = 0;
@@ -39,7 +39,7 @@ const MapRouteInfo = (props: {
     return massdkReducer.massdk;
   });
   //========================================================
-  
+
   const [openSetInf, setOpenSetInf] = React.useState(true);
 
   if (dlRoute1 === 0) {
@@ -50,7 +50,7 @@ const MapRouteInfo = (props: {
     dlRouteBegin = maskRoute.dlRoute;
     sRoute1 = (dlRoute1 / 1000 / sec) * 3600;
     let sec2 = dlRoute1 / (sRoute1 / 3.6);
-    tmRoute1 = Math.round(sec2 / 60) + " мин";
+    tmRoute1 = Math.round(sec2 / 60) + ' мин';
     sRoute1 = Math.round(sRoute1 * 10) / 10;
     sRouteBegin = sRoute1;
   }
@@ -73,18 +73,18 @@ const MapRouteInfo = (props: {
   };
 
   const handleKey = (event: any) => {
-    if (event.key === "Enter") event.preventDefault();
+    if (event.key === 'Enter') event.preventDefault();
   };
 
   const handleChangeDl = (event: any) => {
-    let valueInp = event.target.value.replace(/^0+/, "");
+    let valueInp = event.target.value.replace(/^0+/, '');
     if (Number(valueInp) < 0) valueInp = 0;
-    if (valueInp === "") valueInp = 0;
+    if (valueInp === '') valueInp = 0;
     if (Number(valueInp) < 1000000) {
       valueInp = Math.trunc(Number(valueInp)).toString();
       dlRoute1 = valueInp;
       let sec2 = dlRoute1 / (sRoute1 / 3.6);
-      tmRoute1 = Math.round(sec2 / 60) + " мин";
+      tmRoute1 = Math.round(sec2 / 60) + ' мин';
       flagSave = true;
       setValueDl(valueInp);
       setValueTm(Math.round(sec2));
@@ -93,15 +93,15 @@ const MapRouteInfo = (props: {
   };
 
   const handleChangeTm = (event: any) => {
-    let valueInp = event.target.value.replace(/^0+/, "");
+    let valueInp = event.target.value.replace(/^0+/, '');
     if (Number(valueInp) < 0) valueInp = 0;
-    if (valueInp === "") valueInp = 0;
+    if (valueInp === '') valueInp = 0;
     if (Number(valueInp) < 66300) {
       valueInp = Math.trunc(Number(valueInp)).toString();
       sec = valueInp;
       sRoute1 = (dlRoute1 / 1000 / sec) * 3600;
       let sec2 = dlRoute1 / (sRoute1 / 3.6);
-      tmRoute1 = Math.round(sec2 / 60) + " мин";
+      tmRoute1 = Math.round(sec2 / 60) + ' мин';
       flagSave = true;
       sRoute1 = Math.round(sRoute1 * 10) / 10;
       setValueTm(valueInp);
@@ -166,7 +166,7 @@ const MapRouteInfo = (props: {
             м
           </Grid>
           {flagSave && (
-            <Grid item xs sx={{ textAlign: "center", border: 0 }}>
+            <Grid item xs sx={{ textAlign: 'center', border: 0 }}>
               {StrokaMenu()}
             </Grid>
           )}
@@ -193,7 +193,7 @@ const MapRouteInfo = (props: {
         <Box sx={{ marginTop: 1.5 }}>
           <b>Средняя скорость прохождения:</b> {sRoute1} км/ч <br />
         </Box>
-        {props.activeRoute && props.activeRoute.properties.get("blocked") && (
+        {props.activeRoute && props.activeRoute.properties.get('blocked') && (
           <Box>Имеются участки с перекрытыми дорогами</Box>
         )}
         {flagSave && (
