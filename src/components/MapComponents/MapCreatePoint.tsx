@@ -73,7 +73,7 @@ const MapCreatePoint = (props: {
                 <TextField
                   size="small"
                   onKeyPress={handleKey} //отключение Enter
-                  inputProps={{ style: { fontSize: 13.3 } }}
+                  InputProps={{disableUnderline: true, style: { fontSize: 13.3 } }}
                   value={valuen}
                   onChange={handleChange}
                   variant="standard"

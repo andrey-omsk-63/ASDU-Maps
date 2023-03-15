@@ -17,7 +17,7 @@ export const styleModalMenu = {
 
   export const styleBoxFormArea = {
     "& > :not(style)": {
-      marginTop: "-8px",
+      marginTop: "-6px",
       marginLeft: "-10px",
       width: "73px",
     },

@@ -247,7 +247,7 @@ const MapPointDataError = (props: {
             type="number"
             onKeyPress={handleKey} //отключение Enter
             value={value}
-            inputProps={{ style: { fontSize: 14.2 } }}
+            InputProps={{ disableUnderline: true, style: { fontSize: 14.2 } }}
             onChange={func}
             variant="standard"
             color="secondary"
@@ -307,7 +307,7 @@ const MapPointDataError = (props: {
             onKeyPress={handleKey} //отключение Enter
             value={currency}
             onChange={handleChange}
-            InputProps={{ style: { fontSize: 14 } }}
+            InputProps={{disableUnderline: true, style: { fontSize: 14 } }}
             variant="standard"
             color="secondary"
           >

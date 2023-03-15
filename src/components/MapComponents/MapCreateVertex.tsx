@@ -162,6 +162,7 @@ const MapCreateVertex = (props: {
             select
             size="small"
             onKeyPress={handleKey} //отключение Enter
+            InputProps={{ disableUnderline: true }}
             value={currency}
             onChange={handleChange}
             variant="standard"
@@ -197,7 +198,10 @@ const MapCreateVertex = (props: {
                       size="small"
                       onKeyPress={handleKey} //отключение Enter
                       type="number"
-                      inputProps={{ style: { fontSize: 13.3 } }}
+                      InputProps={{
+                        disableUnderline: true,
+                        style: { fontSize: 13.3 },
+                      }}
                       value={valuen}
                       onChange={handleChangeID}
                       variant="standard"
