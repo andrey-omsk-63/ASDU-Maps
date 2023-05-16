@@ -612,9 +612,6 @@ const MainMap = (props: {
         }
       };
       mapp.current.events.add("contextmenu", funcContex);
-      // mapp.current.events.add('mousedown', function (e: any) {
-      //   pointCenter = mapp.current.getCenter(); // нажата левая/правая кнопка мыши 0, 1 или 2 в зависимости от того, какая кнопка мыши нажата (В IE значение может быть от 0 до 7).
-      // });
       mapp.current.events.remove("boundschange", funcBound);
       funcBound = function () {
         pointCenter = mapp.current.getCenter();
@@ -625,13 +622,11 @@ const MainMap = (props: {
   };
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(massroute).length) {
-    console.log("massroute:", massroute);
     if (props.region) homeRegion = props.region;
     if (!props.region && massroute.vertexes.length)
       homeRegion = massroute.vertexes[0].region;
-    for (let i = 0; i < massroute.points.length; i++) {
+    for (let i = 0; i < massroute.points.length; i++)
       massroute.vertexes.push(massroute.points[i]);
-    }
     for (let i = 0; i < massroute.vertexes.length; i++) {
       let masskPoint = MasskPoint();
       masskPoint.ID = massroute.vertexes[i].id;

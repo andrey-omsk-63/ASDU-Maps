@@ -129,7 +129,8 @@ export const getPointData = (
   let cont3 = '';
   if (massdk[index].area) cont3 = ', ' + map.dateMap.tflight[index].idevice;
   let cont1 = massdk[index].nameCoordinates + '<br/>';
-  let cont2 = '[' + massdk[index].region + ', ' + massdk[index].area;
+  //let cont2 = '[' + massdk[index].region + ', ' + massdk[index].area;
+  let cont2 = '[' + massdk[index].area;
   cont2 += ', ' + massdk[index].ID + cont3 + ']';
   let textBalloon = '';
   if (index === pointAaIndex) textBalloon = 'Начало';
@@ -167,22 +168,22 @@ export const getPointOptions = (
   } else {
     if (massdk[index].newCoordinates > 0) colorBalloon = 'islands#darkOrangeCircleDotIcon';
   }
-  for (let i = 0; i < coordStart.length; i++) {
-    if (
-      massdk[index].coordinates[0] === coordStart[i][0] &&
-      massdk[index].coordinates[1] === coordStart[i][1]
-    ) {
-      colorBalloon = 'islands#grayStretchyIcon';
-    }
-  }
-  for (let i = 0; i < coordStop.length; i++) {
-    if (
-      massdk[index].coordinates[0] === coordStop[i][0] &&
-      massdk[index].coordinates[1] === coordStop[i][1]
-    ) {
-      colorBalloon = 'islands#grayStretchyIcon';
-    }
-  }
+  // for (let i = 0; i < coordStart.length; i++) {
+  //   if (
+  //     massdk[index].coordinates[0] === coordStart[i][0] &&
+  //     massdk[index].coordinates[1] === coordStart[i][1]
+  //   ) {
+  //     colorBalloon = 'islands#grayStretchyIcon';
+  //   }
+  // }
+  // for (let i = 0; i < coordStop.length; i++) {
+  //   if (
+  //     massdk[index].coordinates[0] === coordStop[i][0] &&
+  //     massdk[index].coordinates[1] === coordStop[i][1]
+  //   ) {
+  //     colorBalloon = 'islands#grayStretchyIcon';
+  //   }
+  // }
   if (index === pointAaIndex) colorBalloon = 'islands#redStretchyIcon';
   if (index === pointBbIndex) colorBalloon = 'islands#darkBlueStretchyIcon';
 
@@ -241,7 +242,8 @@ export const getMassMultiRouteOptions = () => {
     strokeColor: '#1A9165',
     routeActiveStrokeWidth: 2,
     routeStrokeWidth: 0,
-    //wayPointVisible: false,
+    //=======
+    wayPointVisible: false,
   };
 };
 
@@ -251,6 +253,8 @@ export const getMassMultiRouteInOptions = () => {
     routeStrokeStyle: 'dot',
     routeActiveStrokeColor: '#E91427',
     routeStrokeWidth: 0,
+    //=======
+    wayPointVisible: false,
   };
 };
 
