@@ -128,28 +128,44 @@ const MapCreateVertex = (props: {
   const handleClose = () => {
     if (CheckAvailVertex()) {
       if (CheckDoublAreaID()) {
-        massdk.push(
-          MapssdkNewPoint(
-            props.region,
-            props.coord,
-            adrV,
-            Number(currency),
-            Number(valuen)
-          )
-        );
-        massroute.vertexes.push(
-          MassrouteNewPoint(
-            props.region,
-            props.coord,
-            adrV,
-            Number(currency),
-            Number(valuen)
-          )
-        );
-        dispatch(massdkCreate(massdk));
-        dispatch(massrouteCreate(massroute));
+        let propsCoord = [0, 0];
+        for (let i = 0; i < map.dateMap.tflight.length; i++) {
+          if (
+            map.dateMap.tflight[i].ID === Number(valuen) &&
+            Number(map.dateMap.tflight[i].area.num) === Number(currency)
+          ) {
+            propsCoord[0] = map.dateMap.tflight[i].points.Y;
+            propsCoord[1] = map.dateMap.tflight[i].points.X;
+            break;
+          }
+        }
+        if (propsCoord[0]) {
+          massdk.push(
+            MapssdkNewPoint(
+              props.region,
+              //props.coord,
+              propsCoord,
+              adrV,
+              Number(currency), // area
+              Number(valuen) // id
+            )
+          );
+          massroute.vertexes.push(
+            MassrouteNewPoint(
+              props.region,
+              //props.coord,
+              propsCoord,
+              adrV,
+              Number(currency), // area
+              Number(valuen) // id
+            )
+          );
+          dispatch(massdkCreate(massdk));
+          dispatch(massrouteCreate(massroute));
+          //props.createPoint(props.coord);
+          props.createPoint(propsCoord);
+        }
         setOpenSetAdress(false);
-        props.createPoint(props.coord);
       }
     }
   };

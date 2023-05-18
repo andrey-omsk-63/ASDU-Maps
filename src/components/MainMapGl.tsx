@@ -103,12 +103,12 @@ const MainMap = (props: {
     const { massdkReducer } = state;
     return massdkReducer.massdk;
   });
-  console.log('massdk:',massdk)
+  //console.log('massdk:',massdk)
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
     return massrouteReducer.massroute;
   });
-  console.log('massroute:',massroute)
+  //console.log('massroute:',massroute)
   let massroutepro = useSelector((state: any) => {
     const { massrouteproReducer } = state;
     return massrouteproReducer.massroutepro;
@@ -121,7 +121,7 @@ const MainMap = (props: {
     const { mapReducer } = state;
     return mapReducer.map;
   });
-  console.log('map:',map)
+  //console.log('map:',map)
   const dispatch = useDispatch();
   //===========================================================
   const [openSetInf, setOpenSetInf] = React.useState(false);
