@@ -140,12 +140,16 @@ export const styleSetAdrAreaID = {
   //border: 1,
   marginTop: '10vh',
   marginLeft: '48px',
-  width: '316px',
+  width: '318px',
   height: '14vh',
   // bgcolor: "#FAFAFA",
   // bgcolor: "#DAF0C5",
+  border: '3px solid #000',
+  borderColor: '#FFFEF7',
+  borderRadius: 2,
+  boxShadow: 24,
   bgcolor: '#FFFEF7',
-  opacity: 0.8,
+  opacity: 0.85,
 };
 
 export const styleSetAdrArea = {
