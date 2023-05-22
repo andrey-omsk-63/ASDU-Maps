@@ -122,10 +122,17 @@ export const styleInpKnop = {
 };
 
 export const styleSetAdress = {
-  width: '319px',
-  height: '30px',
+  width: '304px',
+  //height: '30px',
+  height: '7vh',
   marginTop: '9vh',
   marginLeft: '48px',
+  border: '3px solid #000',
+  borderColor: '#FFFEF7',
+  borderRadius: 2,
+  boxShadow: 24,
+  bgcolor: '#FFFEF7',
+  opacity: 0.85,
 };
 
 export const styleBoxForm = {
