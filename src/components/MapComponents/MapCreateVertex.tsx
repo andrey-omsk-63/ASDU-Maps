@@ -143,7 +143,6 @@ const MapCreateVertex = (props: {
           massdk.push(
             MapssdkNewPoint(
               props.region,
-              //props.coord,
               propsCoord,
               adrV,
               Number(currency), // area
@@ -153,7 +152,6 @@ const MapCreateVertex = (props: {
           massroute.vertexes.push(
             MassrouteNewPoint(
               props.region,
-              //props.coord,
               propsCoord,
               adrV,
               Number(currency), // area
@@ -162,7 +160,6 @@ const MapCreateVertex = (props: {
           );
           dispatch(massdkCreate(massdk));
           dispatch(massrouteCreate(massroute));
-          //props.createPoint(props.coord);
           props.createPoint(propsCoord);
         }
         setOpenSetAdress(false);
@@ -242,7 +239,6 @@ const MapCreateVertex = (props: {
               ws={{}}
               fromCross={0}
               toCross={0}
-              //activeRoute={0}
               update={0}
             />
           )}

@@ -122,8 +122,11 @@ const App = () => {
           pointRab.points = []; // массив протоколов
           pointRab.vertexes = [];
           pointRab.ways = [];
-          dateRouteGl = JSON.parse(JSON.stringify(data));
           dateRouteProGl = JSON.parse(JSON.stringify(pointRab));
+          dateRouteGl = JSON.parse(JSON.stringify(data));
+          if (dateRouteGl.points === null) dateRouteGl.points = [];
+          if (dateRouteGl.vertexes === null) dateRouteGl.vertexes = [];
+          if (dateRouteGl.ways === null) dateRouteGl.ways = [];
           dispatch(massrouteCreate(dateRouteGl));
           dispatch(massrouteproCreate(dateRouteProGl));
           break;
@@ -173,6 +176,7 @@ const App = () => {
             dateRouteProGl.ways.splice(dateRouteGl.ways.length - 1, 1);
             dispatch(massrouteproCreate(dateRouteProGl));
             dispatch(massrouteCreate(dateRouteGl));
+            console.log('dateRouteGl:',dateRouteGl)
             setOpenSetErr(true);
           }
           break;

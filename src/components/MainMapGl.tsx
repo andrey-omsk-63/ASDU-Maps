@@ -108,7 +108,7 @@ const MainMap = (props: {
     const { massrouteReducer } = state;
     return massrouteReducer.massroute;
   });
-  //console.log('massroute:',massroute)
+  console.log("massroute:", massroute);
   let massroutepro = useSelector((state: any) => {
     const { massrouteproReducer } = state;
     return massrouteproReducer.massroutepro;
@@ -121,7 +121,7 @@ const MainMap = (props: {
     const { mapReducer } = state;
     return mapReducer.map;
   });
-  //console.log('map:',map)
+  console.log("map:", map);
   const dispatch = useDispatch();
   //===========================================================
   const [openSetInf, setOpenSetInf] = React.useState(false);
@@ -581,9 +581,7 @@ const MainMap = (props: {
               pAaI,
               pBbI,
               massdk,
-              massroute,
-              coordStartIn,
-              coordStop
+              massroute
             )}
             modules={["geoObject.addon.balloon", "geoObject.addon.hint"]}
             onClick={() => OnPlacemarkClickPoint(props.idx)}
@@ -651,7 +649,30 @@ const MainMap = (props: {
       map.dateMap.boxPoint.point1.X
     );
     flagOpen = true;
+    //=================================
+    let homeReg = map.dateMap.regionInfo[homeRegion]; // подготовка ввода района
+    let dat = map.dateMap.areaInfo[homeReg];
+    console.log("###:", homeRegion, homeReg, dat, map.dateMap.areaInfo);
+    let massKey = [];
+    let massDat = [];
+    const currencies: any = [];
+    for (let key in dat) {
+      massKey.push(key);
+      massDat.push(dat[key]);
+    }
+    let maskCurrencies = {
+      value: "0",
+      label: "Все районы",
+    };
+    currencies.push({...maskCurrencies});
+    for (let i = 0; i < massKey.length; i++) {
+      maskCurrencies.value = massKey[i];
+      maskCurrencies.label = massDat[i];
+      currencies.push({...maskCurrencies});
+    }
+    console.log("currencies:", currencies);
   }
+
   //========================================================
   let mapState: any = {
     center: pointCenter,
@@ -675,6 +696,7 @@ const MainMap = (props: {
 
   return (
     <Grid container sx={{ border: 0, height: "99.9vh" }}>
+      <>{StrokaMenuGlob("Район управления", PressButton, 121)}</>
       {makeRevers && needRevers === 0 && <>{PressButton(35)}</>}
       {makeRevers && needRevers === 1 && <>{PressButton(36)}</>}
       {makeRevers && needRevers === 2 && <>{PressButton(37)}</>}

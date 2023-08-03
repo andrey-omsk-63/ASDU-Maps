@@ -162,8 +162,6 @@ export const getPointOptions = (
   pointBbIndex: number,
   massdk: any,
   massroute: any,
-  coordStart: any,
-  coordStop: any
 ) => {
   let idxMap = -1;
   for (let i = 0; i < map.dateMap.tflight.length; i++) {
@@ -175,7 +173,6 @@ export const getPointOptions = (
       break;
     }
   }
-  //console.log("idxMap:", index, idxMap);
 
   const Hoster = () => {
     let host = "https://localhost:3000/18.svg";
@@ -184,6 +181,7 @@ export const getPointOptions = (
       host =
         window.location.origin + "/free/img/trafficLights/" + mapp + ".svg";
     }
+    if (!debug && idxMap < 0) host = "";
     return host;
   };
 
@@ -269,7 +267,6 @@ export const getMassMultiRouteOptions = () => {
     strokeColor: "#1A9165",
     routeActiveStrokeWidth: 2,
     routeStrokeWidth: 0,
-    //=======
     wayPointVisible: false,
   };
 };
@@ -300,7 +297,7 @@ export const StrokaMenuGlob = (soob: string, func: any, mode: number) => {
   const styleApp01 = {
     fontSize: 14,
     marginRight: 0.1,
-    width: (soob.length + 7) * 6.5,
+    width: (soob.length + 10) * 6.5,
     maxHeight: "21px",
     minHeight: "21px",
     backgroundColor: "#D7F1C0",
