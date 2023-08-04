@@ -1,4 +1,7 @@
 import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
 
 import { Pointer, Router } from "./../App";
 import { Vertex } from "./../interfaceRoute";
@@ -119,6 +122,55 @@ export const CenterCoord = (aY: number, aX: number, bY: number, bX: number) => {
   return [coord0, coord1];
 };
 
+export const InputArea = (func: any, currency: any, currencies: any) => {
+  const handleKey = (event: any) => {
+    if (event.key === "Enter") event.preventDefault();
+  };
+
+  const styleSetArea = {
+    width: "150px",
+    maxHeight: "2px",
+    minHeight: "2px",
+    bgcolor: "#93D145",
+    border: 1,
+    borderRadius: 1.5,
+    borderColor: "#93D145",
+    textAlign: "center",
+    p: 1.25,
+  };
+
+  const styleBoxFormArea = {
+    "& > :not(style)": {
+      marginTop: "-10px",
+      marginLeft: "-15px",
+      width: "175px",
+    },
+  };
+
+  return (
+    <Box sx={styleSetArea}>
+      <Box component="form" sx={styleBoxFormArea}>
+        <TextField
+          select
+          size="small"
+          onKeyPress={handleKey} //отключение Enter
+          value={currency}
+          onChange={func}
+          InputProps={{ disableUnderline: true, style: { fontSize: 14 } }}
+          variant="standard"
+          color="secondary"
+        >
+          {currencies.map((option: any) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
+      </Box>
+    </Box>
+  );
+};
+
 //=== Placemark =====================================
 export const getPointData = (
   index: number,
@@ -157,11 +209,12 @@ export const getPointData = (
 export const getPointOptions = (
   debug: boolean,
   index: number,
+  AREA: string,
   map: any,
   pointAaIndex: number,
   pointBbIndex: number,
   massdk: any,
-  massroute: any,
+  massroute: any
 ) => {
   let idxMap = -1;
   for (let i = 0; i < map.dateMap.tflight.length; i++) {
@@ -175,13 +228,13 @@ export const getPointOptions = (
   }
 
   const Hoster = () => {
-    let host = "https://localhost:3000/18.svg";
-    if (!debug && idxMap >= 0) {
-      let mapp = map.dateMap.tflight[idxMap].tlsost.num.toString();
-      host =
-        window.location.origin + "/free/img/trafficLights/" + mapp + ".svg";
+    let host = "";
+    if (map.dateMap.tflight[idxMap].area.num === AREA || AREA === "0") {
+      host = "https://localhost:3000/1.svg";
+      if (!debug && idxMap >= 0)
+        host = window.location.origin + "/free/img/trafficLights/1.svg";
+      if (!debug && idxMap < 0) host = "";
     }
-    if (!debug && idxMap < 0) host = "";
     return host;
   };
 
@@ -191,24 +244,8 @@ export const getPointOptions = (
     if (massdk[index].newCoordinates > 0)
       colorBalloon = "islands#darkOrangeCircleIcon";
   } else {
-    //if (massdk[index].newCoordinates > 0) colorBalloon = 'islands#darkOrangeCircleDotIcon';
+    if (massdk[index].newCoordinates > 0) colorBalloon = 'islands#darkOrangeCircleDotIcon';
   }
-  // for (let i = 0; i < coordStart.length; i++) {
-  //   if (
-  //     massdk[index].coordinates[0] === coordStart[i][0] &&
-  //     massdk[index].coordinates[1] === coordStart[i][1]
-  //   ) {
-  //     colorBalloon = 'islands#grayStretchyIcon';
-  //   }
-  // }
-  // for (let i = 0; i < coordStop.length; i++) {
-  //   if (
-  //     massdk[index].coordinates[0] === coordStop[i][0] &&
-  //     massdk[index].coordinates[1] === coordStop[i][1]
-  //   ) {
-  //     colorBalloon = 'islands#grayStretchyIcon';
-  //   }
-  // }
   if (index === pointAaIndex) colorBalloon = "islands#redStretchyIcon";
   if (index === pointBbIndex) colorBalloon = "islands#darkBlueStretchyIcon";
 
@@ -293,16 +330,18 @@ export const RecevKeySvg = (recMassroute: any) => {
   return keySvg;
 };
 
-export const StrokaMenuGlob = (soob: string, func: any, mode: number) => {
+export const StrokaMenuGlob = (soob: string, func: Function, mode: number) => {
   const styleApp01 = {
     fontSize: 14,
     marginRight: 0.1,
     width: (soob.length + 10) * 6.5,
     maxHeight: "21px",
     minHeight: "21px",
-    backgroundColor: "#D7F1C0",
+    backgroundColor: "#C4EAA2",
+    //backgroundColor: "#E9F5D8",
     color: "black",
     textTransform: "unset !important",
+    p: 1.5,
   };
 
   return (

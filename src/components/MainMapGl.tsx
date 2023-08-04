@@ -8,6 +8,8 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
+//import TextField from "@mui/material/TextField";
+//import MenuItem from "@mui/material/MenuItem";
 
 import { YMaps, Map, Placemark, FullscreenControl } from "react-yandex-maps";
 import { GeolocationControl, YMapsApi } from "react-yandex-maps";
@@ -22,7 +24,7 @@ import MapCreatePointVertex from "./MapComponents/MapCreatePointVertex";
 import MapRouteProtokol from "./MapComponents/MapRouteProtokol";
 import MapReversRoute from "./MapComponents/MapReversRoute";
 
-import { RecordMassRoute } from "./MapServiceFunctions";
+import { RecordMassRoute, InputArea } from "./MapServiceFunctions";
 import { DecodingCoord, CodingCoord } from "./MapServiceFunctions";
 import { getMultiRouteOptions, DoublRoute } from "./MapServiceFunctions";
 import { getReferencePoints, CenterCoord } from "./MapServiceFunctions";
@@ -89,6 +91,11 @@ let toCross: any = {
 let funcContex: any = null;
 let funcBound: any = null;
 
+const currencies: any = [];
+let massKey: any = [];
+let massDat: any = [];
+let AREA = "0";
+
 const MainMap = (props: {
   ws: WebSocket;
   region: any;
@@ -124,6 +131,7 @@ const MainMap = (props: {
   console.log("map:", map);
   const dispatch = useDispatch();
   //===========================================================
+  const [currency, setCurrency] = React.useState("0");
   const [openSetInf, setOpenSetInf] = React.useState(false);
   const [openSetPro, setOpenSetPro] = React.useState(false);
   const [openSetEr, setOpenSetEr] = React.useState(false);
@@ -298,6 +306,18 @@ const MainMap = (props: {
         break;
       case 77: // удаление связи / отмена назначений
         ZeroRoute(false);
+        break;
+      case 121: // выбор района
+        console.log("******:", AREA, currency);
+        massRoute = [];
+        if (AREA === "0") {
+          massRoute = massroute.ways;
+        } else {
+          for (let i = 0; i < massroute.ways.length; i++) {
+            if (massroute.ways[i].sourceArea.toString() === AREA)
+              massRoute.push(massroute.ways[i]);
+          }
+        }
     }
   };
 
@@ -577,6 +597,7 @@ const MainMap = (props: {
             options={getPointOptions(
               debugging,
               props.idx,
+              AREA,
               map,
               pAaI,
               pBbI,
@@ -621,6 +642,12 @@ const MainMap = (props: {
       mapp.current.events.add("boundschange", funcBound);
     }
   };
+
+  const handleChangeArea = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCurrency(event.target.value);
+    AREA = event.target.value;
+    PressButton(121);
+  };
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(massroute).length) {
     if (props.region) homeRegion = props.region;
@@ -649,13 +676,8 @@ const MainMap = (props: {
       map.dateMap.boxPoint.point1.X
     );
     flagOpen = true;
-    //=================================
     let homeReg = map.dateMap.regionInfo[homeRegion]; // подготовка ввода района
     let dat = map.dateMap.areaInfo[homeReg];
-    console.log("###:", homeRegion, homeReg, dat, map.dateMap.areaInfo);
-    let massKey = [];
-    let massDat = [];
-    const currencies: any = [];
     for (let key in dat) {
       massKey.push(key);
       massDat.push(dat[key]);
@@ -664,15 +686,13 @@ const MainMap = (props: {
       value: "0",
       label: "Все районы",
     };
-    currencies.push({...maskCurrencies});
+    currencies.push({ ...maskCurrencies });
     for (let i = 0; i < massKey.length; i++) {
       maskCurrencies.value = massKey[i];
       maskCurrencies.label = massDat[i];
-      currencies.push({...maskCurrencies});
+      currencies.push({ ...maskCurrencies });
     }
-    console.log("currencies:", currencies);
   }
-
   //========================================================
   let mapState: any = {
     center: pointCenter,
@@ -696,7 +716,7 @@ const MainMap = (props: {
 
   return (
     <Grid container sx={{ border: 0, height: "99.9vh" }}>
-      <>{StrokaMenuGlob("Район управления", PressButton, 121)}</>
+      {InputArea(handleChangeArea, currency, currencies)}
       {makeRevers && needRevers === 0 && <>{PressButton(35)}</>}
       {makeRevers && needRevers === 1 && <>{PressButton(36)}</>}
       {makeRevers && needRevers === 2 && <>{PressButton(37)}</>}
