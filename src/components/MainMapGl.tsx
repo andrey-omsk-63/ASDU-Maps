@@ -115,7 +115,7 @@ const MainMap = (props: {
     const { massrouteReducer } = state;
     return massrouteReducer.massroute;
   });
-  console.log("massroute:", massroute);
+  //console.log("massroute:", massroute);
   let massroutepro = useSelector((state: any) => {
     const { massrouteproReducer } = state;
     return massrouteproReducer.massroutepro;
@@ -128,7 +128,7 @@ const MainMap = (props: {
     const { mapReducer } = state;
     return mapReducer.map;
   });
-  console.log("map:", map);
+  //console.log("map:", map);
   const dispatch = useDispatch();
   //===========================================================
   const [currency, setCurrency] = React.useState("0");
@@ -174,6 +174,17 @@ const MainMap = (props: {
     setOpenSetEr(true);
   };
 
+  const FillMassRoute = () => {
+    massRoute = [];
+    if (AREA === "0") {
+      massRoute = massroute.ways;
+    } else {
+      for (let i = 0; i < massroute.ways.length; i++)
+        if (massroute.ways[i].sourceArea.toString() === AREA)
+          massRoute.push(massroute.ways[i]);
+    }
+  };
+
   const MakeRecordMassRoute = (mode: boolean, mass: any) => {
     let aRou = reqRoute;
     let debug = debugging;
@@ -205,6 +216,7 @@ const MainMap = (props: {
       ZeroRoute(mode);
     }
     setNeedRevers(0);
+    flagDemo && ymaps && addRoute(ymaps); // перерисовка связей
   };
 
   const MakeСollectionRoute = () => {
@@ -219,7 +231,8 @@ const MainMap = (props: {
         coordStopIn.push(pointAa);
       }
     }
-    ymaps && addRoute(ymaps); // перерисовка связей
+    FillMassRoute();
+    flagDemo && ymaps && addRoute(ymaps); // перерисовка связей
   };
 
   const ReversRoute = () => {
@@ -255,7 +268,7 @@ const MainMap = (props: {
   const PressButton = (mode: number) => {
     switch (mode) {
       case 3: // режим включения Demo сети связей
-        massRoute = massroute.ways;
+        FillMassRoute();
         setFlagDemo(true);
         ymaps && addRoute(ymaps); // перерисовка связей
         break;
@@ -308,16 +321,8 @@ const MainMap = (props: {
         ZeroRoute(false);
         break;
       case 121: // выбор района
-        console.log("******:", AREA, currency);
-        massRoute = [];
-        if (AREA === "0") {
-          massRoute = massroute.ways;
-        } else {
-          for (let i = 0; i < massroute.ways.length; i++) {
-            if (massroute.ways[i].sourceArea.toString() === AREA)
-              massRoute.push(massroute.ways[i]);
-          }
-        }
+        FillMassRoute();
+        flagDemo && ymaps && addRoute(ymaps); // перерисовка связей
     }
   };
 
@@ -392,26 +397,32 @@ const MainMap = (props: {
           SoobOpenSetEr("Начальная и конечная точки совпадают");
         } else {
           pointBbIndex = index; // конечная точка
-          if (
-            massroute.vertexes[pointAaIndex].area === 0 &&
-            massroute.vertexes[pointBbIndex].area === 0
-          ) {
+          let areaAa = massroute.vertexes[pointAaIndex].area;
+          let areaBb = massroute.vertexes[pointBbIndex].area;
+          if (areaAa === 0 && areaBb === 0) {
             pointBbIndex = 0; // конечная точка
             SoobOpenSetEr("Связь между двумя точками создовать нельзя");
           } else {
-            pointBb = [
-              massdk[index].coordinates[0],
-              massdk[index].coordinates[1],
-            ];
-            toCross.pointBbRegin = massdk[index].region.toString();
-            toCross.pointBbArea = massdk[index].area.toString();
-            toCross.pointBbID = massdk[index].ID;
-            if (DoublRoute(massroute.ways, pointAa, pointBb)) {
-              SoobOpenSetEr("Дубликатная связь");
-              ZeroRoute(false);
+            console.log("###:", areaAa, areaBb);
+            if (areaAa !== areaBb && areaAa !== 0 && areaBb !== 0) {
+              console.log("КОСЯК!!!");
+              pointBbIndex = 0; // конечная точка
+              SoobOpenSetEr("Связь между CO в разных районах создовать нельзя");
             } else {
-              setFlagRoute(true);
-              ymaps && addRoute(ymaps); // перерисовка связей
+              pointBb = [
+                massdk[index].coordinates[0],
+                massdk[index].coordinates[1],
+              ];
+              toCross.pointBbRegin = massdk[index].region.toString();
+              toCross.pointBbArea = massdk[index].area.toString();
+              toCross.pointBbID = massdk[index].ID;
+              if (DoublRoute(massroute.ways, pointAa, pointBb)) {
+                SoobOpenSetEr("Дубликатная связь");
+                ZeroRoute(false);
+              } else {
+                setFlagRoute(true);
+                ymaps && addRoute(ymaps); // перерисовка связей
+              }
             }
           }
         }

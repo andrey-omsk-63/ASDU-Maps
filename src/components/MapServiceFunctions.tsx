@@ -263,9 +263,9 @@ export const getPointOptions = (
       iconImageHref: Hoster(),
       //iconImageHref: '/faza.png',
       // размеры метки
-      iconImageSize: [30, 38],
+      iconImageSize: [30, 30],
       // её "ножки" (точки привязки)
-      iconImageOffset: [-15, -38],
+      iconImageOffset: [-15, -30],
     };
   };
 

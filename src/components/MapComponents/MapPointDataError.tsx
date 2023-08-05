@@ -17,7 +17,9 @@ import { SendSocketCreateWay } from "./../MapSocketFunctions";
 import { SendSocketCreateWayFromPoint } from "./../MapSocketFunctions";
 import { SendSocketCreateWayToPoint } from "./../MapSocketFunctions";
 
-import { styleModalEnd, styleSetInf } from "./../MainMapStyle";
+//import { styleModalEnd, 
+  //styleSetInf
+// } from "./../MainMapStyle";
 import { styleModalMenu, styleSetArea } from "./MapPointDataErrorStyle";
 import { styleBoxFormArea, styleBoxFormNapr } from "./MapPointDataErrorStyle";
 import { styleSetNapr, styleSave } from "./MapPointDataErrorStyle";
@@ -61,6 +63,33 @@ const MapPointDataError = (props: {
   });
   const dispatch = useDispatch();
   const [openSetEr, setOpenSetEr] = React.useState(true);
+  let colorBorder = props.sErr === "Дубликатная связь" ? 'primary.main' : 'red';
+  let colorEnd = props.sErr === "Дубликатная связь" ? 'black' : 'red';
+
+  const styleModalEnd = {
+    position: 'absolute',
+    top: '0%',
+    left: 'auto',
+    right: '-0%',
+    height: '21px',
+    maxWidth: '2%',
+    minWidth: '2%',
+    color: colorEnd,
+  };
+
+  const styleSetInf = {
+    outline: "none",
+    position: 'absolute',
+    marginTop: '15vh',
+    marginLeft: '24vh',
+    width: 380,
+    bgcolor: 'background.paper',
+    border: '3px solid #000',
+    borderColor: colorBorder,
+    borderRadius: 2,
+    boxShadow: 24,
+    p: 1.5,
+  };
 
   //=== инициализация ======================================
   if (index < 0) flagSave = false;
