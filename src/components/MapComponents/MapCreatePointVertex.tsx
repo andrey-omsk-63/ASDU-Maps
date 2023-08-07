@@ -15,6 +15,7 @@ const MapCreatePointVertex = (props: {
   region: number;
   coord: any;
   createPoint: any;
+  area: string;
 }) => {
   const styleSet = {
     position: "absolute",
@@ -32,6 +33,7 @@ const MapCreatePointVertex = (props: {
   const [openSet, setOpenSet] = React.useState(true);
   const [openSetPoint, setOpenSetPoint] = React.useState(false);
   const [openSetVert, setOpenSetVert] = React.useState(false);
+  const AREA = props.area;
 
   const handleCloseSet = (event: any, reason: string) => {
     if (reason !== "backdropClick") setOpenSet(false);
@@ -85,7 +87,7 @@ const MapCreatePointVertex = (props: {
         <MapCreateVertex
           setOpen={props.setOpen}
           region={props.region}
-          coord={props.coord}
+          area={AREA}
           createPoint={props.createPoint}
         />
       )}

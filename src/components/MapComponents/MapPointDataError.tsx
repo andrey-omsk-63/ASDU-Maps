@@ -17,8 +17,8 @@ import { SendSocketCreateWay } from "./../MapSocketFunctions";
 import { SendSocketCreateWayFromPoint } from "./../MapSocketFunctions";
 import { SendSocketCreateWayToPoint } from "./../MapSocketFunctions";
 
-//import { styleModalEnd, 
-  //styleSetInf
+//import { styleModalEnd,
+//styleSetInf
 // } from "./../MainMapStyle";
 import { styleModalMenu, styleSetArea } from "./MapPointDataErrorStyle";
 import { styleBoxFormArea, styleBoxFormNapr } from "./MapPointDataErrorStyle";
@@ -63,28 +63,28 @@ const MapPointDataError = (props: {
   });
   const dispatch = useDispatch();
   const [openSetEr, setOpenSetEr] = React.useState(true);
-  let colorBorder = props.sErr === "Дубликатная связь" ? 'primary.main' : 'red';
-  let colorEnd = props.sErr === "Дубликатная связь" ? 'black' : 'red';
+  let colorBorder = props.sErr === "Дубликатная связь" ? "primary.main" : "red";
+  let colorEnd = props.sErr === "Дубликатная связь" ? "black" : "red";
 
   const styleModalEnd = {
-    position: 'absolute',
-    top: '0%',
-    left: 'auto',
-    right: '-0%',
-    height: '21px',
-    maxWidth: '2%',
-    minWidth: '2%',
+    position: "absolute",
+    top: "0%",
+    left: "auto",
+    right: "-0%",
+    height: "21px",
+    maxWidth: "2%",
+    minWidth: "2%",
     color: colorEnd,
   };
 
   const styleSetInf = {
     outline: "none",
-    position: 'absolute',
-    marginTop: '15vh',
-    marginLeft: '24vh',
+    position: "absolute",
+    marginTop: "15vh",
+    marginLeft: "24vh",
     width: 380,
-    bgcolor: 'background.paper',
-    border: '3px solid #000',
+    bgcolor: "background.paper",
+    border: "3px solid #000",
     borderColor: colorBorder,
     borderRadius: 2,
     boxShadow: 24,
@@ -336,7 +336,7 @@ const MapPointDataError = (props: {
             onKeyPress={handleKey} //отключение Enter
             value={currency}
             onChange={handleChange}
-            InputProps={{disableUnderline: true, style: { fontSize: 14 } }}
+            InputProps={{ disableUnderline: true, style: { fontSize: 14 } }}
             variant="standard"
             color="secondary"
           >

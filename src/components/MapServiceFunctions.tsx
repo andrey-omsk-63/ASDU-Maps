@@ -131,9 +131,10 @@ export const InputArea = (func: any, currency: any, currencies: any) => {
     width: "150px",
     maxHeight: "2px",
     minHeight: "2px",
+    marginLeft: 0.5,
     bgcolor: "#93D145",
     border: 1,
-    borderRadius: 1.5,
+    borderRadius: 1,
     borderColor: "#93D145",
     textAlign: "center",
     p: 1.25,
@@ -170,6 +171,42 @@ export const InputArea = (func: any, currency: any, currencies: any) => {
     </Box>
   );
 };
+
+export const Distance = (coord1: Array<number>, coord2: Array<number>) => {
+  if (coord1[0] === coord2[0] && coord1[1] === coord2[1]) {
+    return 0;
+  } else {
+    let radlat1 = (Math.PI * coord1[0]) / 180;
+    let radlat2 = (Math.PI * coord2[0]) / 180;
+    let theta = coord1[1] - coord2[1];
+    let radtheta = (Math.PI * theta) / 180;
+    let dist =
+      Math.sin(radlat1) * Math.sin(radlat2) +
+      Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+    if (dist > 1) dist = 1;
+    dist = Math.acos(dist);
+    dist = (dist * 180) / Math.PI;
+    dist = dist * 60 * 1.1515 * 1609.344;
+    return dist;
+  }
+};
+
+export const DelOrCreate = (massdk: any,newPointCoord: any) => {
+  let minDist = 999999;
+  let nomInMass = -1;
+  for (let i = 0; i < massdk.length; i++) {
+    let corFromMap = [
+      massdk[i].coordinates[0],
+      massdk[i].coordinates[1],
+    ];
+    let dister = Distance(newPointCoord, corFromMap);
+    if (dister < 200 && minDist > dister) {
+      minDist = dister;
+      nomInMass = i;
+    }
+  }
+  return nomInMass;
+}
 
 //=== Placemark =====================================
 export const getPointData = (
@@ -244,7 +281,8 @@ export const getPointOptions = (
     if (massdk[index].newCoordinates > 0)
       colorBalloon = "islands#darkOrangeCircleIcon";
   } else {
-    if (massdk[index].newCoordinates > 0) colorBalloon = 'islands#darkOrangeCircleDotIcon';
+    if (massdk[index].newCoordinates > 0)
+      colorBalloon = "islands#darkOrangeCircleDotIcon";
   }
   if (index === pointAaIndex) colorBalloon = "islands#redStretchyIcon";
   if (index === pointBbIndex) colorBalloon = "islands#darkBlueStretchyIcon";
@@ -265,7 +303,8 @@ export const getPointOptions = (
       // размеры метки
       iconImageSize: [30, 30],
       // её "ножки" (точки привязки)
-      iconImageOffset: [-15, -30],
+      //iconImageOffset: [-15, -30], // нижняя часть
+      iconImageOffset: [-15, -15], // центр
     };
   };
 
@@ -331,10 +370,34 @@ export const RecevKeySvg = (recMassroute: any) => {
 };
 
 export const StrokaMenuGlob = (soob: string, func: Function, mode: number) => {
+  const MesssgeLength = (text: string, fontSize: number) => {
+    function textWidth(text: string, fontProp: any) {
+      let tag = document.createElement("div");
+      tag.style.position = "absolute";
+      tag.style.left = "-999em";
+      tag.style.whiteSpace = "nowrap";
+      tag.style.font = fontProp;
+      tag.innerHTML = text;
+      document.body.appendChild(tag);
+      let result = tag.clientWidth;
+      document.body.removeChild(tag);
+      return result;
+    }
+    let theCSSprop = window
+      .getComputedStyle(document.body, null)
+      .getPropertyValue("font-family");
+    let bb = "bold " + fontSize + "px " + theCSSprop;
+    return textWidth(text, bb);
+  };
+
+  // let dlina = MesssgeLength(soob, 14) + 14;
+  // console.log("dlina", dlina+30,(soob.length + 10) * 6.5);
+
   const styleApp01 = {
     fontSize: 14,
-    marginRight: 0.1,
-    width: (soob.length + 10) * 6.5,
+    marginLeft: 0.2,
+    //width: (soob.length + 10) * 6.5,
+    width: MesssgeLength(soob, 14) + 30,
     maxHeight: "21px",
     minHeight: "21px",
     backgroundColor: "#C4EAA2",

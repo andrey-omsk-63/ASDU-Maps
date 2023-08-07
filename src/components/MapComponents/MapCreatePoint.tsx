@@ -13,7 +13,7 @@ import { MapssdkNewPoint, MassrouteNewPoint } from "./../MapServiceFunctions";
 import { styleSetAdress, styleBoxForm, styleInpKnop } from "./../MainMapStyle";
 import { styleSet } from "./../MainMapStyle";
 
-let chNewCoord = 1;
+//let chNewCoord = 1;
 
 const MapCreatePoint = (props: {
   setOpen: any;
@@ -32,11 +32,18 @@ const MapCreatePoint = (props: {
   });
   const dispatch = useDispatch();
   //========================================================
+  const NameMode = () => {
+    let nameMode =
+      "(" +
+      new Date().toLocaleDateString() +
+      " " +
+      new Date().toLocaleTimeString() +
+      ")";
+    return nameMode;
+  };
 
   const [openSetAdress, setOpenSetAdress] = React.useState(true);
-  const [valuen, setValuen] = React.useState(
-    "Новая точка " + String(chNewCoord)
-  );
+  const [valuen, setValuen] = React.useState("Объект" + NameMode());
 
   const handleKey = (event: any) => {
     if (event.key === "Enter") event.preventDefault();
@@ -73,7 +80,10 @@ const MapCreatePoint = (props: {
                 <TextField
                   size="small"
                   onKeyPress={handleKey} //отключение Enter
-                  InputProps={{disableUnderline: true, style: { fontSize: 13.3 } }}
+                  InputProps={{
+                    disableUnderline: true,
+                    style: { fontSize: 13.3 },
+                  }}
                   value={valuen}
                   onChange={handleChange}
                   variant="standard"

@@ -8,8 +8,6 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
-//import TextField from "@mui/material/TextField";
-//import MenuItem from "@mui/material/MenuItem";
 
 import { YMaps, Map, Placemark, FullscreenControl } from "react-yandex-maps";
 import { GeolocationControl, YMapsApi } from "react-yandex-maps";
@@ -28,7 +26,7 @@ import { RecordMassRoute, InputArea } from "./MapServiceFunctions";
 import { DecodingCoord, CodingCoord } from "./MapServiceFunctions";
 import { getMultiRouteOptions, DoublRoute } from "./MapServiceFunctions";
 import { getReferencePoints, CenterCoord } from "./MapServiceFunctions";
-import { getMassPolyRouteOptions } from "./MapServiceFunctions";
+import { getMassPolyRouteOptions, DelOrCreate } from "./MapServiceFunctions";
 import { getMassMultiRouteOptions } from "./MapServiceFunctions";
 import { getMassMultiRouteInOptions } from "./MapServiceFunctions";
 import { getPointData, getPointOptions } from "./MapServiceFunctions";
@@ -95,6 +93,7 @@ const currencies: any = [];
 let massKey: any = [];
 let massDat: any = [];
 let AREA = "0";
+let idxDel = -1;
 
 const MainMap = (props: {
   ws: WebSocket;
@@ -110,7 +109,7 @@ const MainMap = (props: {
     const { massdkReducer } = state;
     return massdkReducer.massdk;
   });
-  //console.log('massdk:',massdk)
+  console.log("massdk:", massdk);
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
     return massrouteReducer.massroute;
@@ -143,6 +142,7 @@ const MainMap = (props: {
   const [revers, setRevers] = React.useState(false);
   const [openSet, setOpenSet] = React.useState(false);
   const [openSetCreate, setOpenSetCreate] = React.useState(false);
+  const [openSetDelete, setOpenSetDelete] = React.useState(false);
   const [openSetAdress, setOpenSetAdress] = React.useState(false);
   const [openSetRevers, setOpenSetRevers] = React.useState(false);
   const [makeRevers, setMakeRevers] = React.useState(false);
@@ -634,6 +634,29 @@ const MainMap = (props: {
     );
   };
 
+  const DelVertexOrPoint = (idx: number) => {
+    return (
+      <Modal
+        open={openSetDelete}
+        onClose={() => setOpenSetDelete(false)}
+        hideBackdrop
+      >
+        <Box sx={styleSetPoint}>
+          <Button
+            sx={styleModalEndMapGl}
+            onClick={() => setOpenSetDelete(false)}
+          >
+            <b>&#10006;</b>
+          </Button>
+          <Box sx={{ marginTop: 2, textAlign: "center" }}>
+            Производится удаление [{massdk[idx].area},{massdk[idx].ID}]{" "}
+            {massdk[idx].nameCoordinates}
+          </Box>
+        </Box>
+      </Modal>
+    );
+  };
+
   const InstanceRefDo = (ref: React.Ref<any>) => {
     if (ref) {
       mapp.current = ref;
@@ -641,7 +664,9 @@ const MainMap = (props: {
       funcContex = function (e: any) {
         if (mapp.current.hint) {
           newPointCoord = e.get("coords"); // нажата правая кнопка мыши
-          setOpenSetCreate(true);
+          idxDel = DelOrCreate(massdk, newPointCoord);
+          idxDel >= 0 && setOpenSetDelete(true);
+          idxDel < 0 && setOpenSetCreate(true);
         }
       };
       mapp.current.events.add("contextmenu", funcContex);
@@ -724,6 +749,8 @@ const MainMap = (props: {
       masSvg = null;
     }
   }
+
+  console.log("2nomInMass:", openSetDelete, idxDel);
 
   return (
     <Grid container sx={{ border: 0, height: "99.9vh" }}>
@@ -819,8 +846,10 @@ const MainMap = (props: {
                 region={homeRegion}
                 coord={newPointCoord}
                 createPoint={MakeNewPoint}
+                area={AREA}
               />
             )}
+            {openSetDelete && DelVertexOrPoint(idxDel)}
             {openSetRevers && (
               <MapReversRoute
                 setOpen={setOpenSetRevers}

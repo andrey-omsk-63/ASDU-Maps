@@ -23,7 +23,7 @@ let adrV = "";
 const MapCreateVertex = (props: {
   setOpen: any;
   region: number;
-  coord: any;
+  area: string;
   createPoint: any;
 }) => {
   //== Piece of Redux ======================================
@@ -64,6 +64,7 @@ const MapCreateVertex = (props: {
   const [currency, setCurrency] = React.useState(massKey[0]);
   const [valuen, setValuen] = React.useState(1);
   const [openSetErr, setOpenSetErr] = React.useState(false);
+  const AREA = props.area;
 
   const handleKey = (event: any) => {
     if (event.key === "Enter") event.preventDefault();
@@ -199,9 +200,20 @@ const MapCreateVertex = (props: {
         <Grid item container sx={styleSetAdrAreaID}>
           <Grid item>
             <Grid item container sx={styleSetAdrArea}>
-              <Grid item xs={9.5}>
-                <InputArea />
-              </Grid>
+              {AREA === "0" && (
+                <Grid item xs={9.5}>
+                  <InputArea />
+                </Grid>
+              )}
+              {AREA !== "0" && (
+                <Grid item xs={9.5}>
+                  <Box
+                    sx={{ fontSize: 17, marginTop: 1.5, textAlign: "center" }}
+                  >
+                    {massDat[Number(AREA) - 1]}
+                  </Box>
+                </Grid>
+              )}
             </Grid>
             <Grid item container sx={styleSetAdrID}>
               <Grid item xs={9.5}>
