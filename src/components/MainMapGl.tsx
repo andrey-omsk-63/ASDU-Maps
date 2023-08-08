@@ -32,6 +32,7 @@ import { getMassMultiRouteInOptions } from "./MapServiceFunctions";
 import { getPointData, getPointOptions } from "./MapServiceFunctions";
 import { StrokaBalloon, ChangeCrossFunc } from "./MapServiceFunctions";
 import { RecevKeySvg, StrokaMenuGlob, MasskPoint } from "./MapServiceFunctions";
+import { DelVertexOrPoint } from "./MapServiceFunctions";
 
 import { SendSocketCreatePoint, SocketDeleteWay } from "./MapSocketFunctions";
 import { SendSocketCreateVertex } from "./MapSocketFunctions";
@@ -94,6 +95,7 @@ let massKey: any = [];
 let massDat: any = [];
 let AREA = "0";
 let idxDel = -1;
+//let flagDemo = false;
 
 const MainMap = (props: {
   ws: WebSocket;
@@ -127,7 +129,7 @@ const MainMap = (props: {
     const { mapReducer } = state;
     return mapReducer.map;
   });
-  //console.log("map:", map);
+  console.log("map:", map);
   const dispatch = useDispatch();
   //===========================================================
   const [currency, setCurrency] = React.useState("0");
@@ -216,7 +218,8 @@ const MainMap = (props: {
       ZeroRoute(mode);
     }
     setNeedRevers(0);
-    flagDemo && ymaps && addRoute(ymaps); // перерисовка связей
+    flagDemo && FillMassRoute();
+    ymaps && addRoute(ymaps); // перерисовка связей
   };
 
   const MakeСollectionRoute = () => {
@@ -232,7 +235,8 @@ const MainMap = (props: {
       }
     }
     FillMassRoute();
-    flagDemo && ymaps && addRoute(ymaps); // перерисовка связей
+    console.log("2###:", flagDemo, AREA, typeof AREA, massRoute);
+    ymaps && addRoute(ymaps); // перерисовка связей
   };
 
   const ReversRoute = () => {
@@ -268,14 +272,15 @@ const MainMap = (props: {
   const PressButton = (mode: number) => {
     switch (mode) {
       case 3: // режим включения Demo сети связей
-        FillMassRoute();
         setFlagDemo(true);
+        FillMassRoute();
         ymaps && addRoute(ymaps); // перерисовка связей
         break;
       case 6: // режим отмены Demo сети связей
-        massRoute = [];
         setFlagDemo(false);
+        massRoute = [];
         ymaps && addRoute(ymaps); // перерисовка связей
+        //}, 100);
         break;
       case 12: // реверс связи
         ReversRoute();
@@ -322,12 +327,14 @@ const MainMap = (props: {
         break;
       case 121: // выбор района
         FillMassRoute();
+        console.log("1###:", flagDemo, AREA, typeof AREA, massRoute);
         flagDemo && ymaps && addRoute(ymaps); // перерисовка связей
     }
   };
 
   const addRoute = (ymaps: any) => {
     mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
+    console.log("addRoute:", massRoute);
     let massPolyRoute: any = []; // cеть связей
     for (let i = 0; i < massRoute.length; i++) {
       massPolyRoute[i] = new ymaps.Polyline(
@@ -392,6 +399,7 @@ const MainMap = (props: {
       MakeСollectionRoute();
       setFlagPusk(true);
     } else {
+      let soob = "Связь между перекрёстками в разных районах создовать нельзя";
       if (pointBb === 0) {
         if (pointAaIndex === index) {
           SoobOpenSetEr("Начальная и конечная точки совпадают");
@@ -403,11 +411,9 @@ const MainMap = (props: {
             pointBbIndex = 0; // конечная точка
             SoobOpenSetEr("Связь между двумя точками создовать нельзя");
           } else {
-            console.log("###:", areaAa, areaBb);
             if (areaAa !== areaBb && areaAa !== 0 && areaBb !== 0) {
-              console.log("КОСЯК!!!");
               pointBbIndex = 0; // конечная точка
-              SoobOpenSetEr("Связь между CO в разных районах создовать нельзя");
+              SoobOpenSetEr(soob);
             } else {
               pointBb = [
                 massdk[index].coordinates[0],
@@ -436,11 +442,9 @@ const MainMap = (props: {
   const ModalPressBalloon = () => {
     const [openSetErBall, setOpenSetErBall] = React.useState(false);
     let pointRoute: any = 0;
-    let soobDel = "Удаление точки";
     let areaPoint = -1;
     if (indexPoint >= 0) areaPoint = massdk[indexPoint].area;
     if (indexPoint >= 0 && indexPoint < massdk.length) {
-      if (areaPoint) soobDel = "Удаление перекрёстка";
       pointRoute = [
         massdk[indexPoint].coordinates[0],
         massdk[indexPoint].coordinates[1],
@@ -488,50 +492,6 @@ const MainMap = (props: {
             }
           }
           break;
-        case 3: // Удаление точки/перекрёстка
-          console.log("Удаление");
-          if (pointAaIndex === indexPoint || pointBbIndex === indexPoint) {
-            soobError = "Начальную и конечную точки связи удалять нельзя";
-            setOpenSetErBall(true);
-          } else {
-            let massRouteRab: any = []; // удаление из массива сети связей
-            let coordPoint = massroute.vertexes[indexPoint].dgis;
-            let idPoint = massroute.vertexes[indexPoint].id;
-            let regionV = massroute.vertexes[indexPoint].region.toString();
-            let areaV = massroute.vertexes[indexPoint].area.toString();
-            for (let i = 0; i < massroute.ways.length; i++) {
-              let iffer =
-                coordPoint !== massroute.ways[i].starts &&
-                coordPoint !== massroute.ways[i].stops;
-              iffer && massRouteRab.push(massroute.ways[i]);
-              !iffer && SocketDeleteWay(debugging, WS, massroute.ways[i]);
-            }
-            massroute.ways.splice(0, massroute.ways.length); // massroute = [];
-            massroute.ways = massRouteRab;
-            if (flagDemo) massRoute = massroute.ways;
-            DelCollectionRoutes(); // удаление колекции связей
-            massdk.splice(indexPoint, 1); // удаление самой точки/перекрёстка
-            massroute.vertexes.splice(indexPoint, 1);
-            dispatch(massdkCreate(massdk));
-            dispatch(massrouteCreate(massroute));
-            let oldPointAa = coordinates[pointAaIndex];
-            let oldPointBb = coordinates[pointBbIndex];
-            coordinates.splice(indexPoint, 1);
-            dispatch(coordinatesCreate(coordinates));
-            for (let i = 0; i < coordinates.length; i++) {
-              if (coordinates[i] === oldPointAa) pointAaIndex = i;
-              if (coordinates[i] === oldPointBb) pointBbIndex = i;
-            }
-            if (areaV === "0") {
-              SendSocketDeletePoint(debugging, WS, idPoint);
-            } else {
-              SendSocketDeleteVertex(debugging, WS, regionV, areaV, idPoint);
-            }
-            setOpenSet(false);
-            indexPoint = -1;
-            ymaps && addRoute(ymaps); // перерисовка связей
-          }
-          break;
         case 4: // Редактирование адреса
           setOpenSetAdress(true);
       }
@@ -543,8 +503,7 @@ const MainMap = (props: {
           <Button sx={styleModalEndMapGl} onClick={() => setOpenSet(false)}>
             <b>&#10006;</b>
           </Button>
-          <Box sx={{ marginTop: 2, textAlign: "center" }}>
-            {StrokaBalloon(soobDel, handleClose, 3)}
+          <Box sx={{ marginTop: 1, textAlign: "center" }}>
             {!areaPoint && (
               <>{StrokaBalloon("Редактирование адреса", handleClose, 4)}</>
             )}
@@ -634,27 +593,36 @@ const MainMap = (props: {
     );
   };
 
-  const DelVertexOrPoint = (idx: number) => {
-    return (
-      <Modal
-        open={openSetDelete}
-        onClose={() => setOpenSetDelete(false)}
-        hideBackdrop
-      >
-        <Box sx={styleSetPoint}>
-          <Button
-            sx={styleModalEndMapGl}
-            onClick={() => setOpenSetDelete(false)}
-          >
-            <b>&#10006;</b>
-          </Button>
-          <Box sx={{ marginTop: 2, textAlign: "center" }}>
-            Производится удаление [{massdk[idx].area},{massdk[idx].ID}]{" "}
-            {massdk[idx].nameCoordinates}
-          </Box>
-        </Box>
-      </Modal>
-    );
+  const handleCloseDel = (mode: boolean) => {
+    if (mode) {
+      let massRouteRab: any = []; // удаление из массива сети связей
+      let coordPoint = massroute.vertexes[idxDel].dgis;
+      let idPoint = massroute.vertexes[idxDel].id;
+      let regionV = massroute.vertexes[idxDel].region.toString();
+      let areaV = massroute.vertexes[idxDel].area.toString();
+      for (let i = 0; i < massroute.ways.length; i++) {
+        let iffer =
+          coordPoint !== massroute.ways[i].starts &&
+          coordPoint !== massroute.ways[i].stops;
+        iffer && massRouteRab.push(massroute.ways[i]);
+        !iffer && SocketDeleteWay(debugging, WS, massroute.ways[i]);
+      }
+      massroute.ways.splice(0, massroute.ways.length); // massroute = [];
+      massroute.ways = massRouteRab;
+      if (flagDemo) massRoute = massroute.ways;
+      DelCollectionRoutes(); // удаление колекции связей
+      massdk.splice(idxDel, 1); // удаление самой точки/перекрёстка
+      massroute.vertexes.splice(idxDel, 1);
+      dispatch(massdkCreate(massdk));
+      dispatch(massrouteCreate(massroute));
+      coordinates.splice(idxDel, 1);
+      dispatch(coordinatesCreate(coordinates));
+      areaV === "0" && SendSocketDeletePoint(debugging, WS, idPoint); // объкт
+      areaV !== "0" &&
+        SendSocketDeleteVertex(debugging, WS, regionV, areaV, idPoint); // светофор
+      ymaps && addRoute(ymaps); // перерисовка связей
+    }
+    setOpenSetDelete(false);
   };
 
   const InstanceRefDo = (ref: React.Ref<any>) => {
@@ -750,8 +718,6 @@ const MainMap = (props: {
     }
   }
 
-  console.log("2nomInMass:", openSetDelete, idxDel);
-
   return (
     <Grid container sx={{ border: 0, height: "99.9vh" }}>
       {InputArea(handleChangeArea, currency, currencies)}
@@ -759,24 +725,26 @@ const MainMap = (props: {
       {makeRevers && needRevers === 1 && <>{PressButton(36)}</>}
       {makeRevers && needRevers === 2 && <>{PressButton(37)}</>}
       {flagPusk && !flagBind && (
-        <>{StrokaMenuGlob("Отмена назначений", PressButton, 77)}</>
+        <>{StrokaMenuGlob("Отм.назначений", PressButton, 77)}</>
       )}
       {flagPusk && flagRoute && !flagBind && (
         <>
-          {StrokaMenuGlob("Сохранить связь", PressButton, 33)}
+          {StrokaMenuGlob("Сохр.связь", PressButton, 33)}
           {StrokaMenuGlob("Реверc связи", PressButton, 12)}
-          {StrokaMenuGlob("Редактир.связи", PressButton, 69)}
+          {StrokaMenuGlob("Редакт.связи", PressButton, 69)}
         </>
       )}
       {flagPusk && flagRoute && flagBind && (
         <>
-          {StrokaMenuGlob("Сохранить связь", PressButton, 33)}
-          {StrokaMenuGlob("Отменить связь", PressButton, 77)}
-          {StrokaMenuGlob("Редактир.связи", PressButton, 69)}
+          {StrokaMenuGlob("Сохр.связь", PressButton, 33)}
+          {StrokaMenuGlob("Отм.связь", PressButton, 77)}
+          {StrokaMenuGlob("Редакт.связи", PressButton, 69)}
         </>
       )}
-      {!flagDemo && <>{StrokaMenuGlob("Demo сети", PressButton, 3)}</>}
-      {flagDemo && <>{StrokaMenuGlob("Откл Demo", PressButton, 6)}</>}
+      {!flagDemo && (
+        <>{StrokaMenuGlob("Формализованные Связи", PressButton, 3)}</>
+      )}
+      {flagDemo && <>{StrokaMenuGlob("Отключить ФС", PressButton, 6)}</>}
       {flagPro && <>{StrokaMenuGlob("Протокол", PressButton, 24)}</>}
       {Object.keys(massroute).length && (
         <YMaps
@@ -849,7 +817,8 @@ const MainMap = (props: {
                 area={AREA}
               />
             )}
-            {openSetDelete && DelVertexOrPoint(idxDel)}
+            {openSetDelete &&
+              DelVertexOrPoint(openSetDelete, massdk, idxDel, handleCloseDel)}
             {openSetRevers && (
               <MapReversRoute
                 setOpen={setOpenSetRevers}

@@ -63,6 +63,7 @@ export const styleSetImg = {
 //=== MapGl =====================================================
 
 export const styleSetPoint = {
+  outline: "none",
   position: 'absolute',
   marginTop: '15vh',
   marginLeft: '24vh',

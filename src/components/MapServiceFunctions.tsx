@@ -2,11 +2,13 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
+import Modal from "@mui/material/Modal";
+import Typography from "@mui/material/Typography";
 
 import { Pointer, Router } from "./../App";
 import { Vertex } from "./../interfaceRoute";
 
-import { styleModalMenu } from "./MainMapStyle";
+import { styleModalMenu, styleModalEndMapGl } from "./MainMapStyle";
 
 export const MapssdkNewPoint = (
   homeRegion: number,
@@ -191,22 +193,19 @@ export const Distance = (coord1: Array<number>, coord2: Array<number>) => {
   }
 };
 
-export const DelOrCreate = (massdk: any,newPointCoord: any) => {
+export const DelOrCreate = (massdk: any, newPointCoord: any) => {
   let minDist = 999999;
   let nomInMass = -1;
   for (let i = 0; i < massdk.length; i++) {
-    let corFromMap = [
-      massdk[i].coordinates[0],
-      massdk[i].coordinates[1],
-    ];
+    let corFromMap = [massdk[i].coordinates[0], massdk[i].coordinates[1]];
     let dister = Distance(newPointCoord, corFromMap);
-    if (dister < 200 && minDist > dister) {
+    if (dister < 1000 && minDist > dister) {
       minDist = dister;
       nomInMass = i;
     }
   }
   return nomInMass;
-}
+};
 
 //=== Placemark =====================================
 export const getPointData = (
@@ -227,8 +226,6 @@ export const getPointData = (
     }
   }
   let cont3 = "";
-  //console.log("!!!", index, idxMap, massdk[index].area);
-  //if (massdk[index].area) cont3 = ', ' + map.dateMap.tflight[idxMap].idevice;
   if (idxMap >= 0) cont3 = ", " + map.dateMap.tflight[idxMap].idevice;
   let cont1 = massdk[index].nameCoordinates + "<br/>";
   //let cont2 = '[' + massdk[index].region + ', ' + massdk[index].area;
@@ -265,13 +262,18 @@ export const getPointOptions = (
   }
 
   const Hoster = () => {
+    console.log("1@@@:",index, idxMap, map.dateMap.tflight[idxMap]);
+    console.log("2@@@:", AREA,  map.dateMap.tflight[idxMap].area.num);
     let host = "";
-    if (map.dateMap.tflight[idxMap].area.num === AREA || AREA === "0") {
-      host = "https://localhost:3000/1.svg";
-      if (!debug && idxMap >= 0)
-        host = window.location.origin + "/free/img/trafficLights/1.svg";
-      if (!debug && idxMap < 0) host = "";
+    if (idxMap >= 0) {
+      if (map.dateMap.tflight[idxMap].area.num === AREA || AREA === "0") {
+        host = "https://localhost:3000/1.svg";
+        if (!debug && idxMap >= 0)
+          host = window.location.origin + "/free/img/trafficLights/1.svg";
+        if (!debug && idxMap < 0) host = "";
+      }
     }
+    console.log('AREA:',AREA, typeof AREA, idxMap,host)
     return host;
   };
 
@@ -457,4 +459,72 @@ export const ChangeCrossFunc = (fromCross: any, toCross: any) => {
   mass.push(fromCross);
   mass.push(toCross);
   return mass;
+};
+
+export const DelVertexOrPoint = (
+  openSetDelete: boolean,
+  massdk: any,
+  idx: number,
+  handleCloseDel: Function
+) => {
+  let soob = massdk[idx].area === 0 ? "объект" : "перекрёсток";
+  const styleSetPoint = {
+    outline: "none",
+    position: "absolute",
+    marginTop: "15vh",
+    marginLeft: "24vh",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "3px solid #000",
+    borderColor: "primary.main",
+    borderRadius: 2,
+    boxShadow: 24,
+    textAlign: "center",
+    p: 1,
+  };
+
+  const styleModalMenu = {
+    marginTop: 0.5,
+    backgroundColor: "#E6F5D6",
+    textTransform: "unset !important",
+    color: "black",
+  };
+
+  return (
+    <Modal
+      open={openSetDelete}
+      onClose={() => handleCloseDel(false)}
+      hideBackdrop
+    >
+      <Box sx={styleSetPoint}>
+        <Button sx={styleModalEndMapGl} onClick={() => handleCloseDel(false)}>
+          <b>&#10006;</b>
+        </Button>
+        <Typography variant="h6" sx={{ color: "red" }}>
+          Предупреждение
+        </Typography>
+        <Box>
+          Будут удалены {soob}&nbsp;
+          <b>
+            [{massdk[idx].area}, {massdk[idx].ID}
+            ]&nbsp;&nbsp;
+            {massdk[idx].nameCoordinates}
+          </b>{" "}
+          и все связи с ним
+        </Box>
+        <Box sx={{ marginTop: 1.2 }}>
+          <Typography variant="h6" sx={{ color: "red" }}>
+            Удалять данный {soob}?
+          </Typography>
+          <Button sx={styleModalMenu} onClick={() => handleCloseDel(true)}>
+            Да
+          </Button>
+          &nbsp;
+          <Button sx={styleModalMenu} onClick={() => handleCloseDel(false)}>
+            Нет
+          </Button>
+        </Box>
+      </Box>
+    </Modal>
+  );
 };
