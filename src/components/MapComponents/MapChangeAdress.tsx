@@ -36,7 +36,7 @@ let toCross: any = {
 let massBind = [-1, -1];
 
 const MapChangeAdress = (props: {
-  debug: boolean;
+  //debug: boolean;
   ws: any;
   iPoint: number;
   setOpen: any;
@@ -80,7 +80,7 @@ const MapChangeAdress = (props: {
   const handleCloseSetAdr = () => {
     if (massdk[props.iPoint].nameCoordinates !== valuen) {
       const handleSendOpen = () => {
-        if (!props.debug) {
+        if (props.ws.url !== "wss://localhost:3000/W") {
           if (props.ws.readyState === WebSocket.OPEN) {
             props.ws.send(
               JSON.stringify({
@@ -115,17 +115,17 @@ const MapChangeAdress = (props: {
           massroute.ways[i].sourceID === idPoint
         ) {
           massWays.push(massroute.ways[i]);
-          SocketDeleteWay(props.debug, props.ws, massroute.ways[i]);
+          SocketDeleteWay(props.ws, massroute.ways[i]);
         }
         if (
           !massroute.ways[i].targetArea &&
           massroute.ways[i].targetID === idPoint
         ) {
           massWays.push(massroute.ways[i]);
-          SocketDeleteWay(props.debug, props.ws, massroute.ways[i]);
+          SocketDeleteWay(props.ws, massroute.ways[i]);
         }
       }
-      SendSocketDeletePoint(props.debug, props.ws, idPoint);
+      SendSocketDeletePoint(props.ws, idPoint);
       //SendSocketCreatePoint(deb, WS, coor, valuen);
       handleSendOpen(); // создание новой точки со старым ID
 
@@ -156,7 +156,6 @@ const MapChangeAdress = (props: {
         reqRoute.tmRoute = massWays[i].time;
         if (!massWays[i].sourceArea) {
           SendSocketCreateWayFromPoint(
-            props.debug,
             props.ws,
             fromCross,
             toCross,
@@ -165,7 +164,6 @@ const MapChangeAdress = (props: {
           );
         } else {
           SendSocketCreateWayToPoint(
-            props.debug,
             props.ws,
             fromCross,
             toCross,

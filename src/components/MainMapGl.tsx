@@ -52,18 +52,16 @@ let coordStopIn: any = []; // рабочий массив коллекции и�
 let massRoute: any = []; // рабочий массив сети связей
 let masSvg: any = ["", ""];
 
-let debugging = false;
-let flagOpen = false;
-let flagBind = false;
-let flagRevers = false;
-let needLinkBind = false;
+let debugging: boolean, flagOpen: boolean, flagBind: boolean;
+let flagRevers: boolean, needLinkBind: boolean, FlagDemo: boolean;
+debugging = flagOpen = flagBind = flagRevers = needLinkBind = FlagDemo = false;
+let newPointCoord: any, homeRegion: any, pointCenter: any;
+newPointCoord = homeRegion = pointCenter = 0;
+
 let activeRoute: any = null;
-let newPointCoord: any = 0;
 let soobError = "";
 let oldsErr = "";
 let zoom = 10;
-let homeRegion = 0;
-let pointCenter: any = 0;
 let indexPoint: number = -1;
 let reqRoute: any = {
   dlRoute: 0,
@@ -95,7 +93,6 @@ let massKey: any = [];
 let massDat: any = [];
 let AREA = "0";
 let idxDel = -1;
-//let flagDemo = false;
 
 const MainMap = (props: {
   ws: WebSocket;
@@ -111,7 +108,7 @@ const MainMap = (props: {
     const { massdkReducer } = state;
     return massdkReducer.massdk;
   });
-  console.log("massdk:", massdk);
+  //console.log("massdk:", massdk);
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
     return massrouteReducer.massroute;
@@ -129,7 +126,7 @@ const MainMap = (props: {
     const { mapReducer } = state;
     return mapReducer.map;
   });
-  console.log("map:", map);
+  //console.log("map:", map);
   const dispatch = useDispatch();
   //===========================================================
   const [currency, setCurrency] = React.useState("0");
@@ -160,10 +157,8 @@ const MainMap = (props: {
   };
 
   const ZeroRoute = (mode: boolean) => {
-    pointAa = 0;
-    pointBb = 0;
-    pointAaIndex = -1;
-    pointBbIndex = -1;
+    pointAa = pointBb = 0;
+    pointAaIndex = pointBbIndex = -1;
     DelCollectionRoutes();
     flagBind = false;
     setFlagRoute(false);
@@ -178,18 +173,19 @@ const MainMap = (props: {
 
   const FillMassRoute = () => {
     massRoute = [];
-    if (AREA === "0") {
-      massRoute = massroute.ways;
-    } else {
+    if (AREA === "0" && FlagDemo) massRoute = massroute.ways;
+    if (AREA !== "0" && FlagDemo) {
       for (let i = 0; i < massroute.ways.length; i++)
-        if (massroute.ways[i].sourceArea.toString() === AREA)
+        if (
+          massroute.ways[i].sourceArea.toString() === AREA ||
+          massroute.ways[i].targetArea.toString() === AREA
+        )
           massRoute.push(massroute.ways[i]);
     }
   };
 
   const MakeRecordMassRoute = (mode: boolean, mass: any) => {
     let aRou = reqRoute;
-    let debug = debugging;
     fromCross.pointAcod = CodingCoord(pointAa);
     toCross.pointBcod = CodingCoord(pointBb);
     if (DoublRoute(massroute.ways, pointAa, pointBb)) {
@@ -201,12 +197,12 @@ const MainMap = (props: {
       dispatch(massrouteCreate(massroute));
       dispatch(massrouteproCreate(massroutepro));
       if (massroute.vertexes[pointAaIndex].area === 0) {
-        SendSocketCreateWayFromPoint(debug, WS, fromCross, toCross, mass, aRou);
+        SendSocketCreateWayFromPoint(WS, fromCross, toCross, mass, aRou);
       } else {
         if (massroute.vertexes[pointBbIndex].area === 0) {
-          SendSocketCreateWayToPoint(debug, WS, fromCross, toCross, mass, aRou);
+          SendSocketCreateWayToPoint(WS, fromCross, toCross, mass, aRou);
         } else {
-          SendSocketCreateWay(debug, WS, fromCross, toCross, mass, aRou);
+          SendSocketCreateWay(WS, fromCross, toCross, mass, aRou);
         }
       }
       setFlagPro(true); //включение протокола
@@ -235,7 +231,6 @@ const MainMap = (props: {
       }
     }
     FillMassRoute();
-    console.log("2###:", flagDemo, AREA, typeof AREA, massRoute);
     ymaps && addRoute(ymaps); // перерисовка связей
   };
 
@@ -264,7 +259,7 @@ const MainMap = (props: {
     let idIn = massroute.vertexes[pointAaIndex].id;
     let arOn = massroute.vertexes[pointBbIndex].area;
     let idOn = massroute.vertexes[pointBbIndex].id;
-    SendSocketGetSvg(debugging, WS, homeRegion, arIn, idIn, arOn, idOn);
+    SendSocketGetSvg(WS, homeRegion, arIn, idIn, arOn, idOn);
     flagBind = true;
     setOpenSetBind(true);
   };
@@ -273,14 +268,15 @@ const MainMap = (props: {
     switch (mode) {
       case 3: // режим включения Demo сети связей
         setFlagDemo(true);
+        FlagDemo = true;
         FillMassRoute();
         ymaps && addRoute(ymaps); // перерисовка связей
         break;
       case 6: // режим отмены Demo сети связей
         setFlagDemo(false);
+        FlagDemo = true;
         massRoute = [];
         ymaps && addRoute(ymaps); // перерисовка связей
-        //}, 100);
         break;
       case 12: // реверс связи
         ReversRoute();
@@ -327,14 +323,12 @@ const MainMap = (props: {
         break;
       case 121: // выбор района
         FillMassRoute();
-        console.log("1###:", flagDemo, AREA, typeof AREA, massRoute);
         flagDemo && ymaps && addRoute(ymaps); // перерисовка связей
     }
   };
 
   const addRoute = (ymaps: any) => {
     mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
-    console.log("addRoute:", massRoute);
     let massPolyRoute: any = []; // cеть связей
     for (let i = 0; i < massRoute.length; i++) {
       massPolyRoute[i] = new ymaps.Polyline(
@@ -369,12 +363,10 @@ const MainMap = (props: {
     multiRoute.model.events.add("requestsuccess", function () {
       activeRoute = multiRoute.getActiveRoute();
       if (activeRoute) {
-        reqRoute.dlRoute = Math.round(
-          activeRoute.properties.get("distance").value
-        );
-        reqRoute.tmRoute = Math.round(
-          activeRoute.properties.get("duration").value
-        );
+        let dist = activeRoute.properties.get("distance").value;
+        reqRoute.dlRoute = Math.round(dist);
+        let duration = activeRoute.properties.get("duration").value;
+        reqRoute.tmRoute = Math.round(duration);
       }
     });
   };
@@ -517,7 +509,6 @@ const MainMap = (props: {
           </Box>
           {openSetAdress && (
             <MapChangeAdress
-              debug={debugging}
               ws={WS}
               iPoint={indexPoint}
               setOpen={setOpenSetAdress}
@@ -529,7 +520,6 @@ const MainMap = (props: {
             <MapPointDataError
               sErr={soobError}
               setOpen={setOpenSetErBall}
-              debug={debugging}
               ws={WS}
               fromCross={fromCross}
               toCross={toCross}
@@ -548,8 +538,8 @@ const MainMap = (props: {
     let adress = massroute.vertexes[massroute.vertexes.length - 1].name;
     coordinates.push(coords);
     dispatch(coordinatesCreate(coordinates));
-    areaV && SendSocketCreateVertex(debugging, WS, homeRegion, areaV, idV);
-    !areaV && SendSocketCreatePoint(debugging, WS, coor, adress);
+    areaV && SendSocketCreateVertex(WS, homeRegion, areaV, idV);
+    !areaV && SendSocketCreatePoint(WS, coor, adress);
     setOpenSetCreate(false);
   };
 
@@ -605,7 +595,7 @@ const MainMap = (props: {
           coordPoint !== massroute.ways[i].starts &&
           coordPoint !== massroute.ways[i].stops;
         iffer && massRouteRab.push(massroute.ways[i]);
-        !iffer && SocketDeleteWay(debugging, WS, massroute.ways[i]);
+        !iffer && SocketDeleteWay(WS, massroute.ways[i]);
       }
       massroute.ways.splice(0, massroute.ways.length); // massroute = [];
       massroute.ways = massRouteRab;
@@ -617,9 +607,8 @@ const MainMap = (props: {
       dispatch(massrouteCreate(massroute));
       coordinates.splice(idxDel, 1);
       dispatch(coordinatesCreate(coordinates));
-      areaV === "0" && SendSocketDeletePoint(debugging, WS, idPoint); // объкт
-      areaV !== "0" &&
-        SendSocketDeleteVertex(debugging, WS, regionV, areaV, idPoint); // светофор
+      areaV === "0" && SendSocketDeletePoint(WS, idPoint); // объкт
+      areaV !== "0" && SendSocketDeleteVertex(WS, regionV, areaV, idPoint); // светофор
       ymaps && addRoute(ymaps); // перерисовка связей
     }
     setOpenSetDelete(false);
@@ -779,7 +768,6 @@ const MainMap = (props: {
               <MapPointDataError
                 sErr={soobError}
                 setOpen={setOpenSetEr}
-                debug={debugging}
                 ws={WS}
                 fromCross={fromCross}
                 toCross={toCross}
@@ -799,8 +787,8 @@ const MainMap = (props: {
             )}
             {openSetBind && (
               <MapRouteBind
-                debug={debugging}
                 setOpen={setOpenSetBind}
+                debug={debugging}
                 svg={masSvg}
                 setSvg={props.setSvg}
                 idxA={pointAaIndex}

@@ -3,13 +3,13 @@ import { Way } from "./../interfaceRoute";
 //=== SendSocket ===================================
 
 export const SendSocketCreatePoint = (
-  debugging: boolean,
+  //debugging: boolean,
   ws: WebSocket,
   codCoord: string,
   adress: string
 ) => {
   const handleSendOpen = () => {
-    if (!debugging) {
+    if (ws.url !== "wss://localhost:3000/W") {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
@@ -23,7 +23,7 @@ export const SendSocketCreatePoint = (
       } else {
         setTimeout(() => {
           handleSendOpen();
-        }, 1000);
+        }, 100);
       }
     }
   };
@@ -31,18 +31,18 @@ export const SendSocketCreatePoint = (
 };
 
 export const SendSocketDeletePoint = (
-  debugging: boolean,
+  //debugging: boolean,
   ws: WebSocket,
   id: number
 ) => {
   const handleSendOpen = () => {
-    if (!debugging) {
+    if (ws.url !== "wss://localhost:3000/W") {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(JSON.stringify({ type: "deletePoint", data: { id } }));
       } else {
         setTimeout(() => {
           handleSendOpen();
-        }, 1000);
+        }, 100);
       }
     }
   };
@@ -50,14 +50,14 @@ export const SendSocketDeletePoint = (
 };
 
 export const SendSocketCreateVertex = (
-  debugging: boolean,
+  //debugging: boolean,
   ws: WebSocket,
   region: number,
   area: number,
   ID: number
 ) => {
   const handleSendOpen = () => {
-    if (!debugging) {
+    if (ws.url !== "wss://localhost:3000/W") {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
@@ -72,7 +72,7 @@ export const SendSocketCreateVertex = (
       } else {
         setTimeout(() => {
           handleSendOpen();
-        }, 1000);
+        }, 100);
       }
     }
   };
@@ -80,14 +80,14 @@ export const SendSocketCreateVertex = (
 };
 
 export const SendSocketDeleteVertex = (
-  debugging: boolean,
+  //debugging: boolean,
   ws: WebSocket,
   region: string,
   area: string,
   id: number
 ) => {
   const handleSendOpen = () => {
-    if (!debugging) {
+    if (ws.url !== "wss://localhost:3000/W") {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({ type: "deleteVertex", data: { region, area, id } })
@@ -95,7 +95,7 @@ export const SendSocketDeleteVertex = (
       } else {
         setTimeout(() => {
           handleSendOpen();
-        }, 1000);
+        }, 100);
       }
     }
   };
@@ -103,7 +103,7 @@ export const SendSocketDeleteVertex = (
 };
 
 export const SendSocketCreateWay = (
-  debugging: boolean,
+  //debugging: boolean,
   ws: WebSocket,
   fromCr: any,
   toCr: any,
@@ -111,7 +111,7 @@ export const SendSocketCreateWay = (
   reqRoute: any
 ) => {
   const handleSendOpen = () => {
-    if (!debugging) {
+    if (ws.url !== "wss://localhost:3000/W") {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
@@ -137,7 +137,7 @@ export const SendSocketCreateWay = (
       } else {
         setTimeout(() => {
           handleSendOpen();
-        }, 1000);
+        }, 100);
       }
     }
   };
@@ -145,13 +145,13 @@ export const SendSocketCreateWay = (
 };
 
 export const SendSocketDeleteWay = (
-  debugging: boolean,
+  //debugging: boolean,
   ws: WebSocket,
   fromCr: any,
   toCr: any
 ) => {
   const handleSendOpen = () => {
-    if (!debugging) {
+    if (ws.url !== "wss://localhost:3000/W") {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
@@ -173,7 +173,7 @@ export const SendSocketDeleteWay = (
       } else {
         setTimeout(() => {
           handleSendOpen();
-        }, 1000);
+        }, 100);
       }
     }
   };
@@ -181,7 +181,7 @@ export const SendSocketDeleteWay = (
 };
 
 export const SendSocketCreateWayFromPoint = (
-  debugging: boolean,
+  //debugging: boolean,
   ws: WebSocket,
   fromCr: any,
   toCr: any,
@@ -189,7 +189,7 @@ export const SendSocketCreateWayFromPoint = (
   reqRoute: any
 ) => {
   const handleSendOpen = () => {
-    if (!debugging) {
+    if (ws.url !== "wss://localhost:3000/W") {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
@@ -211,7 +211,7 @@ export const SendSocketCreateWayFromPoint = (
       } else {
         setTimeout(() => {
           handleSendOpen();
-        }, 1000);
+        }, 100);
       }
     }
   };
@@ -219,14 +219,13 @@ export const SendSocketCreateWayFromPoint = (
 };
 
 export const SendSocketDeleteWayFromPoint = (
-  debugging: boolean,
+  //debugging: boolean,
   ws: WebSocket,
   fromCr: any,
   toCr: any
-  // lengthRoute: number
 ) => {
   const handleSendOpen = () => {
-    if (!debugging) {
+    if (ws.url !== "wss://localhost:3000/W") {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
@@ -238,14 +237,13 @@ export const SendSocketDeleteWayFromPoint = (
                 area: toCr.pointBbArea,
                 id: toCr.pointBbID,
               },
-              //lenght: lengthRoute,
             },
           })
         );
       } else {
         setTimeout(() => {
           handleSendOpen();
-        }, 1000);
+        }, 100);
       }
     }
   };
@@ -253,7 +251,7 @@ export const SendSocketDeleteWayFromPoint = (
 };
 
 export const SendSocketCreateWayToPoint = (
-  debugging: boolean,
+  //debugging: boolean,
   ws: WebSocket,
   fromCr: any,
   toCr: any,
@@ -261,7 +259,7 @@ export const SendSocketCreateWayToPoint = (
   reqRoute: any
 ) => {
   const handleSendOpen = () => {
-    if (!debugging) {
+    if (ws.url !== "wss://localhost:3000/W") {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
@@ -283,7 +281,7 @@ export const SendSocketCreateWayToPoint = (
       } else {
         setTimeout(() => {
           handleSendOpen();
-        }, 1000);
+        }, 100);
       }
     }
   };
@@ -291,14 +289,13 @@ export const SendSocketCreateWayToPoint = (
 };
 
 export const SendSocketDeleteWayToPoint = (
-  debugging: boolean,
+  //debugging: boolean,
   ws: WebSocket,
   fromCr: any,
   toCr: any
-  // reqRoute: any
 ) => {
   const handleSendOpen = () => {
-    if (!debugging) {
+    if (ws.url !== "wss://localhost:3000/W") {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
@@ -317,7 +314,7 @@ export const SendSocketDeleteWayToPoint = (
       } else {
         setTimeout(() => {
           handleSendOpen();
-        }, 1000);
+        }, 100);
       }
     }
   };
@@ -325,7 +322,7 @@ export const SendSocketDeleteWayToPoint = (
 };
 
 export const SendSocketGetSvg = (
-  debugging: boolean,
+  //debugging: boolean,
   ws: WebSocket,
   region: number,
   areaIn: number,
@@ -334,7 +331,7 @@ export const SendSocketGetSvg = (
   idOn: number
 ) => {
   const handleSendOpen = () => {
-    if (!debugging) {
+    if (ws.url !== "wss://localhost:3000/W") {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
@@ -358,7 +355,7 @@ export const SendSocketGetSvg = (
       } else {
         setTimeout(() => {
           handleSendOpen();
-        }, 1000);
+        }, 100);
       }
     }
   };
@@ -366,7 +363,7 @@ export const SendSocketGetSvg = (
 };
 //==================================================
 export const SocketDeleteWay = (
-  debugging: boolean,
+  //debugging: boolean,
   WS: WebSocket,
   ways: Way
 ) => {
@@ -392,12 +389,12 @@ export const SocketDeleteWay = (
   toCross.pointBbID = ways.targetID;
   toCross.pointBcod = ways.stops;
   if (ways.sourceArea === 0) {
-    SendSocketDeleteWayFromPoint(debugging, WS, fromCross, toCross);
+    SendSocketDeleteWayFromPoint(WS, fromCross, toCross);
   } else {
     if (ways.targetArea === 0) {
-      SendSocketDeleteWayToPoint(debugging, WS, fromCross, toCross);
+      SendSocketDeleteWayToPoint(WS, fromCross, toCross);
     } else {
-      SendSocketDeleteWay(debugging, WS, fromCross, toCross);
+      SendSocketDeleteWay(WS, fromCross, toCross);
     }
   }
 };

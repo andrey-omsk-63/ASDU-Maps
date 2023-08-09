@@ -251,29 +251,28 @@ export const getPointOptions = (
   massroute: any
 ) => {
   let idxMap = -1;
+  let Area = "-1";
   for (let i = 0; i < map.dateMap.tflight.length; i++) {
     if (
       map.dateMap.tflight[i].ID === massdk[index].ID &&
       Number(map.dateMap.tflight[i].area.num) === massdk[index].area
     ) {
       idxMap = i;
+      Area = map.dateMap.tflight[i].area.num
       break;
     }
   }
 
   const Hoster = () => {
-    console.log("1@@@:",index, idxMap, map.dateMap.tflight[idxMap]);
-    console.log("2@@@:", AREA,  map.dateMap.tflight[idxMap].area.num);
     let host = "";
     if (idxMap >= 0) {
-      if (map.dateMap.tflight[idxMap].area.num === AREA || AREA === "0") {
-        host = "https://localhost:3000/1.svg";
+      if (Area === AREA || AREA === "0") {
+        host = "http://localhost:3000/1.svg";
         if (!debug && idxMap >= 0)
           host = window.location.origin + "/free/img/trafficLights/1.svg";
         if (!debug && idxMap < 0) host = "";
       }
     }
-    console.log('AREA:',AREA, typeof AREA, idxMap,host)
     return host;
   };
 
@@ -301,7 +300,6 @@ export const getPointOptions = (
       iconLayout: "default#image",
       // изображение иконки метки
       iconImageHref: Hoster(),
-      //iconImageHref: '/faza.png',
       // размеры метки
       iconImageSize: [30, 30],
       // её "ножки" (точки привязки)

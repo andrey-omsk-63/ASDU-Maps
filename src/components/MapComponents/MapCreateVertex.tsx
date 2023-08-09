@@ -247,7 +247,6 @@ const MapCreateVertex = (props: {
             <MapPointDataError
               sErr={soobErr}
               setOpen={setOpenSetErr}
-              debug={false}
               ws={{}}
               fromCross={0}
               toCross={0}

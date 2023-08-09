@@ -45,7 +45,7 @@ let tmRoute1 = "";
 const MapPointDataError = (props: {
   sErr: string;
   setOpen: any;
-  debug: boolean;
+  //debug: boolean;
   ws: any;
   fromCross: any;
   toCross: any;
@@ -178,16 +178,15 @@ const MapPointDataError = (props: {
   };
 
   const handleCloseDel = (mode: number) => {
-    let deb = props.debug;
     if (mode === 1) {
       DeleteWay();
       if (props.fromCross.pointAaArea === "0") {
-        SendSocketDeleteWayFromPoint(deb, WS, props.fromCross, props.toCross);
+        SendSocketDeleteWayFromPoint(WS, props.fromCross, props.toCross);
       } else {
         if (props.toCross.pointBbArea === "0") {
-          SendSocketDeleteWayToPoint(deb, WS, props.fromCross, props.toCross);
+          SendSocketDeleteWayToPoint(WS, props.fromCross, props.toCross);
         } else {
-          SendSocketDeleteWay(deb, WS, props.fromCross, props.toCross);
+          SendSocketDeleteWay(WS, props.fromCross, props.toCross);
         }
       }
     }
@@ -207,19 +206,18 @@ const MapPointDataError = (props: {
     massroute.ways[index].time = Number(sec);
     reqRoute.tmRoute = Number(sec);
     dispatch(massrouteCreate(massroute));
-    let deb = props.debug;
     let frCr = props.fromCross;
     let toCr = props.toCross;
     if (props.fromCross.pointAaArea === "0") {
-      SendSocketDeleteWayFromPoint(deb, WS, frCr, toCr);
-      SendSocketCreateWayFromPoint(deb, WS, frCr, toCr, massBindNew, reqRoute);
+      SendSocketDeleteWayFromPoint(WS, frCr, toCr);
+      SendSocketCreateWayFromPoint(WS, frCr, toCr, massBindNew, reqRoute);
     } else {
       if (props.toCross.pointBbArea === "0") {
-        SendSocketDeleteWayToPoint(deb, WS, frCr, props.toCross);
-        SendSocketCreateWayToPoint(deb, WS, frCr, toCr, massBindNew, reqRoute);
+        SendSocketDeleteWayToPoint(WS, frCr, props.toCross);
+        SendSocketCreateWayToPoint(WS, frCr, toCr, massBindNew, reqRoute);
       } else {
-        SendSocketDeleteWay(deb, WS, frCr, props.toCross);
-        SendSocketCreateWay(deb, WS, frCr, toCr, massBindNew, reqRoute);
+        SendSocketDeleteWay(WS, frCr, props.toCross);
+        SendSocketCreateWay(WS, frCr, toCr, massBindNew, reqRoute);
       }
     }
     handleCloseSetEnd();

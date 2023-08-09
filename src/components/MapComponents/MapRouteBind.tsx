@@ -17,8 +17,9 @@ let OldIdxA = 0;
 let OldIdxB = 0;
 
 const MapRouteBind = (props: {
-  debug: boolean;
+  //debug: boolean;
   setOpen: any;
+  debug: boolean;
   svg: any;
   setSvg: any;
   idxA: number;
@@ -41,7 +42,7 @@ const MapRouteBind = (props: {
   let widthHeight = heightImg.toString();
   let haveSvgA = true;
   let haveSvgB = true;
- 
+
   if (OldIdxA !== props.idxA || OldIdxB !== props.idxB) {
     massBind = [0, 0];
     OldIdxA = props.idxA;
@@ -156,7 +157,7 @@ const MapRouteBind = (props: {
             onKeyPress={handleKey} //отключение Enter
             value={currency}
             onChange={handleChange}
-            InputProps={{disableUnderline: true, style: { fontSize: 14 } }}
+            InputProps={{ disableUnderline: true, style: { fontSize: 14 } }}
             variant="standard"
             color="secondary"
           >
