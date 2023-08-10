@@ -258,7 +258,7 @@ export const getPointOptions = (
       Number(map.dateMap.tflight[i].area.num) === massdk[index].area
     ) {
       idxMap = i;
-      Area = map.dateMap.tflight[i].area.num
+      Area = map.dateMap.tflight[i].area.num;
       break;
     }
   }
@@ -519,6 +519,57 @@ export const DelVertexOrPoint = (
           </Button>
           &nbsp;
           <Button sx={styleModalMenu} onClick={() => handleCloseDel(false)}>
+            Нет
+          </Button>
+        </Box>
+      </Box>
+    </Modal>
+  );
+};
+
+export const NoVertex = (openSetErr: boolean, handleCloseErr: Function) => {
+  const styleSetPoint = {
+    outline: "none",
+    position: "absolute",
+    marginTop: "15vh",
+    marginLeft: "24vh",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "3px solid #000",
+    borderColor: "primary.main",
+    borderRadius: 2,
+    boxShadow: 24,
+    textAlign: "center",
+    p: 1,
+  };
+
+  const styleModalMenu = {
+    marginTop: 0.5,
+    backgroundColor: "#E6F5D6",
+    textTransform: "unset !important",
+    color: "black",
+  };
+
+  return (
+    <Modal open={openSetErr} onClose={() => handleCloseErr(false)} hideBackdrop>
+      <Box sx={styleSetPoint}>
+        <Button sx={styleModalEndMapGl} onClick={() => handleCloseErr(false)}>
+          <b>&#10006;</b>
+        </Button>
+        <Typography variant="h6" sx={{ color: "red" }}>
+          Предупреждение
+        </Typography>
+        <Box sx={{ marginTop: 0.5 }}>
+          <Box sx={{ marginBottom: 1.2 }}>
+            <b>
+              В Базе Данных нет информации по данному перекрёстку. Продолжать?
+            </b>
+          </Box>
+          <Button sx={styleModalMenu} onClick={() => handleCloseErr(true)}>
+            Да
+          </Button>
+          &nbsp;
+          <Button sx={styleModalMenu} onClick={() => handleCloseErr(false)}>
             Нет
           </Button>
         </Box>

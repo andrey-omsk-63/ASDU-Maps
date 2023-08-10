@@ -13,8 +13,6 @@ import { MapssdkNewPoint, MassrouteNewPoint } from "./../MapServiceFunctions";
 import { styleSetAdress, styleBoxForm, styleInpKnop } from "./../MainMapStyle";
 import { styleSet } from "./../MainMapStyle";
 
-//let chNewCoord = 1;
-
 const MapCreatePoint = (props: {
   setOpen: any;
   region: number;

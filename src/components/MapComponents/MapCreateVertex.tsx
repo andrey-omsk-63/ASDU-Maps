@@ -6,24 +6,33 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
+//import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 
-import { MapssdkNewPoint, MassrouteNewPoint } from "./../MapServiceFunctions";
 import MapPointDataError from "./MapPointDataError";
+
+import { MapssdkNewPoint, MassrouteNewPoint } from "./../MapServiceFunctions";
+import { NoVertex } from "./../MapServiceFunctions";
 
 import { styleInpKnop, styleSetAdrAreaID } from "./../MainMapStyle";
 import { styleSetAdrArea, styleSetAdrID } from "./../MainMapStyle";
 import { styleSetArea, styleSetID } from "./../MainMapStyle";
+import { styleSetAdrAreaLess, styleModalEndMapGl } from "./../MainMapStyle";
 import { styleBoxFormArea, styleBoxFormID } from "./../MainMapStyle";
 
 let soobErr = "";
 let adrV = "";
 
+let oldCoord: any = 0;
+//let flagLevel01 = true;
+let propsCoord = [0, 0];
+
 const MapCreateVertex = (props: {
   setOpen: any;
   region: number;
   area: string;
+  coord: any;
   createPoint: any;
 }) => {
   //== Piece of Redux ======================================
@@ -39,7 +48,14 @@ const MapCreateVertex = (props: {
     const { mapReducer } = state;
     return mapReducer.map;
   });
+  console.log("MAP:", map);
   const dispatch = useDispatch();
+  //====== инициализация ===================================
+  if (oldCoord !== props.coord) {
+    //flagLevel01 = true;
+    oldCoord = props.coord;
+    propsCoord = [0, 0];
+  }
   //========================================================
   let homeRegion = map.dateMap.regionInfo[props.region];
   let dat = map.dateMap.areaInfo[homeRegion];
@@ -63,16 +79,21 @@ const MapCreateVertex = (props: {
   const [openSetAdress, setOpenSetAdress] = React.useState(true);
   const [currency, setCurrency] = React.useState(massKey[0]);
   const [valuen, setValuen] = React.useState(1);
+  const [valueAdr, setValueAdr] = React.useState("123456");
   const [openSetErr, setOpenSetErr] = React.useState(false);
+  const [openSetNoVertex, setOpenSetNoVertex] = React.useState(false);
+  const [openSetInpAdres, setOpenSetInpAdres] = React.useState(false);
   const AREA = props.area;
+  let Area = AREA === "0" ? "1" : props.area;
 
   const handleKey = (event: any) => {
     if (event.key === "Enter") event.preventDefault();
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    Area = event.target.value;
     setCurrency(event.target.value);
-    console.log("setCurrency:", currency);
+    console.log("setCurrency:", currency, typeof currency, AREA, Area);
     setOpenSetAdress(true);
   };
 
@@ -91,15 +112,16 @@ const MapCreateVertex = (props: {
 
   const CheckDoublAreaID = () => {
     let doublAreaID = true;
-
     for (let i = 0; i < massroute.vertexes.length; i++) {
       if (
         massroute.vertexes[i].region === props.region &&
-        massroute.vertexes[i].area === Number(currency) &&
+        massroute.vertexes[i].area === Number(Area) &&
         massroute.vertexes[i].id === Number(valuen)
       ) {
         doublAreaID = false;
-        soobErr = "Дубликатная запись ключ: Регион_Pайон_ID";
+        soobErr = "Дубликатная запись ключ: Pайон_ID";
+        console.log();
+        console.log(soobErr);
         setOpenSetErr(true);
       }
     }
@@ -111,7 +133,7 @@ const MapCreateVertex = (props: {
     for (let i = 0; i < map.dateMap.tflight.length; i++) {
       if (
         map.dateMap.tflight[i].region.num === props.region.toString() &&
-        map.dateMap.tflight[i].area.num === currency &&
+        map.dateMap.tflight[i].area.num === Area &&
         map.dateMap.tflight[i].ID === Number(valuen)
       ) {
         availVertex = true;
@@ -119,51 +141,58 @@ const MapCreateVertex = (props: {
         break;
       }
     }
-    if (!availVertex) {
-      soobErr = "Нет информации по данному перекрёстку";
-      setOpenSetErr(true);
-    }
+    console.log("CheckAvailVertex", availVertex);
     return availVertex;
   };
 
+  const SaveVertex = () => {
+    if (!propsCoord[0]) {
+      // светофор в базе есть
+      for (let i = 0; i < map.dateMap.tflight.length; i++) {
+        if (
+          map.dateMap.tflight[i].ID === Number(valuen) &&
+          Number(map.dateMap.tflight[i].area.num) === Number(Area)
+        ) {
+          propsCoord[0] = map.dateMap.tflight[i].points.Y;
+          propsCoord[1] = map.dateMap.tflight[i].points.X;
+          break;
+        }
+      }
+    }
+    if (propsCoord[0]) {
+      massdk.push(
+        MapssdkNewPoint(
+          props.region,
+          propsCoord,
+          adrV,
+          Number(Area), // area
+          Number(valuen) // id
+        )
+      );
+      massroute.vertexes.push(
+        MassrouteNewPoint(
+          props.region,
+          propsCoord,
+          adrV,
+          Number(Area), // area
+          Number(valuen) // id
+        )
+      );
+      dispatch(massdkCreate(massdk));
+      dispatch(massrouteCreate(massroute));
+      props.createPoint(propsCoord);
+    }
+    handleCloseSetAdress();
+  };
+
   const handleClose = () => {
-    if (CheckAvailVertex()) {
-      if (CheckDoublAreaID()) {
-        let propsCoord = [0, 0];
-        for (let i = 0; i < map.dateMap.tflight.length; i++) {
-          if (
-            map.dateMap.tflight[i].ID === Number(valuen) &&
-            Number(map.dateMap.tflight[i].area.num) === Number(currency)
-          ) {
-            propsCoord[0] = map.dateMap.tflight[i].points.Y;
-            propsCoord[1] = map.dateMap.tflight[i].points.X;
-            break;
-          }
-        }
-        if (propsCoord[0]) {
-          massdk.push(
-            MapssdkNewPoint(
-              props.region,
-              propsCoord,
-              adrV,
-              Number(currency), // area
-              Number(valuen) // id
-            )
-          );
-          massroute.vertexes.push(
-            MassrouteNewPoint(
-              props.region,
-              propsCoord,
-              adrV,
-              Number(currency), // area
-              Number(valuen) // id
-            )
-          );
-          dispatch(massdkCreate(massdk));
-          dispatch(massrouteCreate(massroute));
-          props.createPoint(propsCoord);
-        }
-        setOpenSetAdress(false);
+    if (CheckDoublAreaID()) {
+      if (CheckAvailVertex()) {
+        console.log("333333");
+        SaveVertex();
+      } else {
+        console.log("111111");
+        setOpenSetNoVertex(true);
       }
     }
   };
@@ -194,26 +223,117 @@ const MapCreateVertex = (props: {
     );
   };
 
+  const handleCloseNoVertex = (mode: boolean) => {
+    if (mode) {
+      console.log("555555");
+      //=======================================
+      setOpenSetInpAdres(true);
+    } else {
+      console.log("444444");
+      handleCloseSetAdress();
+    }
+    setOpenSetNoVertex(false);
+  };
+
+  const handleCloseInpAdr = (mode: boolean) => {
+    adrV = valueAdr
+    propsCoord = props.coord;
+    SaveVertex();
+  };
+
+  const handleChangeAdr = (event: any) => {
+    let valueInp = event.target.value.replace(/^0+/, "");
+    setValueAdr(valueInp);
+  };
+
+  const InputAdressVertex = (
+    openSetInpAdres: boolean,
+    handleCloseInp: Function
+  ) => {
+    const styleSetAdres = {
+      outline: "none",
+      position: "absolute",
+      marginTop: "15vh",
+      marginLeft: "24vh",
+      width: 400,
+      height: "50px",
+      bgcolor: "background.paper",
+      border: "3px solid #000",
+      borderColor: "primary.main",
+      borderRadius: 2,
+      boxShadow: 24,
+      textAlign: "center",
+      p: 1,
+    };
+
+    const styleSetAd = {
+      width: "370px",
+      maxHeight: "3px",
+      minHeight: "3px",
+      bgcolor: "#FAFAFA",
+      boxShadow: 3,
+      textAlign: "center",
+      p: 1.5,
+    };
+
+    const styleBoxFormAdres = {
+      "& > :not(style)": {
+        marginTop: "-9px",
+        marginLeft: "-12px",
+        width: 390,
+      },
+    };
+
+    return (
+      <Modal
+        open={openSetInpAdres}
+        onClose={() => handleCloseInp(false)}
+        hideBackdrop
+      >
+        <Box sx={styleSetAdres}>
+          <Button
+            sx={styleModalEndMapGl}
+            onClick={() => handleCloseInpAdr(true)}
+          >
+            <b>&#10006;</b>
+          </Button>
+          <Box sx={styleSetAd}>
+            <Box component="form" sx={styleBoxFormAdres}>
+              <TextField
+                size="small"
+                onKeyPress={handleKey} //отключение Enter
+                type="text"
+                InputProps={{
+                  disableUnderline: true,
+                  style: { fontSize: 13.3 },
+                }}
+                value={valueAdr}
+                onChange={handleChangeAdr}
+                variant="standard"
+                helperText="Введите адрес светофора"
+                color="secondary"
+              />
+            </Box>
+          </Box>
+        </Box>
+      </Modal>
+    );
+  };
+
   return (
     <Box>
       <Modal open={openSetAdress} onClose={handleCloseSetAdress} hideBackdrop>
         <Grid item container sx={styleSetAdrAreaID}>
           <Grid item>
             <Grid item container sx={styleSetAdrArea}>
-              {AREA === "0" && (
-                <Grid item xs={9.5}>
-                  <InputArea />
-                </Grid>
-              )}
-              {AREA !== "0" && (
-                <Grid item xs={9.5}>
-                  <Box
-                    sx={{ fontSize: 17, marginTop: 1.5, textAlign: "center" }}
-                  >
+              <Grid item xs={9.5}>
+                {AREA === "0" && <InputArea />}
+                {AREA !== "0" && (
+                  <Box sx={styleSetAdrAreaLess}>
                     {massDat[Number(AREA) - 1]}
                   </Box>
-                </Grid>
-              )}
+                )}
+              </Grid>
             </Grid>
             <Grid item container sx={styleSetAdrID}>
               <Grid item xs={9.5}>
@@ -243,6 +363,12 @@ const MapCreateVertex = (props: {
               </Grid>
             </Grid>
           </Grid>
+          {openSetNoVertex && (
+            <>{NoVertex(openSetNoVertex, handleCloseNoVertex)}</>
+          )}
+          {openSetInpAdres && (
+            <>{InputAdressVertex(openSetInpAdres, handleCloseInpAdr)}</>
+          )}
           {openSetErr && (
             <MapPointDataError
               sErr={soobErr}

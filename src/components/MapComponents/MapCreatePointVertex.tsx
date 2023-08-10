@@ -88,6 +88,7 @@ const MapCreatePointVertex = (props: {
           setOpen={props.setOpen}
           region={props.region}
           area={AREA}
+          coord={props.coord}
           createPoint={props.createPoint}
         />
       )}

@@ -615,6 +615,7 @@ const MainMap = (props: {
   };
 
   const InstanceRefDo = (ref: React.Ref<any>) => {
+    //console.log('InstanceRefDo:',ref)
     if (ref) {
       mapp.current = ref;
       mapp.current.events.remove("contextmenu", funcContex);
@@ -713,6 +714,10 @@ const MainMap = (props: {
       {makeRevers && needRevers === 0 && <>{PressButton(35)}</>}
       {makeRevers && needRevers === 1 && <>{PressButton(36)}</>}
       {makeRevers && needRevers === 2 && <>{PressButton(37)}</>}
+      {!flagDemo && (
+        <>{StrokaMenuGlob("Формальные Связи", PressButton, 3)}</>
+      )}
+      {flagDemo && <>{StrokaMenuGlob("Отключить ФС", PressButton, 6)}</>}
       {flagPusk && !flagBind && (
         <>{StrokaMenuGlob("Отм.назначений", PressButton, 77)}</>
       )}
@@ -730,10 +735,6 @@ const MainMap = (props: {
           {StrokaMenuGlob("Редакт.связи", PressButton, 69)}
         </>
       )}
-      {!flagDemo && (
-        <>{StrokaMenuGlob("Формализованные Связи", PressButton, 3)}</>
-      )}
-      {flagDemo && <>{StrokaMenuGlob("Отключить ФС", PressButton, 6)}</>}
       {flagPro && <>{StrokaMenuGlob("Протокол", PressButton, 24)}</>}
       {Object.keys(massroute).length && (
         <YMaps
