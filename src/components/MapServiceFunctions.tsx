@@ -1,3 +1,4 @@
+import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -9,6 +10,11 @@ import { Pointer, Router } from "./../App";
 import { Vertex } from "./../interfaceRoute";
 
 import { styleModalMenu, styleModalEndMapGl } from "./MainMapStyle";
+import { styleInpKnop } from "./MainMapStyle";
+
+const handleKey = (event: any) => {
+  if (event.key === "Enter") event.preventDefault();
+};
 
 export const MapssdkNewPoint = (
   homeRegion: number,
@@ -48,8 +54,8 @@ export const MassrouteNewPoint = (
     id: 0,
     dgis: "",
     scale: 0,
-    lin: [],
-    lout: [],
+    lin: [1, 3, 5, 7, 9, 11],
+    lout: [2, 4, 6, 8, 10, 12],
     name: "",
   };
 
@@ -199,7 +205,7 @@ export const DelOrCreate = (massdk: any, newPointCoord: any) => {
   for (let i = 0; i < massdk.length; i++) {
     let corFromMap = [massdk[i].coordinates[0], massdk[i].coordinates[1]];
     let dister = Distance(newPointCoord, corFromMap);
-    if (dister < 1000 && minDist > dister) {
+    if (dister < 150 && minDist > dister) {
       minDist = dister;
       nomInMass = i;
     }
@@ -225,7 +231,7 @@ export const getPointData = (
       break;
     }
   }
-  let cont3 = "";
+  let cont3 = ", null";
   if (idxMap >= 0) cont3 = ", " + map.dateMap.tflight[idxMap].idevice;
   let cont1 = massdk[index].nameCoordinates + "<br/>";
   //let cont2 = '[' + massdk[index].region + ', ' + massdk[index].area;
@@ -251,18 +257,16 @@ export const getPointOptions = (
   massroute: any
 ) => {
   let idxMap = -1;
-  let Area = "-1";
+  let Area = massdk[index].area.toString()
   for (let i = 0; i < map.dateMap.tflight.length; i++) {
     if (
       map.dateMap.tflight[i].ID === massdk[index].ID &&
       Number(map.dateMap.tflight[i].area.num) === massdk[index].area
     ) {
       idxMap = i;
-      Area = map.dateMap.tflight[i].area.num;
       break;
     }
   }
-
   const Hoster = () => {
     let host = "";
     if (idxMap >= 0) {
@@ -273,6 +277,15 @@ export const getPointOptions = (
         if (!debug && idxMap < 0) host = "";
       }
     }
+    //================================= потом исправить ======
+    if (massdk[index].newCoordinates > 0) {
+      if (Area === AREA || AREA === "0") {
+        host = "http://localhost:3000/18.svg";
+        if (!debug)
+          host = window.location.origin + "/free/img/trafficLights/18.svg";
+      }
+    }
+    //========================================================
     return host;
   };
 
@@ -281,10 +294,11 @@ export const getPointOptions = (
     colorBalloon = "islands#violetCircleIcon";
     if (massdk[index].newCoordinates > 0)
       colorBalloon = "islands#darkOrangeCircleIcon";
-  } else {
-    if (massdk[index].newCoordinates > 0)
-      colorBalloon = "islands#darkOrangeCircleDotIcon";
   }
+  //  else {
+  //   if (massdk[index].newCoordinates > 0)
+  //     colorBalloon = "islands#darkOrangeCircleDotIcon";
+  // }
   if (index === pointAaIndex) colorBalloon = "islands#redStretchyIcon";
   if (index === pointBbIndex) colorBalloon = "islands#darkBlueStretchyIcon";
 
@@ -574,6 +588,85 @@ export const NoVertex = (openSetErr: boolean, handleCloseErr: Function) => {
           </Button>
         </Box>
       </Box>
+    </Modal>
+  );
+};
+
+export const InputAdressVertex = (
+  openSetInpAdres: boolean,
+  handleCloseInp: Function,
+  valueAdr: string,
+  setValueAdr: Function
+) => {
+  const styleSetAdres = {
+    marginTop: "26vh",
+    marginLeft: "46px",
+    width: "318px",
+    height: "7vh",
+    border: "3px solid #000",
+    borderColor: "#FFFEF7",
+    borderRadius: 2,
+    boxShadow: 24,
+    bgcolor: "#FFFEF7",
+    opacity: 0.85,
+  };
+
+  const styleSetAd = {
+    width: "230px",
+    maxHeight: "3px",
+    minHeight: "3px",
+    bgcolor: "#FAFAFA",
+    boxShadow: 3,
+    textAlign: "center",
+    p: 1.5,
+  };
+
+  const styleBoxFormAdres = {
+    "& > :not(style)": {
+      marginTop: "-9px",
+      marginLeft: "-12px",
+      width: "253px",
+    },
+  };
+
+  const handleChangeAdr = (event: any) => {
+    let valueInp = event.target.value.replace(/^0+/, "");
+    setValueAdr(valueInp);
+  };
+
+  return (
+    <Modal
+      open={openSetInpAdres}
+      onClose={() => handleCloseInp(false)}
+      //hideBackdrop
+    >
+      <Grid item container sx={styleSetAdres}>
+        <Grid item xs={9.7}>
+          <Box sx={styleSetAd}>
+            <Box component="form" sx={styleBoxFormAdres}>
+              <TextField
+                size="small"
+                onKeyPress={handleKey} //отключение Enter
+                type="text"
+                InputProps={{
+                  disableUnderline: true,
+                  style: { fontSize: 13.3 },
+                }}
+                value={valueAdr}
+                onChange={handleChangeAdr}
+                variant="standard"
+                helperText="Введите адрес светофора"
+                color="secondary"
+              />
+            </Box>
+          </Box>
+        </Grid>
+        <Grid item xs={2.3}>
+          <Button sx={styleInpKnop} onClick={() => handleCloseInp(true)}>
+            Ввод
+          </Button>
+        </Grid>
+      </Grid>
     </Modal>
   );
 };

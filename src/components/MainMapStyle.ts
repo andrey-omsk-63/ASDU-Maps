@@ -114,8 +114,8 @@ export const styleSet = {
 export const styleInpKnop = {
   fontSize: 13.3,
   color: "black",
-  maxHeight: "27px",
-  minHeight: "27px",
+  maxHeight: "28px",
+  minHeight: "28px",
   maxWidth: "62px",
   minWidth: "62px",
   backgroundColor: "#FFDB4D",
@@ -145,9 +145,8 @@ export const styleBoxForm = {
 };
 //=== InputVertex =====================================================
 export const styleSetAdrAreaID = {
-  //border: 1,
   marginTop: "10vh",
-  marginLeft: "48px",
+  marginLeft: "46px",
   width: "318px",
   height: "14vh",
   // bgcolor: "#FAFAFA",
@@ -195,6 +194,7 @@ export const styleSetID = {
   boxShadow: 3,
   textAlign: "center",
   p: 1.5,
+  //border: 1,
 };
 
 export const styleBoxFormArea = {

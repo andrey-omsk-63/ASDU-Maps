@@ -60,7 +60,7 @@ const MapCreatePoint = (props: {
     dispatch(massdkCreate(massdk));
     dispatch(massrouteCreate(massroute));
     setOpenSetAdress(false);
-    props.createPoint(props.coord);
+    props.createPoint(props.coord, true);
   };
 
   const handleCloseSetAdress = () => {

@@ -86,6 +86,7 @@ const App = () => {
     window.location.search;
 
   const [openSetErr, setOpenSetErr] = React.useState(false);
+  const [trigger, setTrigger] = React.useState(false);
   const [svg, setSvg] = React.useState<any>(null);
 
   if (flagOpenWS) {
@@ -134,6 +135,7 @@ const App = () => {
           if (data.status) {
             dateRouteGl.vertexes[dateRouteGl.vertexes.length - 1].id = data.id;
             massdk[massdk.length - 1].ID = data.id;
+            setTrigger(!trigger)
           } else {
             dateRouteGl.vertexes.splice(dateRouteGl.vertexes.length - 1, 1);
             massdk.splice(massdk.length - 1, 1);
@@ -232,7 +234,7 @@ const App = () => {
           console.log("data_default:", data);
       }
     };
-  }, [dispatch, massdk, coordinates, svg]);
+  }, [dispatch, massdk, coordinates, svg, trigger]);
 
   if (WS.url === "wss://localhost:3000/W" && flagOpen) {
     console.log("РЕЖИМ ОТЛАДКИ!!!");
@@ -258,6 +260,7 @@ const App = () => {
           sErr={soob}
           svg={svg}
           setSvg={setSvg}
+          trigger={trigger}
         />
       </Grid>
     </Grid>

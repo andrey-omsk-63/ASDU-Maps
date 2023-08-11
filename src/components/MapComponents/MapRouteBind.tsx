@@ -36,7 +36,13 @@ const MapRouteBind = (props: {
   const [openSetBind, setOpenSetBind] = React.useState(true);
   let masSvg = ["", ""];
   let otlOrKosyk = props.debug;
-  if (!props.svg) otlOrKosyk = true;
+  if (!props.svg) {
+    otlOrKosyk = true;
+  } else {
+    if (props.svg[0] === '' && props.svg[1] === '') otlOrKosyk = true;
+  }
+
+  console.log("SVG:", props.svg);
 
   let heightImg = window.innerWidth / 3.333;
   let widthHeight = heightImg.toString();

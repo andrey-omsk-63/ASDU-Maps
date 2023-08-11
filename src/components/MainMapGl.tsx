@@ -100,6 +100,7 @@ const MainMap = (props: {
   sErr: string;
   svg: any;
   setSvg: any;
+  trigger: boolean;
 }) => {
   const WS = props.ws;
   if (WS.url === "wss://localhost:3000/W") debugging = true;
@@ -531,15 +532,15 @@ const MainMap = (props: {
     );
   };
 
-  const MakeNewPoint = (coords: any) => {
+  const MakeNewPoint = (coords: any, avail: boolean ) => {
     let coor: string = CodingCoord(coords);
     let areaV = massroute.vertexes[massroute.vertexes.length - 1].area;
     let idV = massroute.vertexes[massroute.vertexes.length - 1].id;
     let adress = massroute.vertexes[massroute.vertexes.length - 1].name;
     coordinates.push(coords);
     dispatch(coordinatesCreate(coordinates));
-    areaV && SendSocketCreateVertex(WS, homeRegion, areaV, idV);
-    !areaV && SendSocketCreatePoint(WS, coor, adress);
+    areaV && avail && SendSocketCreateVertex(WS, homeRegion, areaV, idV); // светофор
+    !areaV && SendSocketCreatePoint(WS, coor, adress); // объект
     setOpenSetCreate(false);
   };
 
