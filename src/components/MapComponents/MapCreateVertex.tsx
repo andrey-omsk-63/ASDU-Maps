@@ -130,8 +130,7 @@ const MapCreateVertex = (props: {
         massroute.vertexes[i].id === Number(valuen)
       ) {
         doublAreaID = false;
-        soobErr = "Дубликатная запись (район:" + Area + " ID:" + valuen + ")";
-        console.log(soobErr);
+        soobErr = "Такой светофор уже существует (район: " + Area + " ID: " + valuen + ")";
         setOpenSetErr(true);
       }
     }
@@ -248,7 +247,7 @@ const MapCreateVertex = (props: {
             type="number"
             InputProps={{
               disableUnderline: true,
-              style: { fontSize: 13.3 },
+              style: { fontSize: 13.3, backgroundColor: "#FFFBE5" },
             }}
             value={valuen}
             onChange={handleChangeID}

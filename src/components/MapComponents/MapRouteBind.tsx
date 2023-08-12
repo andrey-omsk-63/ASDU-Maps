@@ -26,7 +26,7 @@ const MapRouteBind = (props: {
   idxB: number;
   func: any;
 }) => {
-  // console.log("idxA:", props.idxA, "idxB:", props.idxB);
+  console.log("MapRouteBind:", props.svg);
   //== Piece of Redux ======================================
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
@@ -35,14 +35,18 @@ const MapRouteBind = (props: {
   //========================================================
   const [openSetBind, setOpenSetBind] = React.useState(true);
   let masSvg = ["", ""];
-  let otlOrKosyk = props.debug;
-  if (!props.svg) {
-    otlOrKosyk = true;
-  } else {
-    if (props.svg[0] === '' && props.svg[1] === '') otlOrKosyk = true;
+  // let otlOrKosyk1 = props.debug;
+  // let otlOrKosyk2 = props.debug;
+  if (props.svg) {
+  //   otlOrKosyk1 = true;
+  //   otlOrKosyk2 = true;
+  // } else {
+    //if (props.svg[0] === '' && props.svg[1] === '') otlOrKosyk = true;
+    let dat = props.svg;
+    masSvg = [];
+    for (let key in dat) masSvg.push(dat[key]);
   }
-
-  console.log("SVG:", props.svg);
+  console.log("###:", masSvg);
 
   let heightImg = window.innerWidth / 3.333;
   let widthHeight = heightImg.toString();
@@ -67,8 +71,8 @@ const MapRouteBind = (props: {
 
   const ReplaceInSvg = (idx: number) => {
     let ch = "";
-    let svgPipa = props.svg[idx];
-    let vxod = props.svg[idx].indexOf("width=");
+    let svgPipa = masSvg[idx];
+    let vxod = masSvg[idx].indexOf("width=");
     for (let i = 0; i < 100; i++) {
       if (isNaN(Number(svgPipa[vxod + 7 + i]))) break;
       ch = ch + svgPipa[vxod + 7 + i];
@@ -182,10 +186,8 @@ const MapRouteBind = (props: {
     );
   };
 
-  if (!otlOrKosyk) {
-    masSvg[0] = ReplaceInSvg(0);
-    masSvg[1] = ReplaceInSvg(1);
-  }
+  if (masSvg[0] !== "") masSvg[0] = ReplaceInSvg(0);
+  if (masSvg[1] !== "") masSvg[1] = ReplaceInSvg(1);
 
   const StrokaMenu = (soob: string, mode: number) => {
     const styleAppBind = {
@@ -262,15 +264,15 @@ const MapRouteBind = (props: {
           {!haveSvgA && <Grid item xs={4}></Grid>}
           {haveSvgA && (
             <Grid item xs={4} sx={styleSetImg}>
-              {otlOrKosyk && <>{AppIconAsdu()}</>}
-              {!otlOrKosyk && <>{ExampleComponent(0)}</>}
+              {masSvg[0] === "" && <>{AppIconAsdu()}</>}
+              {masSvg[0] !== "" && <>{ExampleComponent(0)}</>}
             </Grid>
           )}
           <Grid item xs={3.5}></Grid>
           {haveSvgB && (
             <Grid item xs={4} sx={styleSetImg}>
-              {otlOrKosyk && <>{AppIconAsdu()}</>}
-              {!otlOrKosyk && <>{ExampleComponent(1)}</>}
+              {masSvg[1] === "" && <>{AppIconAsdu()}</>}
+              {masSvg[1] !== "" && <>{ExampleComponent(1)}</>}
             </Grid>
           )}
           <Grid item xs={0.25}></Grid>

@@ -257,7 +257,7 @@ export const getPointOptions = (
   massroute: any
 ) => {
   let idxMap = -1;
-  let Area = massdk[index].area.toString()
+  let Area = massdk[index].area.toString();
   for (let i = 0; i < map.dateMap.tflight.length; i++) {
     if (
       map.dateMap.tflight[i].ID === massdk[index].ID &&
@@ -436,7 +436,7 @@ export const StrokaBalloon = (soob: string, func: any, mode: number) => {
   );
 };
 
-export const MasskPoint = () => {
+export const MasskPoint = (massrouteVertexes: any) => {
   let masskPoint: Pointer = {
     ID: -1,
     coordinates: [],
@@ -445,6 +445,12 @@ export const MasskPoint = () => {
     area: 0,
     newCoordinates: 0,
   };
+  masskPoint.ID = massrouteVertexes.id;
+  masskPoint.coordinates = DecodingCoord(massrouteVertexes.dgis);
+  masskPoint.nameCoordinates = massrouteVertexes.name;
+  masskPoint.region = massrouteVertexes.region;
+  masskPoint.area = massrouteVertexes.area;
+  masskPoint.newCoordinates = 0;
   return masskPoint;
 };
 
@@ -650,12 +656,12 @@ export const InputAdressVertex = (
                 type="text"
                 InputProps={{
                   disableUnderline: true,
-                  style: { fontSize: 13.3 },
+                  style: { fontSize: 13.3, backgroundColor: "#FFFBE5" },
                 }}
                 value={valueAdr}
                 onChange={handleChangeAdr}
                 variant="standard"
-                helperText="Введите адрес светофора"
+                helperText="Введите наименование (адрес)"
                 color="secondary"
               />
             </Box>

@@ -616,7 +616,6 @@ const MainMap = (props: {
   };
 
   const InstanceRefDo = (ref: React.Ref<any>) => {
-    //console.log('InstanceRefDo:',ref)
     if (ref) {
       mapp.current = ref;
       mapp.current.events.remove("contextmenu", funcContex);
@@ -651,14 +650,14 @@ const MainMap = (props: {
     for (let i = 0; i < massroute.points.length; i++)
       massroute.vertexes.push(massroute.points[i]);
     for (let i = 0; i < massroute.vertexes.length; i++) {
-      let masskPoint = MasskPoint();
-      masskPoint.ID = massroute.vertexes[i].id;
-      masskPoint.coordinates = DecodingCoord(massroute.vertexes[i].dgis);
-      masskPoint.nameCoordinates = massroute.vertexes[i].name;
-      masskPoint.region = massroute.vertexes[i].region;
-      masskPoint.area = massroute.vertexes[i].area;
-      masskPoint.newCoordinates = 0;
-      massdk.push(masskPoint);
+      //let masskPoint = MasskPoint(massroute.vertexes[i]);
+      // masskPoint.ID = massroute.vertexes[i].id;
+      // masskPoint.coordinates = DecodingCoord(massroute.vertexes[i].dgis);
+      // masskPoint.nameCoordinates = massroute.vertexes[i].name;
+      // masskPoint.region = massroute.vertexes[i].region;
+      // masskPoint.area = massroute.vertexes[i].area;
+      // masskPoint.newCoordinates = 0;
+      massdk.push(MasskPoint(massroute.vertexes[i]));
       coordinates.push(DecodingCoord(massroute.vertexes[i].dgis));
     }
     dispatch(massdkCreate(massdk));

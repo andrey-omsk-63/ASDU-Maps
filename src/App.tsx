@@ -135,7 +135,7 @@ const App = () => {
           if (data.status) {
             dateRouteGl.vertexes[dateRouteGl.vertexes.length - 1].id = data.id;
             massdk[massdk.length - 1].ID = data.id;
-            setTrigger(!trigger)
+            setTrigger(!trigger);
           } else {
             dateRouteGl.vertexes.splice(dateRouteGl.vertexes.length - 1, 1);
             massdk.splice(massdk.length - 1, 1);
@@ -174,12 +174,14 @@ const App = () => {
         case "createWay":
           if (!data.status) {
             soob = SoobErrorCreateWay(data);
-            dateRouteGl.ways.splice(dateRouteGl.ways.length - 1, 1);
-            dateRouteProGl.ways.splice(dateRouteGl.ways.length - 1, 1);
-            dispatch(massrouteproCreate(dateRouteProGl));
-            dispatch(massrouteCreate(dateRouteGl));
-            console.log('dateRouteGl:',dateRouteGl)
-            setOpenSetErr(true);
+            //================================= потом исправить ======
+            console.log("createWay:", soob);
+            // dateRouteGl.ways.splice(dateRouteGl.ways.length - 1, 1);
+            // dateRouteProGl.ways.splice(dateRouteGl.ways.length - 1, 1);
+            // dispatch(massrouteproCreate(dateRouteProGl));
+            // dispatch(massrouteCreate(dateRouteGl));
+            // console.log('dateRouteGl:',dateRouteGl)
+            // setOpenSetErr(true);
           }
           break;
         case "deleteWay":
@@ -191,11 +193,13 @@ const App = () => {
         case "createWayToPoint":
           if (!data.status) {
             soob = SoobErrorCreateWayToPoint(data);
-            dateRouteGl.ways.splice(dateRouteGl.ways.length - 1, 1);
-            dispatch(massrouteCreate(dateRouteGl));
-            dateRouteProGl.ways.splice(dateRouteGl.ways.length - 1, 1);
-            dispatch(massrouteproCreate(dateRouteProGl));
-            setOpenSetErr(true);
+            //================================= потом исправить ======
+            console.log("createWayToPoint:", soob);
+            // dateRouteGl.ways.splice(dateRouteGl.ways.length - 1, 1);
+            // dispatch(massrouteCreate(dateRouteGl));
+            // dateRouteProGl.ways.splice(dateRouteGl.ways.length - 1, 1);
+            // dispatch(massrouteproCreate(dateRouteProGl));
+            // setOpenSetErr(true);
           }
           break;
         case "deleteWayToPoint":
@@ -207,12 +211,13 @@ const App = () => {
         case "createWayFromPoint":
           if (!data.status) {
             soob = SoobErrorCreateWayFromPoint(data);
-            console.log("soob:", soob);
-            dateRouteGl.ways.splice(dateRouteGl.ways.length - 1, 1);
-            dispatch(massrouteCreate(dateRouteGl));
-            dateRouteProGl.ways.splice(dateRouteGl.ways.length - 1, 1);
-            dispatch(massrouteproCreate(dateRouteProGl));
-            setOpenSetErr(true);
+            //================================= потом исправить ======
+            console.log("createWayFromPoint:", soob);
+            // dateRouteGl.ways.splice(dateRouteGl.ways.length - 1, 1);
+            // dispatch(massrouteCreate(dateRouteGl));
+            // dateRouteProGl.ways.splice(dateRouteGl.ways.length - 1, 1);
+            // dispatch(massrouteproCreate(dateRouteProGl));
+            // setOpenSetErr(true);
           }
           break;
         case "deleteWayFromPoint":

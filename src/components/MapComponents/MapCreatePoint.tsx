@@ -80,12 +80,12 @@ const MapCreatePoint = (props: {
                   onKeyPress={handleKey} //отключение Enter
                   InputProps={{
                     disableUnderline: true,
-                    style: { fontSize: 13.3 },
+                    style: { fontSize: 13.3, backgroundColor: "#FFFBE5" },
                   }}
                   value={valuen}
                   onChange={handleChange}
                   variant="standard"
-                  helperText="Введите адрес новой точки"
+                  helperText="Введите наименование (адрес)"
                   color="secondary"
                 />
               </Box>

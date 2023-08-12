@@ -80,8 +80,8 @@ const MapPointDataError = (props: {
   const styleSetInf = {
     outline: "none",
     position: "absolute",
-    marginTop: "15vh",
-    marginLeft: "24vh",
+    marginTop: "18vh",
+    marginLeft: "27vh",
     width: 380,
     bgcolor: "background.paper",
     border: "3px solid #000",
