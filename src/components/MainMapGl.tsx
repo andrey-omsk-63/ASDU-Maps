@@ -84,8 +84,6 @@ let funcContex: any = null;
 let funcBound: any = null;
 
 let currencies: any = [];
-// let massKey: any = [];
-// let massDat: any = [];
 let AREA = "0";
 let idxDel = -1;
 
