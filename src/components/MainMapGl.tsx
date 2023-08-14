@@ -5,14 +5,8 @@ import { coordinatesCreate, massrouteproCreate } from "./../redux/actions";
 
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-import Typography from "@mui/material/Typography";
-
-import { YMaps, Map, Placemark, FullscreenControl } from "react-yandex-maps";
-import { GeolocationControl, YMapsApi } from "react-yandex-maps";
-import { RulerControl, SearchControl } from "react-yandex-maps";
-import { TrafficControl, TypeSelector, ZoomControl } from "react-yandex-maps";
+import { YMaps, Map, Placemark, YMapsApi } from "react-yandex-maps";
 
 import MapRouteInfo from "./MapComponents/MapRouteInfo";
 import MapChangeAdress from "./MapComponents/MapChangeAdress";
@@ -23,16 +17,18 @@ import MapRouteProtokol from "./MapComponents/MapRouteProtokol";
 import MapReversRoute from "./MapComponents/MapReversRoute";
 
 import { RecordMassRoute, InputArea } from "./MapServiceFunctions";
+import { YandexServices, ShowFormalRoute } from "./MapServiceFunctions";
 import { DecodingCoord, CodingCoord } from "./MapServiceFunctions";
 import { getMultiRouteOptions, DoublRoute } from "./MapServiceFunctions";
 import { getReferencePoints, CenterCoord } from "./MapServiceFunctions";
 import { getMassPolyRouteOptions, DelOrCreate } from "./MapServiceFunctions";
-import { getMassMultiRouteOptions } from "./MapServiceFunctions";
-import { getMassMultiRouteInOptions } from "./MapServiceFunctions";
+import { getMassMultiRouteOptions, MakeToCross } from "./MapServiceFunctions";
+import { getMassMultiRouteInOptions, MakeRevers } from "./MapServiceFunctions";
 import { getPointData, getPointOptions } from "./MapServiceFunctions";
-import { StrokaBalloon, ChangeCrossFunc } from "./MapServiceFunctions";
+import { СontentModalPressBalloon, MakeFromCross } from "./MapServiceFunctions";
+import { ChangeCrossFunc, PreparCurrencies } from "./MapServiceFunctions";
 import { RecevKeySvg, StrokaMenuGlob, MasskPoint } from "./MapServiceFunctions";
-import { DelVertexOrPoint } from "./MapServiceFunctions";
+import { DelVertexOrPoint, MenuProcesRoute } from "./MapServiceFunctions";
 
 import { SendSocketCreatePoint, SocketDeleteWay } from "./MapSocketFunctions";
 import { SendSocketCreateVertex } from "./MapSocketFunctions";
@@ -42,8 +38,7 @@ import { SendSocketCreateWay, SendSocketGetSvg } from "./MapSocketFunctions";
 import { SendSocketCreateWayFromPoint } from "./MapSocketFunctions";
 import { SendSocketCreateWayToPoint } from "./MapSocketFunctions";
 
-import { styleSetPoint, styleTypography, searchControl } from "./MainMapStyle";
-import { styleModalEndMapGl } from "./MainMapStyle";
+import { styleSetPoint } from "./MainMapStyle";
 
 let coordStart: any = []; // рабочий массив коллекции входящих связей
 let coordStop: any = []; // рабочий массив коллекции входящих связей
@@ -88,9 +83,9 @@ let toCross: any = {
 let funcContex: any = null;
 let funcBound: any = null;
 
-const currencies: any = [];
-let massKey: any = [];
-let massDat: any = [];
+let currencies: any = [];
+// let massKey: any = [];
+// let massDat: any = [];
 let AREA = "0";
 let idxDel = -1;
 
@@ -149,6 +144,7 @@ const MainMap = (props: {
   const [needRevers, setNeedRevers] = React.useState(0);
   const [ymaps, setYmaps] = React.useState<YMapsApi | null>(null);
   const mapp = React.useRef<any>(null);
+  const MyYandexKey = "65162f5f-2d15-41d1-a881-6c1acf34cfa1";
 
   const DelCollectionRoutes = () => {
     coordStart = [];
@@ -386,9 +382,7 @@ const MainMap = (props: {
     if (pointAa === 0) {
       pointAaIndex = index; // начальная точка
       pointAa = [massdk[index].coordinates[0], massdk[index].coordinates[1]];
-      fromCross.pointAaRegin = massdk[index].region.toString();
-      fromCross.pointAaArea = massdk[index].area.toString();
-      fromCross.pointAaID = massdk[index].ID;
+      fromCross = MakeFromCross(massdk[index]);
       MakeСollectionRoute();
       setFlagPusk(true);
     } else {
@@ -412,9 +406,7 @@ const MainMap = (props: {
                 massdk[index].coordinates[0],
                 massdk[index].coordinates[1],
               ];
-              toCross.pointBbRegin = massdk[index].region.toString();
-              toCross.pointBbArea = massdk[index].area.toString();
-              toCross.pointBbID = massdk[index].ID;
+              toCross = MakeToCross(massdk[index]);
               if (DoublRoute(massroute.ways, pointAa, pointBb)) {
                 SoobOpenSetEr("Дубликатная связь");
                 ZeroRoute(false);
@@ -453,9 +445,7 @@ const MainMap = (props: {
           } else {
             pointAaIndex = indexPoint;
             pointAa = pointRoute;
-            fromCross.pointAaRegin = massdk[pointAaIndex].region.toString();
-            fromCross.pointAaArea = massdk[pointAaIndex].area.toString();
-            fromCross.pointAaID = massdk[pointAaIndex].ID;
+            fromCross = MakeFromCross(massdk[pointAaIndex]);
             MakeСollectionRoute();
             setOpenSet(false);
           }
@@ -473,9 +463,7 @@ const MainMap = (props: {
             } else {
               pointBbIndex = indexPoint;
               pointBb = pointRoute;
-              toCross.pointBbRegin = massdk[pointBbIndex].region.toString();
-              toCross.pointBbArea = massdk[pointBbIndex].area.toString();
-              toCross.pointBbID = massdk[pointBbIndex].ID;
+              toCross = MakeToCross(massdk[pointBbIndex]);
               if (DoublRoute(massroute.ways, pointAa, pointBb)) {
                 SoobOpenSetEr("Дубликатная связь");
                 ZeroRoute(false);
@@ -493,21 +481,7 @@ const MainMap = (props: {
     return (
       <Modal open={openSet} onClose={() => setOpenSet(false)} hideBackdrop>
         <Box sx={styleSetPoint}>
-          <Button sx={styleModalEndMapGl} onClick={() => setOpenSet(false)}>
-            <b>&#10006;</b>
-          </Button>
-          <Box sx={{ marginTop: 1, textAlign: "center" }}>
-            {!areaPoint && (
-              <>{StrokaBalloon("Редактирование адреса", handleClose, 4)}</>
-            )}
-          </Box>
-          <Typography variant="h6" sx={styleTypography}>
-            Перестроение связи:
-          </Typography>
-          <Box sx={{ marginTop: 1, textAlign: "center" }}>
-            {StrokaBalloon("Начальная точка", handleClose, 1)}
-            {StrokaBalloon("Конечная точка", handleClose, 2)}
-          </Box>
+          {СontentModalPressBalloon(setOpenSet, handleClose, areaPoint)}
           {openSetAdress && (
             <MapChangeAdress
               ws={WS}
@@ -532,7 +506,7 @@ const MainMap = (props: {
     );
   };
 
-  const MakeNewPoint = (coords: any, avail: boolean ) => {
+  const MakeNewPoint = (coords: any, avail: boolean) => {
     let coor: string = CodingCoord(coords);
     let areaV = massroute.vertexes[massroute.vertexes.length - 1].area;
     let idV = massroute.vertexes[massroute.vertexes.length - 1].id;
@@ -642,6 +616,21 @@ const MainMap = (props: {
     AREA = event.target.value;
     PressButton(121);
   };
+
+  // const PreparCurrencies = (massKey: any, massDat: any) => {
+  //   const currencies: any = [];
+  //   let maskCurrencies = {
+  //     value: "0",
+  //     label: "Все районы",
+  //   };
+  //   currencies.push({ ...maskCurrencies });
+  //   for (let i = 0; i < massKey.length; i++) {
+  //     maskCurrencies.value = massKey[i];
+  //     maskCurrencies.label = massDat[i];
+  //     currencies.push({ ...maskCurrencies });
+  //   }
+  //   return currencies;
+  // };
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(massroute).length) {
     if (props.region) homeRegion = props.region;
@@ -650,13 +639,6 @@ const MainMap = (props: {
     for (let i = 0; i < massroute.points.length; i++)
       massroute.vertexes.push(massroute.points[i]);
     for (let i = 0; i < massroute.vertexes.length; i++) {
-      //let masskPoint = MasskPoint(massroute.vertexes[i]);
-      // masskPoint.ID = massroute.vertexes[i].id;
-      // masskPoint.coordinates = DecodingCoord(massroute.vertexes[i].dgis);
-      // masskPoint.nameCoordinates = massroute.vertexes[i].name;
-      // masskPoint.region = massroute.vertexes[i].region;
-      // masskPoint.area = massroute.vertexes[i].area;
-      // masskPoint.newCoordinates = 0;
       massdk.push(MasskPoint(massroute.vertexes[i]));
       coordinates.push(DecodingCoord(massroute.vertexes[i].dgis));
     }
@@ -669,23 +651,24 @@ const MainMap = (props: {
       map.dateMap.boxPoint.point1.Y,
       map.dateMap.boxPoint.point1.X
     );
-    flagOpen = true;
     let homeReg = map.dateMap.regionInfo[homeRegion]; // подготовка ввода района
-    let dat = map.dateMap.areaInfo[homeReg];
-    for (let key in dat) {
-      massKey.push(key);
-      massDat.push(dat[key]);
-    }
-    let maskCurrencies = {
-      value: "0",
-      label: "Все районы",
-    };
-    currencies.push({ ...maskCurrencies });
-    for (let i = 0; i < massKey.length; i++) {
-      maskCurrencies.value = massKey[i];
-      maskCurrencies.label = massDat[i];
-      currencies.push({ ...maskCurrencies });
-    }
+    // let dat = map.dateMap.areaInfo[homeReg];
+    // for (let key in dat) {
+    //   massKey.push(key);
+    //   massDat.push(dat[key]);
+    // }
+    // let maskCurrencies = {
+    //   value: "0",
+    //   label: "Все районы",
+    // };
+    // currencies.push({ ...maskCurrencies });
+    // for (let i = 0; i < massKey.length; i++) {
+    //   maskCurrencies.value = massKey[i];
+    //   maskCurrencies.label = massDat[i];
+    //   currencies.push({ ...maskCurrencies });
+    // }
+    currencies = PreparCurrencies(map.dateMap.areaInfo[homeReg]);
+    flagOpen = true;
   }
   //========================================================
   let mapState: any = {
@@ -697,52 +680,23 @@ const MainMap = (props: {
     ymaps && addRoute(ymaps); // перерисовка связей
     oldsErr = props.sErr;
   }
-
   masSvg = ["", ""];
   if (!debugging) {
     if (props.svg) {
       masSvg[0] = props.svg[RecevKeySvg(massroute.vertexes[pointAaIndex])];
       masSvg[1] = props.svg[RecevKeySvg(massroute.vertexes[pointBbIndex])];
-    } else {
-      masSvg = null;
     }
   }
 
   return (
-    <Grid container sx={{ border: 0, height: "99.9vh" }}>
+    <Grid container sx={{ height: "99.9vh" }}>
       {InputArea(handleChangeArea, currency, currencies)}
-      {makeRevers && needRevers === 0 && <>{PressButton(35)}</>}
-      {makeRevers && needRevers === 1 && <>{PressButton(36)}</>}
-      {makeRevers && needRevers === 2 && <>{PressButton(37)}</>}
-      {!flagDemo && (
-        <>{StrokaMenuGlob("Формальные Связи", PressButton, 3)}</>
-      )}
-      {flagDemo && <>{StrokaMenuGlob("Отключить ФС", PressButton, 6)}</>}
-      {flagPusk && !flagBind && (
-        <>{StrokaMenuGlob("Отм.назначений", PressButton, 77)}</>
-      )}
-      {flagPusk && flagRoute && !flagBind && (
-        <>
-          {StrokaMenuGlob("Сохр.связь", PressButton, 33)}
-          {StrokaMenuGlob("Реверc связи", PressButton, 12)}
-          {StrokaMenuGlob("Редакт.связи", PressButton, 69)}
-        </>
-      )}
-      {flagPusk && flagRoute && flagBind && (
-        <>
-          {StrokaMenuGlob("Сохр.связь", PressButton, 33)}
-          {StrokaMenuGlob("Отм.связь", PressButton, 77)}
-          {StrokaMenuGlob("Редакт.связи", PressButton, 69)}
-        </>
-      )}
+      {MakeRevers(makeRevers, needRevers, PressButton)}
+      {ShowFormalRoute(flagDemo, PressButton)}
+      {MenuProcesRoute(flagPusk, flagBind, flagRoute, PressButton)}
       {flagPro && <>{StrokaMenuGlob("Протокол", PressButton, 24)}</>}
       {Object.keys(massroute).length && (
-        <YMaps
-          query={{
-            apikey: "65162f5f-2d15-41d1-a881-6c1acf34cfa1",
-            lang: "ru_RU",
-          }}
-        >
+        <YMaps query={{ apikey: MyYandexKey, lang: "ru_RU" }}>
           <Map
             modules={["multiRouter.MultiRoute", "Polyline"]}
             state={mapState}
@@ -753,15 +707,7 @@ const MainMap = (props: {
             width={"99.8%"}
             height={"97%"}
           >
-            {/* сервисы Яндекса */}
-            <FullscreenControl />
-            <GeolocationControl options={{ float: "left" }} />
-            <RulerControl options={{ float: "right" }} />
-            <SearchControl options={searchControl} />
-            <TrafficControl options={{ float: "right" }} />
-            <TypeSelector options={{ float: "right" }} />
-            <ZoomControl options={{ float: "right" }} />
-            {/* служебные компоненты */}
+            {YandexServices()}
             <PlacemarkDo />
             <ModalPressBalloon />
             {openSetPro && <MapRouteProtokol setOpen={setOpenSetPro} />}

@@ -26,7 +26,7 @@ const MapRouteBind = (props: {
   idxB: number;
   func: any;
 }) => {
-  console.log("MapRouteBind:", props.svg);
+  //console.log("MapRouteBind:", props.svg);
   //== Piece of Redux ======================================
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
@@ -35,20 +35,13 @@ const MapRouteBind = (props: {
   //========================================================
   const [openSetBind, setOpenSetBind] = React.useState(true);
   let masSvg = ["", ""];
-  // let otlOrKosyk1 = props.debug;
-  // let otlOrKosyk2 = props.debug;
   if (props.svg) {
-  //   otlOrKosyk1 = true;
-  //   otlOrKosyk2 = true;
-  // } else {
-    //if (props.svg[0] === '' && props.svg[1] === '') otlOrKosyk = true;
     let dat = props.svg;
     masSvg = [];
     for (let key in dat) masSvg.push(dat[key]);
   }
-  console.log("###:", masSvg);
 
-  let heightImg = window.innerWidth / 3.333;
+  let heightImg = Math.round(window.innerWidth / 3.333);
   let widthHeight = heightImg.toString();
   let haveSvgA = true;
   let haveSvgB = true;
@@ -79,6 +72,15 @@ const MapRouteBind = (props: {
     }
     for (let i = 0; i < 6; i++) {
       svgPipa = svgPipa.replace(ch, widthHeight);
+    }
+    let chh = "";
+    let vxodh = masSvg[idx].indexOf("height=");
+    for (let i = 0; i < 100; i++) {
+      if (isNaN(Number(svgPipa[vxodh + 8 + i]))) break;
+      chh = chh + svgPipa[vxodh + 8 + i];
+    }
+    for (let i = 0; i < 6; i++) {
+      svgPipa = svgPipa.replace(chh, widthHeight);
     }
     return svgPipa;
   };

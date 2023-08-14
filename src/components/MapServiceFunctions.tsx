@@ -6,11 +6,16 @@ import MenuItem from "@mui/material/MenuItem";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 
+import { FullscreenControl, GeolocationControl } from "react-yandex-maps";
+import { RulerControl, SearchControl } from "react-yandex-maps";
+import { TrafficControl, TypeSelector, ZoomControl } from "react-yandex-maps";
+
 import { Pointer, Router } from "./../App";
 import { Vertex } from "./../interfaceRoute";
 
 import { styleModalMenu, styleModalEndMapGl } from "./MainMapStyle";
 import { styleInpKnop } from "./MainMapStyle";
+import { styleTypography, searchControl } from "./MainMapStyle";
 
 const handleKey = (event: any) => {
   if (event.key === "Enter") event.preventDefault();
@@ -103,6 +108,32 @@ export const RecordMassRoute = (
   return masskRoute;
 };
 
+export const MakeFromCross = (mass: any) => {
+  let fromCross: any = {
+    pointAaRegin: "",
+    pointAaArea: "",
+    pointAaID: 0,
+    pointAcod: "",
+  };
+  fromCross.pointAaRegin = mass.region.toString();
+  fromCross.pointAaArea = mass.area.toString();
+  fromCross.pointAaID = mass.ID;
+  return fromCross;
+};
+
+export const MakeToCross = (mass: any) => {
+  let toCross: any = {
+    pointBbRegin: "",
+    pointBbArea: "",
+    pointBbID: 0,
+    pointBcod: "",
+  };
+  toCross.pointBbRegin = mass.region.toString();
+  toCross.pointBbArea = mass.area.toString();
+  toCross.pointBbID = mass.ID;
+  return toCross;
+};
+
 export const DecodingCoord = (coord: string) => {
   return coord.split(",").map(Number);
 };
@@ -128,6 +159,27 @@ export const CenterCoord = (aY: number, aX: number, bY: number, bX: number) => {
   let coord1 = (aX - bX) / 2 + bX;
   if (aX < bX) coord1 = (bX - aX) / 2 + aX;
   return [coord0, coord1];
+};
+
+export const PreparCurrencies = (dat: any) => {
+  const currencies: any = [];
+  let massKey: any = [];
+  let massDat: any = [];
+  for (let key in dat) {
+    massKey.push(key);
+    massDat.push(dat[key]);
+  }
+  let maskCurrencies = {
+    value: "0",
+    label: "Все районы",
+  };
+  currencies.push({ ...maskCurrencies });
+  for (let i = 0; i < massKey.length; i++) {
+    maskCurrencies.value = massKey[i];
+    maskCurrencies.label = massDat[i];
+    currencies.push({ ...maskCurrencies });
+  }
+  return currencies;
 };
 
 export const InputArea = (func: any, currency: any, currencies: any) => {
@@ -404,13 +456,9 @@ export const StrokaMenuGlob = (soob: string, func: Function, mode: number) => {
     return textWidth(text, bb);
   };
 
-  // let dlina = MesssgeLength(soob, 14) + 14;
-  // console.log("dlina", dlina+30,(soob.length + 10) * 6.5);
-
   const styleApp01 = {
     fontSize: 14,
     marginLeft: 0.2,
-    //width: (soob.length + 10) * 6.5,
     width: MesssgeLength(soob, 14) + 30,
     maxHeight: "21px",
     minHeight: "21px",
@@ -428,11 +476,103 @@ export const StrokaMenuGlob = (soob: string, func: Function, mode: number) => {
   );
 };
 
+export const MakeRevers = (
+  makeRevers: boolean,
+  needRevers: number,
+  PressButton: Function
+) => {
+  return (
+    <>
+      {makeRevers && needRevers === 0 && <>{PressButton(35)}</>}
+      {makeRevers && needRevers === 1 && <>{PressButton(36)}</>}
+      {makeRevers && needRevers === 2 && <>{PressButton(37)}</>}
+    </>
+  );
+};
+
+export const ShowFormalRoute = (flagDemo: boolean, PressButton: Function) => {
+  return (
+    <>
+      {!flagDemo && <>{StrokaMenuGlob("Формальные Связи", PressButton, 3)}</>}
+      {flagDemo && <>{StrokaMenuGlob("Отключить ФС", PressButton, 6)}</>}
+    </>
+  );
+};
+
+export const MenuProcesRoute = (
+  flagPusk: boolean,
+  flagBind: boolean,
+  flagRoute: boolean,
+  PressButton: Function
+) => {
+  return (
+    <>
+      {flagPusk && !flagBind && (
+        <>{StrokaMenuGlob("Отм.назначений", PressButton, 77)}</>
+      )}
+      {flagPusk && flagRoute && !flagBind && (
+        <>
+          {StrokaMenuGlob("Сохр.связь", PressButton, 33)}
+          {StrokaMenuGlob("Реверc связи", PressButton, 12)}
+          {StrokaMenuGlob("Редакт.связи", PressButton, 69)}
+        </>
+      )}
+      {flagPusk && flagRoute && flagBind && (
+        <>
+          {StrokaMenuGlob("Сохр.связь", PressButton, 33)}
+          {StrokaMenuGlob("Отм.связь", PressButton, 77)}
+          {StrokaMenuGlob("Редакт.связи", PressButton, 69)}
+        </>
+      )}
+    </>
+  );
+};
+
+export const YandexServices = () => {
+  return (
+    <>
+      <FullscreenControl />
+      <GeolocationControl options={{ float: "left" }} />
+      <RulerControl options={{ float: "right" }} />
+      <SearchControl options={searchControl} />
+      <TrafficControl options={{ float: "right" }} />
+      <TypeSelector options={{ float: "right" }} />
+      <ZoomControl options={{ float: "right" }} />
+    </>
+  );
+};
+
 export const StrokaBalloon = (soob: string, func: any, mode: number) => {
   return (
     <Button sx={styleModalMenu} onClick={() => func(mode)}>
       <b>{soob}</b>
     </Button>
+  );
+};
+
+export const СontentModalPressBalloon = (
+  setOpenSet: Function,
+  handleClose: Function,
+  areaPoint: number
+) => {
+  return (
+    <>
+      <Button sx={styleModalEndMapGl} onClick={() => setOpenSet(false)}>
+        <b>&#10006;</b>
+      </Button>
+      <Box sx={{ marginTop: 1, textAlign: "center" }}>
+        {!areaPoint && (
+          <>{StrokaBalloon("Редактирование адреса", handleClose, 4)}</>
+        )}
+      </Box>
+      <Typography variant="h6" sx={styleTypography}>
+        Перестроение связи:
+      </Typography>
+      <Box sx={{ marginTop: 1, textAlign: "center" }}>
+        {StrokaBalloon("Начальная точка", handleClose, 1)}
+        {StrokaBalloon("Конечная точка", handleClose, 2)}
+      </Box>
+    </>
   );
 };
 
