@@ -616,21 +616,7 @@ const MainMap = (props: {
     AREA = event.target.value;
     PressButton(121);
   };
-
-  // const PreparCurrencies = (massKey: any, massDat: any) => {
-  //   const currencies: any = [];
-  //   let maskCurrencies = {
-  //     value: "0",
-  //     label: "Все районы",
-  //   };
-  //   currencies.push({ ...maskCurrencies });
-  //   for (let i = 0; i < massKey.length; i++) {
-  //     maskCurrencies.value = massKey[i];
-  //     maskCurrencies.label = massDat[i];
-  //     currencies.push({ ...maskCurrencies });
-  //   }
-  //   return currencies;
-  // };
+ 
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(massroute).length) {
     if (props.region) homeRegion = props.region;
@@ -652,21 +638,6 @@ const MainMap = (props: {
       map.dateMap.boxPoint.point1.X
     );
     let homeReg = map.dateMap.regionInfo[homeRegion]; // подготовка ввода района
-    // let dat = map.dateMap.areaInfo[homeReg];
-    // for (let key in dat) {
-    //   massKey.push(key);
-    //   massDat.push(dat[key]);
-    // }
-    // let maskCurrencies = {
-    //   value: "0",
-    //   label: "Все районы",
-    // };
-    // currencies.push({ ...maskCurrencies });
-    // for (let i = 0; i < massKey.length; i++) {
-    //   maskCurrencies.value = massKey[i];
-    //   maskCurrencies.label = massDat[i];
-    //   currencies.push({ ...maskCurrencies });
-    // }
     currencies = PreparCurrencies(map.dateMap.areaInfo[homeReg]);
     flagOpen = true;
   }
