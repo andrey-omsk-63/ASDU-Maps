@@ -45,6 +45,7 @@ let tmRoute1 = "";
 const MapPointDataError = (props: {
   sErr: string;
   setOpen: any;
+  //debug: boolean;
   ws: any;
   fromCross: any;
   toCross: any;
@@ -79,8 +80,8 @@ const MapPointDataError = (props: {
   const styleSetInf = {
     outline: "none",
     position: "absolute",
-    marginTop: "18vh",
-    marginLeft: "27vh",
+    marginTop: "15vh",
+    marginLeft: "24vh",
     width: 380,
     bgcolor: "background.paper",
     border: "3px solid #000",

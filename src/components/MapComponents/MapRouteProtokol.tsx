@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
 
 import { styleModalEnd } from "./../MainMapStyle";
 
@@ -15,11 +14,12 @@ const MapRouteProtokol = (props: { setOpen: any }) => {
     return massrouteproReducer.massroutepro;
   });
   //===========================================================
-  const [openSetPro, setOpenSetPro] = React.useState(true);
+  //const [openSetPro, setOpenSetPro] = React.useState(true);
 
   const handleCloseSetEndPro = () => {
+    console.log('0mode_pro:',false)
     props.setOpen(false);
-    setOpenSetPro(false);
+    //setOpenSetPro(false);
   };
 
   let massPro = massroutepro.ways;
@@ -48,12 +48,27 @@ const MapRouteProtokol = (props: { setOpen: any }) => {
       massProtokol.push(masSpis[j]);
     }
   }
-  
+
+  // const styleSetInf = {
+  //   position: "relative",
+  //   marginTop: 10.5,
+  //   marginLeft: "auto",
+  //   marginRight: 3,
+  //   width: 460,
+  //   bgcolor: "background.paper",
+  //   border: "3px solid #000",
+  //   borderColor: "primary.main",
+  //   borderRadius: 2,
+  //   boxShadow: 24,
+  //   p: 1.5,
+  // };
+
   const styleSetInf = {
-    position: "relative",
-    marginTop: 10.5,
-    marginLeft: "auto",
-    marginRight: 3,
+    outline: "none",
+    position: "absolute",
+    left: "77%",
+    top: "50%",
+    transform: "translate(-50%, -50%)",
     width: 460,
     bgcolor: "background.paper",
     border: "3px solid #000",
@@ -87,29 +102,27 @@ const MapRouteProtokol = (props: { setOpen: any }) => {
   };
 
   return (
-    <Modal open={openSetPro} onClose={handleCloseSetEndPro} hideBackdrop>
-      <Box sx={styleSetInf}>
-        <Button sx={styleModalEnd} onClick={handleCloseSetEndPro}>
-          <b>&#10006;</b>
-        </Button>
-        <Box sx={{ marginTop: -0.5, textAlign: "center" }}>
-          <b>Протокол созданных связей:</b>
-        </Box>
-        <Box sx={{ marginTop: 0.5 }}>
-          <Grid container sx={{ bgcolor: "#C0E2C3" }}>
-            <Grid item xs={6} sx={{ border: 0, textAlign: "center" }}>
-              <b>Выход</b>
-            </Grid>
-            <Grid item xs={6} sx={{ border: 0, textAlign: "center" }}>
-              <b>Вход</b>
-            </Grid>
+    <Box sx={styleSetInf}>
+      <Button sx={styleModalEnd} onClick={() => handleCloseSetEndPro()}>
+        <b>&#10006;</b>
+      </Button>
+      <Box sx={{ marginTop: -0.5, textAlign: "center" }}>
+        <b>Протокол созданных связей:</b>
+      </Box>
+      <Box sx={{ marginTop: 0.5 }}>
+        <Grid container sx={{ bgcolor: "#C0E2C3" }}>
+          <Grid item xs={6} sx={{ border: 0, textAlign: "center" }}>
+            <b>Выход</b>
           </Grid>
-          <Box sx={{ border: 0, overflowX: "auto", height: "73vh" }}>
-            {StrokaProtokol()}
-          </Box>
+          <Grid item xs={6} sx={{ border: 0, textAlign: "center" }}>
+            <b>Вход</b>
+          </Grid>
+        </Grid>
+        <Box sx={{ border: 0, overflowX: "auto", height: "73vh" }}>
+          {StrokaProtokol()}
         </Box>
       </Box>
-    </Modal>
+    </Box>
   );
 };
 

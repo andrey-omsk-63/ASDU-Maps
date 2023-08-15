@@ -10,6 +10,12 @@ import { FullscreenControl, GeolocationControl } from "react-yandex-maps";
 import { RulerControl, SearchControl } from "react-yandex-maps";
 import { TrafficControl, TypeSelector, ZoomControl } from "react-yandex-maps";
 
+import { SendSocketCreatePoint } from "./MapSocketFunctions";
+import { SendSocketCreateVertex } from "./MapSocketFunctions";
+import { SocketDeleteWay } from "./MapSocketFunctions";
+import { SendSocketDeletePoint } from "./MapSocketFunctions";
+import { SendSocketDeleteVertex } from "./MapSocketFunctions";
+
 import { Pointer, Router } from "./../App";
 import { Vertex } from "./../interfaceRoute";
 
@@ -19,6 +25,10 @@ import { styleTypography, searchControl } from "./MainMapStyle";
 
 const handleKey = (event: any) => {
   if (event.key === "Enter") event.preventDefault();
+};
+
+export const MassCoord = (mass: any) => {
+  return [mass.coordinates[0], mass.coordinates[1]];
 };
 
 export const MapssdkNewPoint = (
@@ -108,6 +118,24 @@ export const RecordMassRoute = (
   return masskRoute;
 };
 
+export const FillMassRouteContent = (
+  AREA: string,
+  FlagDemo: boolean,
+  massroute: any
+) => {
+  let massRoute: any = [];
+  if (AREA === "0" && FlagDemo) massRoute = massroute.ways;
+  if (AREA !== "0" && FlagDemo) {
+    for (let i = 0; i < massroute.ways.length; i++)
+      if (
+        massroute.ways[i].sourceArea.toString() === AREA ||
+        massroute.ways[i].targetArea.toString() === AREA
+      )
+        massRoute.push(massroute.ways[i]);
+  }
+  return massRoute;
+};
+
 export const MakeFromCross = (mass: any) => {
   let fromCross: any = {
     pointAaRegin: "",
@@ -161,6 +189,119 @@ export const CenterCoord = (aY: number, aX: number, bY: number, bX: number) => {
   return [coord0, coord1];
 };
 
+export const CenterCoordBegin = (map: any) => {
+  return CenterCoord(
+    map.dateMap.boxPoint.point0.Y,
+    map.dateMap.boxPoint.point0.X,
+    map.dateMap.boxPoint.point1.Y,
+    map.dateMap.boxPoint.point1.X
+  );
+};
+
+export const MakeNewPointContent = (
+  WS: any,
+  coords: any,
+  avail: boolean,
+  homeRegion: number,
+  massroute: any
+) => {
+  let coor: string = CodingCoord(coords);
+  let areaV = massroute.vertexes[massroute.vertexes.length - 1].area;
+  let idV = massroute.vertexes[massroute.vertexes.length - 1].id;
+  let adress = massroute.vertexes[massroute.vertexes.length - 1].name;
+  areaV && avail && SendSocketCreateVertex(WS, homeRegion, areaV, idV); // светофор
+  !areaV && SendSocketCreatePoint(WS, coor, adress); // объект
+};
+
+export const DelPointVertexContent = (
+  WS: any,
+  massroute: any,
+  idxDel: number
+) => {
+  let massRouteRab: any = []; // удаление из массива сети связей
+  let coordPoint = massroute.vertexes[idxDel].dgis;
+  let idPoint = massroute.vertexes[idxDel].id;
+  let regionV = massroute.vertexes[idxDel].region.toString();
+  let areaV = massroute.vertexes[idxDel].area.toString();
+  areaV === "0" && SendSocketDeletePoint(WS, idPoint); // объкт
+  areaV !== "0" && SendSocketDeleteVertex(WS, regionV, areaV, idPoint); // светофор
+  for (let i = 0; i < massroute.ways.length; i++) {
+    let iffer =
+      coordPoint !== massroute.ways[i].starts &&
+      coordPoint !== massroute.ways[i].stops;
+    iffer && massRouteRab.push(massroute.ways[i]);
+    !iffer && SocketDeleteWay(WS, massroute.ways[i]);
+  }
+  return massRouteRab;
+};
+
+export const PreparCurrenciesMode = () => {
+  const currencies: any = [];
+  let dat = ["Создание связей", "Перекрёстки"];
+  let massKey: any = [];
+  let massDat: any = [];
+  for (let key in dat) {
+    massKey.push(key);
+    massDat.push(dat[key]);
+  }
+  let maskCurrencies = {
+    value: "0",
+    label: "Все режимы",
+  };
+  for (let i = 0; i < massKey.length; i++) {
+    maskCurrencies.value = massKey[i];
+    maskCurrencies.label = massDat[i];
+    currencies.push({ ...maskCurrencies });
+  }
+  return currencies;
+};
+
+// export const InputMode = (func: any, currency: any, currencies: any) => {
+//   const styleSetArea = {
+//     width: "150px",
+//     maxHeight: "2px",
+//     minHeight: "2px",
+//     marginLeft: 0.3,
+//     bgcolor: "#93D145",
+//     border: 1,
+//     borderRadius: 1,
+//     borderColor: "#93D145",
+//     textAlign: "center",
+//     p: 1.25,
+//   };
+
+//   const styleBoxFormArea = {
+//     "& > :not(style)": {
+//       marginTop: "-10px",
+//       marginLeft: "-15px",
+//       width: "175px",
+//     },
+//   };
+
+//   return (
+//     <Box sx={styleSetArea}>
+//       <Box component="form" sx={styleBoxFormArea}>
+//         <TextField
+//           select
+//           size="small"
+//           onKeyPress={handleKey} //отключение Enter
+//           value={currency}
+//           onChange={func}
+//           InputProps={{ disableUnderline: true, style: { fontSize: 14 } }}
+//           variant="standard"
+//           color="secondary"
+//         >
+//           {currencies.map((option: any) => (
+//             <MenuItem key={option.value} value={option.value}>
+//               {option.label}
+//             </MenuItem>
+//           ))}
+//         </TextField>
+//       </Box>
+//     </Box>
+//   );
+// };
+
 export const PreparCurrencies = (dat: any) => {
   const currencies: any = [];
   let massKey: any = [];
@@ -182,16 +323,12 @@ export const PreparCurrencies = (dat: any) => {
   return currencies;
 };
 
-export const InputArea = (func: any, currency: any, currencies: any) => {
-  const handleKey = (event: any) => {
-    if (event.key === "Enter") event.preventDefault();
-  };
-
-  const styleSetArea = {
+export const InputMenu = (func: any, currency: any, currencies: any) => {
+  const styleSet = {
     width: "150px",
     maxHeight: "2px",
     minHeight: "2px",
-    marginLeft: 0.5,
+    marginLeft: 0.3,
     bgcolor: "#93D145",
     border: 1,
     borderRadius: 1,
@@ -200,7 +337,7 @@ export const InputArea = (func: any, currency: any, currencies: any) => {
     p: 1.25,
   };
 
-  const styleBoxFormArea = {
+  const styleBoxForm = {
     "& > :not(style)": {
       marginTop: "-10px",
       marginLeft: "-15px",
@@ -209,8 +346,8 @@ export const InputArea = (func: any, currency: any, currencies: any) => {
   };
 
   return (
-    <Box sx={styleSetArea}>
-      <Box component="form" sx={styleBoxFormArea}>
+    <Box sx={styleSet}>
+      <Box component="form" sx={styleBoxForm}>
         <TextField
           select
           size="small"
@@ -302,6 +439,7 @@ export const getPointOptions = (
   debug: boolean,
   index: number,
   AREA: string,
+  MODE: string,
   map: any,
   pointAaIndex: number,
   pointBbIndex: number,
@@ -351,7 +489,8 @@ export const getPointOptions = (
   //   if (massdk[index].newCoordinates > 0)
   //     colorBalloon = "islands#darkOrangeCircleDotIcon";
   // }
-  if (index === pointAaIndex) colorBalloon = "islands#redStretchyIcon";
+  if (index === pointAaIndex && MODE === "0")
+    colorBalloon = "islands#redStretchyIcon";
   if (index === pointBbIndex) colorBalloon = "islands#darkBlueStretchyIcon";
 
   const NoImg = () => {
