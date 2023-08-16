@@ -14,12 +14,11 @@ const MapRouteProtokol = (props: { setOpen: any }) => {
     return massrouteproReducer.massroutepro;
   });
   //===========================================================
-  //const [openSetPro, setOpenSetPro] = React.useState(true);
+  
 
   const handleCloseSetEndPro = () => {
-    console.log('0mode_pro:',false)
+    console.log("0mode_pro:", false);
     props.setOpen(false);
-    //setOpenSetPro(false);
   };
 
   let massPro = massroutepro.ways;
@@ -49,26 +48,10 @@ const MapRouteProtokol = (props: { setOpen: any }) => {
     }
   }
 
-  // const styleSetInf = {
-  //   position: "relative",
-  //   marginTop: 10.5,
-  //   marginLeft: "auto",
-  //   marginRight: 3,
-  //   width: 460,
-  //   bgcolor: "background.paper",
-  //   border: "3px solid #000",
-  //   borderColor: "primary.main",
-  //   borderRadius: 2,
-  //   boxShadow: 24,
-  //   p: 1.5,
-  // };
-
   const styleSetInf = {
-    outline: "none",
-    position: "absolute",
-    left: "77%",
-    top: "50%",
-    transform: "translate(-50%, -50%)",
+    position: "relative",
+    marginTop: "-92vh",
+    marginLeft: "auto",
     width: 460,
     bgcolor: "background.paper",
     border: "3px solid #000",
@@ -77,6 +60,20 @@ const MapRouteProtokol = (props: { setOpen: any }) => {
     boxShadow: 24,
     p: 1.5,
   };
+
+  // const styleSetInf = {
+  //   outline: "none",
+  //   position: "absolute",
+  //   right: 0,
+  //   transform: "translate(0%, -114%)",
+  //   width: 460,
+  //   bgcolor: "background.paper",
+  //   border: "3px solid #000",
+  //   borderColor: "primary.main",
+  //   borderRadius: 2,
+  //   boxShadow: 24,
+  //   p: 1.5,
+  // };
 
   const StrokaProtokol = () => {
     let resStr = [];
@@ -102,6 +99,7 @@ const MapRouteProtokol = (props: { setOpen: any }) => {
   };
 
   return (
+    // <Box sx={{position: "relative"}}>
     <Box sx={styleSetInf}>
       <Button sx={styleModalEnd} onClick={() => handleCloseSetEndPro()}>
         <b>&#10006;</b>
@@ -123,6 +121,7 @@ const MapRouteProtokol = (props: { setOpen: any }) => {
         </Box>
       </Box>
     </Box>
+    // </Box>
   );
 };
 

@@ -313,10 +313,12 @@ const MainMap = (props: {
         break;
       case 121: // выбор района
         FillMassRoute();
+        ZeroRoute(false);
         flagDemo && ymaps && addRoute(ymaps); // перерисовка связей
         break;
       case 212: // выбор режима работы
-        console.log("Режим работы", MODE);
+        SetOpenSetForm(false)
+        ZeroRoute(false);
     }
   };
 
@@ -376,6 +378,7 @@ const MainMap = (props: {
 
   const OnPlacemarkClickPoint = (index: number) => {
     if (pointAa === 0) {
+      if (!massdk[index].area && MODE === "1") return;
       pointAaIndex = index; // начальная точка
       pointAa = [massdk[index].coordinates[0], massdk[index].coordinates[1]];
       fromCross = MakeFromCross(massdk[index]);
@@ -439,7 +442,6 @@ const MainMap = (props: {
             pointAa = pointRoute;
             fromCross = MakeFromCross(massdk[pointAaIndex]);
             MakeСollectionRoute();
-            //setOpenSet(false);
           }
           break;
         case 2: // Конечная точка
@@ -460,7 +462,6 @@ const MainMap = (props: {
                 SoobOpenSetEr("Дубликатная связь");
                 ZeroRoute(false);
               }
-              //setOpenSet(false);
               ymaps && addRoute(ymaps); // перерисовка связей
             }
           }
@@ -571,11 +572,11 @@ const MainMap = (props: {
       funcContex = function (e: any) {
         if (mapp.current.hint) {
           newPointCoord = e.get("coords"); // нажата правая кнопка мыши
-          if (MODE === "0") {
-            idxDel = DelOrCreate(massdk, newPointCoord);
-            idxDel >= 0 && setOpenSetDelete(true);
-            idxDel < 0 && setOpenSetCreate(true);
-          }
+          // if (MODE === "0") {
+          idxDel = DelOrCreate(massdk, newPointCoord);
+          idxDel >= 0 && setOpenSetDelete(true);
+          idxDel < 0 && setOpenSetCreate(true);
+          //}
         }
       };
       mapp.current.events.add("contextmenu", funcContex);
@@ -620,6 +621,8 @@ const MainMap = (props: {
     currenciesMode = PreparCurrenciesMode();
     console.log("currenciesMode:", currenciesMode);
     flagOpen = true;
+    console.log("massroute:", massroute);
+    console.log("map:", map);
   }
   //========================================================
   let mapState: any = {
@@ -668,7 +671,9 @@ const MainMap = (props: {
             <PlacemarkDo />
             <ModalPressBalloon />
             {openSetPro && <MapRouteProtokol setOpen={setOpenSetPro} />}
-            {openSetForm && <MapVertexForma setOpen={SetOpenSetForm} idx={pointAaIndex} />}
+            {openSetForm && pointAaIndex >= 0 && (
+              <MapVertexForma setOpen={SetOpenSetForm} idx={pointAaIndex} />
+            )}
             {openSetEr && (
               <MapPointDataError
                 sErr={soobError}

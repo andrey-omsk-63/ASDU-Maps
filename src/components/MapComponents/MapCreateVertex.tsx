@@ -189,8 +189,8 @@ const MapCreateVertex = (props: {
         )
       );
 
-      console.log("!!!massdk:", massdk);
-      console.log("!!!massroute:", massroute);
+      // console.log("!!!massdk:", massdk);
+      // console.log("!!!massroute:", massroute);
 
       dispatch(massdkCreate(massdk));
       dispatch(massrouteCreate(massroute));

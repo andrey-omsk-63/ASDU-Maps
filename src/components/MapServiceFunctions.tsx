@@ -256,52 +256,6 @@ export const PreparCurrenciesMode = () => {
   return currencies;
 };
 
-// export const InputMode = (func: any, currency: any, currencies: any) => {
-//   const styleSetArea = {
-//     width: "150px",
-//     maxHeight: "2px",
-//     minHeight: "2px",
-//     marginLeft: 0.3,
-//     bgcolor: "#93D145",
-//     border: 1,
-//     borderRadius: 1,
-//     borderColor: "#93D145",
-//     textAlign: "center",
-//     p: 1.25,
-//   };
-
-//   const styleBoxFormArea = {
-//     "& > :not(style)": {
-//       marginTop: "-10px",
-//       marginLeft: "-15px",
-//       width: "175px",
-//     },
-//   };
-
-//   return (
-//     <Box sx={styleSetArea}>
-//       <Box component="form" sx={styleBoxFormArea}>
-//         <TextField
-//           select
-//           size="small"
-//           onKeyPress={handleKey} //отключение Enter
-//           value={currency}
-//           onChange={func}
-//           InputProps={{ disableUnderline: true, style: { fontSize: 14 } }}
-//           variant="standard"
-//           color="secondary"
-//         >
-//           {currencies.map((option: any) => (
-//             <MenuItem key={option.value} value={option.value}>
-//               {option.label}
-//             </MenuItem>
-//           ))}
-//         </TextField>
-//       </Box>
-//     </Box>
-//   );
-// };
-
 export const PreparCurrencies = (dat: any) => {
   const currencies: any = [];
   let massKey: any = [];
@@ -402,6 +356,22 @@ export const DelOrCreate = (massdk: any, newPointCoord: any) => {
   return nomInMass;
 };
 
+export const ComplianceMapMassdk = (index: number, massdk: any, map: any) => {
+  let idxMap = -1;
+  if (index >= 0 && map.dateMap.tflight.length > index) {
+    for (let i = 0; i < map.dateMap.tflight.length; i++) {
+      if (
+        map.dateMap.tflight[i].ID === massdk[index].ID &&
+        Number(map.dateMap.tflight[i].area.num) === massdk[index].area
+      ) {
+        idxMap = i;
+        break;
+      }
+    }
+  }
+  return idxMap;
+};
+
 //=== Placemark =====================================
 export const getPointData = (
   index: number,
@@ -410,16 +380,17 @@ export const getPointData = (
   massdk: any,
   map: any
 ) => {
-  let idxMap = -1;
-  for (let i = 0; i < map.dateMap.tflight.length; i++) {
-    if (
-      map.dateMap.tflight[i].ID === massdk[index].ID &&
-      Number(map.dateMap.tflight[i].area.num) === massdk[index].area
-    ) {
-      idxMap = i;
-      break;
-    }
-  }
+  let idxMap = ComplianceMapMassdk(index, massdk, map);
+  // let idxMap = -1;
+  // for (let i = 0; i < map.dateMap.tflight.length; i++) {
+  //   if (
+  //     map.dateMap.tflight[i].ID === massdk[index].ID &&
+  //     Number(map.dateMap.tflight[i].area.num) === massdk[index].area
+  //   ) {
+  //     idxMap = i;
+  //     break;
+  //   }
+  // }
   let cont3 = ", null";
   if (idxMap >= 0) cont3 = ", " + map.dateMap.tflight[idxMap].idevice;
   let cont1 = massdk[index].nameCoordinates + "<br/>";
@@ -476,6 +447,11 @@ export const getPointOptions = (
       }
     }
     //========================================================
+    if (MODE === "1" && index === pointAaIndex) {
+      host = "http://localhost:3000/4.svg";
+      if (!debug)
+        host = window.location.origin + "/free/img/trafficLights/4.svg";
+    }
     return host;
   };
 
