@@ -7,7 +7,9 @@ import Button from "@mui/material/Button";
 
 import { ComplianceMapMassdk } from "./../MapServiceFunctions";
 
-import { styleModalEnd } from "./../MainMapStyle";
+import { styleModalEnd, styleFormInf, styleFormName } from "./../MainMapStyle";
+import { styleFT02, styleFT03, styleFT033 } from "./../MainMapStyle";
+import { styleFormTabl } from "./../MainMapStyle";
 
 const MapVertexForma = (props: { setOpen: any; idx: number }) => {
   //== Piece of Redux =======================================
@@ -24,63 +26,8 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
   const idxMap = ComplianceMapMassdk(props.idx, massdk, map);
   const MAP = map.dateMap.tflight[idxMap];
 
-  console.log("MapVertexForma:", props.idx, idxMap);
-
   const handleCloseSetEnd = () => {
     props.setOpen(false);
-  };
-
-  const styleFormInf = {
-    outline: "none",
-    position: "relative",
-    marginTop: "-92vh",
-    marginLeft: "auto",
-    width: 460,
-    height: 700,
-    bgcolor: "background.paper",
-    border: "3px solid #000",
-    borderColor: "primary.main",
-    borderRadius: 2,
-    boxShadow: 24,
-    p: 1.5,
-  };
-
-  const styleFormName = {
-    fontSize: 17,
-    marginTop: 0.5,
-    marginBottom: 2,
-    textAlign: "center",
-  };
-
-  const styleFT02 = {
-    padding: 0.7,
-    textAlign: "center",
-    bgcolor: "#C0E2C3",
-  };
-
-  const styleFormTabl = {
-    border: 1,
-    borderRadius: 1,
-    borderColor: "primary.main",
-    marginTop: 1.5,
-    marginLeft: -0.5,
-    marginRight: -0.5,
-    height: 333,
-  };
-
-  const styleFT03 = {
-    borderRight: 1,
-    borderBottom: 1,
-    borderColor: "primary.main",
-    padding: 0.7,
-    textAlign: "center",
-  };
-
-  const styleFT033 = {
-    borderBottom: 1,
-    borderColor: "primary.main",
-    padding: 0.7,
-    textAlign: "center",
   };
 
   const HeaderTablFaz = () => {
@@ -106,8 +53,6 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
     let resStr = [];
     let lng = idxMap >= 0 ? MAP.phases.length : 0;
     for (let i = 0; i < lng; i++) {
-      
-
       resStr.push(
         <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
           <Grid xs={1} item sx={styleFT03}>

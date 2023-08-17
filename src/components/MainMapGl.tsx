@@ -16,6 +16,7 @@ import MapCreatePointVertex from "./MapComponents/MapCreatePointVertex";
 import MapRouteProtokol from "./MapComponents/MapRouteProtokol";
 import MapReversRoute from "./MapComponents/MapReversRoute";
 import MapVertexForma from "./MapComponents/MapVertexForma";
+import MapWaysForma from "./MapComponents/MapWaysForma";
 
 import { RecordMassRoute, MakeNewPointContent } from "./MapServiceFunctions";
 import { YandexServices, ShowFormalRoute } from "./MapServiceFunctions";
@@ -128,7 +129,8 @@ const MainMap = (props: {
   const [currencyMode, setCurrencyMode] = React.useState("0");
   const [openSetInf, setOpenSetInf] = React.useState(false);
   const [openSetPro, setOpenSetPro] = React.useState(false);
-  const [openSetForm, setOpenSetForm] = React.useState(false);
+  const [openSetVertForm, setOpenSetVertForm] = React.useState(false);
+  const [openSetWaysForm, setOpenSetWaysForm] = React.useState(false);
   const [openSetEr, setOpenSetEr] = React.useState(false);
   const [openSetBind, setOpenSetBind] = React.useState(false);
   const [flagDemo, setFlagDemo] = React.useState(false);
@@ -317,7 +319,8 @@ const MainMap = (props: {
         flagDemo && ymaps && addRoute(ymaps); // перерисовка связей
         break;
       case 212: // выбор режима работы
-        SetOpenSetForm(false)
+        SetOpenSetVertForm(false);
+        setOpenSetWaysForm(false)
         ZeroRoute(false);
     }
   };
@@ -384,7 +387,7 @@ const MainMap = (props: {
       fromCross = MakeFromCross(massdk[index]);
       MakeСollectionRoute();
       setFlagPusk(true);
-      if (MODE === "1") setOpenSetForm(true);
+      if (MODE === "1") setOpenSetVertForm(true);
     } else {
       let soob = "Связь между перекрёстками в разных районах создовать нельзя";
       if (MODE === "0") {
@@ -572,11 +575,13 @@ const MainMap = (props: {
       funcContex = function (e: any) {
         if (mapp.current.hint) {
           newPointCoord = e.get("coords"); // нажата правая кнопка мыши
-          // if (MODE === "0") {
           idxDel = DelOrCreate(massdk, newPointCoord);
-          idxDel >= 0 && setOpenSetDelete(true);
-          idxDel < 0 && setOpenSetCreate(true);
-          //}
+          if (MODE === "0") {
+            idxDel >= 0 && setOpenSetDelete(true);
+            idxDel < 0 && setOpenSetCreate(true);
+          } else {
+            idxDel >= 0 && setOpenSetWaysForm(true);
+          }
         }
       };
       mapp.current.events.add("contextmenu", funcContex);
@@ -642,9 +647,14 @@ const MainMap = (props: {
     }
   }
 
-  const SetOpenSetForm = (mode: boolean) => {
+  const SetOpenSetVertForm = (mode: boolean) => {
     ZeroRoute(false);
-    setOpenSetForm(mode);
+    setOpenSetVertForm(mode);
+  };
+
+  const SetOpenSetWaysForm = (mode: boolean) => {
+    ZeroRoute(false);
+    setOpenSetWaysForm(mode);
   };
 
   return (
@@ -671,8 +681,11 @@ const MainMap = (props: {
             <PlacemarkDo />
             <ModalPressBalloon />
             {openSetPro && <MapRouteProtokol setOpen={setOpenSetPro} />}
-            {openSetForm && pointAaIndex >= 0 && (
-              <MapVertexForma setOpen={SetOpenSetForm} idx={pointAaIndex} />
+            {openSetVertForm && pointAaIndex >= 0 && (
+              <MapVertexForma setOpen={SetOpenSetVertForm} idx={pointAaIndex} />
+            )}
+            {openSetWaysForm && (
+              <MapWaysForma setOpen={SetOpenSetWaysForm} idx={idxDel} />
             )}
             {openSetEr && (
               <MapPointDataError
