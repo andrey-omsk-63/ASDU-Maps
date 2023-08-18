@@ -1,18 +1,19 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
 
-import Grid from "@mui/material/Grid";
+//import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 
 import MapPointDataError from "./MapPointDataError";
+//import MapWaysFormMenu from "./MapWaysFormMenu";
 
-import { ComplianceMapMassdk } from "./../MapServiceFunctions";
+//import { ComplianceMapMassdk } from "./../MapServiceFunctions";
 
 import { styleModalEnd, styleFormInf } from "./../MainMapStyle";
-import { styleFT02, styleFT03, styleFT033 } from "./../MainMapStyle";
-import { styleFormTabl } from "./../MainMapStyle";
+//import { styleFT02, styleFT03, styleFT033 } from "./../MainMapStyle";
+//import { styleFormTabl } from "./../MainMapStyle";
 
 let allRight = false;
 let openSetErr = false;
@@ -20,15 +21,15 @@ let OpenMenu = false;
 let soobErr = "";
 let massTargetRoute: Array<number> = [];
 let massTargetName: Array<string> = [];
-let nomInMass = 0;
+//let nomInMass = 0;
 let oldIdx = -1;
 
 const MapWaysForma = (props: { setOpen: any; idx: number }) => {
   //== Piece of Redux =======================================
-  const map = useSelector((state: any) => {
-    const { mapReducer } = state;
-    return mapReducer.map;
-  });
+  // const map = useSelector((state: any) => {
+  //   const { mapReducer } = state;
+  //   return mapReducer.map;
+  // });
   //console.log("map:", map);
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;
@@ -38,21 +39,22 @@ const MapWaysForma = (props: { setOpen: any; idx: number }) => {
     const { massrouteReducer } = state;
     return massrouteReducer.massroute;
   });
-  console.log("massroute:", massroute);
+  //console.log("massroute:", massroute);
   //===========================================================
-  const idxMap = ComplianceMapMassdk(props.idx, massdk, map);
-  const MAP = map.dateMap.tflight[idxMap];
+  const [nomInMass, setNomInMass] = React.useState(0);
+  //const idxMap = ComplianceMapMassdk(props.idx, massdk, map);
+  //const MAP = map.dateMap.tflight[idxMap];
   const propsArea = massroute.vertexes[props.idx].area;
   const propsId = massroute.vertexes[props.idx].id;
 
-  console.log("MapWaysForma:", props.idx, idxMap, propsArea, propsId);
+  //console.log("MapWaysForma:", props.idx, idxMap, propsArea, propsId);
   //=== инициализация ======================================
   if (oldIdx !== props.idx) {
     oldIdx = props.idx;
     allRight = false;
     openSetErr = false;
     OpenMenu = false;
-    nomInMass = 0;
+    setNomInMass(0);
     //soobErr = "";
     massTargetRoute = [];
     massTargetName = [];
@@ -85,7 +87,7 @@ const MapWaysForma = (props: { setOpen: any; idx: number }) => {
         OpenMenu = true;
       }
     }
-    console.log("massTargetRoute:", massTargetRoute, massTargetName);
+    //console.log("massTargetRoute:", massTargetRoute, massTargetName);
   }
   //==========================================================
   const styleFW02 = {
@@ -95,16 +97,16 @@ const MapWaysForma = (props: { setOpen: any; idx: number }) => {
     width: 550,
     backgroundColor: "#E9F5D8",
     color: "black",
-    //marginRight: 1,
     marginTop: 1,
     textTransform: "unset !important",
   };
 
   const styleFW01 = {
-    position: "absolute",
-    left: "50%",
-    top: "50%",
-    transform: "translate(-50%, -50%)",
+    outline: "none",
+    position: "relative",
+    //marginTop: "-91vh",
+    marginTop: "9vh",
+    marginLeft: "auto",
     width: 555,
     bgcolor: "background.paper",
     border: "2px solid #000",
@@ -121,31 +123,47 @@ const MapWaysForma = (props: { setOpen: any; idx: number }) => {
   };
 
   const handleCloseSetEnd = () => {
+    oldIdx = -1;
     props.setOpen(false);
+  };
+
+  const handleCloseAllRight = (mode: number) => {
+    allRight = true;
+    setNomInMass(mode);
+    props.setOpen(true);
   };
 
   const MenuRoutes = () => {
     const [openMenu, setOpenMenu] = React.useState(true);
 
     const handleClose = (mode: number) => {
-      if (mode === 777) {
+      if (typeof mode !== "number") {
         handleCloseSetEnd();
       } else {
-        allRight = true;
-        nomInMass = mode;
-        setOpenMenu(false);
+        if (mode === 777) {
+          handleCloseSetEnd();
+        } else {
+          handleCloseAllRight(mode);
+          //allRight = true;
+          //nomInMass = mode;
+          setOpenMenu(false);
+        }
       }
     };
 
     const SpisRoutes = () => {
       let resStr = [];
       resStr.push(
-        <Button sx={styleModalEnd} onClick={() => handleClose(777)}>
+        <Button
+          key={Math.random()}
+          sx={styleModalEnd}
+          onClick={() => handleClose(777)}
+        >
           <b>&#10006;</b>
         </Button>
       );
       resStr.push(
-        <Box sx={{ textAlign: "center", marginBottom: 1 }}>
+        <Box key={Math.random()} sx={{ textAlign: "center", marginBottom: 1 }}>
           Входящая связь перекрёстка <b>{massdk[props.idx].nameCoordinates}</b>{" "}
           с перекрёстком
         </Box>
@@ -168,76 +186,78 @@ const MapWaysForma = (props: { setOpen: any; idx: number }) => {
     return (
       <>
         <Modal open={openMenu} onClose={handleClose} hideBackdrop>
-          <Box sx={styleFW01}>{SpisRoutes()}</Box>
+        <Box sx={styleFW01}>{SpisRoutes()}</Box>
         </Modal>
       </>
     );
     //}
   };
 
-  const HeaderTablFaz = () => {
-    return (
-      <Grid container>
-        <Grid item xs={1} sx={styleFT02}>
-          №
-        </Grid>
-        <Grid item xs={3.5} sx={styleFT02}>
-          Мин.длит.фаз(с)
-        </Grid>
-        <Grid item xs={3.5} sx={styleFT02}>
-          Нач.длит.фаз(с)
-        </Grid>
-        <Grid item xs={4} sx={styleFT02}>
-          Порядок фаз
-        </Grid>
-      </Grid>
-    );
-  };
+  // const HeaderTablFaz = () => {
+  //   return (
+  //     <Grid container>
+  //       <Grid item xs={1} sx={styleFT02}>
+  //         №
+  //       </Grid>
+  //       <Grid item xs={3.5} sx={styleFT02}>
+  //         Мин.длит.фаз(с)
+  //       </Grid>
+  //       <Grid item xs={3.5} sx={styleFT02}>
+  //         Нач.длит.фаз(с)
+  //       </Grid>
+  //       <Grid item xs={4} sx={styleFT02}>
+  //         Порядок фаз
+  //       </Grid>
+  //     </Grid>
+  //   );
+  // };
 
-  const StrokaMainTabl = () => {
-    let resStr = [];
-    let lng = idxMap >= 0 ? MAP.phases.length : 0;
-    for (let i = 0; i < lng; i++) {
-      resStr.push(
-        <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
-          <Grid xs={1} item sx={styleFT03}>
-            <Box sx={{ p: 0.2 }}>{i + 1}</Box>
-          </Grid>
-          <Grid xs={3.5} item sx={styleFT03}>
-            0
-          </Grid>
-          <Grid xs={3.5} item sx={styleFT03}>
-            0
-          </Grid>
-          <Grid xs={4} item sx={styleFT033}>
-            0
-          </Grid>
-        </Grid>
-      );
-    }
-    return resStr;
-  };
+  // const StrokaMainTabl = () => {
+  //   let resStr = [];
+  //   let lng = idxMap >= 0 ? MAP.phases.length : 0;
+  //   for (let i = 0; i < lng; i++) {
+  //     resStr.push(
+  //       <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
+  //         <Grid xs={1} item sx={styleFT03}>
+  //           <Box sx={{ p: 0.2 }}>{i + 1}</Box>
+  //         </Grid>
+  //         <Grid xs={3.5} item sx={styleFT03}>
+  //           0
+  //         </Grid>
+  //         <Grid xs={3.5} item sx={styleFT03}>
+  //           0
+  //         </Grid>
+  //         <Grid xs={4} item sx={styleFT033}>
+  //           0
+  //         </Grid>
+  //       </Grid>
+  //     );
+  //   }
+  //   return resStr;
+  // };
 
-  const StrokaTabl = (recLeft: string, recRight: string) => {
-    return (
-      <>
-        <Grid container sx={{ marginTop: 1 }}>
-          <Grid item xs={0.25}></Grid>
-          <Grid item xs={5}>
-            <b>{recLeft}</b>
-          </Grid>
-          <Grid item xs>
-            {recRight}
-          </Grid>
-        </Grid>
-      </>
-    );
-  };
+  // const StrokaTabl = (recLeft: string, recRight: string) => {
+  //   return (
+  //     <>
+  //       <Grid container sx={{ marginTop: 1 }}>
+  //         <Grid item xs={0.25}></Grid>
+  //         <Grid item xs={5}>
+  //           <b>{recLeft}</b>
+  //         </Grid>
+  //         <Grid item xs>
+  //           {recRight}
+  //         </Grid>
+  //       </Grid>
+  //     </>
+  //   );
+  // };
 
-  let aa = idxMap >= 0 ? MAP.area.nameArea : "";
-  let bb = massdk.length > props.idx ? massdk[props.idx].area : "";
-  let soob1 = bb + " " + aa;
-  let soob2 = idxMap >= 0 ? MAP.phases.length : "нет информации";
+  //let aa = idxMap >= 0 ? MAP.area.nameArea : "";
+  //let bb = massdk.length > props.idx ? massdk[props.idx].area : "";
+  //let soob1 = bb + " " + aa;
+  //let soob2 = idxMap >= 0 ? MAP.phases.length : "нет информации";
+
+  
 
   return (
     <>
@@ -253,7 +273,7 @@ const MapWaysForma = (props: { setOpen: any; idx: number }) => {
                 <b>{massdk[props.idx].nameCoordinates}</b> с перекрёстком{" "}
                 <b>{massTargetName[nomInMass]}</b>
               </Box>
-              <Box sx={{ fontSize: 12, marginTop: 0.5 }}>Общие</Box>
+              {/* <Box sx={{ fontSize: 12, marginTop: 0.5 }}>Общие</Box>
               {StrokaTabl("Район", soob1)}
               {StrokaTabl("Номер перекрёстка", massdk[props.idx].ID)}
               {StrokaTabl("Время цикла cек.", "нет информации")}
@@ -266,7 +286,7 @@ const MapWaysForma = (props: { setOpen: any; idx: number }) => {
               <Box sx={styleFormTabl}>
                 {HeaderTablFaz()}
                 {StrokaMainTabl()}
-              </Box>
+              </Box> */}
             </>
           )}
         </Box>
@@ -281,7 +301,13 @@ const MapWaysForma = (props: { setOpen: any; idx: number }) => {
           update={0}
         />
       )}
-      {OpenMenu && <>{MenuRoutes()}</>}
+      {OpenMenu && (<>{MenuRoutes()}</>
+        //   setOpen={props.setOpen}
+        //   idx={props.idx}
+        //   massTargetName={massTargetName}
+        //   handleCloseAllRight={handleCloseAllRight}
+        // />
+      )}
     </>
   );
 };

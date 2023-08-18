@@ -137,7 +137,7 @@ const MainMap = (props: {
   const [flagPro, setFlagPro] = React.useState(false);
   const [flagPusk, setFlagPusk] = React.useState(false);
   const [flagRoute, setFlagRoute] = React.useState(false);
-  const [revers, setRevers] = React.useState(false);
+  const [revers, setRevers] = React.useState(false); // для ререндера
   const [openSet, setOpenSet] = React.useState(false);
   const [openSetCreate, setOpenSetCreate] = React.useState(false);
   const [openSetDelete, setOpenSetDelete] = React.useState(false);
@@ -156,15 +156,20 @@ const MainMap = (props: {
     coordStopIn = [];
   };
 
-  const ZeroRoute = (mode: boolean) => {
-    pointAa = pointBb = 0;
-    pointAaIndex = pointBbIndex = -1;
-    DelCollectionRoutes();
-    flagBind = false;
-    setFlagRoute(false);
-    setFlagPusk(mode);
-    ymaps && addRoute(ymaps); // перерисовка связей
-  };
+  const ZeroRoute = React.useCallback(
+    (mode: boolean) => {
+      pointAa = pointBb = 0;
+      pointAaIndex = pointBbIndex = -1;
+      DelCollectionRoutes();
+      flagBind = false;
+      setFlagRoute(false);
+      setFlagPusk(mode);
+      setOpenSetVertForm(false);
+      setOpenSetWaysForm(false);
+      ymaps && addRoute(ymaps); // перерисовка связей
+    },
+    [ymaps]
+  );
 
   const SoobOpenSetEr = (soob: string) => {
     soobError = soob;
@@ -210,12 +215,14 @@ const MainMap = (props: {
     ymaps && addRoute(ymaps); // перерисовка связей
   };
 
-  const MakeСollectionRoute = () => {
+  const MakeСollectionRoute = (needStops: boolean) => {
     DelCollectionRoutes();
     for (let i = 0; i < massroute.ways.length; i++) {
-      if (massroute.ways[i].starts === CodingCoord(pointAa)) {
-        coordStop.push(DecodingCoord(massroute.ways[i].stops)); // исходящие связи
-        coordStart.push(pointAa);
+      if (needStops) {
+        if (massroute.ways[i].starts === CodingCoord(pointAa)) {
+          coordStop.push(DecodingCoord(massroute.ways[i].stops)); // исходящие связи
+          coordStart.push(pointAa);
+        }
       }
       if (massroute.ways[i].stops === CodingCoord(pointAa)) {
         coordStartIn.push(DecodingCoord(massroute.ways[i].starts)); // входящие связи
@@ -240,8 +247,8 @@ const MainMap = (props: {
       ZeroRoute(false);
       noDoublRoute = false;
     } else {
-      MakeСollectionRoute();
-      setRevers(!revers);
+      MakeСollectionRoute(true);
+      setRevers(!revers); // ререндер
     }
     return noDoublRoute;
   };
@@ -257,6 +264,7 @@ const MainMap = (props: {
   };
 
   const PressButton = (mode: number) => {
+    //flEsc = true;
     switch (mode) {
       case 3: // режим включения Demo сети связей
         setFlagDemo(true);
@@ -319,8 +327,6 @@ const MainMap = (props: {
         flagDemo && ymaps && addRoute(ymaps); // перерисовка связей
         break;
       case 212: // выбор режима работы
-        SetOpenSetVertForm(false);
-        setOpenSetWaysForm(false)
         ZeroRoute(false);
     }
   };
@@ -382,12 +388,15 @@ const MainMap = (props: {
   const OnPlacemarkClickPoint = (index: number) => {
     if (pointAa === 0) {
       if (!massdk[index].area && MODE === "1") return;
-      pointAaIndex = index; // начальная точка
-      pointAa = [massdk[index].coordinates[0], massdk[index].coordinates[1]];
-      fromCross = MakeFromCross(massdk[index]);
-      MakeСollectionRoute();
-      setFlagPusk(true);
-      if (MODE === "1") setOpenSetVertForm(true);
+      if (!openSetWaysForm) {
+        pointAaIndex = index; // начальная точка
+        pointAa = [massdk[index].coordinates[0], massdk[index].coordinates[1]];
+        fromCross = MakeFromCross(massdk[index]);
+        MakeСollectionRoute(false);
+        setFlagPusk(true);
+      }
+
+      if (MODE === "1" && !openSetWaysForm) setOpenSetVertForm(true);
     } else {
       let soob = "Связь между перекрёстками в разных районах создовать нельзя";
       if (MODE === "0") {
@@ -444,7 +453,7 @@ const MainMap = (props: {
             pointAaIndex = indexPoint;
             pointAa = pointRoute;
             fromCross = MakeFromCross(massdk[pointAaIndex]);
-            MakeСollectionRoute();
+            MakeСollectionRoute(true);
           }
           break;
         case 2: // Конечная точка
@@ -580,7 +589,13 @@ const MainMap = (props: {
             idxDel >= 0 && setOpenSetDelete(true);
             idxDel < 0 && setOpenSetCreate(true);
           } else {
-            idxDel >= 0 && setOpenSetWaysForm(true);
+            if (idxDel >= 0) {
+              setOpenSetWaysForm(true);
+              pointAaIndex = idxDel; // начальная точка
+              pointAa = MassCoord(massdk[idxDel]);
+              MakeСollectionRoute(false);
+              setRevers(!revers); // ререндер
+            }
           }
         }
       };
@@ -606,6 +621,15 @@ const MainMap = (props: {
     PressButton(212);
   };
 
+  const SetOpenSetVertForm = (mode: boolean) => {
+    ZeroRoute(false);
+    setOpenSetVertForm(mode);
+  };
+
+  const SetOpenSetWaysForm = (mode: boolean) => {
+    !mode && ZeroRoute(false);
+    setOpenSetWaysForm(mode);
+  };
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(massroute).length) {
     if (props.region) homeRegion = props.region;
@@ -646,17 +670,31 @@ const MainMap = (props: {
       masSvg[1] = props.svg[RecevKeySvg(massroute.vertexes[pointBbIndex])];
     }
   }
+  //=== обработка Esc ======================================
+  const escFunction = React.useCallback(
+    (event) => {
+      if (event.keyCode === 27) {
+        if (
+          pointAa ||
+          flagBind ||
+          flagRoute ||
+          flagPusk ||
+          openSetVertForm ||
+          openSetWaysForm
+        )
+          ZeroRoute(false);
+      }
+    },
+    [ZeroRoute, flagRoute, flagPusk, openSetVertForm, openSetWaysForm]
+  );
 
-  const SetOpenSetVertForm = (mode: boolean) => {
-    ZeroRoute(false);
-    setOpenSetVertForm(mode);
-  };
-
-  const SetOpenSetWaysForm = (mode: boolean) => {
-    ZeroRoute(false);
-    setOpenSetWaysForm(mode);
-  };
-
+  React.useEffect(() => {
+    document.addEventListener("keydown", escFunction);
+    return () => {
+      document.removeEventListener("keydown", escFunction);
+    };
+  }, [escFunction]);
+  //========================================================
   return (
     <Grid container sx={{ height: "99.9vh" }}>
       {InputMenu(handleChangeArea, currency, currencies)}

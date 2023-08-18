@@ -114,6 +114,7 @@ const MapCreateVertex = (props: {
     if (valueInp === "") valueInp = 0;
     valueInp = Math.trunc(Number(valueInp)).toString();
     setValuen(valueInp);
+    setValueAdr("ДК " + valueInp + " " + NameMode());
   };
 
   const handleCloseSetAdress = () => {
@@ -130,7 +131,12 @@ const MapCreateVertex = (props: {
         massroute.vertexes[i].id === Number(valuen)
       ) {
         doublAreaID = false;
-        soobErr = "Такой светофор уже существует (район: " + Area + " ID: " + valuen + ")";
+        soobErr =
+          "Такой светофор уже существует (район: " +
+          Area +
+          " ID: " +
+          valuen +
+          ")";
         setOpenSetErr(true);
       }
     }
