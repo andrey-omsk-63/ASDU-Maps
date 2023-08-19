@@ -109,7 +109,6 @@ const MainMap = (props: {
     const { massrouteReducer } = state;
     return massrouteReducer.massroute;
   });
-  //console.log("massroute:", massroute);
   let massroutepro = useSelector((state: any) => {
     const { massrouteproReducer } = state;
     return massrouteproReducer.massroutepro;
@@ -122,7 +121,6 @@ const MainMap = (props: {
     const { mapReducer } = state;
     return mapReducer.map;
   });
-  //console.log("map:", map);
   const dispatch = useDispatch();
   //===========================================================
   const [currency, setCurrency] = React.useState("0");
@@ -216,6 +214,7 @@ const MainMap = (props: {
   };
 
   const MakeСollectionRoute = (needStops: boolean) => {
+    console.log("needStops:", needStops);
     DelCollectionRoutes();
     for (let i = 0; i < massroute.ways.length; i++) {
       if (needStops) {
@@ -337,7 +336,7 @@ const MainMap = (props: {
     for (let i = 0; i < massRoute.length; i++) {
       massPolyRoute[i] = new ymaps.Polyline(
         [DecodingCoord(massRoute[i].starts), DecodingCoord(massRoute[i].stops)],
-        { balloonContent: "Ломаная линия" },
+        { balloonContent: "Формальная связь" },
         getMassPolyRouteOptions()
       );
       mapp.current.geoObjects.add(massPolyRoute[i]);
@@ -392,10 +391,9 @@ const MainMap = (props: {
         pointAaIndex = index; // начальная точка
         pointAa = [massdk[index].coordinates[0], massdk[index].coordinates[1]];
         fromCross = MakeFromCross(massdk[index]);
-        MakeСollectionRoute(false);
+        MakeСollectionRoute(MODE === "1" ? false : true);
         setFlagPusk(true);
       }
-
       if (MODE === "1" && !openSetWaysForm) setOpenSetVertForm(true);
     } else {
       let soob = "Связь между перекрёстками в разных районах создовать нельзя";
@@ -442,7 +440,6 @@ const MainMap = (props: {
     if (indexPoint >= 0) areaPoint = massdk[indexPoint].area;
     if (indexPoint >= 0 && indexPoint < massdk.length)
       pointRoute = MassCoord(massdk[indexPoint]);
-
     const handleClose = (param: number) => {
       switch (param) {
         case 1: // Начальная точка
@@ -521,7 +518,6 @@ const MainMap = (props: {
   const PlacemarkDo = () => {
     let pAaI = pointAaIndex;
     let pBbI = pointBbIndex;
-
     const DoPlacemarkDo = (props: { coordinate: any; idx: number }) => {
       const MemoPlacemarkDo = React.useMemo(
         () => (
@@ -664,16 +660,15 @@ const MainMap = (props: {
     oldsErr = props.sErr;
   }
   masSvg = ["", ""];
-  if (!debugging) {
+  if (!debugging)
     if (props.svg) {
       masSvg[0] = props.svg[RecevKeySvg(massroute.vertexes[pointAaIndex])];
       masSvg[1] = props.svg[RecevKeySvg(massroute.vertexes[pointBbIndex])];
     }
-  }
   //=== обработка Esc ======================================
   const escFunction = React.useCallback(
     (event) => {
-      if (event.keyCode === 27) {
+      if (event.keyCode === 27)
         if (
           pointAa ||
           flagBind ||
@@ -683,7 +678,6 @@ const MainMap = (props: {
           openSetWaysForm
         )
           ZeroRoute(false);
-      }
     },
     [ZeroRoute, flagRoute, flagPusk, openSetVertForm, openSetWaysForm]
   );
@@ -695,6 +689,7 @@ const MainMap = (props: {
     };
   }, [escFunction]);
   //========================================================
+
   return (
     <Grid container sx={{ height: "99.9vh" }}>
       {InputMenu(handleChangeArea, currency, currencies)}

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
 
-//import Grid from "@mui/material/Grid";
+import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
@@ -186,7 +186,7 @@ const MapWaysForma = (props: { setOpen: any; idx: number }) => {
     return (
       <>
         <Modal open={openMenu} onClose={handleClose} hideBackdrop>
-        <Box sx={styleFW01}>{SpisRoutes()}</Box>
+          <Box sx={styleFW01}>{SpisRoutes()}</Box>
         </Modal>
       </>
     );
@@ -236,28 +236,26 @@ const MapWaysForma = (props: { setOpen: any; idx: number }) => {
   //   return resStr;
   // };
 
-  // const StrokaTabl = (recLeft: string, recRight: string) => {
-  //   return (
-  //     <>
-  //       <Grid container sx={{ marginTop: 1 }}>
-  //         <Grid item xs={0.25}></Grid>
-  //         <Grid item xs={5}>
-  //           <b>{recLeft}</b>
-  //         </Grid>
-  //         <Grid item xs>
-  //           {recRight}
-  //         </Grid>
-  //       </Grid>
-  //     </>
-  //   );
-  // };
+  const StrokaTabl = (recLeft: string, recRight: string) => {
+    return (
+      <>
+        <Grid container sx={{ marginTop: 1 }}>
+          <Grid item xs={0.25}></Grid>
+          <Grid item xs={8.5} sx={{ fontSize: 15 }}>
+            <b>{recLeft}</b>
+          </Grid>
+          <Grid item xs>
+            {recRight}
+          </Grid>
+        </Grid>
+      </>
+    );
+  };
 
   //let aa = idxMap >= 0 ? MAP.area.nameArea : "";
   //let bb = massdk.length > props.idx ? massdk[props.idx].area : "";
   //let soob1 = bb + " " + aa;
   //let soob2 = idxMap >= 0 ? MAP.phases.length : "нет информации";
-
-  
 
   return (
     <>
@@ -273,17 +271,25 @@ const MapWaysForma = (props: { setOpen: any; idx: number }) => {
                 <b>{massdk[props.idx].nameCoordinates}</b> с перекрёстком{" "}
                 <b>{massTargetName[nomInMass]}</b>
               </Box>
-              {/* <Box sx={{ fontSize: 12, marginTop: 0.5 }}>Общие</Box>
-              {StrokaTabl("Район", soob1)}
-              {StrokaTabl("Номер перекрёстка", massdk[props.idx].ID)}
-              {StrokaTabl("Время цикла cек.", "нет информации")}
-              <Box sx={{ fontSize: 12, marginTop: 2.5 }}>Свойства фаз</Box>
-              {StrokaTabl("Количество фаз", soob2)}
-              {StrokaTabl("Начальное смещение", "нет информации")}
-              <Box sx={{ fontSize: 12, marginTop: 2.5 }}>
-                Таблица параметров фаз
-              </Box>
-              <Box sx={styleFormTabl}>
+              <Box sx={{ fontSize: 12, marginTop: 0.5 }}>Основные свойства</Box>
+              {StrokaTabl("№ Направления", "нет информации")}
+              {StrokaTabl("Насыщение(т.е./ч.)", "нет информации")}
+              {StrokaTabl("Интенсивность(т.е./ч.)", "нет информации")}
+              {StrokaTabl("Дисперсия пачки(%)", "нет информации")}
+              {StrokaTabl("Длинна перегона(м)", "нет информации")}
+              {StrokaTabl("Вес остановки", "нет информации")}
+              {StrokaTabl("Вес задержки", "нет информации")}
+              {StrokaTabl("Смещ.начала зелёного(сек)", "нет информации")}
+              {StrokaTabl("Смещ.конца зелёного(сек)", "нет информации")}
+              {StrokaTabl(
+                "Интенсивность пост.потока(т.е./ч.)",
+                "1200"
+              )}
+              {StrokaTabl("Зелёные фазы для данного направления", " 2 ")}
+              {/* <Box sx={{ fontSize: 12, marginTop: 1.5 }}>
+                Выберите зелёные фазы для данного направления
+              </Box> */}
+              {/* <Box sx={styleFormTabl}>
                 {HeaderTablFaz()}
                 {StrokaMainTabl()}
               </Box> */}
@@ -301,13 +307,7 @@ const MapWaysForma = (props: { setOpen: any; idx: number }) => {
           update={0}
         />
       )}
-      {OpenMenu && (<>{MenuRoutes()}</>
-        //   setOpen={props.setOpen}
-        //   idx={props.idx}
-        //   massTargetName={massTargetName}
-        //   handleCloseAllRight={handleCloseAllRight}
-        // />
-      )}
+      {OpenMenu && <>{MenuRoutes()}</>}
     </>
   );
 };

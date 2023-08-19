@@ -11,7 +11,10 @@ import { styleModalEnd, styleFormInf, styleFormName } from "./../MainMapStyle";
 import { styleFT02, styleFT03, styleFT033 } from "./../MainMapStyle";
 import { styleFormTabl } from "./../MainMapStyle";
 
-const MapVertexForma = (props: { setOpen: any; idx: number }) => {
+const MapVertexForma = (props: {
+  setOpen: any;
+  idx: number;
+}) => {
   //== Piece of Redux =======================================
   const map = useSelector((state: any) => {
     const { mapReducer } = state;
