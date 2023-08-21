@@ -574,7 +574,7 @@ export const StrokaMenuGlob = (soob: string, func: Function, mode: number) => {
   const styleApp01 = {
     fontSize: 14,
     marginLeft: 0.2,
-    width: MesssgeLength(soob, 14) + 30,
+    width: MesssgeLength(soob, 14) + 32,
     maxHeight: "21px",
     minHeight: "21px",
     backgroundColor: "#C4EAA2",
@@ -608,8 +608,8 @@ export const MakeRevers = (
 export const ShowFormalRoute = (flagDemo: boolean, PressButton: Function) => {
   return (
     <>
-      {!flagDemo && <>{StrokaMenuGlob("Формальные Связи", PressButton, 3)}</>}
-      {flagDemo && <>{StrokaMenuGlob("Отключить ФС", PressButton, 6)}</>}
+      {!flagDemo && <>{StrokaMenuGlob("Формальн.Связи", PressButton, 3)}</>}
+       {flagDemo && <>{StrokaMenuGlob("Отключить ФС", PressButton, 6)}</>}
     </>
   );
 };

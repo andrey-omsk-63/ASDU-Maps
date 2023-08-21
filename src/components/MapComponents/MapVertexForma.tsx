@@ -9,12 +9,9 @@ import { ComplianceMapMassdk } from "./../MapServiceFunctions";
 
 import { styleModalEnd, styleFormInf, styleFormName } from "./../MainMapStyle";
 import { styleFT02, styleFT03, styleFT033 } from "./../MainMapStyle";
-import { styleFormTabl } from "./../MainMapStyle";
+import { styleFormTabl, styleFormMenu } from "./../MainMapStyle";
 
-const MapVertexForma = (props: {
-  setOpen: any;
-  idx: number;
-}) => {
+const MapVertexForma = (props: { setOpen: any; idx: number }) => {
   //== Piece of Redux =======================================
   const map = useSelector((state: any) => {
     const { mapReducer } = state;
@@ -92,6 +89,10 @@ const MapVertexForma = (props: {
     );
   };
 
+  const SaveForm = (mode: boolean) => {
+    handleCloseSetEnd()
+  };
+
   let aa = idxMap >= 0 ? MAP.area.nameArea : "";
   let bb = massdk.length > props.idx ? massdk[props.idx].area : "";
   let soob1 = bb + " " + aa;
@@ -123,6 +124,21 @@ const MapVertexForma = (props: {
             {HeaderTablFaz()}
             {StrokaMainTabl()}
           </Box>
+          <Grid container>
+            <Grid item xs={6} sx={{ marginTop: 0.5, textAlign: "center" }}>
+              <Button sx={styleFormMenu} onClick={() => SaveForm(true)}>
+                Сохранить изменения
+              </Button>
+            </Grid>
+            <Grid item xs={6} sx={{ marginTop: 0.5, textAlign: "center" }}>
+              <Button
+                sx={styleFormMenu}
+                onClick={() => SaveForm(false)}
+              >
+                Выйти без сохранения
+              </Button>
+            </Grid>
+          </Grid>
         </>
       )}
     </Box>

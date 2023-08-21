@@ -16,6 +16,7 @@ import MapCreatePointVertex from "./MapComponents/MapCreatePointVertex";
 import MapRouteProtokol from "./MapComponents/MapRouteProtokol";
 import MapReversRoute from "./MapComponents/MapReversRoute";
 import MapVertexForma from "./MapComponents/MapVertexForma";
+import MapWaysFormMenu from "./MapComponents/MapWaysFormMenu";
 import MapWaysForma from "./MapComponents/MapWaysForma";
 
 import { RecordMassRoute, MakeNewPointContent } from "./MapServiceFunctions";
@@ -80,6 +81,8 @@ let toCross: any = {
   pointBbID: 0,
   pointBcod: "",
 };
+let nomRoute = -1;
+let idxRoute = -1;
 
 let funcContex: any = null;
 let funcBound: any = null;
@@ -129,6 +132,7 @@ const MainMap = (props: {
   const [openSetPro, setOpenSetPro] = React.useState(false);
   const [openSetVertForm, setOpenSetVertForm] = React.useState(false);
   const [openSetWaysForm, setOpenSetWaysForm] = React.useState(false);
+  const [openSetWaysFormMenu, setOpenSetWaysFormMenu] = React.useState(false);
   const [openSetEr, setOpenSetEr] = React.useState(false);
   const [openSetBind, setOpenSetBind] = React.useState(false);
   const [flagDemo, setFlagDemo] = React.useState(false);
@@ -164,6 +168,7 @@ const MainMap = (props: {
       setFlagPusk(mode);
       setOpenSetVertForm(false);
       setOpenSetWaysForm(false);
+      setOpenSetWaysFormMenu(false);
       ymaps && addRoute(ymaps); // перерисовка связей
     },
     [ymaps]
@@ -214,7 +219,6 @@ const MainMap = (props: {
   };
 
   const MakeСollectionRoute = (needStops: boolean) => {
-    console.log("needStops:", needStops);
     DelCollectionRoutes();
     for (let i = 0; i < massroute.ways.length; i++) {
       if (needStops) {
@@ -585,8 +589,11 @@ const MainMap = (props: {
             idxDel >= 0 && setOpenSetDelete(true);
             idxDel < 0 && setOpenSetCreate(true);
           } else {
-            if (idxDel >= 0) {
-              setOpenSetWaysForm(true);
+            if (idxDel >= 0 && nomRoute < 0) {
+              console.log('InstanceRefDo_nomRoute:',nomRoute)
+              nomRoute = 0;
+              idxRoute = idxDel
+              setOpenSetWaysFormMenu(true);
               pointAaIndex = idxDel; // начальная точка
               pointAa = MassCoord(massdk[idxDel]);
               MakeСollectionRoute(false);
@@ -624,7 +631,15 @@ const MainMap = (props: {
 
   const SetOpenSetWaysForm = (mode: boolean) => {
     !mode && ZeroRoute(false);
+    nomRoute = -1;
     setOpenSetWaysForm(mode);
+  };
+
+  const SetOpenSetWaysFormMenu = (mode: number) => {
+    console.log("SetOpenSetWaysFormMenu:", mode);
+    nomRoute = mode;
+    setOpenSetWaysFormMenu(false)
+    setOpenSetWaysForm(true);
   };
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(massroute).length) {
@@ -717,8 +732,15 @@ const MainMap = (props: {
             {openSetVertForm && pointAaIndex >= 0 && (
               <MapVertexForma setOpen={SetOpenSetVertForm} idx={pointAaIndex} />
             )}
+            {openSetWaysFormMenu && (
+              <MapWaysFormMenu setOpen={SetOpenSetWaysFormMenu} idx={idxRoute} />
+            )}
             {openSetWaysForm && (
-              <MapWaysForma setOpen={SetOpenSetWaysForm} idx={idxDel} />
+              <MapWaysForma
+                setOpen={SetOpenSetWaysForm}
+                idx={idxRoute}
+                nomInMass={nomRoute}
+              />
             )}
             {openSetEr && (
               <MapPointDataError

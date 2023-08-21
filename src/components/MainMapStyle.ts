@@ -273,7 +273,7 @@ export const styleFormInf = {
   marginTop: "-92vh",
   marginLeft: "auto",
   width: 460,
-  height: 700,
+  //height: 700,
   bgcolor: "background.paper",
   border: "3px solid #000",
   borderColor: "primary.main",
@@ -287,6 +287,14 @@ export const styleFormName = {
   marginTop: 0.5,
   marginBottom: 2,
   textAlign: "center",
+};
+
+export const styleFormMenu = {
+  marginTop: 0.5,
+  marginRight: 1,
+  backgroundColor: "#E6F5D6",
+  textTransform: "unset !important",
+  color: "black",
 };
 
 export const styleFT02 = {
