@@ -378,19 +378,10 @@ export const getPointData = (
   pointAaIndex: number,
   pointBbIndex: number,
   massdk: any,
-  map: any
+  map: any,
+  MODE: string
 ) => {
   let idxMap = ComplianceMapMassdk(index, massdk, map);
-  // let idxMap = -1;
-  // for (let i = 0; i < map.dateMap.tflight.length; i++) {
-  //   if (
-  //     map.dateMap.tflight[i].ID === massdk[index].ID &&
-  //     Number(map.dateMap.tflight[i].area.num) === massdk[index].area
-  //   ) {
-  //     idxMap = i;
-  //     break;
-  //   }
-  // }
   let cont3 = ", null";
   if (idxMap >= 0) cont3 = ", " + map.dateMap.tflight[idxMap].idevice;
   let cont1 = massdk[index].nameCoordinates + "<br/>";
@@ -398,8 +389,9 @@ export const getPointData = (
   let cont2 = "[" + massdk[index].area;
   cont2 += ", " + massdk[index].ID + cont3 + "]";
   let textBalloon = "";
-  if (index === pointAaIndex) textBalloon = "Начало";
-  if (index === pointBbIndex) textBalloon = "Конец";
+  if (index === pointAaIndex && MODE === "0") textBalloon = "Начало";
+  if (index === pointBbIndex && MODE === "0") textBalloon = "Конец";
+
   return {
     hintContent: cont1 + cont2,
     iconContent: textBalloon,
@@ -447,10 +439,12 @@ export const getPointOptions = (
       }
     }
     //========================================================
-    if (MODE === "1" && index === pointAaIndex) {
-      host = "http://localhost:3000/4.svg";
-      if (!debug)
-        host = window.location.origin + "/free/img/trafficLights/4.svg";
+    if (MODE === "1") {
+      if (index === pointBbIndex || index === pointAaIndex) {
+        host = "http://localhost:3000/4.svg";
+        if (!debug)
+          host = window.location.origin + "/free/img/trafficLights/4.svg";
+      }
     }
     return host;
   };
@@ -467,7 +461,8 @@ export const getPointOptions = (
   // }
   if (index === pointAaIndex && MODE === "0")
     colorBalloon = "islands#redStretchyIcon";
-  if (index === pointBbIndex) colorBalloon = "islands#darkBlueStretchyIcon";
+  if (index === pointBbIndex && MODE === "0")
+    colorBalloon = "islands#darkBlueStretchyIcon";
 
   const NoImg = () => {
     return {
@@ -609,7 +604,7 @@ export const ShowFormalRoute = (flagDemo: boolean, PressButton: Function) => {
   return (
     <>
       {!flagDemo && <>{StrokaMenuGlob("Формальн.Связи", PressButton, 3)}</>}
-       {flagDemo && <>{StrokaMenuGlob("Отключить ФС", PressButton, 6)}</>}
+      {flagDemo && <>{StrokaMenuGlob("Отключить ФС", PressButton, 6)}</>}
     </>
   );
 };

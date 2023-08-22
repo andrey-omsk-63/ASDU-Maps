@@ -6,29 +6,19 @@ import Button from "@mui/material/Button";
 
 import MapPointDataError from "./MapPointDataError";
 
-//import { ComplianceMapMassdk } from "./../MapServiceFunctions";
-
-import { styleModalEnd } from "./../MainMapStyle";
+import { styleModalEnd, styleFW01, styleFW02 } from "./../MainMapStyle";
 
 let openSetErr = false;
 let soobErr = "";
 let OpenMenu = false;
 let massTargetRoute: Array<number> = [];
+let massTargetNum: Array<number> = [];
 let massTargetName: Array<string> = [];
 let oldIdx = -1;
+//let pusto = -1;
 
-const MapWaysFormMenu = (props: {
-  setOpen: any;
-  idx: number;
-  // massTargetName: Array<string>;
-  // handleCloseAllRight: Function;
-}) => {
+const MapWaysFormMenu = (props: { setOpen: any; idx: number }) => {
   //== Piece of Redux =======================================
-  // const map = useSelector((state: any) => {
-  //   const { mapReducer } = state;
-  //   return mapReducer.map;
-  // });
-  //console.log("map:", map);
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;
     return massdkReducer.massdk;
@@ -37,21 +27,23 @@ const MapWaysFormMenu = (props: {
     const { massrouteReducer } = state;
     return massrouteReducer.massroute;
   });
-  console.log("massroute:", massroute);
-  //===========================================================
-
-  // const idxMap = ComplianceMapMassdk(props.idx, massdk, map);
-  // const MAP = map.dateMap.tflight[idxMap];
+  //console.log("massroute:", massroute);
+  //========================================================
   const propsArea = massroute.vertexes[props.idx].area;
   const propsId = massroute.vertexes[props.idx].id;
 
-  console.log("MapWaysFormMenu:");
+  const handleCloseSetEnd = () => {
+    oldIdx = -1;
+    props.setOpen(-1, -1, -1);
+  };
   //=== инициализация ======================================
   if (oldIdx !== props.idx) {
     oldIdx = props.idx;
     openSetErr = false;
+    //pusto = -1;
     OpenMenu = false;
     massTargetRoute = [];
+    massTargetNum = [];
     massTargetName = [];
     for (let i = 0; i < massroute.ways.length; i++) {
       if (
@@ -63,8 +55,10 @@ const MapWaysFormMenu = (props: {
           if (
             massroute.ways[i].sourceArea === massroute.vertexes[j].area &&
             massroute.ways[i].sourceID === massroute.vertexes[j].id
-          )
+          ) {
             massTargetName.push(massroute.vertexes[j].name);
+            massTargetNum.push(j);
+          }
         }
       }
     }
@@ -75,52 +69,21 @@ const MapWaysFormMenu = (props: {
         massroute.vertexes[props.idx].name +
         " нет входящих направлений";
     } else {
-      if (massTargetRoute.length === 1) {
-        props.setOpen(0);
-      } else {
-        //setOpenMenu(true);
-        OpenMenu = true;
-      }
+      //pusto = 1;
+      OpenMenu = true;
     }
   }
   //==========================================================
-  const styleFW02 = {
-    fontSize: 15.2,
-    maxHeight: "21px",
-    minHeight: "21px",
-    width: 550,
-    backgroundColor: "#E9F5D8",
-    color: "black",
-    //marginRight: 1,
-    marginTop: 1,
-    textTransform: "unset !important",
-  };
-
-  const styleFW01 = {
-    outline: "none",
-    position: "relative",
-    marginTop: "-91vh",
-    marginLeft: "auto",
-    width: 555,
-    bgcolor: "background.paper",
-    border: "2px solid #000",
-    borderColor: "primary.main",
-    borderRadius: 2,
-    boxShadow: 24,
-    p: 3,
-  };
-
-  const handleCloseSetEnd = () => {
-    oldIdx = -1;
-    props.setOpen(-1);
-  };
 
   const handleClose = (mode: number) => {
-    if (typeof mode !== "number") handleCloseSetEnd();
-    if (mode === 777) {
+    if (typeof mode !== "number") {
       handleCloseSetEnd();
     } else {
-      props.setOpen(mode);
+      if (mode === 777) {
+        handleCloseSetEnd();
+      } else {
+        props.setOpen(mode, massTargetNum[mode], 1);
+      }
     }
   };
 
@@ -158,7 +121,12 @@ const MapWaysFormMenu = (props: {
 
   return (
     <>
-      {OpenMenu && <Box sx={styleFW01}>{SpisRoutes()}</Box>}
+      {OpenMenu && massTargetRoute.length > 1 && (
+        <Box sx={styleFW01}>{SpisRoutes()}</Box>
+      )}
+      {OpenMenu && massTargetRoute.length === 1 && (
+        <>{ props.setOpen(0, massTargetNum[0], 1)}</>
+      )}
       {openSetErr && (
         <MapPointDataError
           sErr={soobErr}

@@ -49,7 +49,9 @@ let coordStopIn: any = []; // рабочий массив коллекции и�
 let massRoute: any = []; // рабочий массив сети связей
 let masSvg: any = ["", ""];
 
-let debugging: boolean, flagOpen: boolean, flagBind: boolean;
+let debugging: boolean,
+  flagOpen: boolean,
+  flagBind: boolean = false;
 let flagRevers: boolean, needLinkBind: boolean, FlagDemo: boolean;
 debugging = flagOpen = flagBind = flagRevers = needLinkBind = FlagDemo = false;
 let newPointCoord: any, homeRegion: any, pointCenter: any;
@@ -66,7 +68,6 @@ let reqRoute: any = {
 };
 
 let pointAa: any = 0;
-let pointAaIndex: number = -1;
 let fromCross: any = {
   pointAaRegin: "",
   pointAaArea: "",
@@ -81,8 +82,6 @@ let toCross: any = {
   pointBbID: 0,
   pointBcod: "",
 };
-let nomRoute = -1;
-let idxRoute = -1;
 
 let funcContex: any = null;
 let funcBound: any = null;
@@ -90,7 +89,8 @@ let currencies: any = [];
 let currenciesMode: any = [];
 let AREA = "0";
 let MODE = "0";
-let idxDel = -1;
+let idxDel: number, nomRoute: number, idxRoute: number, pointAaIndex: number;
+idxDel = nomRoute = idxRoute = pointAaIndex = -1;
 
 const MainMap = (props: {
   ws: WebSocket;
@@ -161,7 +161,7 @@ const MainMap = (props: {
   const ZeroRoute = React.useCallback(
     (mode: boolean) => {
       pointAa = pointBb = 0;
-      pointAaIndex = pointBbIndex = -1;
+      pointAaIndex = pointBbIndex = nomRoute = -1;
       DelCollectionRoutes();
       flagBind = false;
       setFlagRoute(false);
@@ -267,7 +267,6 @@ const MainMap = (props: {
   };
 
   const PressButton = (mode: number) => {
-    //flEsc = true;
     switch (mode) {
       case 3: // режим включения Demo сети связей
         setFlagDemo(true);
@@ -528,7 +527,7 @@ const MainMap = (props: {
           <Placemark
             key={props.idx}
             geometry={props.coordinate}
-            properties={getPointData(props.idx, pAaI, pBbI, massdk, map)}
+            properties={getPointData(props.idx, pAaI, pBbI, massdk, map, MODE)}
             options={getPointOptions(
               debugging,
               props.idx,
@@ -578,6 +577,7 @@ const MainMap = (props: {
   };
 
   const InstanceRefDo = (ref: React.Ref<any>) => {
+    console.log('InstanceRefDo')
     if (ref) {
       mapp.current = ref;
       mapp.current.events.remove("contextmenu", funcContex);
@@ -590,9 +590,8 @@ const MainMap = (props: {
             idxDel < 0 && setOpenSetCreate(true);
           } else {
             if (idxDel >= 0 && nomRoute < 0) {
-              console.log('InstanceRefDo_nomRoute:',nomRoute)
               nomRoute = 0;
-              idxRoute = idxDel
+              idxRoute = idxDel;
               setOpenSetWaysFormMenu(true);
               pointAaIndex = idxDel; // начальная точка
               pointAa = MassCoord(massdk[idxDel]);
@@ -635,11 +634,15 @@ const MainMap = (props: {
     setOpenSetWaysForm(mode);
   };
 
-  const SetOpenSetWaysFormMenu = (mode: number) => {
-    console.log("SetOpenSetWaysFormMenu:", mode);
-    nomRoute = mode;
-    setOpenSetWaysFormMenu(false)
-    setOpenSetWaysForm(true);
+  const SetOpenSetWaysFormMenu = (mode: number, idx: number, pusto: number) => {
+    setOpenSetWaysFormMenu(false);
+    if (pusto > 0) {
+      nomRoute = mode;
+      pointBbIndex = idx; // номер в massdk
+      setOpenSetWaysForm(true);
+    } else {
+      ZeroRoute(false);
+    }
   };
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(massroute).length) {
@@ -659,7 +662,6 @@ const MainMap = (props: {
     let homeReg = map.dateMap.regionInfo[homeRegion]; // подготовка ввода района
     currencies = PreparCurrencies(map.dateMap.areaInfo[homeReg]);
     currenciesMode = PreparCurrenciesMode();
-    console.log("currenciesMode:", currenciesMode);
     flagOpen = true;
     console.log("massroute:", massroute);
     console.log("map:", map);
@@ -699,12 +701,9 @@ const MainMap = (props: {
 
   React.useEffect(() => {
     document.addEventListener("keydown", escFunction);
-    return () => {
-      document.removeEventListener("keydown", escFunction);
-    };
+    return () => document.removeEventListener("keydown", escFunction);
   }, [escFunction]);
   //========================================================
-
   return (
     <Grid container sx={{ height: "99.9vh" }}>
       {InputMenu(handleChangeArea, currency, currencies)}
@@ -733,7 +732,10 @@ const MainMap = (props: {
               <MapVertexForma setOpen={SetOpenSetVertForm} idx={pointAaIndex} />
             )}
             {openSetWaysFormMenu && (
-              <MapWaysFormMenu setOpen={SetOpenSetWaysFormMenu} idx={idxRoute} />
+              <MapWaysFormMenu
+                setOpen={SetOpenSetWaysFormMenu}
+                idx={idxRoute}
+              />
             )}
             {openSetWaysForm && (
               <MapWaysForma

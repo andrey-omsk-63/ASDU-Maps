@@ -52,6 +52,7 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
   const StrokaMainTabl = () => {
     let resStr = [];
     let lng = idxMap >= 0 ? MAP.phases.length : 0;
+    //lng = 8; // для отладки, потом убрать !!!
     for (let i = 0; i < lng; i++) {
       resStr.push(
         <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
@@ -125,12 +126,12 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
             {StrokaMainTabl()}
           </Box>
           <Grid container>
-            <Grid item xs={6} sx={{ marginTop: 0.5, textAlign: "center" }}>
+            <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>
               <Button sx={styleFormMenu} onClick={() => SaveForm(true)}>
                 Сохранить изменения
               </Button>
             </Grid>
-            <Grid item xs={6} sx={{ marginTop: 0.5, textAlign: "center" }}>
+            <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>
               <Button
                 sx={styleFormMenu}
                 onClick={() => SaveForm(false)}

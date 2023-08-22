@@ -310,7 +310,7 @@ export const styleFormTabl = {
   marginTop: 1.5,
   marginLeft: -0.5,
   marginRight: -0.5,
-  height: 333,
+  height: 306,
 };
 
 export const styleFT03 = {
@@ -328,3 +328,54 @@ export const styleFT033 = {
   textAlign: "center",
 };
 //=== WaysForma =======================================================
+export const styleFW01 = {
+  outline: "none",
+  position: "relative",
+  marginTop: "-91vh",
+  marginLeft: "auto",
+  width: 555,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  borderColor: "primary.main",
+  borderRadius: 2,
+  boxShadow: 24,
+  p: 3,
+};
+
+export const styleFW02 = {
+  fontSize: 15.2,
+  maxHeight: "21px",
+  minHeight: "21px",
+  width: 550,
+  backgroundColor: "#E9F5D8",
+  color: "black",
+  marginTop: 1,
+  textTransform: "unset !important",
+};
+export const styleFW03 = {
+  fontSize: 15.2,
+  maxHeight: "21px",
+  minHeight: "21px",
+  width: 333,
+  backgroundColor: "#E9F5D8",
+  color: "black",
+  marginTop: 1,
+  textTransform: "unset !important",
+};
+
+export const styleFormNameRoute = {
+  marginTop: 0.5,
+  marginBottom: 2,
+  textAlign: "center",
+};
+
+export const styleFormFWTabl = {
+  border: 1,
+  borderRadius: 1,
+  borderColor: "primary.main",
+  marginTop: 1.5,
+  marginLeft: -0.5,
+  marginRight: -0.5,
+  height: 96,
+  overflowX: 'auto',
+};
