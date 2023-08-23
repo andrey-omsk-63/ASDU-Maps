@@ -246,7 +246,7 @@ export const styleAppBind = {
 };
 
 export const styleBind01 = {
-  bgcolor: "#FAFAFA",
+  //bgcolor: "#FAFAFA",
   opacity: 0.7,
   textAlign: "right",
   //color: '#B51EFF',
@@ -254,7 +254,7 @@ export const styleBind01 = {
 
 export const styleBind02 = {
   fontSize: 33,
-  marginTop: "21vh",
+  //marginTop: "21vh",
   textAlign: "center",
   height: 33,
   width: "100%",
@@ -262,9 +262,10 @@ export const styleBind02 = {
 };
 
 export const styleBind03 = {
-  marginTop: -2,
-  bgcolor: "background.paper",
-  opacity: 0.7,
+  //marginBottom: 2,
+  //marginTop: -2,
+  //bgcolor: "background.paper",
+  //opacity: 0.7,
 };
 //=== VertexForma =====================================================
 export const styleFormInf = {
@@ -377,5 +378,5 @@ export const styleFormFWTabl = {
   marginLeft: -0.5,
   marginRight: -0.5,
   height: 96,
-  overflowX: 'auto',
+  overflowX: "auto",
 };

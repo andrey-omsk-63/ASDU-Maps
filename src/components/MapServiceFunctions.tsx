@@ -172,11 +172,18 @@ export const CodingCoord = (coord: Array<number>) => {
 
 export const DoublRoute = (massroute: any, pointA: any, pointB: any) => {
   let flDubl = false;
-  let pointAcod = CodingCoord(pointA);
-  let pointBcod = CodingCoord(pointB);
+  // let pointAcod = CodingCoord(pointA);
+  // let pointBcod = CodingCoord(pointB);
+  // for (let i = 0; i < massroute.length; i++) {
+  //   if (massroute[i].starts === pointAcod && massroute[i].stops === pointBcod)
+  //     flDubl = true;
+  // }
   for (let i = 0; i < massroute.length; i++) {
-    if (massroute[i].starts === pointAcod && massroute[i].stops === pointBcod)
-      flDubl = true;
+    let corStart = DecodingCoord(massroute[i].starts)
+    let corStop = DecodingCoord(massroute[i].stops)
+    let distStart = Distance(corStart, pointA);
+    let distStop = Distance(corStop, pointB);
+    if (distStart < 100 && distStop < 100) flDubl = true;
   }
   return flDubl;
 };
@@ -342,13 +349,13 @@ export const Distance = (coord1: Array<number>, coord2: Array<number>) => {
   }
 };
 
-export const DelOrCreate = (massdk: any, newPointCoord: any) => {
+export const NearestPoint = (massdk: any, newPointCoord: any) => {
   let minDist = 999999;
   let nomInMass = -1;
   for (let i = 0; i < massdk.length; i++) {
     let corFromMap = [massdk[i].coordinates[0], massdk[i].coordinates[1]];
     let dister = Distance(newPointCoord, corFromMap);
-    if (dister < 150 && minDist > dister) {
+    if (dister < 100 && minDist > dister) {
       minDist = dister;
       nomInMass = i;
     }

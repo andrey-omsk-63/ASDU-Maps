@@ -46,6 +46,15 @@ const MapRouteBind = (props: {
   let haveSvgA = true;
   let haveSvgB = true;
 
+  const styleBind00 = {
+    border: "3px solid #000",
+    borderColor: "#F0F0F0",
+    borderRadius: 2,
+    marginTop: "18vh",
+    height: heightImg + 155,
+    bgcolor: "#F0F0F0",
+  };
+
   if (OldIdxA !== props.idxA || OldIdxB !== props.idxB) {
     massBind = [0, 0];
     OldIdxA = props.idxA;
@@ -188,6 +197,8 @@ const MapRouteBind = (props: {
     );
   };
 
+  const InputDirectMass = (mode: number) => {};
+
   if (masSvg[0] !== "") masSvg[0] = ReplaceInSvg(0);
   if (masSvg[1] !== "") masSvg[1] = ReplaceInSvg(1);
 
@@ -196,12 +207,12 @@ const MapRouteBind = (props: {
       fontSize: 14,
       marginRight: 0.1,
       border: "2px solid #000",
-      bgcolor: "background.paper",
+      bgcolor: "#E6F5D6",
       width: (soob.length + 8) * 7,
       maxHeight: "21px",
       minHeight: "21px",
-      borderColor: "primary.main",
-      borderRadius: 2,
+      borderColor: "#E6F5D6",
+      borderRadius: 1,
       color: "black",
       textTransform: "unset !important",
     };
@@ -231,19 +242,19 @@ const MapRouteBind = (props: {
   };
 
   return (
-    <Modal open={openSetBind} onClose={handleClose} hideBackdrop>
-      <>
+    <Modal open={openSetBind} onClose={handleClose}>
+      <Box sx={styleBind00}>
         <Grid container sx={styleBind02}>
           <Grid item xs={4.25}></Grid>
           <Grid item xs={3.5} sx={styleBind03}>
             <b>Привязка направлений</b>
           </Grid>
         </Grid>
-        <Grid container sx={{ marginTop: "6vh", height: 24, width: "100%" }}>
+
+        <Grid container sx={{ marginTop: "7vh", height: 27, width: "100%" }}>
           <Grid item xs={0.25}></Grid>
           {!haveSvgA && <Grid item xs={4}></Grid>}
           {haveSvgA && <>{Inputer("№ исходящего направления:", 0)}</>}
-
           <Grid item xs={3.5}>
             {(massBind[0] && massBind[1]) ||
             (!haveSvgA && massBind[1]) ||
@@ -256,7 +267,6 @@ const MapRouteBind = (props: {
               <Box sx={{ textAlign: "center" }}>{StrokaMenu("Отмена", 0)}</Box>
             )}
           </Grid>
-
           {!haveSvgB && <Grid item xs={4}></Grid>}
           {haveSvgB && <>{Inputer("№ входящего направления:", 1)}</>}
         </Grid>
@@ -279,7 +289,7 @@ const MapRouteBind = (props: {
           )}
           <Grid item xs={0.25}></Grid>
         </Grid>
-      </>
+      </Box>
     </Modal>
   );
 };

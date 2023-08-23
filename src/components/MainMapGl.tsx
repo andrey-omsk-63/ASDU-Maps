@@ -24,7 +24,7 @@ import { YandexServices, ShowFormalRoute } from "./MapServiceFunctions";
 import { DecodingCoord, CodingCoord, InputMenu } from "./MapServiceFunctions";
 import { getMultiRouteOptions, DoublRoute } from "./MapServiceFunctions";
 import { getReferencePoints, CenterCoordBegin } from "./MapServiceFunctions";
-import { getMassPolyRouteOptions, DelOrCreate } from "./MapServiceFunctions";
+import { getMassPolyRouteOptions, NearestPoint } from "./MapServiceFunctions";
 import { getMassMultiRouteOptions, MakeToCross } from "./MapServiceFunctions";
 import { getMassMultiRouteInOptions, MakeRevers } from "./MapServiceFunctions";
 import { getPointData, getPointOptions } from "./MapServiceFunctions";
@@ -56,17 +56,13 @@ let flagRevers: boolean, needLinkBind: boolean, FlagDemo: boolean;
 debugging = flagOpen = flagBind = flagRevers = needLinkBind = FlagDemo = false;
 let newPointCoord: any, homeRegion: any, pointCenter: any;
 newPointCoord = homeRegion = pointCenter = 0;
-
-let activeRoute: any = null;
 let soobError = "";
 let oldsErr = "";
 let zoom = 10;
-let indexPoint: number = -1;
 let reqRoute: any = {
   dlRoute: 0,
   tmRoute: 0,
 };
-
 let pointAa: any = 0;
 let fromCross: any = {
   pointAaRegin: "",
@@ -75,22 +71,21 @@ let fromCross: any = {
   pointAcod: "",
 };
 let pointBb: any = 0;
-let pointBbIndex: number = -1;
 let toCross: any = {
   pointBbRegin: "",
   pointBbArea: "",
   pointBbID: 0,
   pointBcod: "",
 };
-
-let funcContex: any = null;
-let funcBound: any = null;
+let funcContex: any, funcBound: any, funcClick: any, activeRoute: any;
+funcContex = funcBound = funcClick = activeRoute = null;
 let currencies: any = [];
 let currenciesMode: any = [];
 let AREA = "0";
 let MODE = "0";
 let idxDel: number, nomRoute: number, idxRoute: number, pointAaIndex: number;
-idxDel = nomRoute = idxRoute = pointAaIndex = -1;
+let indexPoint: number, pointBbIndex: number;
+idxDel = nomRoute = idxRoute = indexPoint = pointAaIndex = pointBbIndex = -1;
 
 const MainMap = (props: {
   ws: WebSocket;
@@ -387,12 +382,13 @@ const MainMap = (props: {
     ymaps && addRoute(ymaps); // перерисовка связей
   };
 
-  const OnPlacemarkClickPoint = (index: number) => {
+  const OnPlacemarkClickPoint = (index: number, coor: any) => {
+    let COORD = coor ? coor : MassCoord(massdk[index]);
     if (pointAa === 0) {
       if (!massdk[index].area && MODE === "1") return;
       if (!openSetWaysForm) {
         pointAaIndex = index; // начальная точка
-        pointAa = [massdk[index].coordinates[0], massdk[index].coordinates[1]];
+        pointAa = COORD;
         fromCross = MakeFromCross(massdk[index]);
         MakeСollectionRoute(MODE === "1" ? false : true);
         setFlagPusk(true);
@@ -416,7 +412,7 @@ const MainMap = (props: {
                 pointBbIndex = 0; // конечная точка
                 SoobOpenSetEr(soob);
               } else {
-                pointBb = MassCoord(massdk[index]);
+                pointBb = COORD;
                 toCross = MakeToCross(massdk[index]);
                 if (DoublRoute(massroute.ways, pointAa, pointBb)) {
                   SoobOpenSetEr("Дубликатная связь");
@@ -540,7 +536,7 @@ const MainMap = (props: {
               massroute
             )}
             modules={["geoObject.addon.balloon", "geoObject.addon.hint"]}
-            onClick={() => OnPlacemarkClickPoint(props.idx)}
+            onClick={() => OnPlacemarkClickPoint(props.idx, 0)}
           />
         ),
         [props.coordinate, props.idx]
@@ -577,14 +573,13 @@ const MainMap = (props: {
   };
 
   const InstanceRefDo = (ref: React.Ref<any>) => {
-    console.log('InstanceRefDo')
     if (ref) {
       mapp.current = ref;
-      mapp.current.events.remove("contextmenu", funcContex);
+      mapp.current.events.remove("contextmenu", funcContex); // нажата правая кнопка мыши
       funcContex = function (e: any) {
         if (mapp.current.hint) {
-          newPointCoord = e.get("coords"); // нажата правая кнопка мыши
-          idxDel = DelOrCreate(massdk, newPointCoord);
+          newPointCoord = e.get("coords");
+          idxDel = NearestPoint(massdk, newPointCoord);
           if (MODE === "0") {
             idxDel >= 0 && setOpenSetDelete(true);
             idxDel < 0 && setOpenSetCreate(true);
@@ -602,10 +597,17 @@ const MainMap = (props: {
         }
       };
       mapp.current.events.add("contextmenu", funcContex);
-      mapp.current.events.remove("boundschange", funcBound);
+      mapp.current.events.remove("click", funcClick); // нажата левая кнопка мыши
+      funcClick = function (e: any) {
+        let idx = NearestPoint(massdk, e.get("coords"));
+        if (idx >= 0 && MODE === "0")
+          OnPlacemarkClickPoint(idx, e.get("coords"));
+      };
+      mapp.current.events.add("click", funcClick);
+      mapp.current.events.remove("boundschange", funcBound); // покрутили колёсико мыши
       funcBound = function () {
         pointCenter = mapp.current.getCenter();
-        zoom = mapp.current.getZoom(); // покрутили колёсико мыши
+        zoom = mapp.current.getZoom();
       };
       mapp.current.events.add("boundschange", funcBound);
     }
