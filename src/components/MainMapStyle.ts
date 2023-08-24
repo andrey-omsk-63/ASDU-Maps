@@ -52,13 +52,7 @@ export const styleSetInf = {
   p: 1.5,
 };
 
-export const styleSetImg = {
-  bgcolor: "background.paper",
-  border: "3px solid #000",
-  borderColor: "primary.main",
-  borderRadius: 2,
-  boxShadow: 24,
-};
+
 
 //=== MapGl =====================================================
 
@@ -213,23 +207,36 @@ export const styleBoxFormID = {
   },
 };
 //=== RouteBind =======================================================
-export const styleSetNapr = {
-  width: "17px",
-  maxHeight: "3px",
-  minHeight: "3px",
-  bgcolor: "#FAFAFA",
-  boxShadow: 3,
-  marginLeft: "auto",
-  p: 1.5,
-};
+// export const styleSetNapr = {
+//   width: "17px",
+//   maxHeight: "3px",
+//   minHeight: "3px",
+//   bgcolor: "#FAFAFA",
+//   boxShadow: 3,
+//   marginLeft: "auto",
+//   p: 1.5,
+// };
 
-export const styleBoxFormNapr = {
-  "& > :not(style)": {
-    marginTop: "-8px",
-    marginLeft: "-12px",
-    width: "36px",
-  },
-};
+// export const styleBoxFormNapr = {
+//   "& > :not(style)": {
+//     marginTop: "-8px",
+//     marginLeft: "-12px",
+//     width: "36px",
+//   },
+// };
+
+// export const styleBind01 = {
+//   opacity: 0.7,
+//   textAlign: "right",
+// };
+
+export const styleSetImg = {
+    bgcolor: "background.paper",
+    border: "1px solid #000",
+    borderColor: "primary.main",
+    borderRadius: 1,
+    boxShadow: 24,
+  };
 
 export const styleAppBind = {
   fontSize: 14,
@@ -241,32 +248,53 @@ export const styleAppBind = {
   borderColor: "primary.main",
   borderRadius: 2,
   color: "black",
-  //color: '#B51EFF',
   textTransform: "unset !important",
-};
-
-export const styleBind01 = {
-  //bgcolor: "#FAFAFA",
-  opacity: 0.7,
-  textAlign: "right",
-  //color: '#B51EFF',
 };
 
 export const styleBind02 = {
   fontSize: 33,
-  //marginTop: "21vh",
   textAlign: "center",
-  height: 33,
-  width: "100%",
-  //color: '#B51EFF',
+  //height: 33,
+  //width: "100%",
+};
+
+export const styleModalEndBind = {
+  position: "absolute",
+  top: "3%",
+  left: "auto",
+  right: "-0%",
+  height: "21px",
+  maxWidth: "2%",
+  minWidth: "2%",
+  color: "black",
 };
 
 export const styleBind03 = {
-  //marginBottom: 2,
-  //marginTop: -2,
-  //bgcolor: "background.paper",
-  //opacity: 0.7,
+  height: "2vh",
+  lineHeight: "1.8vh",
+  textAlign: "center",
+  //borderLeft: 1,
+  //borderTop: 1,
+  //borderRadiusTop: 2,
+  //borderColor: "#C0E2C3",
+  bgcolor: "#C0E2C3",
 };
+
+export const styleBind04 = {
+  fontSize: 14,
+  //marginRight: 0.1,
+  border: "2px solid #000",
+  bgcolor: "#E6F5D6",
+  maxWidth: "10px",
+  minWidth: "10px",
+  maxHeight: "21px",
+  minHeight: "21px",
+  borderColor: "#E6F5D6",
+  borderRadius: 1,
+  color: "black",
+  //textTransform: "unset !important",
+};
+
 //=== VertexForma =====================================================
 export const styleFormInf = {
   outline: "none",

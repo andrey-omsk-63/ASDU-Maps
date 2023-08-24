@@ -770,7 +770,7 @@ const MainMap = (props: {
             {openSetBind && (
               <MapRouteBind
                 setOpen={setOpenSetBind}
-                debug={debugging}
+                //debug={debugging}
                 svg={masSvg}
                 setSvg={props.setSvg}
                 idxA={pointAaIndex}

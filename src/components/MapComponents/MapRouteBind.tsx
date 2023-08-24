@@ -5,21 +5,19 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-import TextField from "@mui/material/TextField";
-import MenuItem from "@mui/material/MenuItem";
+// import TextField from "@mui/material/TextField";
+// import MenuItem from "@mui/material/MenuItem";
 
-import { styleSetImg, styleSetNapr, styleBoxFormNapr } from "./../MainMapStyle";
-import { styleBind01, styleBind02 } from "./../MainMapStyle";
-import { styleBind03 } from "./../MainMapStyle";
+import { styleSetImg, styleBind02, styleModalEndBind } from "./../MainMapStyle";
+import { styleBind03, styleBind04 } from "./../MainMapStyle";
 
 let massBind = [0, 0];
 let OldIdxA = 0;
 let OldIdxB = 0;
 
 const MapRouteBind = (props: {
-  //debug: boolean;
   setOpen: any;
-  debug: boolean;
+  //debug: boolean;
   svg: any;
   setSvg: any;
   idxA: number;
@@ -41,17 +39,20 @@ const MapRouteBind = (props: {
     for (let key in dat) masSvg.push(dat[key]);
   }
 
-  let heightImg = Math.round(window.innerWidth / 3.333);
+  let heightImg = Math.round(window.innerWidth / 7);
   let widthHeight = heightImg.toString();
   let haveSvgA = true;
   let haveSvgB = true;
 
   const styleBind00 = {
+    outline: "none",
     border: "3px solid #000",
     borderColor: "#F0F0F0",
     borderRadius: 2,
-    marginTop: "18vh",
-    height: heightImg + 155,
+    marginTop: "3vh",
+    marginLeft: 1,
+    marginRight: 1,
+    height: heightImg + window.innerHeight * 0.63,
     bgcolor: "#F0F0F0",
   };
 
@@ -100,7 +101,7 @@ const MapRouteBind = (props: {
     props.setOpen(false);
     setOpenSetBind(false);
     props.setSvg(null);
-    if (mode) props.func(false, massBind);
+    if (mode && typeof mode === "number") props.func(false, massBind);
   };
 
   const ExampleComponent = (idx: number) => {
@@ -132,73 +133,6 @@ const MapRouteBind = (props: {
     );
   }
 
-  const InputDirect = (mode: number) => {
-    const handleKey = (event: any) => {
-      if (event.key === "Enter") event.preventDefault();
-    };
-
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setCurrency(Number(event.target.value));
-      if (mode) {
-        massBind[1] = massDat[Number(event.target.value)];
-      } else {
-        massBind[0] = massDat[Number(event.target.value)];
-      }
-      setTrigger(!trigger);
-    };
-
-    let dat = massroute.vertexes[props.idxA].lin;
-    if (mode) dat = massroute.vertexes[props.idxB].lout;
-    let massKey = [];
-    let massDat: any[] = [];
-    const currencies: any = [];
-    for (let key in dat) {
-      massKey.push(key);
-      massDat.push(dat[key]);
-    }
-    for (let i = 0; i < massKey.length; i++) {
-      let maskCurrencies = {
-        value: "",
-        label: "",
-      };
-      maskCurrencies.value = massKey[i];
-      maskCurrencies.label = massDat[i];
-      currencies.push(maskCurrencies);
-    }
-
-    const [currency, setCurrency] = React.useState(massBind[mode]);
-    const [trigger, setTrigger] = React.useState(true);
-
-    return (
-      <Box sx={styleSetNapr}>
-        <Box component="form" sx={styleBoxFormNapr}>
-          <TextField
-            select
-            size="small"
-            onKeyPress={handleKey} //отключение Enter
-            value={currency}
-            onChange={handleChange}
-            InputProps={{ disableUnderline: true, style: { fontSize: 14 } }}
-            variant="standard"
-            color="secondary"
-          >
-            {currencies.map((option: any) => (
-              <MenuItem
-                key={option.value}
-                value={option.value}
-                sx={{ fontSize: 14 }}
-              >
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-        </Box>
-      </Box>
-    );
-  };
-
-  const InputDirectMass = (mode: number) => {};
-
   if (masSvg[0] !== "") masSvg[0] = ReplaceInSvg(0);
   if (masSvg[1] !== "") masSvg[1] = ReplaceInSvg(1);
 
@@ -228,70 +162,189 @@ const MapRouteBind = (props: {
     );
   };
 
-  const Inputer = (soob: string, mode: number) => {
+  const HeaderBind = () => {
     return (
-      <>
-        <Grid item xs={3.5} sx={styleBind01}>
-          <b>{soob}</b>&nbsp;
+      <Grid container sx={{ marginTop: "1vh", height: heightImg }}>
+        <Grid item xs={0.25}></Grid>
+        {!haveSvgA && <Grid item xs={2}></Grid>}
+        {haveSvgA && (
+          <Grid item xs={2} sx={styleSetImg}>
+            {masSvg[0] === "" && <>{AppIconAsdu()}</>}
+            {masSvg[0] !== "" && <>{ExampleComponent(0)}</>}
+          </Grid>
+        )}
+        <Grid item xs={7.5}>
+          <Box sx={styleBind02}>
+            <b>Привязка направлений</b>
+          </Box>
+
+          <Box sx={{ p: 1, fontSize: 16, textAlign: "center" }}>
+            из <b>{massroute.vertexes[props.idxA].name}</b>
+          </Box>
+          <Box sx={{ p: 1, fontSize: 16, textAlign: "center" }}>
+            в <b>{massroute.vertexes[props.idxB].name}</b>
+          </Box>
         </Grid>
-        <Grid item xs={0.5}>
-          {InputDirect(mode)}
-        </Grid>
-      </>
+        {haveSvgB && (
+          <Grid item xs={2} sx={styleSetImg}>
+            {masSvg[1] === "" && <>{AppIconAsdu()}</>}
+            {masSvg[1] !== "" && <>{ExampleComponent(1)}</>}
+          </Grid>
+        )}
+        <Grid item xs={0.25}></Grid>
+      </Grid>
     );
+  };
+
+  const FooterBind = () => {
+    return (
+      <Grid container sx={{ marginTop: "1vh", height: 27, width: "100%" }}>
+        <Grid item xs={4.5}></Grid>
+        <Grid item xs={3} sx={{ border: 0 }}>
+          {(massBind[0] && massBind[1]) ||
+          (!haveSvgA && massBind[1]) ||
+          (!haveSvgB && massBind[0]) ? (
+            <Box sx={{ textAlign: "center" }}>
+              {StrokaMenu("Отмена", 0)}
+              {StrokaMenu("Привязываем", 1)}
+            </Box>
+          ) : (
+            <Box sx={{ textAlign: "center" }}>{StrokaMenu("Отмена", 0)}</Box>
+          )}
+        </Grid>
+        {!haveSvgB && <Grid item xs={4}></Grid>}
+      </Grid>
+    );
+  };
+
+  const StrokaMainTabl = () => {
+    let resStr = [];
+    let nameRoute = "00" + massroute.vertexes[props.idxA].id;
+    nameRoute = nameRoute.slice(-3);
+    console.log("!!!!!!:", nameRoute);
+    for (let i = 0; i < 7; i++) {
+      let nr = nameRoute + (i + 1).toString();
+      resStr.push(
+        <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
+          <Grid item xs={0.5} sx={{ border: 0 }}></Grid>
+          <Grid item xs={0.5} sx={{ lineHeight: "3vh", textAlign: "center" }}>
+            <Button sx={styleBind04}>
+              <b>{i + 1}</b>
+            </Button>
+          </Grid>
+          <Grid item xs={8} sx={{ border: 1 }}>{nr}</Grid>
+        </Grid>
+      );
+    }
+    return resStr;
   };
 
   return (
     <Modal open={openSetBind} onClose={handleClose}>
       <Box sx={styleBind00}>
-        <Grid container sx={styleBind02}>
-          <Grid item xs={4.25}></Grid>
-          <Grid item xs={3.5} sx={styleBind03}>
-            <b>Привязка направлений</b>
-          </Grid>
-        </Grid>
-
-        <Grid container sx={{ marginTop: "7vh", height: 27, width: "100%" }}>
-          <Grid item xs={0.25}></Grid>
-          {!haveSvgA && <Grid item xs={4}></Grid>}
-          {haveSvgA && <>{Inputer("№ исходящего направления:", 0)}</>}
-          <Grid item xs={3.5}>
-            {(massBind[0] && massBind[1]) ||
-            (!haveSvgA && massBind[1]) ||
-            (!haveSvgB && massBind[0]) ? (
-              <Box sx={{ textAlign: "center" }}>
-                {StrokaMenu("Отмена", 0)}
-                {StrokaMenu("Привязываем", 1)}
-              </Box>
-            ) : (
-              <Box sx={{ textAlign: "center" }}>{StrokaMenu("Отмена", 0)}</Box>
-            )}
-          </Grid>
-          {!haveSvgB && <Grid item xs={4}></Grid>}
-          {haveSvgB && <>{Inputer("№ входящего направления:", 1)}</>}
-        </Grid>
-
-        <Grid container sx={{ marginTop: "1vh", height: heightImg }}>
-          <Grid item xs={0.25}></Grid>
-          {!haveSvgA && <Grid item xs={4}></Grid>}
-          {haveSvgA && (
-            <Grid item xs={4} sx={styleSetImg}>
-              {masSvg[0] === "" && <>{AppIconAsdu()}</>}
-              {masSvg[0] !== "" && <>{ExampleComponent(0)}</>}
+        <Button sx={styleModalEndBind} onClick={() => handleClose(0)}>
+          <b>&#10006;</b>
+        </Button>
+        {HeaderBind()}
+        <Grid container sx={{ marginTop: "1vh", height: "28vh" }}>
+          <Grid item xs={5.5} sx={styleSetImg}>
+            <Box sx={styleBind03}>
+              <b>Исходящие направления</b>
+            </Box>
+            <Grid container sx={{ height: "26vh" }}>
+              {StrokaMainTabl()}
             </Grid>
-          )}
-          <Grid item xs={3.5}></Grid>
-          {haveSvgB && (
-            <Grid item xs={4} sx={styleSetImg}>
-              {masSvg[1] === "" && <>{AppIconAsdu()}</>}
-              {masSvg[1] !== "" && <>{ExampleComponent(1)}</>}
-            </Grid>
-          )}
-          <Grid item xs={0.25}></Grid>
+          </Grid>
+          <Grid item xs={1} sx={{ border: 0 }}></Grid>
+          <Grid item xs sx={{ border: 1 }}></Grid>
         </Grid>
+        <Grid container sx={{ marginTop: "1vh", height: "28vh" }}>
+          <Grid item xs={3} sx={{ border: 0 }}></Grid>
+          <Grid item xs={6} sx={{ border: 1 }}></Grid>
+        </Grid>
+        {FooterBind()}
       </Box>
     </Modal>
   );
 };
 
 export default MapRouteBind;
+// const Inputer = (soob: string, mode: number) => {
+//   return (
+//     <>
+//       <Grid item xs={3.5} sx={styleBind01}>
+//         <b>{soob}</b>&nbsp;
+//       </Grid>
+//       <Grid item xs={0.5}>
+//         {InputDirect(mode)}
+//       </Grid>
+//     </>
+//   );
+// };
+
+// const InputDirect = (mode: number) => {
+//   const handleKey = (event: any) => {
+//     if (event.key === "Enter") event.preventDefault();
+//   };
+
+//   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+//     setCurrency(Number(event.target.value));
+//     if (mode) {
+//       massBind[1] = massDat[Number(event.target.value)];
+//     } else {
+//       massBind[0] = massDat[Number(event.target.value)];
+//     }
+//     setTrigger(!trigger);
+//   };
+
+//   let dat = massroute.vertexes[props.idxA].lin;
+//   if (mode) dat = massroute.vertexes[props.idxB].lout;
+//   let massKey = [];
+//   let massDat: any[] = [];
+//   const currencies: any = [];
+//   for (let key in dat) {
+//     massKey.push(key);
+//     massDat.push(dat[key]);
+//   }
+//   for (let i = 0; i < massKey.length; i++) {
+//     let maskCurrencies = {
+//       value: "",
+//       label: "",
+//     };
+//     maskCurrencies.value = massKey[i];
+//     maskCurrencies.label = massDat[i];
+//     currencies.push(maskCurrencies);
+//   }
+
+//   const [currency, setCurrency] = React.useState(massBind[mode]);
+//   const [trigger, setTrigger] = React.useState(true);
+
+//   return (
+//     <Box sx={styleSetNapr}>
+//       <Box component="form" sx={styleBoxFormNapr}>
+//         <TextField
+//           select
+//           size="small"
+//           onKeyPress={handleKey} //отключение Enter
+//           value={currency}
+//           onChange={handleChange}
+//           InputProps={{ disableUnderline: true, style: { fontSize: 14 } }}
+//           variant="standard"
+//           color="secondary"
+//         >
+//           {currencies.map((option: any) => (
+//             <MenuItem
+//               key={option.value}
+//               value={option.value}
+//               sx={{ fontSize: 14 }}
+//             >
+//               {option.label}
+//             </MenuItem>
+//           ))}
+//         </TextField>
+//       </Box>
+//     </Box>
+//   );
+// };
+
+//const InputDirectMass = (mode: number) => {};
