@@ -42,8 +42,9 @@ const MapRouteInfo = (props: {
 
   const [openSetInf, setOpenSetInf] = React.useState(true);
 
+//=== инициализация ======================================
   if (dlRoute1 === 0) {
-    maskRoute = props.reqRoute; // инициализация
+    maskRoute = props.reqRoute;
     sec = maskRoute.tmRoute;
     tmRouteBegin = maskRoute.tmRoute;
     dlRoute1 = maskRoute.dlRoute;
@@ -54,7 +55,7 @@ const MapRouteInfo = (props: {
     sRoute1 = Math.round(sRoute1 * 10) / 10;
     sRouteBegin = sRoute1;
   }
-
+//========================================================
   const [valueDl, setValueDl] = React.useState(dlRoute1);
   const [valueTm, setValueTm] = React.useState(sec);
 

@@ -439,6 +439,7 @@ const MainMap = (props: {
     if (indexPoint >= 0) areaPoint = massdk[indexPoint].area;
     if (indexPoint >= 0 && indexPoint < massdk.length)
       pointRoute = MassCoord(massdk[indexPoint]);
+
     const handleClose = (param: number) => {
       switch (param) {
         case 1: // Начальная точка
@@ -477,10 +478,11 @@ const MainMap = (props: {
         case 4: // Редактирование адреса
           setOpenSetAdress(true);
       }
+      setOpenSet(false)
     };
 
     return (
-      <Modal open={openSet} onClose={() => setOpenSet(false)} hideBackdrop>
+      <Modal open={openSet} onClose={() => setOpenSet(false)}>
         <Box sx={styleSetPoint}>
           {СontentModalPressBalloon(setOpenSet, handleClose, areaPoint)}
           {openSetAdress && (
@@ -770,11 +772,11 @@ const MainMap = (props: {
             {openSetBind && (
               <MapRouteBind
                 setOpen={setOpenSetBind}
-                //debug={debugging}
                 svg={masSvg}
                 setSvg={props.setSvg}
                 idxA={pointAaIndex}
                 idxB={pointBbIndex}
+                reqRoute={reqRoute}
                 func={MakeRecordMassRoute}
               />
             )}

@@ -179,8 +179,8 @@ export const DoublRoute = (massroute: any, pointA: any, pointB: any) => {
   //     flDubl = true;
   // }
   for (let i = 0; i < massroute.length; i++) {
-    let corStart = DecodingCoord(massroute[i].starts)
-    let corStop = DecodingCoord(massroute[i].stops)
+    let corStart = DecodingCoord(massroute[i].starts);
+    let corStop = DecodingCoord(massroute[i].stops);
     let distStart = Distance(corStart, pointA);
     let distStop = Distance(corStop, pointB);
     if (distStart < 100 && distStop < 100) flDubl = true;
@@ -931,5 +931,35 @@ export const InputAdressVertex = (
         </Grid>
       </Grid>
     </Modal>
+  );
+};
+//=== RouteBind =======================================================
+export const StrokaMenuFooterBind = (
+  soob: string,
+  mode: number,
+  handleClose: Function
+) => {
+  const styleAppBind = {
+    fontSize: 14,
+    marginRight: 0.5,
+    border: "2px solid #000",
+    bgcolor: "#E6F5D6",
+    width: (soob.length + 9) * 7,
+    maxHeight: "21px",
+    minHeight: "21px",
+    borderColor: "#E6F5D6",
+    borderRadius: 1,
+    color: "black",
+    textTransform: "unset !important",
+  };
+
+  return (
+    <Button
+      variant="contained"
+      sx={styleAppBind}
+      onClick={() => handleClose(mode)}
+    >
+      <b>{soob}</b>
+    </Button>
   );
 };

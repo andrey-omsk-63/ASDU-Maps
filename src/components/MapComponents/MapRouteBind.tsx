@@ -8,23 +8,37 @@ import Modal from "@mui/material/Modal";
 // import TextField from "@mui/material/TextField";
 // import MenuItem from "@mui/material/MenuItem";
 
+import MapRouteBindFormFrom from "./MapRouteBindFormFrom";
+
+import { StrokaMenuFooterBind } from "./../MapServiceFunctions";
+
 import { styleSetImg, styleBind02, styleModalEndBind } from "./../MainMapStyle";
-import { styleBind03, styleBind04 } from "./../MainMapStyle";
+import { styleBind03, styleBind033, styleBind04 } from "./../MainMapStyle";
+import { styleBind05 } from "./../MainMapStyle";
 
 let massBind = [0, 0];
-let OldIdxA = 0;
-let OldIdxB = 0;
+let haveSvgA = true;
+let haveSvgB = true;
+
+let masSvg = ["", ""];
+let kolFaz = 4;
+let massFazFrom: Array<number> = [];
+let massFazIn: Array<number> = [];
+let oldIdxA = -1;
+let oldIdxB = -1;
+let idxFrom = -1;
 
 const MapRouteBind = (props: {
   setOpen: any;
-  //debug: boolean;
   svg: any;
   setSvg: any;
   idxA: number;
   idxB: number;
+  reqRoute: any;
   func: any;
 }) => {
-  //console.log("MapRouteBind:", props.svg);
+  console.log("MapRouteBind:", props.reqRoute);
+
   //== Piece of Redux ======================================
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
@@ -32,45 +46,11 @@ const MapRouteBind = (props: {
   });
   //========================================================
   const [openSetBind, setOpenSetBind] = React.useState(true);
-  let masSvg = ["", ""];
-  if (props.svg) {
-    let dat = props.svg;
-    masSvg = [];
-    for (let key in dat) masSvg.push(dat[key]);
-  }
+  const [openFormFrom, setOpenFormFrom] = React.useState(false);
+  const [trigger, setTrigger] = React.useState(false);
 
   let heightImg = Math.round(window.innerWidth / 7);
   let widthHeight = heightImg.toString();
-  let haveSvgA = true;
-  let haveSvgB = true;
-
-  const styleBind00 = {
-    outline: "none",
-    border: "3px solid #000",
-    borderColor: "#F0F0F0",
-    borderRadius: 2,
-    marginTop: "3vh",
-    marginLeft: 1,
-    marginRight: 1,
-    height: heightImg + window.innerHeight * 0.63,
-    bgcolor: "#F0F0F0",
-  };
-
-  if (OldIdxA !== props.idxA || OldIdxB !== props.idxB) {
-    massBind = [0, 0];
-    OldIdxA = props.idxA;
-    OldIdxB = props.idxB;
-  }
-
-  if (!massroute.vertexes[props.idxA].area) {
-    haveSvgA = false;
-    massBind[0] = 0;
-  }
-
-  if (!massroute.vertexes[props.idxB].area) {
-    haveSvgB = false;
-    massBind[1] = 0;
-  }
 
   const ReplaceInSvg = (idx: number) => {
     let ch = "";
@@ -95,9 +75,51 @@ const MapRouteBind = (props: {
     return svgPipa;
   };
 
+  //=== инициализация ======================================
+  if (oldIdxA !== props.idxA || oldIdxB !== props.idxB) {
+    console.log("MapRouteBind: ИНИЦИАЛИЗАЦИЯ");
+    massBind = [0, 0];
+    oldIdxA = props.idxA;
+    oldIdxB = props.idxB;
+    masSvg = ["", ""];
+    massFazFrom = [];
+    for (let i = 0; i < kolFaz; i++) massFazFrom.push(-1);
+    for (let i = 0; i < kolFaz; i++) massFazIn.push(-1);
+    if (props.svg) {
+      let dat = props.svg;
+      masSvg = [];
+      for (let key in dat) masSvg.push(dat[key]);
+    }
+    haveSvgA = true;
+    haveSvgB = true;
+    if (!massroute.vertexes[props.idxA].area) {
+      haveSvgA = false;
+      massBind[0] = 0;
+    }
+    if (!massroute.vertexes[props.idxB].area) {
+      haveSvgB = false;
+      massBind[1] = 0;
+    }
+    if (masSvg[0] !== "") masSvg[0] = ReplaceInSvg(0);
+    if (masSvg[1] !== "") masSvg[1] = ReplaceInSvg(1);
+  }
+  //========================================================
+
+  const styleBind00 = {
+    outline: "none",
+    border: "3px solid #000",
+    borderColor: "#F0F0F0",
+    borderRadius: 2,
+    marginTop: "3vh",
+    marginLeft: 1,
+    marginRight: 1,
+    height: heightImg + window.innerHeight * 0.63,
+    bgcolor: "#F0F0F0",
+  };
+
   const handleClose = (mode: number) => {
-    OldIdxA = 0;
-    OldIdxB = 0;
+    oldIdxA = -1;
+    oldIdxB = -1;
     props.setOpen(false);
     setOpenSetBind(false);
     props.setSvg(null);
@@ -133,36 +155,10 @@ const MapRouteBind = (props: {
     );
   }
 
-  if (masSvg[0] !== "") masSvg[0] = ReplaceInSvg(0);
-  if (masSvg[1] !== "") masSvg[1] = ReplaceInSvg(1);
-
-  const StrokaMenu = (soob: string, mode: number) => {
-    const styleAppBind = {
-      fontSize: 14,
-      marginRight: 0.1,
-      border: "2px solid #000",
-      bgcolor: "#E6F5D6",
-      width: (soob.length + 8) * 7,
-      maxHeight: "21px",
-      minHeight: "21px",
-      borderColor: "#E6F5D6",
-      borderRadius: 1,
-      color: "black",
-      textTransform: "unset !important",
-    };
-
-    return (
-      <Button
-        variant="contained"
-        sx={styleAppBind}
-        onClick={() => handleClose(mode)}
-      >
-        <b>{soob}</b>
-      </Button>
-    );
-  };
-
   const HeaderBind = () => {
+    let sec = props.reqRoute.tmRoute;
+    let sRoute = (props.reqRoute.dlRoute / 1000 / sec) * 3600;
+    sRoute = Math.round(sRoute * 10) / 10;
     return (
       <Grid container sx={{ marginTop: "1vh", height: heightImg }}>
         <Grid item xs={0.25}></Grid>
@@ -183,6 +179,11 @@ const MapRouteBind = (props: {
           </Box>
           <Box sx={{ p: 1, fontSize: 16, textAlign: "center" }}>
             в <b>{massroute.vertexes[props.idxB].name}</b>
+          </Box>
+          <Box sx={{ p: 1, fontSize: 14, textAlign: "center" }}>
+            Длина связи: <b>{props.reqRoute.dlRoute}</b> м&nbsp;&nbsp;Время
+            прохождения: <b>{Math.round(sec / 60)} мин&nbsp;&nbsp;</b>Средняя
+            скорость прохождения: <b>{sRoute}</b> км/ч
           </Box>
         </Grid>
         {haveSvgB && (
@@ -205,11 +206,13 @@ const MapRouteBind = (props: {
           (!haveSvgA && massBind[1]) ||
           (!haveSvgB && massBind[0]) ? (
             <Box sx={{ textAlign: "center" }}>
-              {StrokaMenu("Отмена", 0)}
-              {StrokaMenu("Привязываем", 1)}
+              {StrokaMenuFooterBind("Отмена", 0, handleClose)}
+              {StrokaMenuFooterBind("Привязываем", 1, handleClose)}
             </Box>
           ) : (
-            <Box sx={{ textAlign: "center" }}>{StrokaMenu("Отмена", 0)}</Box>
+            <Box sx={{ textAlign: "center" }}>
+              {StrokaMenuFooterBind("Отмена", 0, handleClose)}
+            </Box>
           )}
         </Grid>
         {!haveSvgB && <Grid item xs={4}></Grid>}
@@ -217,46 +220,139 @@ const MapRouteBind = (props: {
     );
   };
 
-  const StrokaMainTabl = () => {
+  const handleCloseTabFrom = (idx: number) => {
+    console.log("Переход в форму просмотра", idx);
+    idxFrom = idx
+    setOpenFormFrom(true)
+  };
+
+  const StrokaMainTablFrom = () => {
     let resStr = [];
     let nameRoute = "00" + massroute.vertexes[props.idxA].id;
     nameRoute = nameRoute.slice(-3);
-    console.log("!!!!!!:", nameRoute);
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < kolFaz; i++) {
       let nr = nameRoute + (i + 1).toString();
       resStr.push(
         <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
-          <Grid item xs={0.5} sx={{ border: 0 }}></Grid>
-          <Grid item xs={0.5} sx={{ lineHeight: "3vh", textAlign: "center" }}>
-            <Button sx={styleBind04}>
-              <b>{i + 1}</b>
+          <Grid item xs={1} sx={{ lineHeight: "3vh", textAlign: "center" }}>
+            {i + 1}
+          </Grid>
+          <Grid item xs={4} sx={{ lineHeight: "3vh", textAlign: "center" }}>
+            {nr}
+          </Grid>
+          <Grid item xs={2} sx={{ lineHeight: "3vh", textAlign: "center" }}>
+            0
+          </Grid>
+          <Grid item xs sx={{ lineHeight: "3vh", textAlign: "center" }}>
+            <Button sx={styleBind05} onClick={() => handleCloseTabFrom(i)}>
+              просмотр/изменение
             </Button>
           </Grid>
-          <Grid item xs={8} sx={{ border: 1 }}>{nr}</Grid>
         </Grid>
       );
     }
     return resStr;
   };
 
+  const handleCloseTabIn = (idx: number) => {
+    if (massFazFrom[idx] === -1) {
+      massFazFrom[idx] = 1;
+    } else {
+      massFazFrom[idx] = -1;
+    }
+    setTrigger(!trigger);
+  };
+
+  const StrokaMainTablIn = () => {
+    let resStr = [];
+    let nameRoute = "00" + massroute.vertexes[props.idxB].id;
+    nameRoute = nameRoute.slice(-3);
+    for (let i = 0; i < kolFaz; i++) {
+      let nr = nameRoute + (i + 1).toString();
+      let metka = massFazFrom[i] > 0 ? "✔" : "";
+      resStr.push(
+        <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
+          <Grid item xs={0.5} sx={{ marginTop: 0.5, textAlign: "center" }}>
+            <b>{metka}</b>
+          </Grid>
+          <Grid item xs={0.5} sx={{ lineHeight: "3vh", textAlign: "center" }}>
+            <Button sx={styleBind04} onClick={() => handleCloseTabIn(i)}>
+              <b>{i + 1}</b>
+            </Button>
+          </Grid>
+          <Grid item xs={8} sx={{ border: 0, p: 0.5 }}>
+            {nr}
+          </Grid>
+          <Grid item xs sx={{ textAlign: "center", p: 0.5 }}>
+            0
+          </Grid>
+        </Grid>
+      );
+    }
+    return resStr;
+  };
+
+  const TablFrom = () => {
+    return (
+      <Grid item xs={5.5} sx={styleSetImg}>
+        <Box sx={styleBind03}>
+          <em>Исходящие направления</em>
+        </Box>
+        <Box sx={styleBind033}>
+          <Grid container item xs={12}>
+            <Grid item xs={1} sx={{ textAlign: "center" }}>
+              №
+            </Grid>
+            <Grid item xs={4} sx={{ textAlign: "center" }}>
+              Наименование
+            </Grid>
+            <Grid item xs={2} sx={{ textAlign: "center" }}>
+              Интенсивность
+            </Grid>
+            <Grid item xs sx={{ textAlign: "center" }}>
+              Свойства
+            </Grid>
+          </Grid>
+        </Box>
+        <Grid container sx={{ height: "24vh" }}>
+          {StrokaMainTablFrom()}
+        </Grid>
+      </Grid>
+    );
+  };
+
+  const TablIn = () => {
+    return (
+      <Grid item xs sx={styleSetImg}>
+        <Box sx={styleBind03}>
+          <em>Входящие направления</em>
+        </Box>
+        <Box sx={styleBind03}>
+          <Grid container item xs={12}>
+            <Grid item xs={1} sx={{ textAlign: "center" }}>
+              №
+            </Grid>
+          </Grid>
+        </Box>
+        <Grid container sx={{ height: "24vh" }}>
+          {StrokaMainTablIn()}
+        </Grid>
+      </Grid>
+    );
+  };
+
   return (
     <Modal open={openSetBind} onClose={handleClose}>
+      <>
       <Box sx={styleBind00}>
         <Button sx={styleModalEndBind} onClick={() => handleClose(0)}>
           <b>&#10006;</b>
         </Button>
         {HeaderBind()}
         <Grid container sx={{ marginTop: "1vh", height: "28vh" }}>
-          <Grid item xs={5.5} sx={styleSetImg}>
-            <Box sx={styleBind03}>
-              <b>Исходящие направления</b>
-            </Box>
-            <Grid container sx={{ height: "26vh" }}>
-              {StrokaMainTabl()}
-            </Grid>
-          </Grid>
-          <Grid item xs={1} sx={{ border: 0 }}></Grid>
-          <Grid item xs sx={{ border: 1 }}></Grid>
+          {TablFrom()}
+          <Grid item xs={1}></Grid>
+          {TablIn()}
         </Grid>
         <Grid container sx={{ marginTop: "1vh", height: "28vh" }}>
           <Grid item xs={3} sx={{ border: 0 }}></Grid>
@@ -264,11 +360,14 @@ const MapRouteBind = (props: {
         </Grid>
         {FooterBind()}
       </Box>
+      {openFormFrom && <MapRouteBindFormFrom setOpen={setOpenFormFrom} idx={idxFrom}  />}
+      </>
     </Modal>
   );
 };
 
 export default MapRouteBind;
+
 // const Inputer = (soob: string, mode: number) => {
 //   return (
 //     <>

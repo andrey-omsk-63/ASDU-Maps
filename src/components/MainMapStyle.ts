@@ -253,16 +253,19 @@ export const styleAppBind = {
 
 export const styleBind02 = {
   fontSize: 33,
+  marginTop: -1,
   textAlign: "center",
-  //height: 33,
-  //width: "100%",
+  color: "#5B1080",
 };
 
 export const styleModalEndBind = {
   position: "absolute",
   top: "3%",
   left: "auto",
-  right: "-0%",
+  //right: "0.3%",
+  right: 3,
+  //marginLeft: "auto",
+  //marginRight: 1,
   height: "21px",
   maxWidth: "2%",
   minWidth: "2%",
@@ -280,8 +283,15 @@ export const styleBind03 = {
   bgcolor: "#C0E2C3",
 };
 
+export const styleBind033 = {
+  height: "2vh",
+  lineHeight: "1.8vh",
+  textAlign: "center",
+  bgcolor: "#C0E2C3",
+};
+
 export const styleBind04 = {
-  fontSize: 14,
+  fontSize: 12,
   //marginRight: 0.1,
   border: "2px solid #000",
   bgcolor: "#E6F5D6",
@@ -295,6 +305,21 @@ export const styleBind04 = {
   //textTransform: "unset !important",
 };
 
+export const styleBind05 = {
+  fontSize: 12,
+  //marginRight: 0.1,
+  border: "2px solid #000",
+  bgcolor: "#E6F5D6",
+  width: 150,
+  //minWidth: "10px",
+  maxHeight: "21px",
+  minHeight: "21px",
+  borderColor: "#E6F5D6",
+  borderRadius: 1,
+  color: "black",
+  textTransform: "unset !important",
+};
+
 //=== VertexForma =====================================================
 export const styleFormInf = {
   outline: "none",
@@ -302,7 +327,6 @@ export const styleFormInf = {
   marginTop: "-92vh",
   marginLeft: "auto",
   width: 460,
-  //height: 700,
   bgcolor: "background.paper",
   border: "3px solid #000",
   borderColor: "primary.main",
