@@ -70,7 +70,7 @@ const MapCreatePoint = (props: {
 
   return (
     <Box>
-      <Modal open={openSetAdress} onClose={handleCloseSetAdress} hideBackdrop>
+      <Modal open={openSetAdress} onClose={handleCloseSetAdress}>
         <Grid item container sx={styleSetAdress}>
           <Grid item xs={9.5} sx={{ border: 0 }}>
             <Box sx={styleSet}>

@@ -207,23 +207,26 @@ export const styleBoxFormID = {
   },
 };
 //=== RouteBind =======================================================
-// export const styleSetNapr = {
-//   width: "17px",
-//   maxHeight: "3px",
-//   minHeight: "3px",
-//   bgcolor: "#FAFAFA",
-//   boxShadow: 3,
-//   marginLeft: "auto",
-//   p: 1.5,
-// };
+export const styleSetNapr = {
+  width: "17px",
+  maxHeight: "1px",
+  minHeight: "1px",
+  marginTop: "1px",
+  //bgcolor: "#FAFAFA",
+  bgcolor: "#FFFBE5",
+  boxShadow: 3,
+  //textAlign: "center",
+  marginLeft: "auto",
+  p: 1.5,
+};
 
-// export const styleBoxFormNapr = {
-//   "& > :not(style)": {
-//     marginTop: "-8px",
-//     marginLeft: "-12px",
-//     width: "36px",
-//   },
-// };
+export const styleBoxFormNapr = {
+  "& > :not(style)": {
+    marginTop: "-8px",
+    marginLeft: "-12px",
+    width: "36px",
+  },
+};
 
 // export const styleBind01 = {
 //   opacity: 0.7,
@@ -290,20 +293,20 @@ export const styleBind033 = {
   bgcolor: "#C0E2C3",
 };
 
-export const styleBind04 = {
-  fontSize: 12,
-  //marginRight: 0.1,
-  border: "2px solid #000",
-  bgcolor: "#E6F5D6",
-  maxWidth: "10px",
-  minWidth: "10px",
-  maxHeight: "21px",
-  minHeight: "21px",
-  borderColor: "#E6F5D6",
-  borderRadius: 1,
-  color: "black",
-  //textTransform: "unset !important",
-};
+// export const styleBind04 = {
+//   fontSize: 12,
+//   //marginRight: 0.1,
+//   border: "2px solid #000",
+//   bgcolor: "#E6F5D6",
+//   maxWidth: "10px",
+//   minWidth: "10px",
+//   maxHeight: "21px",
+//   minHeight: "21px",
+//   borderColor: "#E6F5D6",
+//   borderRadius: 1,
+//   color: "black",
+//   //textTransform: "unset !important",
+// };
 
 export const styleBind05 = {
   fontSize: 12,

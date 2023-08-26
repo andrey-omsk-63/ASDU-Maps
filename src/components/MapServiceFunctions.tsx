@@ -21,7 +21,7 @@ import { Vertex } from "./../interfaceRoute";
 
 import { styleModalMenu, styleModalEndMapGl } from "./MainMapStyle";
 import { styleInpKnop } from "./MainMapStyle";
-import { styleTypography, searchControl } from "./MainMapStyle";
+import { styleBind02, styleTypography, searchControl } from "./MainMapStyle";
 
 const handleKey = (event: any) => {
   if (event.key === "Enter") event.preventDefault();
@@ -901,7 +901,7 @@ export const InputAdressVertex = (
     <Modal
       open={openSetInpAdres}
       onClose={() => handleCloseInp(false)}
-      //hideBackdrop
+      hideBackdrop
     >
       <Grid item container sx={styleSetAdres}>
         <Grid item xs={9.7}>
@@ -961,5 +961,41 @@ export const StrokaMenuFooterBind = (
     >
       <b>{soob}</b>
     </Button>
+  );
+};
+
+export const HeaderBindMiddle = (
+  reqRoute: any,
+  nameA: string,
+  nameB: string
+) => {
+  let sec = reqRoute.tmRoute;
+  let sRoute = (reqRoute.dlRoute / 1000 / sec) * 3600;
+  sRoute = Math.round(sRoute * 10) / 10;
+  return (
+    <Grid item xs={7.5}>
+      <Box sx={styleBind02}>
+        <b>Привязка направлений</b>
+      </Box>
+      <Box sx={{ p: 1, fontSize: 16, textAlign: "center" }}>
+        из <b>{nameA}</b>
+      </Box>
+      <Box sx={{ p: 1, fontSize: 16, textAlign: "center" }}>
+        в <b>{nameB}</b>
+      </Box>
+      <Box sx={{ p: 1, fontSize: 14, textAlign: "center" }}>
+        Длина связи: <b>{reqRoute.dlRoute}</b> м&nbsp;&nbsp;Время прохождения:{" "}
+        <b>{Math.round(sec / 60)} мин&nbsp;&nbsp;</b>Средняя скорость
+        прохождения: <b>{sRoute}</b> км/ч
+      </Box>
+    </Grid>
+  );
+};
+
+export const HeaderTablBindContent = (xss: number, soob: string) => {
+  return (
+    <Grid item xs={xss} sx={{ textAlign: "center" }}>
+      {soob}
+    </Grid>
   );
 };

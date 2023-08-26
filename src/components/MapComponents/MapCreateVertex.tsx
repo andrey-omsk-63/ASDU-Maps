@@ -286,7 +286,7 @@ const MapCreateVertex = (props: {
 
   return (
     <Box>
-      <Modal open={openSetAdress} onClose={handleCloseSetAdress} hideBackdrop>
+      <Modal open={openSetAdress} onClose={handleCloseSetAdress}>
         <Grid item container sx={styleSetAdrAreaID}>
           <Grid item>
             <Grid item container sx={styleSetAdrArea}>

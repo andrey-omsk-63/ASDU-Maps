@@ -5,23 +5,25 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-// import TextField from "@mui/material/TextField";
-// import MenuItem from "@mui/material/MenuItem";
+import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
 
 import MapRouteBindFormFrom from "./MapRouteBindFormFrom";
 
 import { StrokaMenuFooterBind } from "./../MapServiceFunctions";
+import { HeaderBindMiddle } from "./../MapServiceFunctions";
+import { HeaderTablBindContent } from "./../MapServiceFunctions";
 
-import { styleSetImg, styleBind02, styleModalEndBind } from "./../MainMapStyle";
-import { styleBind03, styleBind033, styleBind04 } from "./../MainMapStyle";
-import { styleBind05 } from "./../MainMapStyle";
+import { styleSetImg, styleModalEndBind } from "./../MainMapStyle";
+import { styleBind03, styleBind033 } from "./../MainMapStyle";
+import { styleBind05, styleSetNapr, styleBoxFormNapr } from "./../MainMapStyle";
 
 let massBind = [0, 0];
 let haveSvgA = true;
 let haveSvgB = true;
 
 let masSvg = ["", ""];
-let kolFaz = 4;
+let kolFaz = 7;
 let massFazFrom: Array<number> = [];
 let massFazIn: Array<number> = [];
 let oldIdxA = -1;
@@ -47,7 +49,7 @@ const MapRouteBind = (props: {
   //========================================================
   const [openSetBind, setOpenSetBind] = React.useState(true);
   const [openFormFrom, setOpenFormFrom] = React.useState(false);
-  const [trigger, setTrigger] = React.useState(false);
+  //const [trigger, setTrigger] = React.useState(false);
 
   let heightImg = Math.round(window.innerWidth / 7);
   let widthHeight = heightImg.toString();
@@ -156,9 +158,8 @@ const MapRouteBind = (props: {
   }
 
   const HeaderBind = () => {
-    let sec = props.reqRoute.tmRoute;
-    let sRoute = (props.reqRoute.dlRoute / 1000 / sec) * 3600;
-    sRoute = Math.round(sRoute * 10) / 10;
+    let nameA = massroute.vertexes[props.idxA].name;
+    let nameB = massroute.vertexes[props.idxB].name;
     return (
       <Grid container sx={{ marginTop: "1vh", height: heightImg }}>
         <Grid item xs={0.25}></Grid>
@@ -169,23 +170,7 @@ const MapRouteBind = (props: {
             {masSvg[0] !== "" && <>{ExampleComponent(0)}</>}
           </Grid>
         )}
-        <Grid item xs={7.5}>
-          <Box sx={styleBind02}>
-            <b>Привязка направлений</b>
-          </Box>
-
-          <Box sx={{ p: 1, fontSize: 16, textAlign: "center" }}>
-            из <b>{massroute.vertexes[props.idxA].name}</b>
-          </Box>
-          <Box sx={{ p: 1, fontSize: 16, textAlign: "center" }}>
-            в <b>{massroute.vertexes[props.idxB].name}</b>
-          </Box>
-          <Box sx={{ p: 1, fontSize: 14, textAlign: "center" }}>
-            Длина связи: <b>{props.reqRoute.dlRoute}</b> м&nbsp;&nbsp;Время
-            прохождения: <b>{Math.round(sec / 60)} мин&nbsp;&nbsp;</b>Средняя
-            скорость прохождения: <b>{sRoute}</b> км/ч
-          </Box>
-        </Grid>
+        {HeaderBindMiddle(props.reqRoute, nameA, nameB)}
         {haveSvgB && (
           <Grid item xs={2} sx={styleSetImg}>
             {masSvg[1] === "" && <>{AppIconAsdu()}</>}
@@ -222,8 +207,8 @@ const MapRouteBind = (props: {
 
   const handleCloseTabFrom = (idx: number) => {
     console.log("Переход в форму просмотра", idx);
-    idxFrom = idx
-    setOpenFormFrom(true)
+    idxFrom = idx;
+    setOpenFormFrom(true);
   };
 
   const StrokaMainTablFrom = () => {
@@ -254,44 +239,6 @@ const MapRouteBind = (props: {
     return resStr;
   };
 
-  const handleCloseTabIn = (idx: number) => {
-    if (massFazFrom[idx] === -1) {
-      massFazFrom[idx] = 1;
-    } else {
-      massFazFrom[idx] = -1;
-    }
-    setTrigger(!trigger);
-  };
-
-  const StrokaMainTablIn = () => {
-    let resStr = [];
-    let nameRoute = "00" + massroute.vertexes[props.idxB].id;
-    nameRoute = nameRoute.slice(-3);
-    for (let i = 0; i < kolFaz; i++) {
-      let nr = nameRoute + (i + 1).toString();
-      let metka = massFazFrom[i] > 0 ? "✔" : "";
-      resStr.push(
-        <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
-          <Grid item xs={0.5} sx={{ marginTop: 0.5, textAlign: "center" }}>
-            <b>{metka}</b>
-          </Grid>
-          <Grid item xs={0.5} sx={{ lineHeight: "3vh", textAlign: "center" }}>
-            <Button sx={styleBind04} onClick={() => handleCloseTabIn(i)}>
-              <b>{i + 1}</b>
-            </Button>
-          </Grid>
-          <Grid item xs={8} sx={{ border: 0, p: 0.5 }}>
-            {nr}
-          </Grid>
-          <Grid item xs sx={{ textAlign: "center", p: 0.5 }}>
-            0
-          </Grid>
-        </Grid>
-      );
-    }
-    return resStr;
-  };
-
   const TablFrom = () => {
     return (
       <Grid item xs={5.5} sx={styleSetImg}>
@@ -300,18 +247,10 @@ const MapRouteBind = (props: {
         </Box>
         <Box sx={styleBind033}>
           <Grid container item xs={12}>
-            <Grid item xs={1} sx={{ textAlign: "center" }}>
-              №
-            </Grid>
-            <Grid item xs={4} sx={{ textAlign: "center" }}>
-              Наименование
-            </Grid>
-            <Grid item xs={2} sx={{ textAlign: "center" }}>
-              Интенсивность
-            </Grid>
-            <Grid item xs sx={{ textAlign: "center" }}>
-              Свойства
-            </Grid>
+            {HeaderTablBindContent(1, "№")}
+            {HeaderTablBindContent(4, "Наименование")}
+            {HeaderTablBindContent(2, "Интенсивность(%)")}
+            {HeaderTablBindContent(5, "Свойства")}
           </Grid>
         </Box>
         <Grid container sx={{ height: "24vh" }}>
@@ -319,6 +258,88 @@ const MapRouteBind = (props: {
         </Grid>
       </Grid>
     );
+  };
+
+  const InputDirect = () => {
+    const handleKey = (event: any) => {
+      if (event.key === "Enter") event.preventDefault();
+    };
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      setCurrency(Number(event.target.value));
+    };
+
+    let dat: Array<number> = [];
+    for (let i = 0; i < kolFaz; i++) dat.push(i + 1);
+
+    let massKey = [];
+    let massDat: any[] = [];
+    const currencies: any = [];
+    for (let key in dat) {
+      massKey.push(key);
+      massDat.push(dat[key]);
+    }
+    for (let i = 0; i < massKey.length; i++) {
+      let maskCurrencies = {
+        value: "",
+        label: "",
+      };
+      maskCurrencies.value = massKey[i];
+      maskCurrencies.label = massDat[i];
+      currencies.push(maskCurrencies);
+    }
+
+    const [currency, setCurrency] = React.useState(0);
+
+    return (
+      <Box sx={styleSetNapr}>
+        <Box component="form" sx={styleBoxFormNapr}>
+          <TextField
+            select
+            size="small"
+            onKeyPress={handleKey} //отключение Enter
+            value={currency}
+            onChange={handleChange}
+            InputProps={{ disableUnderline: true, style: { fontSize: 12 } }}
+            variant="standard"
+            color="secondary"
+          >
+            {currencies.map((option: any) => (
+              <MenuItem
+                key={option.value}
+                value={option.value}
+                sx={{ fontSize: 14 }}
+              >
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Box>
+      </Box>
+    );
+  };
+
+  const StrokaMainTablIn = () => {
+    let resStr = [];
+    let nameRoute = "00" + massroute.vertexes[props.idxB].id;
+    nameRoute = nameRoute.slice(-3);
+    for (let i = 0; i < kolFaz; i++) {
+      let nr = nameRoute + (i + 1).toString();
+      resStr.push(
+        <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
+          <Grid item xs={1} sx={{ lineHeight: "3vh", textAlign: "center" }}>
+            {i + 1}
+          </Grid>
+          <Grid item xs={4} sx={{ lineHeight: "3vh", textAlign: "center" }}>
+            {nr}
+          </Grid>
+          <Grid item xs={3.8} sx={{ lineHeight: "3vh", textAlign: "center" }}>
+            {InputDirect()}
+          </Grid>
+        </Grid>
+      );
+    }
+    return resStr;
   };
 
   const TablIn = () => {
@@ -329,9 +350,9 @@ const MapRouteBind = (props: {
         </Box>
         <Box sx={styleBind03}>
           <Grid container item xs={12}>
-            <Grid item xs={1} sx={{ textAlign: "center" }}>
-              №
-            </Grid>
+            {HeaderTablBindContent(1, "№")}
+            {HeaderTablBindContent(4, "Наименование")}
+            {HeaderTablBindContent(7, "С чем связываем")}
           </Grid>
         </Box>
         <Grid container sx={{ height: "24vh" }}>
@@ -344,23 +365,25 @@ const MapRouteBind = (props: {
   return (
     <Modal open={openSetBind} onClose={handleClose}>
       <>
-      <Box sx={styleBind00}>
-        <Button sx={styleModalEndBind} onClick={() => handleClose(0)}>
-          <b>&#10006;</b>
-        </Button>
-        {HeaderBind()}
-        <Grid container sx={{ marginTop: "1vh", height: "28vh" }}>
-          {TablFrom()}
-          <Grid item xs={1}></Grid>
-          {TablIn()}
-        </Grid>
-        <Grid container sx={{ marginTop: "1vh", height: "28vh" }}>
-          <Grid item xs={3} sx={{ border: 0 }}></Grid>
-          <Grid item xs={6} sx={{ border: 1 }}></Grid>
-        </Grid>
-        {FooterBind()}
-      </Box>
-      {openFormFrom && <MapRouteBindFormFrom setOpen={setOpenFormFrom} idx={idxFrom}  />}
+        <Box sx={styleBind00}>
+          <Button sx={styleModalEndBind} onClick={() => handleClose(0)}>
+            <b>&#10006;</b>
+          </Button>
+          {HeaderBind()}
+          <Grid container sx={{ marginTop: "1vh", height: "28vh" }}>
+            {TablFrom()}
+            <Grid item xs={1}></Grid>
+            {TablIn()}
+          </Grid>
+          <Grid container sx={{ marginTop: "1vh", height: "28vh" }}>
+            <Grid item xs={3} sx={{ border: 0 }}></Grid>
+            <Grid item xs={6} sx={{ border: 1 }}></Grid>
+          </Grid>
+          {FooterBind()}
+        </Box>
+        {openFormFrom && (
+          <MapRouteBindFormFrom setOpen={setOpenFormFrom} idx={idxFrom} />
+        )}
       </>
     </Modal>
   );
