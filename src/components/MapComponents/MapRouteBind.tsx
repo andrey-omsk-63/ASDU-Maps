@@ -5,30 +5,34 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-import TextField from "@mui/material/TextField";
-import MenuItem from "@mui/material/MenuItem";
+//import TextField from "@mui/material/TextField";
+//import MenuItem from "@mui/material/MenuItem";
 
 import MapRouteBindFormFrom from "./MapRouteBindFormFrom";
 
 import { StrokaMenuFooterBind } from "./../MapServiceFunctions";
-import { HeaderBindMiddle } from "./../MapServiceFunctions";
+import { HeaderBindMiddle, ArgTablBindContent } from "./../MapServiceFunctions";
 import { HeaderTablBindContent } from "./../MapServiceFunctions";
 
 import { styleSetImg, styleModalEndBind } from "./../MainMapStyle";
 import { styleBind03, styleBind033 } from "./../MainMapStyle";
-import { styleBind05, styleSetNapr, styleBoxFormNapr } from "./../MainMapStyle";
+import { styleBind04, styleBind05 } from "./../MainMapStyle";
+//import { styleSetNapr, styleBoxFormNapr } from "./../MainMapStyle";
 
 let massBind = [0, 0];
 let haveSvgA = true;
 let haveSvgB = true;
-
 let masSvg = ["", ""];
-let kolFaz = 7;
+
+let kolFazFrom = 7;
+let kolFazIn = 4;
 let massFazFrom: Array<number> = [];
 let massFazIn: Array<number> = [];
 let oldIdxA = -1;
 let oldIdxB = -1;
 let idxFrom = -1;
+let massTotal: any = [];
+let beginMassTotal = 0;
 
 const MapRouteBind = (props: {
   setOpen: any;
@@ -49,7 +53,7 @@ const MapRouteBind = (props: {
   //========================================================
   const [openSetBind, setOpenSetBind] = React.useState(true);
   const [openFormFrom, setOpenFormFrom] = React.useState(false);
-  //const [trigger, setTrigger] = React.useState(false);
+  const [trigger, setTrigger] = React.useState(false);
 
   let heightImg = Math.round(window.innerWidth / 7);
   let widthHeight = heightImg.toString();
@@ -79,14 +83,13 @@ const MapRouteBind = (props: {
 
   //=== инициализация ======================================
   if (oldIdxA !== props.idxA || oldIdxB !== props.idxB) {
-    console.log("MapRouteBind: ИНИЦИАЛИЗАЦИЯ");
     massBind = [0, 0];
     oldIdxA = props.idxA;
     oldIdxB = props.idxB;
     masSvg = ["", ""];
     massFazFrom = [];
-    for (let i = 0; i < kolFaz; i++) massFazFrom.push(-1);
-    for (let i = 0; i < kolFaz; i++) massFazIn.push(-1);
+    for (let i = 0; i < kolFazFrom; i++) massFazFrom.push(-1);
+    for (let i = 0; i < kolFazIn; i++) massFazIn.push(-1);
     if (props.svg) {
       let dat = props.svg;
       masSvg = [];
@@ -104,17 +107,40 @@ const MapRouteBind = (props: {
     }
     if (masSvg[0] !== "") masSvg[0] = ReplaceInSvg(0);
     if (masSvg[1] !== "") masSvg[1] = ReplaceInSvg(1);
+    massTotal = [];
+
+    let nom = 1;
+    for (let j = 0; j < kolFazIn; j++) {
+      for (let i = 0; i < kolFazFrom; i++) {
+        let nameFrom = ("00" + massroute.vertexes[props.idxA].id).slice(-3);
+        nameFrom += (i + 1).toString();
+        let nameIn = ("00" + massroute.vertexes[props.idxB].id).slice(-3);
+        nameIn += (j + 1).toString();
+        let maskTotal: any = {
+          have: false,
+          nom: nom++,
+          name: nameFrom + "/" + nameIn,
+          intensTr: 0,
+          intensPr: 0,
+          time: 0,
+        };
+        massTotal.push(maskTotal);
+      }
+    }
+    console.log("MapRouteBind: ИНИЦИАЛИЗАЦИЯ", massTotal);
   }
   //========================================================
 
   const styleBind00 = {
     outline: "none",
+    position: "absolute",
+    left: "50%",
+    top: "50%",
+    transform: "translate(-50%, -50%)",
     border: "3px solid #000",
     borderColor: "#F0F0F0",
     borderRadius: 2,
-    marginTop: "3vh",
-    marginLeft: 1,
-    marginRight: 1,
+    width: "98%",
     height: heightImg + window.innerHeight * 0.63,
     bgcolor: "#F0F0F0",
   };
@@ -183,6 +209,10 @@ const MapRouteBind = (props: {
   };
 
   const FooterBind = () => {
+    let have = 0
+    for (let i = 0; i < massTotal.length; i++) {
+      if (massTotal[i].have) have++
+    }
     return (
       <Grid container sx={{ marginTop: "1vh", height: 27, width: "100%" }}>
         <Grid item xs={4.5}></Grid>
@@ -211,24 +241,18 @@ const MapRouteBind = (props: {
     setOpenFormFrom(true);
   };
 
-  const StrokaMainTablFrom = () => {
+  const StrokaTablFrom = () => {
     let resStr = [];
     let nameRoute = "00" + massroute.vertexes[props.idxA].id;
     nameRoute = nameRoute.slice(-3);
-    for (let i = 0; i < kolFaz; i++) {
+    for (let i = 0; i < kolFazFrom; i++) {
       let nr = nameRoute + (i + 1).toString();
       resStr.push(
         <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
-          <Grid item xs={1} sx={{ lineHeight: "3vh", textAlign: "center" }}>
-            {i + 1}
-          </Grid>
-          <Grid item xs={4} sx={{ lineHeight: "3vh", textAlign: "center" }}>
-            {nr}
-          </Grid>
-          <Grid item xs={2} sx={{ lineHeight: "3vh", textAlign: "center" }}>
-            0
-          </Grid>
-          <Grid item xs sx={{ lineHeight: "3vh", textAlign: "center" }}>
+          {ArgTablBindContent(1, i + 1)}
+          {ArgTablBindContent(4, nr)}
+          {ArgTablBindContent(3, 0)}
+          <Grid item xs={4} sx={{ ineHeight: "3vh", textAlign: "center" }}>
             <Button sx={styleBind05} onClick={() => handleCloseTabFrom(i)}>
               просмотр/изменение
             </Button>
@@ -249,92 +273,41 @@ const MapRouteBind = (props: {
           <Grid container item xs={12}>
             {HeaderTablBindContent(1, "№")}
             {HeaderTablBindContent(4, "Наименование")}
-            {HeaderTablBindContent(2, "Интенсивность(%)")}
-            {HeaderTablBindContent(5, "Свойства")}
+            {HeaderTablBindContent(3, "Интенсивность(%)")}
+            {HeaderTablBindContent(4, "Свойства")}
           </Grid>
         </Box>
         <Grid container sx={{ height: "24vh" }}>
-          {StrokaMainTablFrom()}
+          {StrokaTablFrom()}
         </Grid>
       </Grid>
     );
   };
 
-  const InputDirect = () => {
-    const handleKey = (event: any) => {
-      if (event.key === "Enter") event.preventDefault();
-    };
-
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setCurrency(Number(event.target.value));
-    };
-
-    let dat: Array<number> = [];
-    for (let i = 0; i < kolFaz; i++) dat.push(i + 1);
-
-    let massKey = [];
-    let massDat: any[] = [];
-    const currencies: any = [];
-    for (let key in dat) {
-      massKey.push(key);
-      massDat.push(dat[key]);
-    }
-    for (let i = 0; i < massKey.length; i++) {
-      let maskCurrencies = {
-        value: "",
-        label: "",
-      };
-      maskCurrencies.value = massKey[i];
-      maskCurrencies.label = massDat[i];
-      currencies.push(maskCurrencies);
-    }
-
-    const [currency, setCurrency] = React.useState(0);
-
-    return (
-      <Box sx={styleSetNapr}>
-        <Box component="form" sx={styleBoxFormNapr}>
-          <TextField
-            select
-            size="small"
-            onKeyPress={handleKey} //отключение Enter
-            value={currency}
-            onChange={handleChange}
-            InputProps={{ disableUnderline: true, style: { fontSize: 12 } }}
-            variant="standard"
-            color="secondary"
-          >
-            {currencies.map((option: any) => (
-              <MenuItem
-                key={option.value}
-                value={option.value}
-                sx={{ fontSize: 14 }}
-              >
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-        </Box>
-      </Box>
-    );
+  const handleCloseIn = (i: number) => {
+    beginMassTotal = i * kolFazFrom;
+    setTrigger(!trigger);
   };
 
-  const StrokaMainTablIn = () => {
+  const StrokaTablIn = () => {
     let resStr = [];
     let nameRoute = "00" + massroute.vertexes[props.idxB].id;
     nameRoute = nameRoute.slice(-3);
-    for (let i = 0; i < kolFaz; i++) {
+    for (let i = 0; i < kolFazIn; i++) {
       let nr = nameRoute + (i + 1).toString();
       resStr.push(
         <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
           <Grid item xs={1} sx={{ lineHeight: "3vh", textAlign: "center" }}>
-            {i + 1}
+            <Button sx={styleBind04} onClick={() => handleCloseIn(i)}>
+              {i + 1}
+            </Button>
           </Grid>
-          <Grid item xs={4} sx={{ lineHeight: "3vh", textAlign: "center" }}>
-            {nr}
-          </Grid>
-          <Grid item xs={3.8} sx={{ lineHeight: "3vh", textAlign: "center" }}>
-            {InputDirect()}
+          {ArgTablBindContent(4, nr)}
+          {ArgTablBindContent(3, 0)}
+          <Grid item xs sx={{ lineHeight: "3vh", textAlign: "center" }}>
+            <Button sx={styleBind05} onClick={() => handleCloseTabFrom(i)}>
+              просмотр/изменение
+            </Button>
           </Grid>
         </Grid>
       );
@@ -348,15 +321,101 @@ const MapRouteBind = (props: {
         <Box sx={styleBind03}>
           <em>Входящие направления</em>
         </Box>
-        <Box sx={styleBind03}>
+        <Box sx={styleBind033}>
           <Grid container item xs={12}>
             {HeaderTablBindContent(1, "№")}
             {HeaderTablBindContent(4, "Наименование")}
-            {HeaderTablBindContent(7, "С чем связываем")}
+            {HeaderTablBindContent(3, "Интенсивность(%)")}
+            {HeaderTablBindContent(4, "Свойства")}
           </Grid>
         </Box>
         <Grid container sx={{ height: "24vh" }}>
-          {StrokaMainTablIn()}
+          {StrokaTablIn()}
+        </Grid>
+      </Grid>
+    );
+  };
+
+  const handleCloseTotal = (idx: number) => {
+    massTotal[idx].have = !massTotal[idx].have;
+    setTrigger(!trigger);
+  }
+
+  const TablTotalContent = (idx: number) => {
+    let i = beginMassTotal + idx;
+    let metka = massTotal[i].have ? "✔" : "";
+    return (
+      <>
+        <Grid item xs={0.5} sx={{ lineHeight: "3vh", textAlign: "center" }}>
+          {metka}
+        </Grid>
+        <Grid item xs={1} sx={{ lineHeight: "3vh", textAlign: "center" }}>
+          <Button sx={styleBind04} onClick={() => handleCloseTotal(i)}>
+            {massTotal[i].nom}
+          </Button>
+        </Grid>
+        <Grid item xs={2.5} sx={{ lineHeight: "3vh", textAlign: "center" }}>
+          {massTotal[i].name}
+        </Grid>
+        <Grid item xs={2.5} sx={{ lineHeight: "3vh", textAlign: "center" }}>
+          {massTotal[i].intensTr}
+        </Grid>
+        <Grid item xs={2.5} sx={{ lineHeight: "3vh", textAlign: "center" }}>
+          {massTotal[i].intensPr}
+        </Grid>
+        <Grid item xs={2.5} sx={{ lineHeight: "3vh", textAlign: "center" }}>
+          {massTotal[i].time}
+        </Grid>
+      </>
+    );
+  };
+
+  const StrokaTablTotal = () => {
+    let resStr: any = [];
+    // let nom = 0;
+    // for (let i = 0; i < kolFazFrom; i++) {
+    //   for (let j = 0; j < kolFazIn; j++) {
+    //     let nameFrom = ("00" + massroute.vertexes[props.idxA].id).slice(-3);
+    //     nameFrom += (i + 1).toString();
+    //     let nameIn = ("00" + massroute.vertexes[props.idxB].id).slice(-3);
+    //     nameIn += (j + 1).toString();
+    //     let nameRoute = nameFrom + "/" + nameIn;
+    //     resStr.push(
+    //       <Grid key={nom} container item xs={12} sx={{ fontSize: 14 }}>
+    //         {TablTotalContent(nom, nameRoute)}
+    //       </Grid>
+    //     );
+    //     nom++;
+    //   }
+    // }
+    for (let i = 0; i < kolFazFrom; i++) {
+      resStr.push(
+        <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
+          {TablTotalContent(i)}
+        </Grid>
+      );
+    }
+    return resStr;
+  };
+
+  const TablTotal = () => {
+    return (
+      <Grid item xs sx={styleSetImg}>
+        <Box sx={styleBind03}>
+          <em>Состав направлений</em>
+        </Box>
+        <Box sx={styleBind033}>
+          <Grid container item xs={12}>
+            {HeaderTablBindContent(0.5, "")}
+            {HeaderTablBindContent(1, "№")}
+            {HeaderTablBindContent(2.5, "Наименование")}
+            {HeaderTablBindContent(3, "Интенсивность(т.е./ч)")}
+            {HeaderTablBindContent(2.5, "Интенсивность(%)")}
+            {HeaderTablBindContent(2.5, "Время проезда(сек)")}
+          </Grid>
+        </Box>
+        <Grid container sx={{ overflowX: "auto", height: "24vh" }}>
+          {StrokaTablTotal()}
         </Grid>
       </Grid>
     );
@@ -376,8 +435,10 @@ const MapRouteBind = (props: {
             {TablIn()}
           </Grid>
           <Grid container sx={{ marginTop: "1vh", height: "28vh" }}>
-            <Grid item xs={3} sx={{ border: 0 }}></Grid>
-            <Grid item xs={6} sx={{ border: 1 }}></Grid>
+            <Grid item xs={2} sx={{ border: 0 }}></Grid>
+            <Grid item xs={8} sx={{ border: 0 }}>
+              {TablTotal()}
+            </Grid>
           </Grid>
           {FooterBind()}
         </Box>
@@ -391,36 +452,31 @@ const MapRouteBind = (props: {
 
 export default MapRouteBind;
 
-// const Inputer = (soob: string, mode: number) => {
-//   return (
-//     <>
-//       <Grid item xs={3.5} sx={styleBind01}>
-//         <b>{soob}</b>&nbsp;
-//       </Grid>
-//       <Grid item xs={0.5}>
-//         {InputDirect(mode)}
-//       </Grid>
-//     </>
-//   );
-// };
-
-// const InputDirect = (mode: number) => {
+// const InputDirect = (nomInn: number) => {
 //   const handleKey = (event: any) => {
 //     if (event.key === "Enter") event.preventDefault();
 //   };
 
 //   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 //     setCurrency(Number(event.target.value));
-//     if (mode) {
-//       massBind[1] = massDat[Number(event.target.value)];
-//     } else {
-//       massBind[0] = massDat[Number(event.target.value)];
+//     let nomFrom = Number(event.target.value) + 1;
+//     let nomIn = nomInn + 1;
+//     //console.log("###:", nomIn, nomFrom);
+//     let ch = 0;
+//     let nomer = -1;
+//     let nmFrom = massTotal[0].name.slice(0, 3) + nomFrom.toString();
+//     let nmIn = massTotal[0].name.slice(5, 8) + nomIn.toString();
+//     let nm = nmFrom + "/" + nmIn;
+//     console.log("@@@:", nmFrom, nmIn);
+//     for (let i = 0; i < massTotal.length; i++) {
+//       if (massTotal[i].name === nm) nomer = ch;
+//       ch++;
 //     }
-//     setTrigger(!trigger);
+//     massTotal[nomer].have = true;
 //   };
 
-//   let dat = massroute.vertexes[props.idxA].lin;
-//   if (mode) dat = massroute.vertexes[props.idxB].lout;
+//   let dat: Array<number> = [];
+//   for (let i = 0; i < kolFazFrom; i++) dat.push(i + 1);
 //   let massKey = [];
 //   let massDat: any[] = [];
 //   const currencies: any = [];
@@ -438,8 +494,7 @@ export default MapRouteBind;
 //     currencies.push(maskCurrencies);
 //   }
 
-//   const [currency, setCurrency] = React.useState(massBind[mode]);
-//   const [trigger, setTrigger] = React.useState(true);
+//   const [currency, setCurrency] = React.useState(0);
 
 //   return (
 //     <Box sx={styleSetNapr}>
@@ -450,7 +505,7 @@ export default MapRouteBind;
 //           onKeyPress={handleKey} //отключение Enter
 //           value={currency}
 //           onChange={handleChange}
-//           InputProps={{ disableUnderline: true, style: { fontSize: 14 } }}
+//           InputProps={{ disableUnderline: true, style: { fontSize: 12 } }}
 //           variant="standard"
 //           color="secondary"
 //         >
@@ -468,5 +523,3 @@ export default MapRouteBind;
 //     </Box>
 //   );
 // };
-
-//const InputDirectMass = (mode: number) => {};

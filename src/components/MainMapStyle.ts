@@ -52,8 +52,6 @@ export const styleSetInf = {
   p: 1.5,
 };
 
-
-
 //=== MapGl =====================================================
 
 export const styleSetPoint = {
@@ -212,10 +210,8 @@ export const styleSetNapr = {
   maxHeight: "1px",
   minHeight: "1px",
   marginTop: "1px",
-  //bgcolor: "#FAFAFA",
   bgcolor: "#FFFBE5",
   boxShadow: 3,
-  //textAlign: "center",
   marginLeft: "auto",
   p: 1.5,
 };
@@ -228,18 +224,13 @@ export const styleBoxFormNapr = {
   },
 };
 
-// export const styleBind01 = {
-//   opacity: 0.7,
-//   textAlign: "right",
-// };
-
 export const styleSetImg = {
-    bgcolor: "background.paper",
-    border: "1px solid #000",
-    borderColor: "primary.main",
-    borderRadius: 1,
-    boxShadow: 24,
-  };
+  bgcolor: "background.paper",
+  border: "1px solid #000",
+  borderColor: "primary.main",
+  borderRadius: 1.5,
+  boxShadow: 24,
+};
 
 export const styleAppBind = {
   fontSize: 14,
@@ -254,6 +245,22 @@ export const styleAppBind = {
   textTransform: "unset !important",
 };
 
+export const styleModalEndBind = {
+  position: "absolute",
+  top: "0%",
+  left: "auto",
+  right: -6,
+  height: "21px",
+  maxWidth: "2%",
+  minWidth: "2%",
+  color: "black",
+};
+
+// export const styleBind01 = {
+//   opacity: 0.7,
+//   textAlign: "right",
+// };
+
 export const styleBind02 = {
   fontSize: 33,
   marginTop: -1,
@@ -261,28 +268,12 @@ export const styleBind02 = {
   color: "#5B1080",
 };
 
-export const styleModalEndBind = {
-  position: "absolute",
-  top: "3%",
-  left: "auto",
-  //right: "0.3%",
-  right: 3,
-  //marginLeft: "auto",
-  //marginRight: 1,
-  height: "21px",
-  maxWidth: "2%",
-  minWidth: "2%",
-  color: "black",
-};
-
 export const styleBind03 = {
   height: "2vh",
   lineHeight: "1.8vh",
   textAlign: "center",
-  //borderLeft: 1,
-  //borderTop: 1,
-  //borderRadiusTop: 2,
-  //borderColor: "#C0E2C3",
+  borderTopLeftRadius: 6,
+  borderTopRightRadius: 6,
   bgcolor: "#C0E2C3",
 };
 
@@ -293,28 +284,25 @@ export const styleBind033 = {
   bgcolor: "#C0E2C3",
 };
 
-// export const styleBind04 = {
-//   fontSize: 12,
-//   //marginRight: 0.1,
-//   border: "2px solid #000",
-//   bgcolor: "#E6F5D6",
-//   maxWidth: "10px",
-//   minWidth: "10px",
-//   maxHeight: "21px",
-//   minHeight: "21px",
-//   borderColor: "#E6F5D6",
-//   borderRadius: 1,
-//   color: "black",
-//   //textTransform: "unset !important",
-// };
+export const styleBind04 = {
+  fontSize: 12,
+  border: "2px solid #000",
+  bgcolor: "#E6F5D6",
+  maxWidth: 12,
+  minWidth: 12,
+  maxHeight: "21px",
+  minHeight: "21px",
+  borderColor: "#E6F5D6",
+  borderRadius: 1,
+  color: "black",
+  textTransform: "unset !important",
+};
 
 export const styleBind05 = {
   fontSize: 12,
-  //marginRight: 0.1,
   border: "2px solid #000",
   bgcolor: "#E6F5D6",
   width: 150,
-  //minWidth: "10px",
   maxHeight: "21px",
   minHeight: "21px",
   borderColor: "#E6F5D6",

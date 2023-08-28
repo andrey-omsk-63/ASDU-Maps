@@ -999,3 +999,11 @@ export const HeaderTablBindContent = (xss: number, soob: string) => {
     </Grid>
   );
 };
+
+export const ArgTablBindContent = (xss: number, soob: any) => {
+  return (
+    <Grid item xs={xss} sx={{ lineHeight: "3vh", textAlign: "center" }}>
+      {soob}
+    </Grid>
+  );
+};
