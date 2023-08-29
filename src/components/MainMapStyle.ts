@@ -247,7 +247,7 @@ export const styleAppBind = {
 
 export const styleModalEndBind = {
   position: "absolute",
-  top: "0%",
+  top: "-0.5%",
   left: "auto",
   right: -6,
   height: "21px",

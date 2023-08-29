@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
@@ -20,8 +22,9 @@ import { Pointer, Router } from "./../App";
 import { Vertex } from "./../interfaceRoute";
 
 import { styleModalMenu, styleModalEndMapGl } from "./MainMapStyle";
-import { styleInpKnop } from "./MainMapStyle";
+import { styleInpKnop, styleBind05 } from "./MainMapStyle";
 import { styleBind02, styleTypography, searchControl } from "./MainMapStyle";
+import { styleBind03, styleBind033, styleSetImg } from "./MainMapStyle";
 
 const handleKey = (event: any) => {
   if (event.key === "Enter") event.preventDefault();
@@ -1004,6 +1007,195 @@ export const ArgTablBindContent = (xss: number, soob: any) => {
   return (
     <Grid item xs={xss} sx={{ lineHeight: "3vh", textAlign: "center" }}>
       {soob}
+    </Grid>
+  );
+};
+
+export const ExampleComponent = (idx: number, masSvg: any) => {
+  return (
+    <div>
+      <div dangerouslySetInnerHTML={{ __html: masSvg[idx] }} />
+    </div>
+  );
+};
+
+export function AppIconAsdu(heightImg: number) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={heightImg - 10}
+      height={heightImg - 10}
+      version="1"
+      viewBox="0 0 91 54"
+    >
+      <path
+        d="M425 513C81 440-106 190 91 68 266-41 640 15 819 176c154 139 110 292-98 341-73 17-208 15-296-4zm270-14c208-38 257-178 108-308C676 79 413 8 240 40 29 78-30 199 100 329c131 131 396 207 595 170z"
+        transform="matrix(.1 0 0 -.1 0 54)"
+      ></path>
+      <path
+        d="M425 451c-11-18-5-20 74-30 108-14 157-56 154-133-2-52-41-120-73-129-44-12-110-10-110 4 1 6 7 62 14 122 7 61 12 113 10 117-4 6-150 1-191-8-45-9-61-40-74-150-10-90-14-104-30-104-12 0-19-7-19-20 0-11 7-20 15-20s15-7 15-15c0-11 11-15 35-15 22 0 38 6 41 15 4 9 19 15 35 15 22 0 29 5 29 20s-7 20-25 20c-29 0-31 10-14 127 12 82 31 113 71 113 18 0 20-5 15-42-4-24-9-74-12-113-3-38-8-87-11-107l-6-38h46c34 0 46 4 46 15s12 15 48 15c97 0 195 47 227 110 59 115-44 225-223 237-56 4-81 2-87-6z"
+        transform="matrix(.1 0 0 -.1 0 54)"
+      ></path>
+    </svg>
+  );
+}
+
+export const HeaderBind = (
+  nameA: string,
+  nameB: string,
+  Route: any,
+  heightImg: number,
+  masSvg: any,
+  haveSvgA: boolean,
+  haveSvgB: boolean
+) => {
+  return (
+    <Grid container sx={{ marginTop: "1vh", height: heightImg }}>
+      <Grid item xs={0.25}></Grid>
+      {!haveSvgA && <Grid item xs={2}></Grid>}
+      {haveSvgA && (
+        <Grid item xs={2} sx={styleSetImg}>
+          {masSvg[0] === "" && <>{AppIconAsdu(heightImg)}</>}
+          {masSvg[0] !== "" && <>{ExampleComponent(0, masSvg)}</>}
+        </Grid>
+      )}
+      {HeaderBindMiddle(Route, nameA, nameB)}
+      {haveSvgB && (
+        <Grid item xs={2} sx={styleSetImg}>
+          {masSvg[1] === "" && <>{AppIconAsdu(heightImg)}</>}
+          {masSvg[1] !== "" && <>{ExampleComponent(1, masSvg)}</>}
+        </Grid>
+      )}
+      <Grid item xs={0.25}></Grid>
+    </Grid>
+  );
+};
+
+export const StrTablFrom = (
+  kolFazFrom: number,
+  nameRoute: string,
+  hClTabFrom: Function,
+  InputPr: Function
+) => {
+  let resStr = [];
+  for (let i = 0; i < kolFazFrom; i++) {
+    let nr = nameRoute + (i + 1).toString();
+    resStr.push(
+      <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
+        {ArgTablBindContent(1, i + 1)}
+        {ArgTablBindContent(4, nr)}
+        <Grid item xs={3} sx={{ display: "grid", justifyContent: "center" }}>
+          {InputPr(i)}
+        </Grid>
+        <Grid item xs={4} sx={{ ineHeight: "3vh", textAlign: "center" }}>
+          <Button sx={styleBind05} onClick={() => hClTabFrom(i)}>
+            просмотр/изменение
+          </Button>
+        </Grid>
+      </Grid>
+    );
+  }
+  return resStr;
+};
+
+export const BindInput = (massBind: any, mode: number, SetMass: Function) => {
+  const [value, setValue] = React.useState(massBind[mode]);
+  const styleSetID = {
+    width: "12px",
+    maxHeight: "3px",
+    minHeight: "3px",
+    bgcolor: "#FAFAFA",
+    boxShadow: 3,
+    textAlign: "center",
+    p: 1.5,
+  };
+
+  const styleBoxFormID = {
+    "& > :not(style)": {
+      marginTop: "-9px",
+      marginLeft: "-12px",
+      width: "35px",
+    },
+  };
+
+  const handleChange = (event: any) => {
+    let valueInp = event.target.value.replace(/^0+/, "");
+    if (Number(valueInp) < 0) valueInp = 0;
+    if (valueInp === "") valueInp = 0;
+    valueInp = Math.trunc(Number(valueInp));
+    if (valueInp < 100) {
+      setValue(valueInp.toString());
+      SetMass(mode, valueInp);
+    }
+  };
+
+  return (
+    <Box sx={styleSetID}>
+      <Box component="form" sx={styleBoxFormID}>
+        <TextField
+          size="small"
+          onKeyPress={handleKey} //отключение Enter
+          type="number"
+          InputProps={{
+            disableUnderline: true,
+            style: { fontSize: 13.3, backgroundColor: "#FFFBE5" },
+          }}
+          value={value}
+          onChange={handleChange}
+          variant="standard"
+          color="secondary"
+        />
+      </Box>
+    </Box>
+  );
+};
+
+export const BindTablFrom = (
+  kolFazFrom: number,
+  nameRoute: string,
+  hClTabFrom: Function,
+  Inputer: Function,
+  massPrFrom: any,
+  SetMass: Function
+) => {
+  const StrTablFrom = () => {
+    let resStr = [];
+    for (let i = 0; i < kolFazFrom; i++) {
+      let nr = nameRoute + (i + 1).toString();
+      resStr.push(
+        <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
+          {ArgTablBindContent(1, i + 1)}
+          {ArgTablBindContent(4, nr)}
+          <Grid item xs={3} sx={{ display: "grid", justifyContent: "center" }}>
+            {Inputer(massPrFrom, i, SetMass)}
+          </Grid>
+          <Grid item xs={4} sx={{ ineHeight: "3vh", textAlign: "center" }}>
+            <Button sx={styleBind05} onClick={() => hClTabFrom(i)}>
+              просмотр/изменение
+            </Button>
+          </Grid>
+        </Grid>
+      );
+    }
+    return resStr;
+  };
+
+  return (
+    <Grid item xs={5.5} sx={styleSetImg}>
+      <Box sx={styleBind03}>
+        <em>Исходящие направления</em>
+      </Box>
+      <Box sx={styleBind033}>
+        <Grid container item xs={12}>
+          {HeaderTablBindContent(1, "№")}
+          {HeaderTablBindContent(4, "Наименование")}
+          {HeaderTablBindContent(3, "Интенсивность(%)")}
+          {HeaderTablBindContent(4, "Свойства")}
+        </Grid>
+      </Box>
+      <Grid container sx={{ height: "24vh" }}>
+        {StrTablFrom()}
+      </Grid>
     </Grid>
   );
 };

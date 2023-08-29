@@ -11,8 +11,9 @@ import Modal from "@mui/material/Modal";
 import MapRouteBindFormFrom from "./MapRouteBindFormFrom";
 
 import { StrokaMenuFooterBind } from "./../MapServiceFunctions";
-import { HeaderBindMiddle, ArgTablBindContent } from "./../MapServiceFunctions";
-import { HeaderTablBindContent } from "./../MapServiceFunctions";
+import { HeaderBind, BindInput } from "./../MapServiceFunctions";
+import { ArgTablBindContent } from "./../MapServiceFunctions";
+import { HeaderTablBindContent, BindTablFrom } from "./../MapServiceFunctions";
 
 import { styleSetImg, styleModalEndBind } from "./../MainMapStyle";
 import { styleBind03, styleBind033 } from "./../MainMapStyle";
@@ -20,12 +21,12 @@ import { styleBind04, styleBind05 } from "./../MainMapStyle";
 //import { styleSetNapr, styleBoxFormNapr } from "./../MainMapStyle";
 
 let massBind = [0, 0];
-let haveSvgA = true;
-let haveSvgB = true;
+let SvgA = true;
+let SvgB = true;
 let masSvg = ["", ""];
 
-let kolFazFrom = 7;
-let kolFazIn = 4;
+let kolFrom = 7;
+let kolIn = 4;
 let massFazFrom: Array<number> = [];
 let massFazIn: Array<number> = [];
 let oldIdxA = -1;
@@ -33,6 +34,10 @@ let oldIdxB = -1;
 let idxFrom = -1;
 let massTotal: any = [];
 let beginMassTotal = 0;
+
+let massFrom: Array<number> = [];
+let massIn: Array<number> = [];
+let massTotPr: Array<number> = [];
 
 const MapRouteBind = (props: {
   setOpen: any;
@@ -43,8 +48,6 @@ const MapRouteBind = (props: {
   reqRoute: any;
   func: any;
 }) => {
-  console.log("MapRouteBind:", props.reqRoute);
-
   //== Piece of Redux ======================================
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
@@ -54,6 +57,10 @@ const MapRouteBind = (props: {
   const [openSetBind, setOpenSetBind] = React.useState(true);
   const [openFormFrom, setOpenFormFrom] = React.useState(false);
   const [trigger, setTrigger] = React.useState(false);
+
+  const nameA = massroute.vertexes[props.idxA].name;
+  const nameB = massroute.vertexes[props.idxB].name;
+  const Route = props.reqRoute;
 
   let heightImg = Math.round(window.innerWidth / 7);
   let widthHeight = heightImg.toString();
@@ -88,30 +95,25 @@ const MapRouteBind = (props: {
     oldIdxB = props.idxB;
     masSvg = ["", ""];
     massFazFrom = [];
-    for (let i = 0; i < kolFazFrom; i++) massFazFrom.push(-1);
-    for (let i = 0; i < kolFazIn; i++) massFazIn.push(-1);
-    if (props.svg) {
-      let dat = props.svg;
-      masSvg = [];
-      for (let key in dat) masSvg.push(dat[key]);
-    }
-    haveSvgA = true;
-    haveSvgB = true;
+    for (let i = 0; i < kolFrom; i++) massFazFrom.push(-1);
+    for (let i = 0; i < kolIn; i++) massFazIn.push(-1);
+    SvgA = true;
+    SvgB = true;
     if (!massroute.vertexes[props.idxA].area) {
-      haveSvgA = false;
+      SvgA = false;
       massBind[0] = 0;
     }
     if (!massroute.vertexes[props.idxB].area) {
-      haveSvgB = false;
+      SvgB = false;
       massBind[1] = 0;
     }
-    if (masSvg[0] !== "") masSvg[0] = ReplaceInSvg(0);
-    if (masSvg[1] !== "") masSvg[1] = ReplaceInSvg(1);
+    massFrom = [0, 0, 0, 0, 0, 0, 0];
+    massIn = [0, 0, 0, 0, 0, 0, 0];
+    massTotPr = [];
     massTotal = [];
-
     let nom = 1;
-    for (let j = 0; j < kolFazIn; j++) {
-      for (let i = 0; i < kolFazFrom; i++) {
+    for (let j = 0; j < kolIn; j++) {
+      for (let i = 0; i < kolFrom; i++) {
         let nameFrom = ("00" + massroute.vertexes[props.idxA].id).slice(-3);
         nameFrom += (i + 1).toString();
         let nameIn = ("00" + massroute.vertexes[props.idxB].id).slice(-3);
@@ -119,15 +121,24 @@ const MapRouteBind = (props: {
         let maskTotal: any = {
           have: false,
           nom: nom++,
-          name: nameFrom + "/" + nameIn,
+          name: nameIn + "/" + nameFrom,
           intensTr: 0,
           intensPr: 0,
           time: 0,
         };
         massTotal.push(maskTotal);
+        massTotPr.push(0);
       }
     }
-    console.log("MapRouteBind: ИНИЦИАЛИЗАЦИЯ", massTotal);
+    console.log("MapRouteBind: ИНИЦИАЛИЗАЦИЯ", massTotPr);
+  }
+
+  if (props.svg && masSvg[0] === "" && masSvg[1] === "") {
+    let dat = props.svg;
+    masSvg = [];
+    for (let key in dat) masSvg.push(dat[key]);
+    if (masSvg[0] !== "") masSvg[0] = ReplaceInSvg(0);
+    if (masSvg[1] !== "") masSvg[1] = ReplaceInSvg(1);
   }
   //========================================================
 
@@ -154,72 +165,16 @@ const MapRouteBind = (props: {
     if (mode && typeof mode === "number") props.func(false, massBind);
   };
 
-  const ExampleComponent = (idx: number) => {
-    return (
-      <div>
-        <div dangerouslySetInnerHTML={{ __html: masSvg[idx] }} />
-      </div>
-    );
-  };
-
-  function AppIconAsdu() {
-    return (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width={heightImg - 10}
-        height={heightImg - 10}
-        version="1"
-        viewBox="0 0 91 54"
-      >
-        <path
-          d="M425 513C81 440-106 190 91 68 266-41 640 15 819 176c154 139 110 292-98 341-73 17-208 15-296-4zm270-14c208-38 257-178 108-308C676 79 413 8 240 40 29 78-30 199 100 329c131 131 396 207 595 170z"
-          transform="matrix(.1 0 0 -.1 0 54)"
-        ></path>
-        <path
-          d="M425 451c-11-18-5-20 74-30 108-14 157-56 154-133-2-52-41-120-73-129-44-12-110-10-110 4 1 6 7 62 14 122 7 61 12 113 10 117-4 6-150 1-191-8-45-9-61-40-74-150-10-90-14-104-30-104-12 0-19-7-19-20 0-11 7-20 15-20s15-7 15-15c0-11 11-15 35-15 22 0 38 6 41 15 4 9 19 15 35 15 22 0 29 5 29 20s-7 20-25 20c-29 0-31 10-14 127 12 82 31 113 71 113 18 0 20-5 15-42-4-24-9-74-12-113-3-38-8-87-11-107l-6-38h46c34 0 46 4 46 15s12 15 48 15c97 0 195 47 227 110 59 115-44 225-223 237-56 4-81 2-87-6z"
-          transform="matrix(.1 0 0 -.1 0 54)"
-        ></path>
-      </svg>
-    );
-  }
-
-  const HeaderBind = () => {
-    let nameA = massroute.vertexes[props.idxA].name;
-    let nameB = massroute.vertexes[props.idxB].name;
-    return (
-      <Grid container sx={{ marginTop: "1vh", height: heightImg }}>
-        <Grid item xs={0.25}></Grid>
-        {!haveSvgA && <Grid item xs={2}></Grid>}
-        {haveSvgA && (
-          <Grid item xs={2} sx={styleSetImg}>
-            {masSvg[0] === "" && <>{AppIconAsdu()}</>}
-            {masSvg[0] !== "" && <>{ExampleComponent(0)}</>}
-          </Grid>
-        )}
-        {HeaderBindMiddle(props.reqRoute, nameA, nameB)}
-        {haveSvgB && (
-          <Grid item xs={2} sx={styleSetImg}>
-            {masSvg[1] === "" && <>{AppIconAsdu()}</>}
-            {masSvg[1] !== "" && <>{ExampleComponent(1)}</>}
-          </Grid>
-        )}
-        <Grid item xs={0.25}></Grid>
-      </Grid>
-    );
-  };
-
   const FooterBind = () => {
-    let have = 0
+    let have = 0;
     for (let i = 0; i < massTotal.length; i++) {
-      if (massTotal[i].have) have++
+      if (massTotal[i].have) have++;
     }
     return (
       <Grid container sx={{ marginTop: "1vh", height: 27, width: "100%" }}>
         <Grid item xs={4.5}></Grid>
         <Grid item xs={3} sx={{ border: 0 }}>
-          {(massBind[0] && massBind[1]) ||
-          (!haveSvgA && massBind[1]) ||
-          (!haveSvgB && massBind[0]) ? (
+          {have ? (
             <Box sx={{ textAlign: "center" }}>
               {StrokaMenuFooterBind("Отмена", 0, handleClose)}
               {StrokaMenuFooterBind("Привязываем", 1, handleClose)}
@@ -230,62 +185,19 @@ const MapRouteBind = (props: {
             </Box>
           )}
         </Grid>
-        {!haveSvgB && <Grid item xs={4}></Grid>}
+        {!SvgB && <Grid item xs={4}></Grid>}
       </Grid>
     );
   };
 
-  const handleCloseTabFrom = (idx: number) => {
+  const hClFrom = (idx: number) => {
     console.log("Переход в форму просмотра", idx);
     idxFrom = idx;
     setOpenFormFrom(true);
   };
 
-  const StrokaTablFrom = () => {
-    let resStr = [];
-    let nameRoute = "00" + massroute.vertexes[props.idxA].id;
-    nameRoute = nameRoute.slice(-3);
-    for (let i = 0; i < kolFazFrom; i++) {
-      let nr = nameRoute + (i + 1).toString();
-      resStr.push(
-        <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
-          {ArgTablBindContent(1, i + 1)}
-          {ArgTablBindContent(4, nr)}
-          {ArgTablBindContent(3, 0)}
-          <Grid item xs={4} sx={{ ineHeight: "3vh", textAlign: "center" }}>
-            <Button sx={styleBind05} onClick={() => handleCloseTabFrom(i)}>
-              просмотр/изменение
-            </Button>
-          </Grid>
-        </Grid>
-      );
-    }
-    return resStr;
-  };
-
-  const TablFrom = () => {
-    return (
-      <Grid item xs={5.5} sx={styleSetImg}>
-        <Box sx={styleBind03}>
-          <em>Исходящие направления</em>
-        </Box>
-        <Box sx={styleBind033}>
-          <Grid container item xs={12}>
-            {HeaderTablBindContent(1, "№")}
-            {HeaderTablBindContent(4, "Наименование")}
-            {HeaderTablBindContent(3, "Интенсивность(%)")}
-            {HeaderTablBindContent(4, "Свойства")}
-          </Grid>
-        </Box>
-        <Grid container sx={{ height: "24vh" }}>
-          {StrokaTablFrom()}
-        </Grid>
-      </Grid>
-    );
-  };
-
   const handleCloseIn = (i: number) => {
-    beginMassTotal = i * kolFazFrom;
+    beginMassTotal = i * kolFrom;
     setTrigger(!trigger);
   };
 
@@ -293,7 +205,7 @@ const MapRouteBind = (props: {
     let resStr = [];
     let nameRoute = "00" + massroute.vertexes[props.idxB].id;
     nameRoute = nameRoute.slice(-3);
-    for (let i = 0; i < kolFazIn; i++) {
+    for (let i = 0; i < kolIn; i++) {
       let nr = nameRoute + (i + 1).toString();
       resStr.push(
         <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
@@ -303,9 +215,11 @@ const MapRouteBind = (props: {
             </Button>
           </Grid>
           {ArgTablBindContent(4, nr)}
-          {ArgTablBindContent(3, 0)}
+          <Grid item xs={3} sx={{ display: "grid", justifyContent: "center" }}>
+            {BindInput(massIn, i, SetIn)}
+          </Grid>
           <Grid item xs sx={{ lineHeight: "3vh", textAlign: "center" }}>
-            <Button sx={styleBind05} onClick={() => handleCloseTabFrom(i)}>
+            <Button sx={styleBind05} onClick={() => hClFrom(i)}>
               просмотр/изменение
             </Button>
           </Grid>
@@ -315,7 +229,7 @@ const MapRouteBind = (props: {
     return resStr;
   };
 
-  const TablIn = () => {
+  const BindTablIn = () => {
     return (
       <Grid item xs sx={styleSetImg}>
         <Box sx={styleBind03}>
@@ -339,7 +253,7 @@ const MapRouteBind = (props: {
   const handleCloseTotal = (idx: number) => {
     massTotal[idx].have = !massTotal[idx].have;
     setTrigger(!trigger);
-  }
+  };
 
   const TablTotalContent = (idx: number) => {
     let i = beginMassTotal + idx;
@@ -357,12 +271,22 @@ const MapRouteBind = (props: {
         <Grid item xs={2.5} sx={{ lineHeight: "3vh", textAlign: "center" }}>
           {massTotal[i].name}
         </Grid>
-        <Grid item xs={2.5} sx={{ lineHeight: "3vh", textAlign: "center" }}>
+        <Grid item xs={3} sx={{ lineHeight: "3vh", textAlign: "center" }}>
           {massTotal[i].intensTr}
         </Grid>
-        <Grid item xs={2.5} sx={{ lineHeight: "3vh", textAlign: "center" }}>
+
+        {/* <Grid item xs={2.5} sx={{ display: "grid", justifyContent: "center" }}>
+          {massTotal[i].have && <>{BindInput(massTotPr, i, SetTotPr)}</>}
+        </Grid> */}
+
+        {/* <Grid item xs={2.5} sx={{ lineHeight: "3vh", textAlign: "center" }}>
           {massTotal[i].intensPr}
+        </Grid> */}
+
+        <Grid item xs={2.5} sx={{ display: "grid", justifyContent: "center" }}>
+          {BindInput(massTotPr, i, SetTotPr)}
         </Grid>
+
         <Grid item xs={2.5} sx={{ lineHeight: "3vh", textAlign: "center" }}>
           {massTotal[i].time}
         </Grid>
@@ -372,23 +296,7 @@ const MapRouteBind = (props: {
 
   const StrokaTablTotal = () => {
     let resStr: any = [];
-    // let nom = 0;
-    // for (let i = 0; i < kolFazFrom; i++) {
-    //   for (let j = 0; j < kolFazIn; j++) {
-    //     let nameFrom = ("00" + massroute.vertexes[props.idxA].id).slice(-3);
-    //     nameFrom += (i + 1).toString();
-    //     let nameIn = ("00" + massroute.vertexes[props.idxB].id).slice(-3);
-    //     nameIn += (j + 1).toString();
-    //     let nameRoute = nameFrom + "/" + nameIn;
-    //     resStr.push(
-    //       <Grid key={nom} container item xs={12} sx={{ fontSize: 14 }}>
-    //         {TablTotalContent(nom, nameRoute)}
-    //       </Grid>
-    //     );
-    //     nom++;
-    //   }
-    // }
-    for (let i = 0; i < kolFazFrom; i++) {
+    for (let i = 0; i < kolFrom; i++) {
       resStr.push(
         <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
           {TablTotalContent(i)}
@@ -421,6 +329,21 @@ const MapRouteBind = (props: {
     );
   };
 
+  const SetFrom = (mode: number, valueInp: number) => {
+    massFrom[mode] = valueInp;
+  };
+
+  const SetIn = (mode: number, valueInp: number) => {
+    massIn[mode] = valueInp;
+  };
+
+  const SetTotPr = (mode: number, valueInp: number) => {
+    massTotPr[mode] = valueInp;
+    massTotal[mode].intensPr = valueInp;
+  };
+
+  let From = ("00" + massroute.vertexes[props.idxA].id).slice(-3);
+
   return (
     <Modal open={openSetBind} onClose={handleClose}>
       <>
@@ -428,11 +351,11 @@ const MapRouteBind = (props: {
           <Button sx={styleModalEndBind} onClick={() => handleClose(0)}>
             <b>&#10006;</b>
           </Button>
-          {HeaderBind()}
+          {HeaderBind(nameA, nameB, Route, heightImg, masSvg, SvgA, SvgB)}
           <Grid container sx={{ marginTop: "1vh", height: "28vh" }}>
-            {TablFrom()}
+            {BindTablFrom(kolFrom, From, hClFrom, BindInput, massFrom, SetFrom)}
             <Grid item xs={1}></Grid>
-            {TablIn()}
+            {BindTablIn()}
           </Grid>
           <Grid container sx={{ marginTop: "1vh", height: "28vh" }}>
             <Grid item xs={2} sx={{ border: 0 }}></Grid>
