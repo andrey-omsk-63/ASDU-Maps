@@ -944,7 +944,7 @@ export const StrokaMenuFooterBind = (
 ) => {
   const styleAppBind = {
     fontSize: 14,
-    marginRight: 0.5,
+    marginRight: 1,
     border: "2px solid #000",
     bgcolor: "#E6F5D6",
     width: (soob.length + 9) * 7,
@@ -980,16 +980,22 @@ export const HeaderBindMiddle = (
       <Box sx={styleBind02}>
         <b>Привязка направлений</b>
       </Box>
-      <Box sx={{ p: 1, fontSize: 16, textAlign: "center" }}>
+      <Box sx={{ p: 0.5, marginTop: 1, fontSize: 16, textAlign: "center" }}>
         из <b>{nameA}</b>
       </Box>
-      <Box sx={{ p: 1, fontSize: 16, textAlign: "center" }}>
+      <Box sx={{ p: 0.5, fontSize: 16, textAlign: "center" }}>
         в <b>{nameB}</b>
       </Box>
-      <Box sx={{ p: 1, fontSize: 14, textAlign: "center" }}>
-        Длина связи: <b>{reqRoute.dlRoute}</b> м&nbsp;&nbsp;Время прохождения:{" "}
-        <b>{Math.round(sec / 60)} мин&nbsp;&nbsp;</b>Средняя скорость
-        прохождения: <b>{sRoute}</b> км/ч
+      <Box sx={{ p: 0.5, marginTop: 1, fontSize: 14, textAlign: "center" }}>
+        Длина связи: <b>{reqRoute.dlRoute}</b> м&nbsp;&nbsp;Время проезда:{" "}
+        <b>
+          {Math.round(sec / 60)} мин {"("}
+          {sec}
+          {" сек)"}
+        </b>
+      </Box>
+      <Box sx={{ p: 0.5, fontSize: 14, textAlign: "center" }}>
+        Средняя скорость проезда: <b>{sRoute}</b> км/ч
       </Box>
     </Grid>
   );
@@ -1098,14 +1104,20 @@ export const StrTablFrom = (
   return resStr;
 };
 
-export const BindInput = (massBind: any, mode: number, SetMass: Function) => {
+export const BindInput = (
+  massBind: any,
+  mode: number,
+  SetMass: Function,
+  pusto: number,
+  MAX: number
+) => {
   const [value, setValue] = React.useState(massBind[mode]);
   const styleSetID = {
-    width: "12px",
+    width: "26px",
     maxHeight: "3px",
     minHeight: "3px",
-    bgcolor: "#FAFAFA",
-    boxShadow: 3,
+    bgcolor: pusto ? "#FFFBE5" : "white",
+    boxShadow: pusto ? 3 : 0,
     textAlign: "center",
     p: 1.5,
   };
@@ -1114,7 +1126,7 @@ export const BindInput = (massBind: any, mode: number, SetMass: Function) => {
     "& > :not(style)": {
       marginTop: "-9px",
       marginLeft: "-12px",
-      width: "35px",
+      width: "50px",
     },
   };
 
@@ -1123,7 +1135,7 @@ export const BindInput = (massBind: any, mode: number, SetMass: Function) => {
     if (Number(valueInp) < 0) valueInp = 0;
     if (valueInp === "") valueInp = 0;
     valueInp = Math.trunc(Number(valueInp));
-    if (valueInp < 100) {
+    if (valueInp <= MAX) {
       setValue(valueInp.toString());
       SetMass(mode, valueInp);
     }
@@ -1131,21 +1143,23 @@ export const BindInput = (massBind: any, mode: number, SetMass: Function) => {
 
   return (
     <Box sx={styleSetID}>
-      <Box component="form" sx={styleBoxFormID}>
-        <TextField
-          size="small"
-          onKeyPress={handleKey} //отключение Enter
-          type="number"
-          InputProps={{
-            disableUnderline: true,
-            style: { fontSize: 13.3, backgroundColor: "#FFFBE5" },
-          }}
-          value={value}
-          onChange={handleChange}
-          variant="standard"
-          color="secondary"
-        />
-      </Box>
+      {pusto > 0 && (
+        <Box component="form" sx={styleBoxFormID}>
+          <TextField
+            size="small"
+            onKeyPress={handleKey} //отключение Enter
+            type="number"
+            InputProps={{
+              disableUnderline: true,
+              style: { fontSize: 13.3, backgroundColor: "#FFFBE5" },
+            }}
+            value={value}
+            onChange={handleChange}
+            variant="standard"
+            color="secondary"
+          />
+        </Box>
+      )}
     </Box>
   );
 };
@@ -1154,7 +1168,7 @@ export const BindTablFrom = (
   kolFazFrom: number,
   nameRoute: string,
   hClTabFrom: Function,
-  Inputer: Function,
+  BindInput: Function,
   massPrFrom: any,
   SetMass: Function
 ) => {
@@ -1165,9 +1179,9 @@ export const BindTablFrom = (
       resStr.push(
         <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
           {ArgTablBindContent(1, i + 1)}
-          {ArgTablBindContent(4, nr)}
-          <Grid item xs={3} sx={{ display: "grid", justifyContent: "center" }}>
-            {Inputer(massPrFrom, i, SetMass)}
+          {ArgTablBindContent(3, nr)}
+          <Grid item xs={4} sx={{ display: "grid", justifyContent: "center" }}>
+            {BindInput(massPrFrom, i, SetMass, 1, 10000)}
           </Grid>
           <Grid item xs={4} sx={{ ineHeight: "3vh", textAlign: "center" }}>
             <Button sx={styleBind05} onClick={() => hClTabFrom(i)}>
@@ -1188,8 +1202,8 @@ export const BindTablFrom = (
       <Box sx={styleBind033}>
         <Grid container item xs={12}>
           {HeaderTablBindContent(1, "№")}
-          {HeaderTablBindContent(4, "Наименование")}
-          {HeaderTablBindContent(3, "Интенсивность(%)")}
+          {HeaderTablBindContent(3, "Наименование")}
+          {HeaderTablBindContent(4, "Интенсивность(т.е./ч)")}
           {HeaderTablBindContent(4, "Свойства")}
         </Grid>
       </Box>

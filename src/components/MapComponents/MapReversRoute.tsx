@@ -46,7 +46,7 @@ const MapReversRoute = (props: {
   };
 
   return (
-    <Modal open={openSetEr} onClose={handleCloseSetEnd} hideBackdrop>
+    <Modal open={openSetEr} onClose={handleCloseSetEnd}>
       <Box sx={styleSetInf}>
         <Button sx={styleModalEnd} onClick={() => handleClose(0)}>
           <b>&#10006;</b>

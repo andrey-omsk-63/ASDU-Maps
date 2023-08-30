@@ -256,14 +256,14 @@ export const styleModalEndBind = {
   color: "black",
 };
 
-// export const styleBind01 = {
-//   opacity: 0.7,
-//   textAlign: "right",
-// };
+export const styleBind01 = {
+  display: "grid",
+  justifyContent: "center",
+};
 
 export const styleBind02 = {
   fontSize: 33,
-  marginTop: -1,
+  marginTop: -1.5,
   textAlign: "center",
   color: "#5B1080",
 };

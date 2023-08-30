@@ -86,6 +86,7 @@ let MODE = "0";
 let idxDel: number, nomRoute: number, idxRoute: number, pointAaIndex: number;
 let indexPoint: number, pointBbIndex: number;
 idxDel = nomRoute = idxRoute = indexPoint = pointAaIndex = pointBbIndex = -1;
+let oldPropsSvg: any = null;
 
 const MainMap = (props: {
   ws: WebSocket;
@@ -180,6 +181,7 @@ const MainMap = (props: {
   };
 
   const MakeRecordMassRoute = (mode: boolean, mass: any) => {
+    console.log("MakeRecordMassRoute:", mode, mass);
     let aRou = reqRoute;
     fromCross.pointAcod = CodingCoord(pointAa);
     toCross.pointBcod = CodingCoord(pointBb);
@@ -334,7 +336,7 @@ const MainMap = (props: {
     for (let i = 0; i < massRoute.length; i++) {
       massPolyRoute[i] = new ymaps.Polyline(
         [DecodingCoord(massRoute[i].starts), DecodingCoord(massRoute[i].stops)],
-        { balloonContent: "Формальная связь" },
+        { hintContent: "Формальная связь" },
         getMassPolyRouteOptions()
       );
       mapp.current.geoObjects.add(massPolyRoute[i]);
@@ -478,7 +480,7 @@ const MainMap = (props: {
         case 4: // Редактирование адреса
           setOpenSetAdress(true);
       }
-      setOpenSet(false)
+      setOpenSet(false);
     };
 
     return (
@@ -681,11 +683,18 @@ const MainMap = (props: {
     oldsErr = props.sErr;
   }
   masSvg = ["", ""];
-  if (!debugging)
-    if (props.svg) {
-      masSvg[0] = props.svg[RecevKeySvg(massroute.vertexes[pointAaIndex])];
-      masSvg[1] = props.svg[RecevKeySvg(massroute.vertexes[pointBbIndex])];
+  if (!debugging) {
+    if (props.svg !== oldPropsSvg) {
+      oldPropsSvg = props.svg
+      if (props.svg && pointAaIndex >= 0 && pointBbIndex >= 0) {
+        masSvg[0] = props.svg[RecevKeySvg(massroute.vertexes[pointAaIndex])];
+        masSvg[1] = props.svg[RecevKeySvg(massroute.vertexes[pointBbIndex])];
+      }
     }
+  }
+  if (openSetBind && pointAaIndex < 0 && pointBbIndex < 0)
+    setOpenSetBind(false); // отработка Esc из RouteBind
+
   //=== обработка Esc ======================================
   const escFunction = React.useCallback(
     (event) => {
@@ -769,7 +778,7 @@ const MainMap = (props: {
                 needLinkBind={needLinkBind}
               />
             )}
-            {openSetBind && (
+            {openSetBind && pointAaIndex >= 0 && pointBbIndex >= 0 && (
               <MapRouteBind
                 setOpen={setOpenSetBind}
                 svg={masSvg}

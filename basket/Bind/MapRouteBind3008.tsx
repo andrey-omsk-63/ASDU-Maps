@@ -17,7 +17,7 @@ import { HeaderTablBindContent, BindTablFrom } from "./../MapServiceFunctions";
 
 import { styleSetImg, styleModalEndBind } from "./../MainMapStyle";
 import { styleBind03, styleBind033 } from "./../MainMapStyle";
-import { styleBind01, styleBind04, styleBind05 } from "./../MainMapStyle";
+import { styleBind04, styleBind05 } from "./../MainMapStyle";
 //import { styleSetNapr, styleBoxFormNapr } from "./../MainMapStyle";
 
 let massBind = [0, 0];
@@ -38,13 +38,6 @@ let beginMassTotal = 0;
 let massFrom: Array<number> = [];
 let massIn: Array<number> = [];
 let massTotPr: Array<number> = [];
-let massTotTr: Array<number> = [];
-let massTotTm: Array<number> = [];
-
-let nameA = "";
-let nameB = "";
-let Route: any = null;
-let From = "";
 
 const MapRouteBind = (props: {
   setOpen: any;
@@ -65,24 +58,9 @@ const MapRouteBind = (props: {
   const [openFormFrom, setOpenFormFrom] = React.useState(false);
   const [trigger, setTrigger] = React.useState(false);
 
-  const handleClose = (mode: number) => {
-    console.log("handleClose:", mode);
-    oldIdxA = -1;
-    oldIdxB = -1;
-    props.setOpen(false);
-    setOpenSetBind(false);
-    props.setSvg(null);
-    if (mode && typeof mode === "number") props.func(false, massBind);
-  };
-
-  if (props.idxA < 0 && props.idxA < 0) {
-    console.log("Косяк!!!");
-  } else {
-    nameA = massroute.vertexes[props.idxA].name;
-    nameB = massroute.vertexes[props.idxB].name;
-    Route = props.reqRoute;
-    From = ("00" + massroute.vertexes[props.idxA].id).slice(-3);
-  }
+  const nameA = massroute.vertexes[props.idxA].name;
+  const nameB = massroute.vertexes[props.idxB].name;
+  const Route = props.reqRoute;
 
   let heightImg = Math.round(window.innerWidth / 7);
   let widthHeight = heightImg.toString();
@@ -132,8 +110,6 @@ const MapRouteBind = (props: {
     massFrom = [0, 0, 0, 0, 0, 0, 0];
     massIn = [0, 0, 0, 0, 0, 0, 0];
     massTotPr = [];
-    massTotTr = [];
-    massTotTm = [];
     massTotal = [];
     let nom = 1;
     for (let j = 0; j < kolIn; j++) {
@@ -152,8 +128,6 @@ const MapRouteBind = (props: {
         };
         massTotal.push(maskTotal);
         massTotPr.push(0);
-        massTotTr.push(0);
-        massTotTm.push(0);
       }
     }
     console.log("MapRouteBind: ИНИЦИАЛИЗАЦИЯ", massTotPr);
@@ -178,8 +152,17 @@ const MapRouteBind = (props: {
     borderColor: "#F0F0F0",
     borderRadius: 2,
     width: "98%",
-    height: heightImg + window.innerHeight * 0.645,
+    height: heightImg + window.innerHeight * 0.63,
     bgcolor: "#F0F0F0",
+  };
+
+  const handleClose = (mode: number) => {
+    oldIdxA = -1;
+    oldIdxB = -1;
+    props.setOpen(false);
+    setOpenSetBind(false);
+    props.setSvg(null);
+    if (mode && typeof mode === "number") props.func(false, massBind);
   };
 
   const FooterBind = () => {
@@ -188,7 +171,7 @@ const MapRouteBind = (props: {
       if (massTotal[i].have) have++;
     }
     return (
-      <Grid container sx={{ marginTop: "2vh", height: 27, width: "100%" }}>
+      <Grid container sx={{ marginTop: "1vh", height: 27, width: "100%" }}>
         <Grid item xs={4.5}></Grid>
         <Grid item xs={3} sx={{ border: 0 }}>
           {have ? (
@@ -231,9 +214,9 @@ const MapRouteBind = (props: {
               {i + 1}
             </Button>
           </Grid>
-          {ArgTablBindContent(3, nr)}
-          <Grid item xs={4} sx={{ display: "grid", justifyContent: "center" }}>
-            {BindInput(massIn, i, SetIn, 1, 10000)}
+          {ArgTablBindContent(4, nr)}
+          <Grid item xs={3} sx={{ display: "grid", justifyContent: "center" }}>
+            {BindInput(massIn, i, SetIn, 1)}
           </Grid>
           <Grid item xs sx={{ lineHeight: "3vh", textAlign: "center" }}>
             <Button sx={styleBind05} onClick={() => hClFrom(i)}>
@@ -255,8 +238,8 @@ const MapRouteBind = (props: {
         <Box sx={styleBind033}>
           <Grid container item xs={12}>
             {HeaderTablBindContent(1, "№")}
-            {HeaderTablBindContent(3, "Наименование")}
-            {HeaderTablBindContent(4, "Интенсивность(т.е./ч)")}
+            {HeaderTablBindContent(4, "Наименование")}
+            {HeaderTablBindContent(3, "Интенсивность(%)")}
             {HeaderTablBindContent(4, "Свойства")}
           </Grid>
         </Box>
@@ -289,21 +272,24 @@ const MapRouteBind = (props: {
         <Grid item xs={2.5} sx={{ lineHeight: "3vh", textAlign: "center" }}>
           {massTotal[i].name}
         </Grid>
-        <Grid item xs={3}>
-          <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
-            <Grid item xs={6} sx={styleBind01}>
-              {BindInput(massTotTr, i, SetTotTr, pusto, 10000)}
-            </Grid>
-            <Grid item xs={6} sx={styleBind01}>
-              {BindInput(massTotTr, i, SetTotTr, pusto, 10000)}
-            </Grid>
-          </Grid>
+        <Grid item xs={3} sx={{ lineHeight: "3vh", textAlign: "center" }}>
+          {massTotal[i].intensTr}
         </Grid>
+
+        {/* <Grid item xs={2.5} sx={{ display: "grid", justifyContent: "center" }}>
+          {massTotal[i].have && <>{BindInput(massTotPr, i, SetTotPr)}</>}
+        </Grid> */}
+
+        {/* <Grid item xs={2.5} sx={{ lineHeight: "3vh", textAlign: "center" }}>
+          {massTotal[i].intensPr}
+        </Grid> */}
+
         <Grid item xs={2.5} sx={{ display: "grid", justifyContent: "center" }}>
-          {BindInput(massTotPr, i, SetTotPr, pusto, 100)}
+          {BindInput(massTotPr, i, SetTotPr, pusto)}
         </Grid>
-        <Grid item xs={2.5} sx={{ display: "grid", justifyContent: "center" }}>
-          {BindInput(massTotTm, i, SetTotTm, pusto, 10000)}
+
+        <Grid item xs={2.5} sx={{ lineHeight: "3vh", textAlign: "center" }}>
+          {massTotal[i].time}
         </Grid>
       </>
     );
@@ -325,9 +311,7 @@ const MapRouteBind = (props: {
     return (
       <Grid item xs sx={styleSetImg}>
         <Box sx={styleBind03}>
-          <em>
-            Состав входящего направления <b>{beginMassTotal / kolFrom + 1}</b>
-          </em>
+          <em>Состав направлений</em>
         </Box>
         <Box sx={styleBind033}>
           <Grid container item xs={12}>
@@ -359,15 +343,7 @@ const MapRouteBind = (props: {
     massTotal[mode].intensPr = valueInp;
   };
 
-  const SetTotTr = (mode: number, valueInp: number) => {
-    massTotTr[mode] = valueInp;
-    massTotal[mode].intensTr = valueInp;
-  };
-
-  const SetTotTm = (mode: number, valueInp: number) => {
-    massTotTm[mode] = valueInp;
-    massTotal[mode].time = valueInp;
-  };
+  let From = ("00" + massroute.vertexes[props.idxA].id).slice(-3);
 
   return (
     <Modal open={openSetBind} onClose={handleClose}>
@@ -399,3 +375,75 @@ const MapRouteBind = (props: {
 };
 
 export default MapRouteBind;
+
+// const InputDirect = (nomInn: number) => {
+//   const handleKey = (event: any) => {
+//     if (event.key === "Enter") event.preventDefault();
+//   };
+
+//   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+//     setCurrency(Number(event.target.value));
+//     let nomFrom = Number(event.target.value) + 1;
+//     let nomIn = nomInn + 1;
+//     //console.log("###:", nomIn, nomFrom);
+//     let ch = 0;
+//     let nomer = -1;
+//     let nmFrom = massTotal[0].name.slice(0, 3) + nomFrom.toString();
+//     let nmIn = massTotal[0].name.slice(5, 8) + nomIn.toString();
+//     let nm = nmFrom + "/" + nmIn;
+//     console.log("@@@:", nmFrom, nmIn);
+//     for (let i = 0; i < massTotal.length; i++) {
+//       if (massTotal[i].name === nm) nomer = ch;
+//       ch++;
+//     }
+//     massTotal[nomer].have = true;
+//   };
+
+//   let dat: Array<number> = [];
+//   for (let i = 0; i < kolFazFrom; i++) dat.push(i + 1);
+//   let massKey = [];
+//   let massDat: any[] = [];
+//   const currencies: any = [];
+//   for (let key in dat) {
+//     massKey.push(key);
+//     massDat.push(dat[key]);
+//   }
+//   for (let i = 0; i < massKey.length; i++) {
+//     let maskCurrencies = {
+//       value: "",
+//       label: "",
+//     };
+//     maskCurrencies.value = massKey[i];
+//     maskCurrencies.label = massDat[i];
+//     currencies.push(maskCurrencies);
+//   }
+
+//   const [currency, setCurrency] = React.useState(0);
+
+//   return (
+//     <Box sx={styleSetNapr}>
+//       <Box component="form" sx={styleBoxFormNapr}>
+//         <TextField
+//           select
+//           size="small"
+//           onKeyPress={handleKey} //отключение Enter
+//           value={currency}
+//           onChange={handleChange}
+//           InputProps={{ disableUnderline: true, style: { fontSize: 12 } }}
+//           variant="standard"
+//           color="secondary"
+//         >
+//           {currencies.map((option: any) => (
+//             <MenuItem
+//               key={option.value}
+//               value={option.value}
+//               sx={{ fontSize: 14 }}
+//             >
+//               {option.label}
+//             </MenuItem>
+//           ))}
+//         </TextField>
+//       </Box>
+//     </Box>
+//   );
+// };
