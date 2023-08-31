@@ -496,9 +496,7 @@ export const getPointOptions = (
 
   return colorBalloon === "islands#violetCircleDotIcon" ? YesImg() : NoImg();
 };
-
 //=== addRoute =====================================
-
 export const getReferencePoints = (pointA: any, pointB: any) => {
   return {
     referencePoints: [pointA, pointB],
@@ -937,6 +935,29 @@ export const InputAdressVertex = (
   );
 };
 //=== RouteBind =======================================================
+export const ReplaceInSvg = (masSvg: any, widthHeight: string, idx: number) => {
+  let ch = "";
+  let svgPipa = masSvg[idx];
+  let vxod = masSvg[idx].indexOf("width=");
+  for (let i = 0; i < 100; i++) {
+    if (isNaN(Number(svgPipa[vxod + 7 + i]))) break;
+    ch = ch + svgPipa[vxod + 7 + i];
+  }
+  for (let i = 0; i < 6; i++) {
+    svgPipa = svgPipa.replace(ch, widthHeight);
+  }
+  let chh = "";
+  let vxodh = masSvg[idx].indexOf("height=");
+  for (let i = 0; i < 100; i++) {
+    if (isNaN(Number(svgPipa[vxodh + 8 + i]))) break;
+    chh = chh + svgPipa[vxodh + 8 + i];
+  }
+  for (let i = 0; i < 6; i++) {
+    svgPipa = svgPipa.replace(chh, widthHeight);
+  }
+  return svgPipa;
+};
+
 export const StrokaMenuFooterBind = (
   soob: string,
   mode: number,
@@ -954,6 +975,7 @@ export const StrokaMenuFooterBind = (
     borderRadius: 1,
     color: "black",
     textTransform: "unset !important",
+    boxShadow: 3,
   };
 
   return (
@@ -1111,11 +1133,12 @@ export const BindInput = (
   pusto: number,
   MAX: number
 ) => {
-  const [value, setValue] = React.useState(massBind[mode]);
+  let value = massBind[mode];
   const styleSetID = {
     width: "26px",
     maxHeight: "3px",
     minHeight: "3px",
+    borderRadius: 2,
     bgcolor: pusto ? "#FFFBE5" : "white",
     boxShadow: pusto ? 3 : 0,
     textAlign: "center",
@@ -1131,12 +1154,14 @@ export const BindInput = (
   };
 
   const handleChange = (event: any) => {
+    console.log("###massBind:", mode, event.target.value);
+
     let valueInp = event.target.value.replace(/^0+/, "");
     if (Number(valueInp) < 0) valueInp = 0;
     if (valueInp === "") valueInp = 0;
     valueInp = Math.trunc(Number(valueInp));
     if (valueInp <= MAX) {
-      setValue(valueInp.toString());
+      value = valueInp.toString();
       SetMass(mode, valueInp);
     }
   };
@@ -1211,5 +1236,70 @@ export const BindTablFrom = (
         {StrTablFrom()}
       </Grid>
     </Grid>
+  );
+};
+//=== WaysForma =======================================================
+export const WaysInput = (
+  VALUE: any,
+
+  SetValue: Function,
+  MAX: number
+) => {
+  const [value, setValue] = React.useState(VALUE);
+
+  const styleSetID = {
+    width: "26px",
+    maxHeight: "1px",
+    minHeight: "1px",
+    //marginTop: "-0px",
+    borderRadius: 1,
+    bgcolor: "#FFFBE5",
+    boxShadow: 3,
+    textAlign: "center",
+    p: 1.5,
+  };
+
+  const styleBoxFormID = {
+    "& > :not(style)": {
+      marginTop: "0px",
+      marginLeft: "-12px",
+      width: "50px",
+    },
+  };
+
+  const handleChange = (event: any) => {
+    let valueInp = event.target.value.replace(/^0+/, "");
+    if (Number(valueInp) < 0) valueInp = 0;
+    if (valueInp === "") valueInp = 0;
+    valueInp = Math.trunc(Number(valueInp));
+    if (valueInp <= MAX) {
+      setValue(valueInp.toString());
+      SetValue(valueInp);
+    }
+  };
+
+  return (
+    <Box sx={styleSetID}>
+      <Box component="form" sx={styleBoxFormID}>
+        <TextField
+          size="small"
+          onKeyPress={handleKey} //отключение Enter
+          type="number"
+          InputProps={{
+            disableUnderline: true,
+            style: {
+              maxHeight: "1px",
+              minHeight: "1px",
+              fontSize: 13.3,
+              backgroundColor: "#FFFBE5",
+            },
+          }}
+          value={value}
+          onChange={handleChange}
+          variant="standard"
+          color="secondary"
+        />
+      </Box>
+    </Box>
   );
 };

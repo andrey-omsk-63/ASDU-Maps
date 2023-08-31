@@ -6,6 +6,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 
 import { ComplianceMapMassdk } from "./../MapServiceFunctions";
+import { WaysInput } from "./../MapServiceFunctions";
 
 import { styleModalEnd, styleFormInf, styleFW03 } from "./../MainMapStyle";
 import { styleFormNameRoute, styleFormFWTabl } from "./../MainMapStyle";
@@ -118,7 +119,7 @@ const MapWaysForma = (props: {
     return resStr;
   };
 
-  const StrokaTabl = (recLeft: string, recRight: string) => {
+  const StrokaTabl = (recLeft: string, recRight: any) => {
     return (
       <>
         <Grid container sx={{ marginTop: 1 }}>
@@ -126,7 +127,7 @@ const MapWaysForma = (props: {
           <Grid item xs={8.5} sx={{ fontSize: 15 }}>
             <b>{recLeft}</b>
           </Grid>
-          <Grid item xs>
+          <Grid item xs sx={{ fontSize: 12 }}>
             {recRight}
           </Grid>
         </Grid>
@@ -136,6 +137,61 @@ const MapWaysForma = (props: {
 
   const SaveForm = (mode: boolean) => {
     handleCloseSetEnd();
+  };
+
+  //let massTot = 3;
+  let massForm = {
+    name: "",
+    satur: 0,
+    intensTr: 0,
+  };
+
+  const SetForm02 = (valueInp: number) => {
+    massForm.satur = valueInp;
+  };
+
+  const SetForm03 = (valueInp: number) => {
+    massForm.intensTr = valueInp;
+  };
+
+  const MainWaysForma = (SaveForm: Function) => {
+    return (
+      <>
+        <Box sx={{ fontSize: 12, marginTop: 0.5 }}>Основные свойства</Box>
+        {StrokaTabl("№ Направления", "нет информации")}
+        {StrokaTabl(
+          "Насыщение(т.е./ч.)",
+          WaysInput(massForm.satur, SetForm02, 10000)
+        )}
+        {StrokaTabl(
+          "Интенсивность(т.е./ч.)",
+          WaysInput(massForm.intensTr, SetForm03, 10000)
+        )}
+        {StrokaTabl("Дисперсия пачки(%)", "нет информации")}
+        {StrokaTabl("Длинна перегона(м)", "нет информации")}
+        {StrokaTabl("Вес остановки", "нет информации")}
+        {StrokaTabl("Вес задержки", "нет информации")}
+        {StrokaTabl("Смещ.начала зелёного(сек)", "нет информации")}
+        {StrokaTabl("Смещ.конца зелёного(сек)", "нет информации")}
+        {StrokaTabl("Интенсивность пост.потока(т.е./ч.)", "1200")}
+        <Box sx={{ fontSize: 12, marginTop: 1.5 }}>
+          Выберите зелёные фазы для данного направления
+        </Box>
+        <Box sx={styleFormFWTabl}>{StrokaMainTabl()}</Box>
+        <Grid container>
+          <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>
+            <Button sx={styleFormMenu} onClick={() => SaveForm(true)}>
+              Сохранить изменения
+            </Button>
+          </Grid>
+          <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>
+            <Button sx={styleFormMenu} onClick={() => SaveForm(false)}>
+              Выйти без сохранения
+            </Button>
+          </Grid>
+        </Grid>
+      </>
+    );
   };
 
   let soob1 = massdk[props.idx].area ? " перекрёстка " : " объекта ";
@@ -154,33 +210,7 @@ const MapWaysForma = (props: {
               {soob2}
               <b>{massTargetName[props.nomInMass]}</b>
             </Box>
-            <Box sx={{ fontSize: 12, marginTop: 0.5 }}>Основные свойства</Box>
-            {StrokaTabl("№ Направления", "нет информации")}
-            {StrokaTabl("Насыщение(т.е./ч.)", "нет информации")}
-            {StrokaTabl("Интенсивность(т.е./ч.)", "нет информации")}
-            {StrokaTabl("Дисперсия пачки(%)", "нет информации")}
-            {StrokaTabl("Длинна перегона(м)", "нет информации")}
-            {StrokaTabl("Вес остановки", "нет информации")}
-            {StrokaTabl("Вес задержки", "нет информации")}
-            {StrokaTabl("Смещ.начала зелёного(сек)", "нет информации")}
-            {StrokaTabl("Смещ.конца зелёного(сек)", "нет информации")}
-            {StrokaTabl("Интенсивность пост.потока(т.е./ч.)", "1200")}
-            <Box sx={{ fontSize: 12, marginTop: 1.5 }}>
-              Выберите зелёные фазы для данного направления
-            </Box>
-            <Box sx={styleFormFWTabl}>{StrokaMainTabl()}</Box>
-            <Grid container>
-              <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>
-                <Button sx={styleFormMenu} onClick={() => SaveForm(true)}>
-                  Сохранить изменения
-                </Button>
-              </Grid>
-              <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>
-                <Button sx={styleFormMenu} onClick={() => SaveForm(false)}>
-                  Выйти без сохранения
-                </Button>
-              </Grid>
-            </Grid>
+            {MainWaysForma(SaveForm)}
           </>
         )}
       </Box>

@@ -296,6 +296,7 @@ export const styleBind04 = {
   borderRadius: 1,
   color: "black",
   textTransform: "unset !important",
+  boxShadow: 3,
 };
 
 export const styleBind05 = {
@@ -309,6 +310,7 @@ export const styleBind05 = {
   borderRadius: 1,
   color: "black",
   textTransform: "unset !important",
+  boxShadow: 3,
 };
 
 //=== VertexForma =====================================================
@@ -319,7 +321,7 @@ export const styleFormInf = {
   marginLeft: "auto",
   width: 460,
   bgcolor: "background.paper",
-  border: "3px solid #000",
+  border: "1px solid #000",
   borderColor: "primary.main",
   borderRadius: 2,
   boxShadow: 24,

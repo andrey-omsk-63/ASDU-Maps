@@ -10,7 +10,7 @@ import Modal from "@mui/material/Modal";
 
 import MapRouteBindFormFrom from "./MapRouteBindFormFrom";
 
-import { StrokaMenuFooterBind } from "./../MapServiceFunctions";
+import { StrokaMenuFooterBind, ReplaceInSvg } from "./../MapServiceFunctions";
 import { HeaderBind, BindInput } from "./../MapServiceFunctions";
 import { ArgTablBindContent } from "./../MapServiceFunctions";
 import { HeaderTablBindContent, BindTablFrom } from "./../MapServiceFunctions";
@@ -18,7 +18,6 @@ import { HeaderTablBindContent, BindTablFrom } from "./../MapServiceFunctions";
 import { styleSetImg, styleModalEndBind } from "./../MainMapStyle";
 import { styleBind03, styleBind033 } from "./../MainMapStyle";
 import { styleBind01, styleBind04, styleBind05 } from "./../MainMapStyle";
-//import { styleSetNapr, styleBoxFormNapr } from "./../MainMapStyle";
 
 let massBind = [0, 0];
 let SvgA = true;
@@ -38,7 +37,8 @@ let beginMassTotal = 0;
 let massFrom: Array<number> = [];
 let massIn: Array<number> = [];
 let massTotPr: Array<number> = [];
-let massTotTr: Array<number> = [];
+let massTotTrFrom: Array<number> = [];
+let massTotTrIn: Array<number> = [];
 let massTotTm: Array<number> = [];
 
 let nameA = "";
@@ -84,31 +84,9 @@ const MapRouteBind = (props: {
     From = ("00" + massroute.vertexes[props.idxA].id).slice(-3);
   }
 
+  const SEC = props.reqRoute.tmRoute;
   let heightImg = Math.round(window.innerWidth / 7);
   let widthHeight = heightImg.toString();
-
-  const ReplaceInSvg = (idx: number) => {
-    let ch = "";
-    let svgPipa = masSvg[idx];
-    let vxod = masSvg[idx].indexOf("width=");
-    for (let i = 0; i < 100; i++) {
-      if (isNaN(Number(svgPipa[vxod + 7 + i]))) break;
-      ch = ch + svgPipa[vxod + 7 + i];
-    }
-    for (let i = 0; i < 6; i++) {
-      svgPipa = svgPipa.replace(ch, widthHeight);
-    }
-    let chh = "";
-    let vxodh = masSvg[idx].indexOf("height=");
-    for (let i = 0; i < 100; i++) {
-      if (isNaN(Number(svgPipa[vxodh + 8 + i]))) break;
-      chh = chh + svgPipa[vxodh + 8 + i];
-    }
-    for (let i = 0; i < 6; i++) {
-      svgPipa = svgPipa.replace(chh, widthHeight);
-    }
-    return svgPipa;
-  };
 
   //=== инициализация ======================================
   if (oldIdxA !== props.idxA || oldIdxB !== props.idxB) {
@@ -132,7 +110,8 @@ const MapRouteBind = (props: {
     massFrom = [0, 0, 0, 0, 0, 0, 0];
     massIn = [0, 0, 0, 0, 0, 0, 0];
     massTotPr = [];
-    massTotTr = [];
+    massTotTrFrom = [];
+    massTotTrIn = [];
     massTotTm = [];
     massTotal = [];
     let nom = 1;
@@ -146,28 +125,32 @@ const MapRouteBind = (props: {
           have: false,
           nom: nom++,
           name: nameIn + "/" + nameFrom,
-          intensTr: 0,
+          intensTrFrom: 0,
+          intensTrIn: 0,
           intensPr: 0,
-          time: 0,
+          time: SEC,
         };
         massTotal.push(maskTotal);
+        massTotTrFrom.push(0);
+        massTotTrIn.push(0);
         massTotPr.push(0);
-        massTotTr.push(0);
-        massTotTm.push(0);
+        massTotTm.push(SEC);
       }
     }
     console.log("MapRouteBind: ИНИЦИАЛИЗАЦИЯ", massTotPr);
   }
 
-  if (props.svg && masSvg[0] === "" && masSvg[1] === "") {
-    let dat = props.svg;
-    masSvg = [];
-    for (let key in dat) masSvg.push(dat[key]);
-    if (masSvg[0] !== "") masSvg[0] = ReplaceInSvg(0);
-    if (masSvg[1] !== "") masSvg[1] = ReplaceInSvg(1);
-  }
+  React.useMemo(() => {
+    if (props.svg && masSvg[0] === "" && masSvg[1] === "") {
+      console.log("Пришли картинки!!!");
+      let dat = props.svg;
+      masSvg = [];
+      for (let key in dat) masSvg.push(dat[key]);
+      if (masSvg[0] !== "") masSvg[0] = ReplaceInSvg(masSvg, widthHeight, 0);
+      if (masSvg[1] !== "") masSvg[1] = ReplaceInSvg(masSvg, widthHeight, 1);
+    }
+  }, [props.svg, widthHeight]);
   //========================================================
-
   const styleBind00 = {
     outline: "none",
     position: "absolute",
@@ -181,7 +164,45 @@ const MapRouteBind = (props: {
     height: heightImg + window.innerHeight * 0.645,
     bgcolor: "#F0F0F0",
   };
+  //=== Функции - обработчики ==============================
+  const SetFrom = (mode: number, valueInp: number) => {
+    massFrom[mode] = valueInp;
+    for (let i = 0; i < kolIn; i++) {
+      massTotal[kolFrom * i +  mode].intensTrFrom = valueInp;
+      massTotTrFrom[kolFrom * i +  mode] = valueInp;
+    }
+    setTrigger(!trigger)
+  };
 
+  const SetIn = (mode: number, valueInp: number) => {
+    massIn[mode] = valueInp;
+    for (let i = 0; i < kolFrom; i++) {
+      massTotal[mode*kolFrom + i].intensTrIn = valueInp;
+      massTotTrIn[mode*kolFrom + i] = valueInp;
+    }
+    setTrigger(!trigger)
+  };
+
+  const SetTotTrFrom = (mode: number, valueInp: number) => {
+    massTotTrFrom[mode] = valueInp;
+    massTotal[mode].intensTrFrom = valueInp;
+  };
+
+  const SetTotTrIn = (mode: number, valueInp: number) => {
+    massTotTrIn[mode] = valueInp;
+    massTotal[mode].intensTrIn = valueInp;
+  };
+
+  const SetTotPr = (mode: number, valueInp: number) => {
+    massTotPr[mode] = valueInp;
+    massTotal[mode].intensPr = valueInp;
+  };
+
+  const SetTotTm = (mode: number, valueInp: number) => {
+    massTotTm[mode] = valueInp;
+    massTotal[mode].time = valueInp;
+  };
+  //========================================================
   const FooterBind = () => {
     let have = 0;
     for (let i = 0; i < massTotal.length; i++) {
@@ -276,12 +297,13 @@ const MapRouteBind = (props: {
     let i = beginMassTotal + idx;
     let metka = massTotal[i].have ? "✔" : "";
     let pusto = massTotal[i].have ? 1 : 0;
+
     return (
       <>
         <Grid item xs={0.5} sx={{ lineHeight: "3vh", textAlign: "center" }}>
           {metka}
         </Grid>
-        <Grid item xs={1} sx={{ lineHeight: "3vh", textAlign: "center" }}>
+        <Grid item xs={0.5} sx={{ lineHeight: "3vh", textAlign: "center" }}>
           <Button sx={styleBind04} onClick={() => handleCloseTotal(i)}>
             {massTotal[i].nom}
           </Button>
@@ -289,20 +311,26 @@ const MapRouteBind = (props: {
         <Grid item xs={2.5} sx={{ lineHeight: "3vh", textAlign: "center" }}>
           {massTotal[i].name}
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={3.5}>
           <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
             <Grid item xs={6} sx={styleBind01}>
-              {BindInput(massTotTr, i, SetTotTr, pusto, 10000)}
+              <Box sx={{ display: "flex" }}>
+                {BindInput(massTotTrFrom, i, SetTotTrFrom, pusto, 10000)}
+                {pusto !== 0 && <>&nbsp;исх</>}
+              </Box>
             </Grid>
             <Grid item xs={6} sx={styleBind01}>
-              {BindInput(massTotTr, i, SetTotTr, pusto, 10000)}
+              <Box sx={{ display: "flex" }}>
+                {BindInput(massTotTrIn, i, SetTotTrIn, pusto, 10000)}
+                {pusto !== 0 && <>&nbsp;вх</>}
+              </Box>
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={2.5} sx={{ display: "grid", justifyContent: "center" }}>
+        <Grid item xs={2.5} sx={styleBind01}>
           {BindInput(massTotPr, i, SetTotPr, pusto, 100)}
         </Grid>
-        <Grid item xs={2.5} sx={{ display: "grid", justifyContent: "center" }}>
+        <Grid item xs={2.5} sx={styleBind01}>
           {BindInput(massTotTm, i, SetTotTm, pusto, 10000)}
         </Grid>
       </>
@@ -332,9 +360,9 @@ const MapRouteBind = (props: {
         <Box sx={styleBind033}>
           <Grid container item xs={12}>
             {HeaderTablBindContent(0.5, "")}
-            {HeaderTablBindContent(1, "№")}
+            {HeaderTablBindContent(0.5, "№")}
             {HeaderTablBindContent(2.5, "Наименование")}
-            {HeaderTablBindContent(3, "Интенсивность(т.е./ч)")}
+            {HeaderTablBindContent(3.5, "Интенсивность(т.е./ч)")}
             {HeaderTablBindContent(2.5, "Интенсивность(%)")}
             {HeaderTablBindContent(2.5, "Время проезда(сек)")}
           </Grid>
@@ -344,29 +372,6 @@ const MapRouteBind = (props: {
         </Grid>
       </Grid>
     );
-  };
-
-  const SetFrom = (mode: number, valueInp: number) => {
-    massFrom[mode] = valueInp;
-  };
-
-  const SetIn = (mode: number, valueInp: number) => {
-    massIn[mode] = valueInp;
-  };
-
-  const SetTotPr = (mode: number, valueInp: number) => {
-    massTotPr[mode] = valueInp;
-    massTotal[mode].intensPr = valueInp;
-  };
-
-  const SetTotTr = (mode: number, valueInp: number) => {
-    massTotTr[mode] = valueInp;
-    massTotal[mode].intensTr = valueInp;
-  };
-
-  const SetTotTm = (mode: number, valueInp: number) => {
-    massTotTm[mode] = valueInp;
-    massTotal[mode].time = valueInp;
   };
 
   return (
