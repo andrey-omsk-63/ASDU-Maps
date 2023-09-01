@@ -422,6 +422,6 @@ export const styleFormFWTabl = {
   marginTop: 1.5,
   marginLeft: -0.5,
   marginRight: -0.5,
-  height: 96,
+  height: 121,
   overflowX: "auto",
 };

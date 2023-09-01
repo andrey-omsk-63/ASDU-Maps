@@ -54,6 +54,21 @@ export interface Router {
   lenght: number;
   time: number;
 }
+
+export interface Directions {
+  name: string;
+  satur: number;
+  intensTr: number;
+  dispers: number;
+  peregon: number;
+  wtStop: number;
+  wtDelay: number;
+  offsetBeginGreen: number;
+  offsetEndGreen: number;
+  intensFl: number;
+  phases: Array<number>;
+}
+
 export let massRoute: Router[] = [];
 export let massRoutePro: Router[] = [];
 export let Coordinates: Array<Array<number>> = []; // массив координат

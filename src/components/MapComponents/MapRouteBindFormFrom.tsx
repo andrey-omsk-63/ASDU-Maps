@@ -6,27 +6,17 @@ import Box from "@mui/material/Box";
 //import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-// import TextField from "@mui/material/TextField";
-// import Typography from "@mui/material/Typography";
-// import MenuItem from "@mui/material/MenuItem";
 
-import { StrokaMenuFooterBind } from "./../MapServiceFunctions";
+import MapWaysFormaMain from "./MapWaysFormaMain";
 
-// import { SendSocketDeleteWay } from "./../MapSocketFunctions";
-// import { SendSocketDeleteWayFromPoint } from "./../MapSocketFunctions";
-// import { SendSocketDeleteWayToPoint } from "./../MapSocketFunctions";
-// import { SendSocketCreateWay } from "./../MapSocketFunctions";
-// import { SendSocketCreateWayFromPoint } from "./../MapSocketFunctions";
-// import { SendSocketCreateWayToPoint } from "./../MapSocketFunctions";
+import { Directions } from "./../../App"; // интерфейс massForm
 
-//import { styleModalEnd,
-//styleSetInf
-// } from "./../MainMapStyle";
-// import { styleModalMenu, styleSetArea } from "./MapPointDataErrorStyle";
-// import { styleBoxFormArea, styleBoxFormNapr } from "./MapPointDataErrorStyle";
-// import { styleSetNapr, styleSave } from "./MapPointDataErrorStyle";
+//import { StrokaMenuFooterBind } from "./../MapServiceFunctions";
 
-const MapRouteBindFormFrom = (props: { setOpen: any; idx: number }) => {
+const MapRouteBindFormFrom = (props: {
+  setOpen: any;
+  maskForm: Directions;
+}) => {
   //const WS = props.ws;
   //== Piece of Redux =======================================
   // let massroute = useSelector((state: any) => {
@@ -54,10 +44,10 @@ const MapRouteBindFormFrom = (props: { setOpen: any; idx: number }) => {
   const styleSetInf = {
     outline: "none",
     position: "absolute",
-    marginTop: "18vh",
-    marginLeft: "7vh",
-    width: 380,
-    //height: 500,
+    left: "50%",
+    top: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 460,
     bgcolor: "background.paper",
     border: "1px solid #000",
     borderColor: "primary.main",
@@ -71,7 +61,8 @@ const MapRouteBindFormFrom = (props: { setOpen: any; idx: number }) => {
     setOpenSetForm(false);
   };
 
-  const handleClose = (mode: number) => {
+  const handleClose = (mode: boolean, mask: Directions ) => {
+    console.log('handleClose:',mode, mask)
     handleCloseSetEnd();
   };
 
@@ -81,13 +72,15 @@ const MapRouteBindFormFrom = (props: { setOpen: any; idx: number }) => {
         <Button sx={styleModalEnd} onClick={handleCloseSetEnd}>
           <b>&#10006;</b>
         </Button>
-        <Box
-          sx={{ border: 1, marginTop: 1.5, width: 377, height: 500,  }}
-        ></Box>
+        <Box sx={{ textAlign: "center" }}>
+          <h1>Заголовок</h1>
+        </Box>
+        <MapWaysFormaMain maskForm={props.maskForm} setClose={handleClose} />
+        {/* <Box sx={{ border: 1, marginTop: 1.5, width: 377, height: 500 }}></Box>
         <Box sx={{ marginTop: 1.5, textAlign: "center" }}>
           {StrokaMenuFooterBind("Выход без сохранения", 0, handleClose)}
           {StrokaMenuFooterBind("Сохранить", 1, handleClose)}
-        </Box>
+        </Box> */}
       </Box>
     </Modal>
   );

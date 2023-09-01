@@ -1135,7 +1135,7 @@ export const BindInput = (
 ) => {
   let value = massBind[mode];
   const styleSetID = {
-    width: "26px",
+    width: "28px",
     maxHeight: "3px",
     minHeight: "3px",
     borderRadius: 2,
@@ -1149,7 +1149,7 @@ export const BindInput = (
     "& > :not(style)": {
       marginTop: "-9px",
       marginLeft: "-12px",
-      width: "50px",
+      width: "52px",
     },
   };
 
@@ -1248,7 +1248,7 @@ export const WaysInput = (
   const [value, setValue] = React.useState(VALUE);
 
   const styleSetID = {
-    width: "26px",
+    width: "28px",
     maxHeight: "1px",
     minHeight: "1px",
     //marginTop: "-0px",
@@ -1263,7 +1263,7 @@ export const WaysInput = (
     "& > :not(style)": {
       marginTop: "0px",
       marginLeft: "-12px",
-      width: "50px",
+      width: "52px",
     },
   };
 

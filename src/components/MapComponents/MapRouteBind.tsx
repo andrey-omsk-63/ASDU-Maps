@@ -8,6 +8,8 @@ import Modal from "@mui/material/Modal";
 //import TextField from "@mui/material/TextField";
 //import MenuItem from "@mui/material/MenuItem";
 
+import { Directions } from "./../../App"; // интерфейс massForm
+
 import MapRouteBindFormFrom from "./MapRouteBindFormFrom";
 
 import { StrokaMenuFooterBind, ReplaceInSvg } from "./../MapServiceFunctions";
@@ -30,7 +32,6 @@ let massFazFrom: Array<number> = [];
 let massFazIn: Array<number> = [];
 let oldIdxA = -1;
 let oldIdxB = -1;
-let idxFrom = -1;
 let massTotal: any = [];
 let beginMassTotal = 0;
 
@@ -45,6 +46,34 @@ let nameA = "";
 let nameB = "";
 let Route: any = null;
 let From = "";
+
+let maskForm: Directions = {
+  name: "0121/0212",
+  satur: 0,
+  intensTr: 0,
+  dispers: 0,
+  peregon: 0,
+  wtStop: 0,
+  wtDelay: 0,
+  offsetBeginGreen: 0,
+  offsetEndGreen: 0,
+  intensFl: 1200,
+  phases: [],
+};
+
+let massForm: Directions = {
+  name: "0121/0212",
+  satur: 0,
+  intensTr: 0,
+  dispers: 0,
+  peregon: 0,
+  wtStop: 0,
+  wtDelay: 0,
+  offsetBeginGreen: 0,
+  offsetEndGreen: 0,
+  intensFl: 1200,
+  phases: [],
+};
 
 const MapRouteBind = (props: {
   setOpen: any;
@@ -168,19 +197,19 @@ const MapRouteBind = (props: {
   const SetFrom = (mode: number, valueInp: number) => {
     massFrom[mode] = valueInp;
     for (let i = 0; i < kolIn; i++) {
-      massTotal[kolFrom * i +  mode].intensTrFrom = valueInp;
-      massTotTrFrom[kolFrom * i +  mode] = valueInp;
+      massTotal[kolFrom * i + mode].intensTrFrom = valueInp;
+      massTotTrFrom[kolFrom * i + mode] = valueInp;
     }
-    setTrigger(!trigger)
+    setTrigger(!trigger);
   };
 
   const SetIn = (mode: number, valueInp: number) => {
     massIn[mode] = valueInp;
     for (let i = 0; i < kolFrom; i++) {
-      massTotal[mode*kolFrom + i].intensTrIn = valueInp;
-      massTotTrIn[mode*kolFrom + i] = valueInp;
+      massTotal[mode * kolFrom + i].intensTrIn = valueInp;
+      massTotTrIn[mode * kolFrom + i] = valueInp;
     }
-    setTrigger(!trigger)
+    setTrigger(!trigger);
   };
 
   const SetTotTrFrom = (mode: number, valueInp: number) => {
@@ -230,7 +259,21 @@ const MapRouteBind = (props: {
 
   const hClFrom = (idx: number) => {
     console.log("Переход в форму просмотра", idx);
-    idxFrom = idx;
+    massForm = JSON.parse(JSON.stringify(maskForm));
+    //============ потом исправить
+    massForm.name = ("00" + massroute.vertexes[props.idxA].id).slice(-3);
+    massForm.name += (idx + 1).toString();
+    for (let i = 0; i < 8; i++) massForm.phases.push(-1);
+    setOpenFormFrom(true);
+  };
+
+  const hClIn = (idx: number) => {
+    console.log("Переход в форму просмотра", idx);
+    massForm = JSON.parse(JSON.stringify(maskForm));
+    //============ потом исправить
+    massForm.name = ("00" + massroute.vertexes[props.idxB].id).slice(-3);
+    massForm.name += (idx + 1).toString();
+    for (let i = 0; i < 8; i++) massForm.phases.push(-1);
     setOpenFormFrom(true);
   };
 
@@ -257,7 +300,7 @@ const MapRouteBind = (props: {
             {BindInput(massIn, i, SetIn, 1, 10000)}
           </Grid>
           <Grid item xs sx={{ lineHeight: "3vh", textAlign: "center" }}>
-            <Button sx={styleBind05} onClick={() => hClFrom(i)}>
+            <Button sx={styleBind05} onClick={() => hClIn(i)}>
               просмотр/изменение
             </Button>
           </Grid>
@@ -396,7 +439,7 @@ const MapRouteBind = (props: {
           {FooterBind()}
         </Box>
         {openFormFrom && (
-          <MapRouteBindFormFrom setOpen={setOpenFormFrom} idx={idxFrom} />
+          <MapRouteBindFormFrom setOpen={setOpenFormFrom} maskForm={massForm} />
         )}
       </>
     </Modal>
