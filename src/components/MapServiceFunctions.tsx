@@ -1133,7 +1133,9 @@ export const BindInput = (
   pusto: number,
   MAX: number
 ) => {
+  const [trigger, setTrigger] = React.useState(false);
   let value = massBind[mode];
+
   const styleSetID = {
     width: "28px",
     maxHeight: "3px",
@@ -1154,14 +1156,13 @@ export const BindInput = (
   };
 
   const handleChange = (event: any) => {
-    console.log("###massBind:", mode, event.target.value);
-
     let valueInp = event.target.value.replace(/^0+/, "");
     if (Number(valueInp) < 0) valueInp = 0;
     if (valueInp === "") valueInp = 0;
     valueInp = Math.trunc(Number(valueInp));
     if (valueInp <= MAX) {
       value = valueInp.toString();
+      setTrigger(!trigger);
       SetMass(mode, valueInp);
     }
   };

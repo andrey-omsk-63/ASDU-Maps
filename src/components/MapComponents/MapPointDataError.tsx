@@ -8,7 +8,7 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import MenuItem from "@mui/material/MenuItem";
+//import MenuItem from "@mui/material/MenuItem";
 
 import { SendSocketDeleteWay } from "./../MapSocketFunctions";
 import { SendSocketDeleteWayFromPoint } from "./../MapSocketFunctions";
@@ -17,12 +17,9 @@ import { SendSocketCreateWay } from "./../MapSocketFunctions";
 import { SendSocketCreateWayFromPoint } from "./../MapSocketFunctions";
 import { SendSocketCreateWayToPoint } from "./../MapSocketFunctions";
 
-//import { styleModalEnd,
-//styleSetInf
-// } from "./../MainMapStyle";
-import { styleModalMenu, styleSetArea } from "./MapPointDataErrorStyle";
-import { styleBoxFormArea, styleBoxFormNapr } from "./MapPointDataErrorStyle";
-import { styleSetNapr, styleSave } from "./MapPointDataErrorStyle";
+import { styleModalMenu, styleSetArea } from "../MapPointDataErrorStyle";
+import { styleBoxFormArea, styleSave } from "../MapPointDataErrorStyle";
+//import { styleSetNapr, styleBoxFormNapr } from "../MapPointDataErrorStyle";
 
 let lengthRoute = 0;
 let index = -1;
@@ -83,7 +80,7 @@ const MapPointDataError = (props: {
     marginLeft: "27vh",
     width: 380,
     bgcolor: "background.paper",
-    border: "3px solid #000",
+    border: "1px solid #000",
     borderColor: colorBorder,
     borderRadius: 2,
     boxShadow: 24,
@@ -291,71 +288,72 @@ const MapPointDataError = (props: {
     );
   };
 
-  const InputDirect = (mode: number) => {
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setCurrency(Number(event.target.value));
-      if (mode) {
-        massBindNew[1] = massDat[Number(event.target.value)];
-      } else {
-        massBindNew[0] = massDat[Number(event.target.value)];
-      }
-      flagSave = true;
-      setTrigger(!trigger);
-    };
+  // const InputDirect = (mode: number) => {
+  //   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //     setCurrency(Number(event.target.value));
+  //     if (mode) {
+  //       massBindNew[1] = massDat[Number(event.target.value)];
+  //     } else {
+  //       massBindNew[0] = massDat[Number(event.target.value)];
+  //     }
+  //     flagSave = true;
+  //     setTrigger(!trigger);
+  //   };
 
-    let dat = massroute.vertexes[fromIdx].lin;
-    if (mode) dat = massroute.vertexes[onIdx].lout;
-    let massKey = [];
-    let massDat: any[] = [];
-    const currencies: any = [];
-    for (let key in dat) {
-      massKey.push(key);
-      massDat.push(dat[key]);
-    }
-    for (let i = 0; i < massKey.length; i++) {
-      let maskCurrencies = {
-        value: "",
-        label: "",
-      };
-      maskCurrencies.value = massKey[i];
-      maskCurrencies.label = massDat[i];
-      currencies.push(maskCurrencies);
-    }
-    const [currency, setCurrency] = React.useState(massBind[mode]);
-    const [trigger, setTrigger] = React.useState(true);
+  //   let dat = massroute.vertexes[fromIdx].lin;
+  //   if (mode) dat = massroute.vertexes[onIdx].lout;
+  //   let massKey = [];
+  //   let massDat: any[] = [];
+  //   const currencies: any = [];
+  //   for (let key in dat) {
+  //     massKey.push(key);
+  //     massDat.push(dat[key]);
+  //   }
+  //   for (let i = 0; i < massKey.length; i++) {
+  //     let maskCurrencies = {
+  //       value: "",
+  //       label: "",
+  //     };
+  //     maskCurrencies.value = massKey[i];
+  //     maskCurrencies.label = massDat[i];
+  //     currencies.push(maskCurrencies);
+  //   }
+  //   const [currency, setCurrency] = React.useState(massBind[mode]);
+  //   const [trigger, setTrigger] = React.useState(true);
 
-    return (
-      <Box sx={styleSetNapr}>
-        <Box component="form" sx={styleBoxFormNapr}>
-          <TextField
-            select
-            size="small"
-            onKeyPress={handleKey} //отключение Enter
-            value={currency}
-            onChange={handleChange}
-            InputProps={{ disableUnderline: true, style: { fontSize: 14 } }}
-            variant="standard"
-            color="secondary"
-          >
-            {currencies.map((option: any) => (
-              <MenuItem
-                key={option.value}
-                value={option.value}
-                sx={{ fontSize: 14 }}
-              >
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-        </Box>
-      </Box>
-    );
-  };
+  //   return (
+  //     <Box sx={styleSetNapr}>
+  //       <Box component="form" sx={styleBoxFormNapr}>
+  //         <TextField
+  //           select
+  //           size="small"
+  //           onKeyPress={handleKey} //отключение Enter
+  //           value={currency}
+  //           onChange={handleChange}
+  //           InputProps={{ disableUnderline: true, style: { fontSize: 14 } }}
+  //           variant="standard"
+  //           color="secondary"
+  //         >
+  //           {currencies.map((option: any) => (
+  //             <MenuItem
+  //               key={option.value}
+  //               value={option.value}
+  //               sx={{ fontSize: 14 }}
+  //             >
+  //               {option.label}
+  //             </MenuItem>
+  //           ))}
+  //         </TextField>
+  //       </Box>
+  //     </Box>
+  //   );
+  // };
 
   const [tmRoute2, setTmRoute2] = React.useState(tmRoute1);
 
   return (
-    <Modal open={openSetEr} onClose={handleCloseSetEnd} hideBackdrop>
+    // <Modal open={openSetEr} onClose={handleCloseSetEnd} hideBackdrop>
+    <Modal open={openSetEr} onClose={handleCloseSetEnd}>
       <Box sx={styleSetInf}>
         <Button sx={styleModalEnd} onClick={handleCloseSetEnd}>
           <b>&#10006;</b>
@@ -372,7 +370,7 @@ const MapPointDataError = (props: {
         )}
         {props.sErr === "Дубликатная связь" && (
           <>
-            {props.fromCross.pointAaArea !== "0" && (
+            {/* {props.fromCross.pointAaArea !== "0" && (
               <Grid container sx={{ marginLeft: 1.5, marginTop: 1.2 }}>
                 <Grid item xs={1.9} sx={{ border: 0 }}>
                   <b>Выход</b>
@@ -390,9 +388,9 @@ const MapPointDataError = (props: {
                   {InputDirect(0)}
                 </Grid>
               </Grid>
-            )}
+            )} */}
 
-            {props.toCross.pointBbArea !== "0" && (
+            {/* {props.toCross.pointBbArea !== "0" && (
               <Grid container sx={{ marginLeft: 1.5, marginTop: 1.2 }}>
                 <Grid item xs={1.9} sx={{ border: 0 }}>
                   <b>Вход</b>
@@ -410,7 +408,7 @@ const MapPointDataError = (props: {
                   {InputDirect(1)}
                 </Grid>
               </Grid>
-            )}
+            )} */}
 
             <Grid container sx={{ marginLeft: 1.5, marginTop: 1.2 }}>
               <Grid item xs={3.5} sx={{ border: 0 }}>

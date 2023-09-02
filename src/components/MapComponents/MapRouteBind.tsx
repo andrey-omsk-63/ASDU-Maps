@@ -166,7 +166,6 @@ const MapRouteBind = (props: {
         massTotTm.push(SEC);
       }
     }
-    console.log("MapRouteBind: ИНИЦИАЛИЗАЦИЯ", massTotPr);
   }
 
   React.useMemo(() => {

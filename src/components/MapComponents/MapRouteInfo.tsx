@@ -8,8 +8,8 @@ import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 
 import { styleModalEnd, styleSetInf } from './../MainMapStyle';
-import { styleBoxFormArea, styleSetArea } from './MapPointDataErrorStyle';
-import { styleSave } from './MapPointDataErrorStyle';
+import { styleBoxFormArea, styleSetArea } from '../MapPointDataErrorStyle';
+import { styleSave } from '../MapPointDataErrorStyle';
 
 let dlRoute1 = 0;
 let dlRouteBegin = 0;
@@ -140,7 +140,8 @@ const MapRouteInfo = (props: {
   const [tmRoute2, setTmRoute2] = React.useState(tmRoute1);
 
   return (
-    <Modal open={openSetInf} onClose={handleCloseSetEndInf} hideBackdrop>
+    // <Modal open={openSetInf} onClose={handleCloseSetEndInf} hideBackdrop>
+    <Modal open={openSetInf} onClose={handleCloseSetEndInf}>
       <Box sx={styleSetInf}>
         <Button sx={styleModalEnd} onClick={handleCloseSetEndInf}>
           <b>&#10006;</b>

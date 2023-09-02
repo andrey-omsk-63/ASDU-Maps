@@ -50,7 +50,7 @@ export const styleModalMenu = {
     maxHeight: "20px",
     minHeight: "20px",
     borderColor: "#E6F5D6",
-    borderRadius: 2,
+    borderRadius: 1,
     color: "black",
     textTransform: "unset !important",
   };

@@ -45,7 +45,7 @@ export const styleSetInf = {
   //======
   width: 380,
   bgcolor: "background.paper",
-  border: "3px solid #000",
+  border: "1px solid #000",
   borderColor: "primary.main",
   borderRadius: 2,
   boxShadow: 24,

@@ -20,9 +20,9 @@ import { SendSocketCreateWayToPoint } from "./../MapSocketFunctions";
 //import { styleModalEnd,
 //styleSetInf
 // } from "./../MainMapStyle";
-import { styleModalMenu, styleSetArea } from "./MapPointDataErrorStyle";
-import { styleBoxFormArea, styleBoxFormNapr } from "./MapPointDataErrorStyle";
-import { styleSetNapr, styleSave } from "./MapPointDataErrorStyle";
+import { styleModalMenu, styleSetArea } from "../MapPointDataErrorStyle";
+import { styleBoxFormArea, styleBoxFormNapr } from "../MapPointDataErrorStyle";
+import { styleSetNapr, styleSave } from "../MapPointDataErrorStyle";
 
 let lengthRoute = 0;
 let index = -1;

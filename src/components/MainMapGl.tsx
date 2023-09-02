@@ -588,7 +588,7 @@ const MainMap = (props: {
             idxDel >= 0 && setOpenSetDelete(true);
             idxDel < 0 && setOpenSetCreate(true);
           } else {
-            if (idxDel >= 0 && nomRoute < 0) {
+            if (idxDel >= 0 && nomRoute < 0 && !openSetVertForm) {
               nomRoute = 0;
               idxRoute = idxDel;
               setOpenSetWaysFormMenu(true);
@@ -744,7 +744,7 @@ const MainMap = (props: {
             {openSetVertForm && pointAaIndex >= 0 && (
               <MapVertexForma setOpen={SetOpenSetVertForm} idx={pointAaIndex} />
             )}
-            {openSetWaysFormMenu && (
+            {openSetWaysFormMenu && !openSetVertForm && (
               <MapWaysFormMenu
                 setOpen={SetOpenSetWaysFormMenu}
                 idx={idxRoute}
