@@ -26,8 +26,8 @@ let SvgA = true;
 let SvgB = true;
 let masSvg = ["", ""];
 
-let kolFrom = 7;
-let kolIn = 4;
+let kolFrom = 5;
+let kolIn = 7;
 let massFazFrom: Array<number> = [];
 let massFazIn: Array<number> = [];
 let oldIdxA = -1;
@@ -51,10 +51,10 @@ let maskForm: Directions = {
   name: "0121/0212",
   satur: 0,
   intensTr: 0,
-  dispers: 0,
+  dispers: 50,
   peregon: 0,
-  wtStop: 0,
-  wtDelay: 0,
+  wtStop: 1,
+  wtDelay: 1,
   offsetBeginGreen: 0,
   offsetEndGreen: 0,
   intensFl: 1200,
@@ -74,6 +74,9 @@ let massForm: Directions = {
   intensFl: 1200,
   phases: [],
 };
+
+let masFormFrom: any = [];
+let masFormIn: any = [];
 
 const MapRouteBind = (props: {
   setOpen: any;
@@ -136,6 +139,7 @@ const MapRouteBind = (props: {
       SvgB = false;
       massBind[1] = 0;
     }
+    maskForm.peregon = props.reqRoute.dlRoute;
     massFrom = [0, 0, 0, 0, 0, 0, 0];
     massIn = [0, 0, 0, 0, 0, 0, 0];
     massTotPr = [];
@@ -145,11 +149,11 @@ const MapRouteBind = (props: {
     massTotal = [];
     let nom = 1;
     for (let j = 0; j < kolIn; j++) {
+      let nameIn = ("00" + massroute.vertexes[props.idxB].id).slice(-3);
+      nameIn += (j + 1).toString();
       for (let i = 0; i < kolFrom; i++) {
         let nameFrom = ("00" + massroute.vertexes[props.idxA].id).slice(-3);
         nameFrom += (i + 1).toString();
-        let nameIn = ("00" + massroute.vertexes[props.idxB].id).slice(-3);
-        nameIn += (j + 1).toString();
         let maskTotal: any = {
           have: false,
           nom: nom++,
@@ -157,14 +161,22 @@ const MapRouteBind = (props: {
           intensTrFrom: 0,
           intensTrIn: 0,
           intensPr: 0,
+          editIntensPr: false,
           time: SEC,
         };
+        //massForm = JSON.parse(JSON.stringify(maskForm));
         massTotal.push(maskTotal);
         massTotTrFrom.push(0);
         massTotTrIn.push(0);
         massTotPr.push(0);
         massTotTm.push(SEC);
       }
+    }
+    masFormFrom = [];
+    for (let i = 0; i < kolFrom; i++) {
+      masFormFrom.push(JSON.parse(JSON.stringify(maskForm)));
+      let nameFrom = ("00" + massroute.vertexes[props.idxA].id).slice(-3);
+      masFormFrom[i].name = nameFrom + (i + 1).toString();
     }
   }
 
@@ -214,21 +226,26 @@ const MapRouteBind = (props: {
   const SetTotTrFrom = (mode: number, valueInp: number) => {
     massTotTrFrom[mode] = valueInp;
     massTotal[mode].intensTrFrom = valueInp;
+    setTrigger(!trigger);
   };
 
   const SetTotTrIn = (mode: number, valueInp: number) => {
     massTotTrIn[mode] = valueInp;
     massTotal[mode].intensTrIn = valueInp;
+    setTrigger(!trigger);
   };
 
   const SetTotPr = (mode: number, valueInp: number) => {
     massTotPr[mode] = valueInp;
     massTotal[mode].intensPr = valueInp;
+    massTotal[mode].editIntensPr = true;
+    setTrigger(!trigger);
   };
 
   const SetTotTm = (mode: number, valueInp: number) => {
     massTotTm[mode] = valueInp;
     massTotal[mode].time = valueInp;
+    setTrigger(!trigger);
   };
   //========================================================
   const FooterBind = () => {
@@ -339,6 +356,9 @@ const MapRouteBind = (props: {
     let i = beginMassTotal + idx;
     let metka = massTotal[i].have ? "✔" : "";
     let pusto = massTotal[i].have ? 1 : 0;
+    if (massTotTrFrom[i] && massTotTrIn[i] && !massTotal[i].editIntensPr) {
+      massTotPr[i] = (massTotTrIn[i] * 100) / massTotTrFrom[i];
+    }
 
     return (
       <>
@@ -358,19 +378,23 @@ const MapRouteBind = (props: {
             <Grid item xs={6} sx={styleBind01}>
               <Box sx={{ display: "flex" }}>
                 {BindInput(massTotTrFrom, i, SetTotTrFrom, pusto, 10000)}
-                {pusto !== 0 && <>&nbsp;исх</>}
+                <Box sx={{ marginTop: 0.5 }}>
+                  {pusto !== 0 && <>&nbsp;исх</>}
+                </Box>
               </Box>
             </Grid>
             <Grid item xs={6} sx={styleBind01}>
               <Box sx={{ display: "flex" }}>
                 {BindInput(massTotTrIn, i, SetTotTrIn, pusto, 10000)}
-                {pusto !== 0 && <>&nbsp;вх</>}
+                <Box sx={{ marginTop: 0.5 }}>
+                  {pusto !== 0 && <>&nbsp;вх</>}
+                </Box>
               </Box>
             </Grid>
           </Grid>
         </Grid>
         <Grid item xs={2.5} sx={styleBind01}>
-          {BindInput(massTotPr, i, SetTotPr, pusto, 100)}
+          {BindInput(massTotPr, i, SetTotPr, pusto, 1000)}
         </Grid>
         <Grid item xs={2.5} sx={styleBind01}>
           {BindInput(massTotTm, i, SetTotTm, pusto, 10000)}
@@ -438,7 +462,12 @@ const MapRouteBind = (props: {
           {FooterBind()}
         </Box>
         {openFormFrom && (
-          <MapRouteBindFormFrom setOpen={setOpenFormFrom} maskForm={massForm} />
+          <MapRouteBindFormFrom
+            setOpen={setOpenFormFrom}
+            maskForm={massForm}
+            idxA={props.idxA}
+            idxB={props.idxB}
+          />
         )}
       </>
     </Modal>

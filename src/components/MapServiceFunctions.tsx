@@ -1242,7 +1242,6 @@ export const BindTablFrom = (
 //=== WaysForma =======================================================
 export const WaysInput = (
   VALUE: any,
-
   SetValue: Function,
   MAX: number
 ) => {
@@ -1252,7 +1251,6 @@ export const WaysInput = (
     width: "28px",
     maxHeight: "1px",
     minHeight: "1px",
-    //marginTop: "-0px",
     borderRadius: 1,
     bgcolor: "#FFFBE5",
     boxShadow: 3,

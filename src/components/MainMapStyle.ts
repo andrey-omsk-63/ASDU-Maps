@@ -249,7 +249,7 @@ export const styleModalEndBind = {
   position: "absolute",
   top: "-0.5%",
   left: "auto",
-  right: -6,
+  right: -7,
   height: "21px",
   maxWidth: "2%",
   minWidth: "2%",
@@ -340,6 +340,7 @@ export const styleFormMenu = {
   marginRight: 1,
   backgroundColor: "#E6F5D6",
   textTransform: "unset !important",
+  boxShadow: 3,
   color: "black",
 };
 

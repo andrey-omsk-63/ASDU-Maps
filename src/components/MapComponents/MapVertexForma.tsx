@@ -5,11 +5,15 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 
-import { ComplianceMapMassdk } from "./../MapServiceFunctions";
+import { ComplianceMapMassdk, WaysInput } from "./../MapServiceFunctions";
 
 import { styleModalEnd, styleFormInf, styleFormName } from "./../MainMapStyle";
 import { styleFT02, styleFT03, styleFT033 } from "./../MainMapStyle";
 import { styleFormTabl, styleFormMenu } from "./../MainMapStyle";
+
+let oldIdx = -1;
+let massForm: any = null;
+let idx = 0;
 
 const MapVertexForma = (props: { setOpen: any; idx: number }) => {
   //== Piece of Redux =======================================
@@ -25,8 +29,31 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
   //===========================================================
   const idxMap = ComplianceMapMassdk(props.idx, massdk, map);
   const MAP = map.dateMap.tflight[idxMap];
+  //=== инициализация ======================================
+  if (oldIdx !== props.idx) {
+    oldIdx = props.idx;
+    let maskForm: any = {
+      kolFaz: idxMap >= 0 ? MAP.phases.length : 0,
+      offset: 0,
+      phases: [],
+    };
+
+    let maskFaz: any = {
+      MinDuration: 0,
+      StartDuration: 0,
+      PhaseOrder: 0,
+    };
+
+    massForm = maskForm;
+    let lng = idxMap >= 0 ? MAP.phases.length : 0;
+    for (let i = 0; i < lng; i++) {
+      massForm.phases.push(maskFaz);
+    }
+    console.log("@@@:", massForm);
+  }
 
   const handleCloseSetEnd = () => {
+    oldIdx = -1;
     props.setOpen(false);
   };
 
@@ -49,24 +76,41 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
     );
   };
 
+  const SetMinDuration = (valueInp: number) => {
+    massForm.phases[idx].MinDuration = valueInp;
+  };
+  const SetStDuration = (valueInp: number) => {
+    massForm.phases[idx].StartDuration = valueInp;
+  };
+  const SetPhaseOrder = (valueInp: number) => {
+    massForm.phases[idx].PhaseOrder = valueInp;
+  };
+
   const StrokaMainTabl = () => {
     let resStr = [];
     let lng = idxMap >= 0 ? MAP.phases.length : 0;
     //lng = 8; // для отладки, потом убрать !!!
     for (let i = 0; i < lng; i++) {
+      idx = i;
       resStr.push(
         <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
           <Grid xs={1} item sx={styleFT03}>
             <Box sx={{ p: 0.2 }}>{i + 1}</Box>
           </Grid>
           <Grid xs={3.5} item sx={styleFT03}>
-            0
+            <Box sx={{ display: "grid", justifyContent: "center" }}>
+              {WaysInput(massForm.phases[i].MinDuration, SetMinDuration, 20)}
+            </Box>
           </Grid>
           <Grid xs={3.5} item sx={styleFT03}>
-            0
+            <Box sx={{ display: "grid", justifyContent: "center" }}>
+              {WaysInput(massForm.phases[i].StartDuration, SetStDuration, 20)}
+            </Box>
           </Grid>
           <Grid xs={4} item sx={styleFT033}>
-            0
+            <Box sx={{ display: "grid", justifyContent: "center" }}>
+              {WaysInput(massForm.phases[i].PhaseOrder, SetPhaseOrder, 20)}
+            </Box>
           </Grid>
         </Grid>
       );
@@ -74,12 +118,12 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
     return resStr;
   };
 
-  const StrokaTabl = (recLeft: string, recRight: string) => {
+  const StrokaTabl = (recLeft: string, recRight: any) => {
     return (
       <>
         <Grid container sx={{ marginTop: 1 }}>
           <Grid item xs={0.25}></Grid>
-          <Grid item xs={5}>
+          <Grid item xs={6}>
             <b>{recLeft}</b>
           </Grid>
           <Grid item xs>
@@ -91,7 +135,11 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
   };
 
   const SaveForm = (mode: boolean) => {
-    handleCloseSetEnd()
+    handleCloseSetEnd();
+  };
+
+  const SetOffset = (valueInp: number) => {
+    massForm.offset = valueInp;
   };
 
   let aa = idxMap >= 0 ? MAP.area.nameArea : "";
@@ -114,10 +162,13 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
           <Box sx={{ fontSize: 12, marginTop: 0.5 }}>Общие</Box>
           {StrokaTabl("Район", soob1)}
           {StrokaTabl("Номер перекрёстка", massdk[props.idx].ID)}
-          {StrokaTabl("Время цикла cек.", "нет информации")}
+          {StrokaTabl("Время цикла cек.", "80 сек.")}
           <Box sx={{ fontSize: 12, marginTop: 2.5 }}>Свойства фаз</Box>
           {StrokaTabl("Количество фаз", soob2)}
-          {StrokaTabl("Начальное смещение", "нет информации")}
+          {StrokaTabl(
+            "Начальное смещение сек.",
+            WaysInput(massForm.offset, SetOffset, 100)
+          )}
           <Box sx={{ fontSize: 12, marginTop: 2.5 }}>
             Таблица параметров фаз
           </Box>
@@ -132,10 +183,7 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
               </Button>
             </Grid>
             <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>
-              <Button
-                sx={styleFormMenu}
-                onClick={() => SaveForm(false)}
-              >
+              <Button sx={styleFormMenu} onClick={() => SaveForm(false)}>
                 Выйти без сохранения
               </Button>
             </Grid>

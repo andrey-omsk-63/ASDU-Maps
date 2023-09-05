@@ -1,5 +1,5 @@
 import * as React from "react";
-//import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 //import { massrouteCreate, massrouteproCreate } from "./../../redux/actions";
 
 import Box from "@mui/material/Box";
@@ -11,22 +11,22 @@ import MapWaysFormaMain from "./MapWaysFormaMain";
 
 import { Directions } from "./../../App"; // интерфейс massForm
 
+import { styleFormNameRoute } from "./../MainMapStyle";
+
 //import { StrokaMenuFooterBind } from "./../MapServiceFunctions";
 
 const MapRouteBindFormFrom = (props: {
   setOpen: any;
   maskForm: Directions;
+  idxA: number;
+  idxB: number;
 }) => {
-  //const WS = props.ws;
   //== Piece of Redux =======================================
-  // let massroute = useSelector((state: any) => {
-  //   const { massrouteReducer } = state;
-  //   return massrouteReducer.massroute;
-  // });
-  // let massroutepro = useSelector((state: any) => {
-  //   const { massrouteproReducer } = state;
-  //   return massrouteproReducer.massroutepro;
-  // });
+  let massdk = useSelector((state: any) => {
+    const { massdkReducer } = state;
+    return massdkReducer.massdk;
+  });
+  //console.log("massdk:", massdk);
   // const dispatch = useDispatch();
   const [openSetForm, setOpenSetForm] = React.useState(true);
 
@@ -61,10 +61,13 @@ const MapRouteBindFormFrom = (props: {
     setOpenSetForm(false);
   };
 
-  const handleClose = (mode: boolean, mask: Directions ) => {
-    console.log('handleClose:',mode, mask)
+  const handleClose = (mode: boolean, mask: Directions) => {
+    console.log("handleClose:", mode, mask);
     handleCloseSetEnd();
   };
+
+  let soob1 = massdk[props.idxA].area ? " перекрёстка " : " объекта ";
+  let soob2 = massdk[props.idxB].area ? " c перекрёстком " : " c объектом ";
 
   return (
     <Modal open={openSetForm} onClose={handleCloseSetEnd}>
@@ -72,15 +75,13 @@ const MapRouteBindFormFrom = (props: {
         <Button sx={styleModalEnd} onClick={handleCloseSetEnd}>
           <b>&#10006;</b>
         </Button>
-        <Box sx={{ textAlign: "center" }}>
-          <h1>Заголовок</h1>
+        <Box sx={styleFormNameRoute}>
+          Входящая связь {soob1}
+          <b>{massdk[props.idxA].nameCoordinates}</b>
+          {soob2}
+          <b>{massdk[props.idxB].nameCoordinates}</b>
         </Box>
         <MapWaysFormaMain maskForm={props.maskForm} setClose={handleClose} />
-        {/* <Box sx={{ border: 1, marginTop: 1.5, width: 377, height: 500 }}></Box>
-        <Box sx={{ marginTop: 1.5, textAlign: "center" }}>
-          {StrokaMenuFooterBind("Выход без сохранения", 0, handleClose)}
-          {StrokaMenuFooterBind("Сохранить", 1, handleClose)}
-        </Box> */}
       </Box>
     </Modal>
   );
