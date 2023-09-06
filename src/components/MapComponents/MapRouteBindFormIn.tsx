@@ -9,11 +9,12 @@ import MapWaysFormaMain from "./MapWaysFormaMain";
 
 import { Directions } from "./../../App"; // интерфейс massForm
 
-import { styleFormNameRoute } from "./../MainMapStyle";
+import { styleSetBindForm } from "./../MainMapStyle";
+import { styleFormNameRoute, styleModalEnd } from "./../MainMapStyle";
 
 //import { StrokaMenuFooterBind } from "./../MapServiceFunctions";
 
-const MapRouteBindFormFrom = (props: {
+const MapRouteBindFormIn = (props: {
   setOpen: any;
   maskForm: Directions;
   IDX: number;
@@ -27,32 +28,6 @@ const MapRouteBindFormFrom = (props: {
   });
   //========================================================
   const [openSetForm, setOpenSetForm] = React.useState(true);
-
-  const styleModalEnd = {
-    position: "absolute",
-    top: "0%",
-    left: "auto",
-    right: "-0%",
-    height: "21px",
-    maxWidth: "2%",
-    minWidth: "2%",
-    color: "black",
-  };
-
-  const styleSetInf = {
-    outline: "none",
-    position: "absolute",
-    left: "50%",
-    top: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 460,
-    bgcolor: "background.paper",
-    border: "1px solid #000",
-    borderColor: "primary.main",
-    borderRadius: 2,
-    boxShadow: 24,
-    p: 1.5,
-  };
 
   const handleCloseSetEnd = () => {
     props.setOpen(false, props.maskForm, props.IDX);
@@ -69,7 +44,7 @@ const MapRouteBindFormFrom = (props: {
 
   return (
     <Modal open={openSetForm} onClose={handleCloseSetEnd}>
-      <Box sx={styleSetInf}>
+      <Box sx={styleSetBindForm}>
         <Button sx={styleModalEnd} onClick={handleCloseSetEnd}>
           <b>&#10006;</b>
         </Button>
@@ -85,4 +60,4 @@ const MapRouteBindFormFrom = (props: {
   );
 };
 
-export default MapRouteBindFormFrom;
+export default MapRouteBindFormIn;

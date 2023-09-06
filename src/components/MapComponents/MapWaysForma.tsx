@@ -64,25 +64,6 @@ const MapWaysForma = (props: {
     oldIdx = props.idx;
     //massFaz = [];
     soob2 = " c перекрёстком ";
-    let maskForm: Directions = {
-      name: "0121/0212",
-      satur: 0,
-      intensTr: 0,
-      dispers: 0,
-      peregon: 0,
-      wtStop: 0,
-      wtDelay: 0,
-      offsetBeginGreen: 0,
-      offsetEndGreen: 0,
-      intensFl: 1200,
-      phases: [],
-    };
-    let lng = idxMap >= 0 ? MAP.phases.length : 0;
-    //============
-    lng = 8; // для отладки, потом убрать !!!
-    //============
-    for (let i = 0; i < lng; i++) maskForm.phases.push(-1);
-    massForm = maskForm;
     massTargetRoute = [];
     massTargetName = [];
     for (let i = 0; i < massroute.ways.length; i++) {
@@ -106,6 +87,27 @@ const MapWaysForma = (props: {
         }
       }
     }
+    let nomRoute = massTargetRoute[props.nomInMass];
+    let dlina = massroute.ways[nomRoute].lenght;
+    let maskForm: Directions = {
+      name: "0121/0212",
+      satur: 0,
+      intensTr: 0,
+      dispers: 50,
+      peregon: dlina,
+      wtStop: 1,
+      wtDelay: 1,
+      offsetBeginGreen: 0,
+      offsetEndGreen: 0,
+      intensFl: 1200,
+      phases: [],
+    };
+    massForm = maskForm;
+    let lng = idxMap >= 0 ? MAP.phases.length : 0;
+    //============
+    lng = 8; // для отладки, потом убрать !!!
+    //============
+    for (let i = 0; i < lng; i++) maskForm.phases.push(-1);
   }
 
   const handleCloseSetEnd = () => {

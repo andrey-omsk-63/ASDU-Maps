@@ -5,12 +5,11 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-//import TextField from "@mui/material/TextField";
-//import MenuItem from "@mui/material/MenuItem";
 
 import { Directions } from "./../../App"; // интерфейс massForm
 
 import MapRouteBindFormFrom from "./MapRouteBindFormFrom";
+import MapRouteBindFormIn from "./MapRouteBindFormIn";
 
 import { StrokaMenuFooterBind, ReplaceInSvg } from "./../MapServiceFunctions";
 import { HeaderBind, BindInput } from "./../MapServiceFunctions";
@@ -32,11 +31,10 @@ let massFazFrom: Array<number> = [];
 let massFazIn: Array<number> = [];
 let oldIdxA = -1;
 let oldIdxB = -1;
+let IDX: number = -1;
 let massTotal: any = [];
 let beginMassTotal = 0;
 
-let massFrom: Array<number> = [];
-let massIn: Array<number> = [];
 let massTotPr: Array<number> = [];
 let massTotTrFrom: Array<number> = [];
 let massTotTrIn: Array<number> = [];
@@ -95,6 +93,7 @@ const MapRouteBind = (props: {
   //========================================================
   const [openSetBind, setOpenSetBind] = React.useState(true);
   const [openFormFrom, setOpenFormFrom] = React.useState(false);
+  const [openFormIn, setOpenFormIn] = React.useState(false);
   const [trigger, setTrigger] = React.useState(false);
 
   const handleClose = (mode: number) => {
@@ -140,17 +139,19 @@ const MapRouteBind = (props: {
       massBind[1] = 0;
     }
     maskForm.peregon = props.reqRoute.dlRoute;
-    massFrom = [0, 0, 0, 0, 0, 0, 0];
-    massIn = [0, 0, 0, 0, 0, 0, 0];
     massTotPr = [];
     massTotTrFrom = [];
     massTotTrIn = [];
     massTotTm = [];
     massTotal = [];
+    masFormFrom = [];
+    masFormIn = [];
     let nom = 1;
     for (let j = 0; j < kolIn; j++) {
       let nameIn = ("00" + massroute.vertexes[props.idxB].id).slice(-3);
       nameIn += (j + 1).toString();
+      masFormIn.push(JSON.parse(JSON.stringify(maskForm)));
+      masFormIn[j].name = nameIn + (j + 1).toString();
       for (let i = 0; i < kolFrom; i++) {
         let nameFrom = ("00" + massroute.vertexes[props.idxA].id).slice(-3);
         nameFrom += (i + 1).toString();
@@ -172,7 +173,6 @@ const MapRouteBind = (props: {
         massTotTm.push(SEC);
       }
     }
-    masFormFrom = [];
     for (let i = 0; i < kolFrom; i++) {
       masFormFrom.push(JSON.parse(JSON.stringify(maskForm)));
       let nameFrom = ("00" + massroute.vertexes[props.idxA].id).slice(-3);
@@ -206,7 +206,7 @@ const MapRouteBind = (props: {
   };
   //=== Функции - обработчики ==============================
   const SetFrom = (mode: number, valueInp: number) => {
-    massFrom[mode] = valueInp;
+    masFormFrom[mode].intensTr = valueInp; // из левой верхней таблицы
     for (let i = 0; i < kolIn; i++) {
       massTotal[kolFrom * i + mode].intensTrFrom = valueInp;
       massTotTrFrom[kolFrom * i + mode] = valueInp;
@@ -215,7 +215,7 @@ const MapRouteBind = (props: {
   };
 
   const SetIn = (mode: number, valueInp: number) => {
-    massIn[mode] = valueInp;
+    masFormIn[mode].intensTr = valueInp; // из правой верхней таблицы
     for (let i = 0; i < kolFrom; i++) {
       massTotal[mode * kolFrom + i].intensTrIn = valueInp;
       massTotTrIn[mode * kolFrom + i] = valueInp;
@@ -224,28 +224,55 @@ const MapRouteBind = (props: {
   };
 
   const SetTotTrFrom = (mode: number, valueInp: number) => {
-    massTotTrFrom[mode] = valueInp;
+    massTotTrFrom[mode] = valueInp; // из нижней таблицы
     massTotal[mode].intensTrFrom = valueInp;
+    // let nomInMass = mode ? kolFrom % mode : 0;
+    // masFormFrom[nomInMass].intensTr = valueInp;
     setTrigger(!trigger);
   };
 
   const SetTotTrIn = (mode: number, valueInp: number) => {
-    massTotTrIn[mode] = valueInp;
+    massTotTrIn[mode] = valueInp; // из нижней таблицы
     massTotal[mode].intensTrIn = valueInp;
+    massTotTrIn[mode] = valueInp;
     setTrigger(!trigger);
   };
 
   const SetTotPr = (mode: number, valueInp: number) => {
-    massTotPr[mode] = valueInp;
+    massTotPr[mode] = valueInp; // из нижней таблицы
     massTotal[mode].intensPr = valueInp;
     massTotal[mode].editIntensPr = true;
     setTrigger(!trigger);
   };
 
   const SetTotTm = (mode: number, valueInp: number) => {
-    massTotTm[mode] = valueInp;
+    massTotTm[mode] = valueInp; // из нижней таблицы
     massTotal[mode].time = valueInp;
     setTrigger(!trigger);
+  };
+
+  const SetOpenFormFrom = (mode: boolean, mask: Directions, idx: number) => {
+    if (mode) {
+      masFormFrom[idx] = mask; // из левой формы
+      for (let i = 0; i < kolIn; i++) {
+        massTotal[kolFrom * i + idx].intensTrFrom = mask.intensTr;
+        massTotTrFrom[kolFrom * i + idx] = mask.intensTr;
+      }
+      setTrigger(!trigger);
+    }
+    setOpenFormFrom(false);
+  };
+
+  const SetOpenFormIn = (mode: boolean, mask: Directions, idx: number) => {
+    if (mode) {
+      masFormIn[idx] = mask; // из правой формы
+      for (let i = 0; i < kolFrom; i++) {
+        massTotal[idx * kolFrom + i].intensTrIn = mask.intensTr;
+        massTotTrIn[idx * kolFrom + i] = mask.intensTr;
+      }
+      setTrigger(!trigger);
+    }
+    setOpenFormIn(false);
   };
   //========================================================
   const FooterBind = () => {
@@ -274,23 +301,23 @@ const MapRouteBind = (props: {
   };
 
   const hClFrom = (idx: number) => {
-    console.log("Переход в форму просмотра", idx);
-    massForm = JSON.parse(JSON.stringify(maskForm));
+    massForm = JSON.parse(JSON.stringify(masFormFrom[idx]));
     //============ потом исправить
     massForm.name = ("00" + massroute.vertexes[props.idxA].id).slice(-3);
     massForm.name += (idx + 1).toString();
     for (let i = 0; i < 8; i++) massForm.phases.push(-1);
+    IDX = idx;
     setOpenFormFrom(true);
   };
 
   const hClIn = (idx: number) => {
-    console.log("Переход в форму просмотра", idx);
-    massForm = JSON.parse(JSON.stringify(maskForm));
+    massForm = JSON.parse(JSON.stringify(masFormIn[idx]));
     //============ потом исправить
     massForm.name = ("00" + massroute.vertexes[props.idxB].id).slice(-3);
     massForm.name += (idx + 1).toString();
     for (let i = 0; i < 8; i++) massForm.phases.push(-1);
-    setOpenFormFrom(true);
+    IDX = idx;
+    setOpenFormIn(true);
   };
 
   const handleCloseIn = (i: number) => {
@@ -313,7 +340,7 @@ const MapRouteBind = (props: {
           </Grid>
           {ArgTablBindContent(3, nr)}
           <Grid item xs={4} sx={{ display: "grid", justifyContent: "center" }}>
-            {BindInput(massIn, i, SetIn, 1, 10000)}
+            {BindInput(masFormIn[i].intensTr, i, SetIn, 1, 10000)}
           </Grid>
           <Grid item xs sx={{ lineHeight: "3vh", textAlign: "center" }}>
             <Button sx={styleBind05} onClick={() => hClIn(i)}>
@@ -377,7 +404,7 @@ const MapRouteBind = (props: {
           <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
             <Grid item xs={6} sx={styleBind01}>
               <Box sx={{ display: "flex" }}>
-                {BindInput(massTotTrFrom, i, SetTotTrFrom, pusto, 10000)}
+                {BindInput(massTotTrFrom[i], i, SetTotTrFrom, pusto, 10000)}
                 <Box sx={{ marginTop: 0.5 }}>
                   {pusto !== 0 && <>&nbsp;исх</>}
                 </Box>
@@ -385,7 +412,7 @@ const MapRouteBind = (props: {
             </Grid>
             <Grid item xs={6} sx={styleBind01}>
               <Box sx={{ display: "flex" }}>
-                {BindInput(massTotTrIn, i, SetTotTrIn, pusto, 10000)}
+                {BindInput(massTotTrIn[i], i, SetTotTrIn, pusto, 10000)}
                 <Box sx={{ marginTop: 0.5 }}>
                   {pusto !== 0 && <>&nbsp;вх</>}
                 </Box>
@@ -394,10 +421,10 @@ const MapRouteBind = (props: {
           </Grid>
         </Grid>
         <Grid item xs={2.5} sx={styleBind01}>
-          {BindInput(massTotPr, i, SetTotPr, pusto, 1000)}
+          {BindInput(massTotPr[i], i, SetTotPr, pusto, 1000)}
         </Grid>
         <Grid item xs={2.5} sx={styleBind01}>
-          {BindInput(massTotTm, i, SetTotTm, pusto, 10000)}
+          {BindInput(massTotTm[i], i, SetTotTm, pusto, 10000)}
         </Grid>
       </>
     );
@@ -449,7 +476,14 @@ const MapRouteBind = (props: {
           </Button>
           {HeaderBind(nameA, nameB, Route, heightImg, masSvg, SvgA, SvgB)}
           <Grid container sx={{ marginTop: "1vh", height: "28vh" }}>
-            {BindTablFrom(kolFrom, From, hClFrom, BindInput, massFrom, SetFrom)}
+            {BindTablFrom(
+              kolFrom,
+              From,
+              hClFrom,
+              BindInput,
+              masFormFrom,
+              SetFrom
+            )}
             <Grid item xs={1}></Grid>
             {BindTablIn()}
           </Grid>
@@ -463,8 +497,18 @@ const MapRouteBind = (props: {
         </Box>
         {openFormFrom && (
           <MapRouteBindFormFrom
-            setOpen={setOpenFormFrom}
+            setOpen={SetOpenFormFrom}
             maskForm={massForm}
+            IDX={IDX}
+            idxA={props.idxA}
+            idxB={props.idxB}
+          />
+        )}
+        {openFormIn && (
+          <MapRouteBindFormIn
+            setOpen={SetOpenFormIn}
+            maskForm={massForm}
+            IDX={IDX}
             idxA={props.idxA}
             idxB={props.idxB}
           />

@@ -8,6 +8,8 @@ import MenuItem from "@mui/material/MenuItem";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 
+//import { Directions } from "./../App"; // интерфейс massForm
+
 import { FullscreenControl, GeolocationControl } from "react-yandex-maps";
 import { RulerControl, SearchControl } from "react-yandex-maps";
 import { TrafficControl, TypeSelector, ZoomControl } from "react-yandex-maps";
@@ -1134,7 +1136,8 @@ export const BindInput = (
   MAX: number
 ) => {
   const [trigger, setTrigger] = React.useState(false);
-  let value = massBind[mode];
+  //let value = massBind[mode];
+  let value = massBind;
 
   const styleSetID = {
     width: "28px",
@@ -1162,8 +1165,9 @@ export const BindInput = (
     valueInp = Math.trunc(Number(valueInp));
     if (valueInp <= MAX) {
       value = valueInp.toString();
-      setTrigger(!trigger);
+      //value = event.target.value.replace(/^0+/, "");
       SetMass(mode, valueInp);
+      setTrigger(!trigger);
     }
   };
 
@@ -1198,6 +1202,7 @@ export const BindTablFrom = (
   massPrFrom: any,
   SetMass: Function
 ) => {
+  //console.log('massPrFrom:',massPrFrom)
   const StrTablFrom = () => {
     let resStr = [];
     for (let i = 0; i < kolFazFrom; i++) {
@@ -1207,7 +1212,7 @@ export const BindTablFrom = (
           {ArgTablBindContent(1, i + 1)}
           {ArgTablBindContent(3, nr)}
           <Grid item xs={4} sx={{ display: "grid", justifyContent: "center" }}>
-            {BindInput(massPrFrom, i, SetMass, 1, 10000)}
+            {BindInput(massPrFrom[i].intensTr, i, SetMass, 1, 10000)}
           </Grid>
           <Grid item xs={4} sx={{ ineHeight: "3vh", textAlign: "center" }}>
             <Button sx={styleBind05} onClick={() => hClTabFrom(i)}>
@@ -1240,11 +1245,7 @@ export const BindTablFrom = (
   );
 };
 //=== WaysForma =======================================================
-export const WaysInput = (
-  VALUE: any,
-  SetValue: Function,
-  MAX: number
-) => {
+export const WaysInput = (VALUE: any, SetValue: Function, MAX: number) => {
   const [value, setValue] = React.useState(VALUE);
 
   const styleSetID = {

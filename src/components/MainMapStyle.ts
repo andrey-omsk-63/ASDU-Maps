@@ -27,7 +27,6 @@ export const styleModalEnd = {
   left: "auto",
   right: "-0%",
   height: "21px",
-  //width: '2%',
   maxWidth: "2%",
   minWidth: "2%",
   color: "black",
@@ -244,7 +243,6 @@ export const styleAppBind = {
   color: "black",
   textTransform: "unset !important",
 };
-
 export const styleModalEndBind = {
   position: "absolute",
   top: "-0.5%",
@@ -311,6 +309,21 @@ export const styleBind05 = {
   color: "black",
   textTransform: "unset !important",
   boxShadow: 3,
+};
+
+export const styleSetBindForm = {
+  outline: "none",
+  position: "absolute",
+  left: "50%",
+  top: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 460,
+  bgcolor: "background.paper",
+  border: "1px solid #000",
+  borderColor: "primary.main",
+  borderRadius: 2,
+  boxShadow: 24,
+  p: 1.5,
 };
 
 //=== VertexForma =====================================================
