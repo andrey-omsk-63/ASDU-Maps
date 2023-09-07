@@ -5,15 +5,16 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 
-import MapWaysFormaMain from "./MapWaysFormaMain";
+import MapWaysFormaMain from "../src/components/MapComponents/MapWaysFormaMain";
 
-import { Directions } from "./../../App"; // интерфейс massForm
+import { Directions } from "../src/App"; // интерфейс massForm
 
-import { styleFormNameRoute } from "./../MainMapStyle";
+import { styleSetBindForm } from "../src/components/MainMapStyle";
+import { styleFormNameRoute, styleModalEnd } from "../src/components/MainMapStyle";
 
 //import { StrokaMenuFooterBind } from "./../MapServiceFunctions";
 
-const MapRouteBindFormFrom = (props: {
+const MapRouteBindFormIn = (props: {
   setOpen: any;
   maskForm: Directions;
   IDX: number;
@@ -28,35 +29,14 @@ const MapRouteBindFormFrom = (props: {
   //========================================================
   const [openSetForm, setOpenSetForm] = React.useState(true);
 
-  const styleModalEnd = {
-    position: "absolute",
-    top: "0%",
-    left: "auto",
-    right: "-0%",
-    height: "21px",
-    maxWidth: "2%",
-    minWidth: "2%",
-    color: "black",
-  };
-
-  const styleSetInf = {
-    outline: "none",
-    position: "absolute",
-    left: "50%",
-    top: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 460,
-    bgcolor: "background.paper",
-    border: "1px solid #000",
-    borderColor: "primary.main",
-    borderRadius: 2,
-    boxShadow: 24,
-    p: 1.5,
-  };
-
   const handleCloseSetEnd = () => {
     props.setOpen(false, props.maskForm, props.IDX);
     setOpenSetForm(false);
+  };
+
+  const handleCloseEnd = (event: any, reason: string) => {
+    //console.log("handleCloseEnd:", reason); // Заглушка
+    if (reason === "escapeKeyDown") handleCloseSetEnd();
   };
 
   const handleClose = (mode: boolean, mask: Directions) => {
@@ -68,8 +48,8 @@ const MapRouteBindFormFrom = (props: {
   let soob2 = massdk[props.idxB].area ? " c перекрёстком " : " c объектом ";
 
   return (
-    <Modal open={openSetForm} onClose={handleCloseSetEnd}>
-      <Box sx={styleSetInf}>
+    <Modal open={openSetForm} onClose={handleCloseEnd}>
+      <Box sx={styleSetBindForm}>
         <Button sx={styleModalEnd} onClick={handleCloseSetEnd}>
           <b>&#10006;</b>
         </Button>
@@ -85,4 +65,4 @@ const MapRouteBindFormFrom = (props: {
   );
 };
 
-export default MapRouteBindFormFrom;
+export default MapRouteBindFormIn;

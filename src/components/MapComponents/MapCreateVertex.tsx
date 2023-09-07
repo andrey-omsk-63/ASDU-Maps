@@ -122,6 +122,11 @@ const MapCreateVertex = (props: {
     setOpenSetAdress(false);
   };
 
+  const handleCloseEnd = (event: any, reason: string) => {
+    //console.log("handleCloseEnd:", reason); // Заглушка
+    if (reason === "escapeKeyDown") handleCloseSetAdress();
+  };
+
   const CheckDoublAreaID = () => {
     let doublAreaID = true;
     for (let i = 0; i < massroute.vertexes.length; i++) {
@@ -282,8 +287,8 @@ const MapCreateVertex = (props: {
   };
 
   return (
-    <Box>
-      <Modal open={openSetAdress} onClose={handleCloseSetAdress}>
+    <>
+      <Modal open={openSetAdress} onClose={handleCloseEnd}>
         <Grid item container sx={styleSetAdrAreaID}>
           <Grid item>
             <Grid item container sx={styleSetAdrArea}>
@@ -307,32 +312,30 @@ const MapCreateVertex = (props: {
               </Grid>
             </Grid>
           </Grid>
-          {openSetNoVertex && (
-            <>{NoVertex(openSetNoVertex, handleCloseNoVertex)}</>
-          )}
-          {openSetInpAdr && (
-            <>
-              {InputAdressVertex(
-                openSetInpAdr,
-                handleCloseInpAdr,
-                valueAdr,
-                setValueAdr
-              )}
-            </>
-          )}
-          {openSetErr && (
-            <MapPointDataError
-              sErr={soobErr}
-              setOpen={setOpenSetErr}
-              ws={{}}
-              fromCross={0}
-              toCross={0}
-              update={0}
-            />
-          )}
         </Grid>
       </Modal>
-    </Box>
+      {openSetNoVertex && <>{NoVertex(openSetNoVertex, handleCloseNoVertex)}</>}
+      {openSetInpAdr && (
+        <>
+          {InputAdressVertex(
+            openSetInpAdr,
+            handleCloseInpAdr,
+            valueAdr,
+            setValueAdr
+          )}
+        </>
+      )}
+      {openSetErr && (
+        <MapPointDataError
+          sErr={soobErr}
+          setOpen={setOpenSetErr}
+          ws={{}}
+          fromCross={0}
+          toCross={0}
+          update={0}
+        />
+      )}
+    </>
   );
 };
 

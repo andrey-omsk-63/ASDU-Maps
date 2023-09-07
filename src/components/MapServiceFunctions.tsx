@@ -291,6 +291,7 @@ export const InputMenu = (func: any, currency: any, currencies: any) => {
     borderColor: '#93D145',
     textAlign: 'center',
     p: 1.25,
+    boxShadow: 6,
   };
 
   const styleBoxForm = {
@@ -568,6 +569,7 @@ export const StrokaMenuGlob = (soob: string, func: Function, mode: number) => {
     color: 'black',
     textTransform: 'unset !important',
     p: 1.5,
+    boxShadow: 6,
   };
 
   return (

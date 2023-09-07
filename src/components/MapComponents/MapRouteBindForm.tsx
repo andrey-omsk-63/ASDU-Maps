@@ -7,14 +7,14 @@ import Modal from "@mui/material/Modal";
 
 import MapWaysFormaMain from "./MapWaysFormaMain";
 
-import { Directions } from "./../../App"; // интерфейс massForm
+import { Directions } from "../../App"; // интерфейс massForm
 
-import { styleSetBindForm } from "./../MainMapStyle";
-import { styleFormNameRoute, styleModalEnd } from "./../MainMapStyle";
+import { styleSetBindForm } from "../MainMapStyle";
+import { styleFormNameRoute, styleModalEnd } from "../MainMapStyle";
 
 //import { StrokaMenuFooterBind } from "./../MapServiceFunctions";
 
-const MapRouteBindFormIn = (props: {
+const MapRouteBindForm = (props: {
   setOpen: any;
   maskForm: Directions;
   IDX: number;
@@ -34,6 +34,11 @@ const MapRouteBindFormIn = (props: {
     setOpenSetForm(false);
   };
 
+  const handleCloseEnd = (event: any, reason: string) => {
+    //console.log("handleCloseEnd:", reason); // Заглушка
+    if (reason === "escapeKeyDown") handleCloseSetEnd();
+  };
+
   const handleClose = (mode: boolean, mask: Directions) => {
     props.setOpen(mode, mask, props.IDX);
     setOpenSetForm(false);
@@ -43,7 +48,7 @@ const MapRouteBindFormIn = (props: {
   let soob2 = massdk[props.idxB].area ? " c перекрёстком " : " c объектом ";
 
   return (
-    <Modal open={openSetForm} onClose={handleCloseSetEnd}>
+    <Modal open={openSetForm} onClose={handleCloseEnd}>
       <Box sx={styleSetBindForm}>
         <Button sx={styleModalEnd} onClick={handleCloseSetEnd}>
           <b>&#10006;</b>
@@ -60,4 +65,4 @@ const MapRouteBindFormIn = (props: {
   );
 };
 
-export default MapRouteBindFormIn;
+export default MapRouteBindForm;

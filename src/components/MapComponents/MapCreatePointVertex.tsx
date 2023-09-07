@@ -18,12 +18,13 @@ const MapCreatePointVertex = (props: {
   area: string;
 }) => {
   const styleSet = {
+    outline: 'none',
     position: "absolute",
     marginTop: "24vh",
     marginLeft: "27vh",
     width: 340,
     bgcolor: "background.paper",
-    border: "3px solid #000",
+    border: "1px solid #000",
     borderColor: "primary.main",
     borderRadius: 2,
     boxShadow: 24,
@@ -35,45 +36,49 @@ const MapCreatePointVertex = (props: {
   const [openSetVert, setOpenSetVert] = React.useState(false);
   const AREA = props.area;
 
-  const handleCloseSet = (event: any, reason: string) => {
-    if (reason !== "backdropClick") setOpenSet(false);
-  };
-
   const handleCloseSetEnd = () => {
     props.setOpen(false);
     setOpenSet(false);
   };
 
+  const handleCloseSet = (event: any, reason: string) => {
+    //console.log("handleCloseEnd:", reason); // Заглушка
+    if (reason !== "backdropClick") handleCloseSetEnd();
+  };
+
   const handleClose = (mode: number) => {
-    if (mode === 1) {
-      setOpenSetPoint(true);
+    console.log("handleClose:", mode);
+    if (typeof mode !== "number") {
+      handleCloseSetEnd();
     } else {
-      setOpenSetVert(true);
+      if (mode === 1) {
+        setOpenSetPoint(true);
+      } else {
+        setOpenSetVert(true);
+      }
+      setOpenSet(false);
     }
-    setOpenSet(false);
   };
 
   return (
     <>
       <Modal open={openSet} onClose={handleCloseSet}>
-        <>
-          <Box sx={styleSet}>
-            <Button sx={styleModalEnd} onClick={handleCloseSetEnd}>
-              <b>&#10006;</b>
+        <Box sx={styleSet}>
+          <Button sx={styleModalEnd} onClick={handleCloseSetEnd}>
+            <b>&#10006;</b>
+          </Button>
+          <Box sx={{ textAlign: "center" }}>
+            <Typography variant="h6">Что создаём?</Typography>
+            <br />
+            <Button sx={styleModalMenu} onClick={() => handleClose(1)}>
+              Точку
             </Button>
-            <Box sx={{ textAlign: "center" }}>
-              <Typography variant="h6">Что создаём?</Typography>
-              <br />
-              <Button sx={styleModalMenu} onClick={() => handleClose(1)}>
-                Точку
-              </Button>
-              &nbsp;
-              <Button sx={styleModalMenu} onClick={() => handleClose(2)}>
-                Перекрёсток
-              </Button>
-            </Box>
+            &nbsp;
+            <Button sx={styleModalMenu} onClick={() => handleClose(2)}>
+              Перекрёсток
+            </Button>
           </Box>
-        </>
+        </Box>
       </Modal>
       {openSetPoint && (
         <MapCreatePoint

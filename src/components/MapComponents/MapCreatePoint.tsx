@@ -68,43 +68,46 @@ const MapCreatePoint = (props: {
     setOpenSetAdress(false);
   };
 
+  const handleCloseEnd = (event: any, reason: string) => {
+    //console.log("handleCloseEnd:", reason); // Заглушка
+    if (reason === "escapeKeyDown") handleCloseSetAdress();
+  };
+
   return (
-    <Box>
-      <Modal open={openSetAdress} onClose={handleCloseSetAdress}>
-        <Grid item container sx={styleSetAdress}>
-          <Grid item xs={9.5} sx={{ border: 0 }}>
-            <Box sx={styleSet}>
-              <Box component="form" sx={styleBoxForm}>
-                <TextField
-                  size="small"
-                  onKeyPress={handleKey} //отключение Enter
-                  InputProps={{
-                    disableUnderline: true,
-                    style: { fontSize: 13.3, backgroundColor: "#FFFBE5" },
-                  }}
-                  value={valuen}
-                  onChange={handleChange}
-                  variant="standard"
-                  helperText="Введите наименование (адрес)"
-                  color="secondary"
-                />
-              </Box>
+    <Modal open={openSetAdress} onClose={handleCloseEnd}>
+      <Grid item container sx={styleSetAdress}>
+        <Grid item xs={9.5} sx={{ border: 0 }}>
+          <Box sx={styleSet}>
+            <Box component="form" sx={styleBoxForm}>
+              <TextField
+                size="small"
+                onKeyPress={handleKey} //отключение Enter
+                InputProps={{
+                  disableUnderline: true,
+                  style: { fontSize: 13.3, backgroundColor: "#FFFBE5" },
+                }}
+                value={valuen}
+                onChange={handleChange}
+                variant="standard"
+                helperText="Введите наименование (адрес)"
+                color="secondary"
+              />
             </Box>
-          </Grid>
-          <Grid item xs sx={{ border: 0 }}>
-            <Box>
-              <Button
-                sx={styleInpKnop}
-                variant="contained"
-                onClick={handleCloseSetAdr}
-              >
-                Ввод
-              </Button>
-            </Box>
-          </Grid>
+          </Box>
         </Grid>
-      </Modal>
-    </Box>
+        <Grid item xs sx={{ border: 0 }}>
+          <Box>
+            <Button
+              sx={styleInpKnop}
+              variant="contained"
+              onClick={handleCloseSetAdr}
+            >
+              Ввод
+            </Button>
+          </Box>
+        </Grid>
+      </Grid>
+    </Modal>
   );
 };
 

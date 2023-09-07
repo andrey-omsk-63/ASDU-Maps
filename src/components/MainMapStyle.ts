@@ -10,7 +10,6 @@ export const styleApp01 = {
   width: '19%',
   maxHeight: '21px',
   minHeight: '21px',
-  //backgroundColor: '#F1F3F4',
   backgroundColor: '#D7F1C0',
   color: 'black',
   textTransform: 'unset !important',
@@ -60,7 +59,7 @@ export const styleSetPoint = {
   marginLeft: '24vh',
   width: 250,
   bgcolor: 'background.paper',
-  border: '3px solid #000',
+  border: '1px solid #000',
   borderColor: 'primary.main',
   borderRadius: 2,
   boxShadow: 24,
@@ -83,13 +82,13 @@ export const styleModalMenu = {
   fontSize: 17,
   maxHeight: '21px',
   minHeight: '21px',
-  //backgroundColor: '#F1F3F4',
   backgroundColor: '#E6F5D6',
   color: 'black',
   marginRight: 1,
   marginBottom: 2,
   textTransform: 'unset !important',
   textAlign: 'center',
+  boxShadow: 3,
 };
 //=== InputAdress =====================================================
 export const styleSet = {
@@ -115,13 +114,12 @@ export const styleInpKnop = {
 
 export const styleSetAdress = {
   width: '304px',
-  //height: '30px',
   height: '7vh',
   marginTop: '9vh',
   marginLeft: '48px',
   border: '3px solid #000',
   borderColor: '#FFFEF7',
-  borderRadius: 2,
+  borderRadius: 1,
   boxShadow: 24,
   bgcolor: '#FFFEF7',
   opacity: 0.85,
@@ -140,11 +138,9 @@ export const styleSetAdrAreaID = {
   marginLeft: '46px',
   width: '318px',
   height: '14vh',
-  // bgcolor: "#FAFAFA",
-  // bgcolor: "#DAF0C5",
   border: '3px solid #000',
   borderColor: '#FFFEF7',
-  borderRadius: 2,
+  borderRadius: 1,
   boxShadow: 24,
   bgcolor: '#FFFEF7',
   opacity: 0.85,
@@ -185,7 +181,6 @@ export const styleSetID = {
   boxShadow: 3,
   textAlign: 'center',
   p: 1.5,
-  //border: 1,
 };
 
 export const styleBoxFormArea = {
