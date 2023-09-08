@@ -12,11 +12,12 @@ import MapRouteBindForm from "./MapRouteBindForm";
 
 import { StrokaMenuFooterBind, ReplaceInSvg } from "./../MapServiceFunctions";
 import { HeaderBind, BindInput } from "./../MapServiceFunctions";
-import { ArgTablBindContent } from "./../MapServiceFunctions";
+//import { ArgTablBindContent } from "./../MapServiceFunctions";
 import { HeaderTablBindContent, BindTablFrom } from "./../MapServiceFunctions";
 
 import { styleSetImg, styleModalEndBind } from "./../MainMapStyle";
-import { styleBind03, styleBind033 } from "./../MainMapStyle";
+import { styleBind042 } from "./../MainMapStyle";
+import { styleBind03, styleBind033, styleBind041 } from "./../MainMapStyle";
 import { styleBind01, styleBind04, styleBind05 } from "./../MainMapStyle";
 
 let massBind = [0, 0];
@@ -223,7 +224,6 @@ const MapRouteBind = (props: {
           chPr += massTotal[beginMassTotal + i].intensTrIn;
       }
       masFormIn[beginMassTotal / kolFrom].intensTr = chPr;
-      //console.log("masFormIn:", masFormIn[beginMassTotal / kolFrom]);
     }
   };
 
@@ -357,14 +357,18 @@ const MapRouteBind = (props: {
     nameRoute = nameRoute.slice(-3);
     for (let i = 0; i < kolIn; i++) {
       let nr = nameRoute + (i + 1).toString();
+      let illum = beginMassTotal / kolFrom === i ? styleBind042 : styleBind041;
+      //console.log("@@@:", i, illum);
       resStr.push(
         <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
           <Grid item xs={1} sx={{ lineHeight: "3vh", textAlign: "center" }}>
-            <Button sx={styleBind04} onClick={() => handleCloseIn(i)}>
-              {i + 1}
+            {i + 1}
+          </Grid>
+          <Grid item xs={3} sx={{ lineHeight: "3vh", textAlign: "center" }}>
+            <Button sx={illum} onClick={() => handleCloseIn(i)}>
+              {nr}
             </Button>
           </Grid>
-          {ArgTablBindContent(3, nr)}
           <Grid item xs={4} sx={{ display: "grid", justifyContent: "center" }}>
             {BindInput(masFormIn[i].intensTr, i, SetIn, 1, 10000)}
           </Grid>
@@ -411,7 +415,7 @@ const MapRouteBind = (props: {
     let metka = massTotal[i].have ? "✔" : "";
     let pusto = massTotal[i].have ? 1 : 0;
     if (massTotTrFrom[i] && massTotTrIn[i] && !massTotal[i].editIntensPr) {
-      massTotPr[i] = (massTotTrIn[i] * 100) / massTotTrFrom[i];
+      massTotPr[i] = Math.round((massTotTrIn[i] * 100) / massTotTrFrom[i]);
     }
 
     return (
@@ -421,7 +425,8 @@ const MapRouteBind = (props: {
         </Grid>
         <Grid item xs={0.5} sx={{ lineHeight: "3vh", textAlign: "center" }}>
           <Button sx={styleBind04} onClick={() => handleCloseTotal(i)}>
-            {massTotal[i].nom}
+            {/* {massTotal[i].nom} */}
+            {idx + 1}
           </Button>
         </Grid>
         <Grid item xs={2.5} sx={{ lineHeight: "3vh", textAlign: "center" }}>
@@ -452,7 +457,10 @@ const MapRouteBind = (props: {
           </Grid>
         </Grid>
         <Grid item xs={2.5} sx={styleBind01}>
-          {BindInput(massTotPr[i], i, SetTotPr, pusto, 1000)}
+          <Box sx={{ display: "flex" }}>
+            {BindInput(massTotPr[i], i, SetTotPr, pusto, 1000)}
+            <Box sx={{ marginTop: 0.5 }}>{pusto !== 0 && <>%</>}</Box>
+          </Box>
         </Grid>
         <Grid item xs={2.5} sx={styleBind01}>
           {BindInput(massTotTm[i], i, SetTotTm, pusto, 10000)}
@@ -474,11 +482,14 @@ const MapRouteBind = (props: {
   };
 
   const TablTotal = () => {
+    let nom = beginMassTotal / kolFrom + 1;
+    let nameRoute = "00" + massroute.vertexes[props.idxB].id;
+    nameRoute = nameRoute.slice(-3) + nom.toString();
     return (
       <Grid item xs sx={styleSetImg}>
         <Box sx={styleBind03}>
           <em>
-            Состав входящего направления <b>{beginMassTotal / kolFrom + 1}</b>
+            Состав входящего направления <b>{nameRoute}</b>
           </em>
         </Box>
         <Box sx={styleBind033}>

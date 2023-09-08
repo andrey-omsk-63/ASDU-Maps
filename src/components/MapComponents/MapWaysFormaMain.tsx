@@ -11,7 +11,7 @@ import { Directions } from "./../../App"; // интерфейс massForm
 import { styleFW03, styleFormFWTabl } from "./../MainMapStyle";
 import { styleFormMenu } from "./../MainMapStyle";
 
-let oldName = "";
+//let oldName = "";
 
 let massForm: Directions = {
   name: "0121/0212",
@@ -35,10 +35,10 @@ const MapWaysFormaMain = (props: {
   const [trigger, setTrigger] = React.useState(false);
 
   //=== инициализация ======================================
-  if (oldName !== props.maskForm.name) {
-    oldName = props.maskForm.name;
+  // if (oldName !== props.maskForm.name) {
+  //   oldName = props.maskForm.name;
     massForm = props.maskForm;
-  }
+  //}
 
   const handleCloseFaz = (mode: number) => {
     if (massForm.phases[mode] === -1) {
@@ -91,7 +91,7 @@ const MapWaysFormaMain = (props: {
   };
 
   const SaveForm = (mode: boolean) => {
-    oldName = "";
+    //oldName = "";
     props.setClose(mode, massForm);
   };
 

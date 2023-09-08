@@ -292,6 +292,36 @@ export const styleBind04 = {
   boxShadow: 3,
 };
 
+export const styleBind041 = {
+  fontSize: 12,
+  border: '2px solid #000',
+  bgcolor: '#E6F5D6',
+  maxWidth: 44,
+  minWidth: 44,
+  maxHeight: '21px',
+  minHeight: '21px',
+  borderColor: '#E6F5D6',
+  borderRadius: 1,
+  color: 'black',
+  textTransform: 'unset !important',
+  boxShadow: 3,
+};
+
+export const styleBind042 = {
+  fontSize: 12,
+  border: '2px solid #000',
+  bgcolor: '#93D145',
+  maxWidth: 44,
+  minWidth: 44,
+  maxHeight: '21px',
+  minHeight: '21px',
+  borderColor: '#93D145',
+  borderRadius: 1,
+  color: 'black',
+  textTransform: 'unset !important',
+  boxShadow: 3,
+};
+
 export const styleBind05 = {
   fontSize: 12,
   border: '2px solid #000',
