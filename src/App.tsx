@@ -67,6 +67,7 @@ export interface Directions {
   offsetEndGreen: number;
   intensFl: number;
   phases: Array<number>;
+  edited: boolean;
 }
 
 export let massRoute: Router[] = [];

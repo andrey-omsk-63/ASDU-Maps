@@ -25,6 +25,7 @@ let massForm: Directions = {
   offsetEndGreen: 0,
   intensFl: 1200,
   phases: [],
+  edited: false,
 };
 
 const MapWaysFormaMain = (props: {

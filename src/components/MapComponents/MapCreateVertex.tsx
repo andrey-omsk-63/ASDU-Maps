@@ -123,7 +123,6 @@ const MapCreateVertex = (props: {
   };
 
   const handleCloseEnd = (event: any, reason: string) => {
-    //console.log("handleCloseEnd:", reason); // Заглушка
     if (reason === "escapeKeyDown") handleCloseSetAdress();
   };
 

@@ -56,6 +56,7 @@ let maskForm: Directions = {
   offsetEndGreen: 0,
   intensFl: 1200,
   phases: [],
+  edited: false,
 };
 
 let massForm: Directions = {
@@ -70,6 +71,7 @@ let massForm: Directions = {
   offsetEndGreen: 0,
   intensFl: 1200,
   phases: [],
+  edited: false,
 };
 
 let masFormFrom: any = [];
@@ -213,6 +215,18 @@ const MapRouteBind = (props: {
     bgcolor: "#F0F0F0",
   };
   //=== Функции - обработчики ==============================
+  const ReCalcIntensTr = () => {
+    if (!masFormIn[beginMassTotal / kolFrom].edited) {
+      let chPr = 0;
+      for (let i = 0; i < kolFrom; i++) {
+        if (massTotal[beginMassTotal + i].have)
+          chPr += massTotal[beginMassTotal + i].intensTrIn;
+      }
+      masFormIn[beginMassTotal / kolFrom].intensTr = chPr;
+      //console.log("masFormIn:", masFormIn[beginMassTotal / kolFrom]);
+    }
+  };
+
   const SetFrom = (mode: number, valueInp: number) => {
     masFormFrom[mode].intensTr = valueInp; // из левой верхней таблицы
     for (let i = 0; i < kolIn; i++) {
@@ -224,10 +238,12 @@ const MapRouteBind = (props: {
 
   const SetIn = (mode: number, valueInp: number) => {
     masFormIn[mode].intensTr = valueInp; // из правой верхней таблицы
+    masFormIn[mode].edited = true;
     // for (let i = 0; i < kolFrom; i++) {
     //   massTotal[mode * kolFrom + i].intensTrIn = valueInp;
     //   massTotTrIn[mode * kolFrom + i] = valueInp;
     // }
+    console.log("masFormIn:", masFormIn);
     setTrigger(!trigger);
   };
 
@@ -242,7 +258,7 @@ const MapRouteBind = (props: {
   const SetTotTrIn = (mode: number, valueInp: number) => {
     massTotTrIn[mode] = valueInp; // из нижней таблицы
     massTotal[mode].intensTrIn = valueInp;
-    massTotTrIn[mode] = valueInp;
+    ReCalcIntensTr();
     setTrigger(!trigger);
   };
 
@@ -273,11 +289,13 @@ const MapRouteBind = (props: {
 
   const SetOpenFormIn = (mode: boolean, mask: Directions, idx: number) => {
     if (mode) {
-      masFormIn[idx] = mask; // из правой формы
-      for (let i = 0; i < kolFrom; i++) {
-        massTotal[idx * kolFrom + i].intensTrIn = mask.intensTr;
-        massTotTrIn[idx * kolFrom + i] = mask.intensTr;
-      }
+      let pr = JSON.parse(JSON.stringify(masFormIn[idx].intensTr)); // из правой формы
+      masFormIn[idx] = mask;
+      if (pr !== masFormIn[idx].intensTr) masFormIn[idx].edited = true;
+      // for (let i = 0; i < kolFrom; i++) {
+      //   massTotal[idx * kolFrom + i].intensTrIn = mask.intensTr;
+      //   massTotTrIn[idx * kolFrom + i] = mask.intensTr;
+      // }
       setTrigger(!trigger);
     }
     setOpenFormIn(false);
@@ -384,6 +402,7 @@ const MapRouteBind = (props: {
 
   const handleCloseTotal = (idx: number) => {
     massTotal[idx].have = !massTotal[idx].have;
+    ReCalcIntensTr();
     setTrigger(!trigger);
   };
 
@@ -414,14 +433,18 @@ const MapRouteBind = (props: {
               <Box sx={{ display: "flex" }}>
                 {/* {BindInput(massTotTrFrom[i], i, SetTotTrFrom, pusto, 10000)} */}
                 <Box sx={{ marginTop: 0.5 }}>
-                  {pusto !== 0 && <>из <b>{massTotTrFrom[i]}</b></>}
+                  {pusto !== 0 && (
+                    <>
+                      из <b>{massTotTrFrom[i]}</b>
+                    </>
+                  )}
                 </Box>
               </Box>
             </Grid>
             <Grid item xs={6} sx={styleBind01}>
               <Box sx={{ display: "flex" }}>
                 <Box sx={{ marginTop: 0.5 }}>
-                  {pusto !== 0 && <>пришло&nbsp;</>}
+                  {pusto !== 0 && <>пришло&nbsp;&nbsp;</>}
                 </Box>
                 {BindInput(massTotTrIn[i], i, SetTotTrIn, pusto, 10000)}
               </Box>

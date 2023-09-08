@@ -30,6 +30,7 @@ let massForm: Directions = {
   offsetEndGreen: 0,
   intensFl: 1200,
   phases: [],
+  edited: false,
 };
 
 const MapWaysForma = (props: {
@@ -101,6 +102,7 @@ const MapWaysForma = (props: {
       offsetEndGreen: 0,
       intensFl: 1200,
       phases: [],
+      edited: false,
     };
     massForm = maskForm;
     let lng = idxMap >= 0 ? MAP.phases.length : 0;
