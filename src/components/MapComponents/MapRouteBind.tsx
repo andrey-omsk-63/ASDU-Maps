@@ -35,10 +35,10 @@ let IDX: number = -1;
 let massTotal: any = [];
 let beginMassTotal = 0;
 
-let massTotPr: Array<number> = [];
-let massTotTrFrom: Array<number> = [];
-let massTotTrIn: Array<number> = [];
-let massTotTm: Array<number> = [];
+let massTotTrFrom: Array<number> = []; // нижняя таблмца - интенсивность из
+let massTotTrIn: Array<number> = []; // нижняя таблмца - интенсивность пришло
+let massTotPr: Array<number> = []; // нижняя таблмца - интенсивность в %
+let massTotTm: Array<number> = []; // нижняя таблмца - время проезда
 
 let nameA = "";
 let nameB = "";
@@ -178,10 +178,10 @@ const MapRouteBind = (props: {
         };
         //massForm = JSON.parse(JSON.stringify(maskForm));
         massTotal.push(maskTotal);
-        massTotTrFrom.push(0);
-        massTotTrIn.push(0);
-        massTotPr.push(0);
-        massTotTm.push(SEC);
+        massTotTrFrom.push(0); // нижняя таблмца - интенсивность из
+        massTotTrIn.push(-1); // нижняя таблмца - интенсивность пришло
+        massTotPr.push(0); // нижняя таблмца - интенсивность в %
+        massTotTm.push(SEC); // нижняя таблмца - время проезда
       }
     }
     for (let i = 0; i < kolFrom; i++) {
@@ -190,7 +190,7 @@ const MapRouteBind = (props: {
       masFormFrom[i].name = nameFrom + (i + 1).toString();
     }
   }
-
+  //=== Ожидания получения изображений перекрёстков ========
   React.useMemo(() => {
     if (props.svg && masSvg[0] === "" && masSvg[1] === "") {
       console.log("Пришли картинки!!!");
@@ -358,7 +358,6 @@ const MapRouteBind = (props: {
     for (let i = 0; i < kolIn; i++) {
       let nr = nameRoute + (i + 1).toString();
       let illum = beginMassTotal / kolFrom === i ? styleBind042 : styleBind041;
-      //console.log("@@@:", i, illum);
       resStr.push(
         <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
           <Grid item xs={1} sx={{ lineHeight: "3vh", textAlign: "center" }}>
@@ -406,6 +405,11 @@ const MapRouteBind = (props: {
 
   const handleCloseTotal = (idx: number) => {
     massTotal[idx].have = !massTotal[idx].have;
+    let pusto = massTotal[idx].have ? 1 : 0;
+    if (pusto && massTotTrIn[idx] < 0) {
+      massTotTrIn[idx] = masFormFrom[idx % kolFrom].intensTr;
+      massTotal[idx].intensTrIn += massTotTrIn[idx];
+    }
     ReCalcIntensTr();
     setTrigger(!trigger);
   };
@@ -414,36 +418,32 @@ const MapRouteBind = (props: {
     let i = beginMassTotal + idx;
     let metka = massTotal[i].have ? "✔" : "";
     let pusto = massTotal[i].have ? 1 : 0;
-    if (massTotTrFrom[i] && massTotTrIn[i] && !massTotal[i].editIntensPr) {
-      massTotPr[i] = Math.round((massTotTrIn[i] * 100) / massTotTrFrom[i]);
+    if (pusto) {
+      if (massTotTrFrom[i] && massTotTrIn[i] > 0 && !massTotal[i].editIntensPr)
+        massTotPr[i] = Math.round((massTotTrIn[i] * 100) / massTotTrFrom[i]);
     }
-
     return (
       <>
         <Grid item xs={0.5} sx={{ lineHeight: "3vh", textAlign: "center" }}>
-          {metka}
+          <b>{metka}</b>
         </Grid>
         <Grid item xs={0.5} sx={{ lineHeight: "3vh", textAlign: "center" }}>
           <Button sx={styleBind04} onClick={() => handleCloseTotal(i)}>
-            {/* {massTotal[i].nom} */}
             {idx + 1}
           </Button>
         </Grid>
         <Grid item xs={2.5} sx={{ lineHeight: "3vh", textAlign: "center" }}>
-          {massTotal[i].name}
+          <b>{massTotal[i].name}</b>
         </Grid>
         <Grid item xs={3.5}>
-          <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
+          <Grid container item xs={12} sx={{ fontSize: 14 }}>
             <Grid item xs={5} sx={styleBind01}>
-              <Box sx={{ display: "flex" }}>
-                {/* {BindInput(massTotTrFrom[i], i, SetTotTrFrom, pusto, 10000)} */}
-                <Box sx={{ marginTop: 0.5 }}>
-                  {pusto !== 0 && (
-                    <>
-                      из <b>{massTotTrFrom[i]}</b>
-                    </>
-                  )}
-                </Box>
+              <Box sx={{ display: "flex", marginTop: 0.5 }}>
+                {pusto !== 0 && (
+                  <>
+                    из&nbsp;<b>{massTotTrFrom[i]}</b>
+                  </>
+                )}
               </Box>
             </Grid>
             <Grid item xs={6} sx={styleBind01}>
