@@ -17,9 +17,6 @@ import { SendSocketCreateWay } from "./../MapSocketFunctions";
 import { SendSocketCreateWayFromPoint } from "./../MapSocketFunctions";
 import { SendSocketCreateWayToPoint } from "./../MapSocketFunctions";
 
-//import { styleModalEnd,
-//styleSetInf
-// } from "./../MainMapStyle";
 import { styleModalMenu, styleSetArea } from "../MapPointDataErrorStyle";
 import { styleBoxFormArea, styleBoxFormNapr } from "../MapPointDataErrorStyle";
 import { styleSetNapr, styleSave } from "../MapPointDataErrorStyle";

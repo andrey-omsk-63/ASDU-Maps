@@ -351,6 +351,22 @@ export const styleSetBindForm = {
   p: 1.5,
 };
 
+export const MakeStyleBind00 = (heightImg: number) => {
+  const styleBind00 = {
+    outline: "none",
+    position: "absolute",
+    left: "50%",
+    top: "50%",
+    transform: "translate(-50%, -50%)",
+    border: "3px solid #000",
+    borderColor: "#F0F0F0",
+    borderRadius: 2,
+    width: "98%",
+    height: heightImg + window.innerHeight * 0.659,
+    bgcolor: "#F0F0F0",
+  };
+  return styleBind00;
+};
 //=== VertexForma =====================================================
 export const styleFormInf = {
   outline: 'none',

@@ -11,12 +11,11 @@ import { Directions } from "./../../App"; // интерфейс massForm
 import MapRouteBindForm from "./MapRouteBindForm";
 
 import { StrokaMenuFooterBind, ReplaceInSvg } from "./../MapServiceFunctions";
-import { HeaderBind, BindInput } from "./../MapServiceFunctions";
-//import { ArgTablBindContent } from "./../MapServiceFunctions";
+import { HeaderBind, BindInput, MaskFormWay } from "./../MapServiceFunctions";
 import { HeaderTablBindContent, BindTablFrom } from "./../MapServiceFunctions";
 
 import { styleSetImg, styleModalEndBind } from "./../MainMapStyle";
-import { styleBind042 } from "./../MainMapStyle";
+import { styleBind042, MakeStyleBind00 } from "./../MainMapStyle";
 import { styleBind03, styleBind033, styleBind041 } from "./../MainMapStyle";
 import { styleBind01, styleBind04, styleBind05 } from "./../MainMapStyle";
 
@@ -27,56 +26,26 @@ let masSvg = ["", ""];
 
 let kolFrom = 4;
 let kolIn = 5;
-let massFazFrom: Array<number> = [];
-let massFazIn: Array<number> = [];
 let oldIdxA = -1;
 let oldIdxB = -1;
 let IDX: number = -1;
+
 let massTotal: any = [];
 let beginMassTotal = 0;
-
-let massTotTrFrom: Array<number> = []; // нижняя таблмца - интенсивность из
-let massTotTrIn: Array<number> = []; // нижняя таблмца - интенсивность пришло
-let massTotPr: Array<number> = []; // нижняя таблмца - интенсивность в %
-let massTotTm: Array<number> = []; // нижняя таблмца - время проезда
+let massTotTrFrom: Array<number> = []; // нижняя таблица - интенсивность 'из'
+let massTotTrIn: Array<number> = []; // нижняя таблица - интенсивность 'пришло'
+let massTotPr: Array<number> = []; // нижняя таблица - интенсивность в %
+let massTotTm: Array<number> = []; // нижняя таблица - время проезда
+let masFormFrom: any = []; // верхняя левая таблица
+let masFormIn: any = []; // верхняя правая таблица
 
 let nameA = "";
 let nameB = "";
 let Route: any = null;
 let From = "";
 
-let maskForm: Directions = {
-  name: "0121/0212",
-  satur: 0,
-  intensTr: 0,
-  dispers: 50,
-  peregon: 0,
-  wtStop: 1,
-  wtDelay: 1,
-  offsetBeginGreen: 0,
-  offsetEndGreen: 0,
-  intensFl: 1200,
-  phases: [],
-  edited: false,
-};
-
-let massForm: Directions = {
-  name: "0121/0212",
-  satur: 0,
-  intensTr: 0,
-  dispers: 0,
-  peregon: 0,
-  wtStop: 0,
-  wtDelay: 0,
-  offsetBeginGreen: 0,
-  offsetEndGreen: 0,
-  intensFl: 1200,
-  phases: [],
-  edited: false,
-};
-
-let masFormFrom: any = [];
-let masFormIn: any = [];
+let maskForm: Directions = JSON.parse(JSON.stringify(MaskFormWay()));
+let massForm: Directions = JSON.parse(JSON.stringify(MaskFormWay()));
 
 const MapRouteBind = (props: {
   setOpen: any;
@@ -107,12 +76,10 @@ const MapRouteBind = (props: {
   };
 
   const handleCloseEnd = (event: any, reason: string) => {
-    //console.log("handleCloseEnd:", reason); // Заглушка
     if (reason === "escapeKeyDown") CloseEnd();
   };
 
   const handleClose = (mode: any) => {
-    console.log("handleClose:", mode);
     CloseEnd();
     if (mode && typeof mode === "number") props.func(false, massBind);
   };
@@ -129,6 +96,7 @@ const MapRouteBind = (props: {
   const SEC = props.reqRoute.tmRoute;
   let heightImg = Math.round(window.innerWidth / 7);
   let widthHeight = heightImg.toString();
+  const styleBind00 = MakeStyleBind00(heightImg); // стиль для главного мод.окна
 
   //=== инициализация ======================================
   if (oldIdxA !== props.idxA || oldIdxB !== props.idxB) {
@@ -136,11 +104,7 @@ const MapRouteBind = (props: {
     oldIdxA = props.idxA;
     oldIdxB = props.idxB;
     masSvg = ["", ""];
-    massFazFrom = [];
-    for (let i = 0; i < kolFrom; i++) massFazFrom.push(-1);
-    for (let i = 0; i < kolIn; i++) massFazIn.push(-1);
-    SvgA = true;
-    SvgB = true;
+    SvgA = SvgB = true;
     if (!massroute.vertexes[props.idxA].area) {
       SvgA = false;
       massBind[0] = 0;
@@ -157,6 +121,7 @@ const MapRouteBind = (props: {
     massTotal = [];
     masFormFrom = [];
     masFormIn = [];
+    beginMassTotal = 0;
     let nom = 1;
     for (let j = 0; j < kolIn; j++) {
       let nameIn = ("00" + massroute.vertexes[props.idxB].id).slice(-3);
@@ -176,12 +141,11 @@ const MapRouteBind = (props: {
           editIntensPr: false,
           time: SEC,
         };
-        //massForm = JSON.parse(JSON.stringify(maskForm));
         massTotal.push(maskTotal);
-        massTotTrFrom.push(0); // нижняя таблмца - интенсивность из
-        massTotTrIn.push(-1); // нижняя таблмца - интенсивность пришло
-        massTotPr.push(0); // нижняя таблмца - интенсивность в %
-        massTotTm.push(SEC); // нижняя таблмца - время проезда
+        massTotTrFrom.push(0); // нижняя таблица - интенсивность 'из'
+        massTotTrIn.push(-1); // нижняя таблица - интенсивность 'пришло'
+        massTotPr.push(0); // нижняя таблица - интенсивность в %
+        massTotTm.push(SEC); // нижняя таблица - время проезда
       }
     }
     for (let i = 0; i < kolFrom; i++) {
@@ -193,7 +157,6 @@ const MapRouteBind = (props: {
   //=== Ожидания получения изображений перекрёстков ========
   React.useMemo(() => {
     if (props.svg && masSvg[0] === "" && masSvg[1] === "") {
-      console.log("Пришли картинки!!!");
       let dat = props.svg;
       masSvg = [];
       for (let key in dat) masSvg.push(dat[key]);
@@ -201,20 +164,6 @@ const MapRouteBind = (props: {
       if (masSvg[1] !== "") masSvg[1] = ReplaceInSvg(masSvg, widthHeight, 1);
     }
   }, [props.svg, widthHeight]);
-  //========================================================
-  const styleBind00 = {
-    outline: "none",
-    position: "absolute",
-    left: "50%",
-    top: "50%",
-    transform: "translate(-50%, -50%)",
-    border: "3px solid #000",
-    borderColor: "#F0F0F0",
-    borderRadius: 2,
-    width: "98%",
-    height: heightImg + window.innerHeight * 0.659,
-    bgcolor: "#F0F0F0",
-  };
   //=== Функции - обработчики ==============================
   const ReCalcIntensTr = () => {
     if (!masFormIn[beginMassTotal / kolFrom].edited) {
@@ -239,21 +188,8 @@ const MapRouteBind = (props: {
   const SetIn = (mode: number, valueInp: number) => {
     masFormIn[mode].intensTr = valueInp; // из правой верхней таблицы
     masFormIn[mode].edited = true;
-    // for (let i = 0; i < kolFrom; i++) {
-    //   massTotal[mode * kolFrom + i].intensTrIn = valueInp;
-    //   massTotTrIn[mode * kolFrom + i] = valueInp;
-    // }
-    console.log("masFormIn:", masFormIn);
     setTrigger(!trigger);
   };
-
-  // const SetTotTrFrom = (mode: number, valueInp: number) => {
-  //   massTotTrFrom[mode] = valueInp; // из нижней таблицы
-  //   massTotal[mode].intensTrFrom = valueInp;
-  //   // let nomInMass = mode ? kolFrom % mode : 0;
-  //   // masFormFrom[nomInMass].intensTr = valueInp;
-  //   setTrigger(!trigger);
-  // };
 
   const SetTotTrIn = (mode: number, valueInp: number) => {
     massTotTrIn[mode] = valueInp; // из нижней таблицы
@@ -292,38 +228,9 @@ const MapRouteBind = (props: {
       let pr = JSON.parse(JSON.stringify(masFormIn[idx].intensTr)); // из правой формы
       masFormIn[idx] = mask;
       if (pr !== masFormIn[idx].intensTr) masFormIn[idx].edited = true;
-      // for (let i = 0; i < kolFrom; i++) {
-      //   massTotal[idx * kolFrom + i].intensTrIn = mask.intensTr;
-      //   massTotTrIn[idx * kolFrom + i] = mask.intensTr;
-      // }
       setTrigger(!trigger);
     }
     setOpenFormIn(false);
-  };
-  //========================================================
-  const FooterBind = () => {
-    let have = 0;
-    for (let i = 0; i < massTotal.length; i++) {
-      if (massTotal[i].have) have++;
-    }
-    return (
-      <Grid container sx={{ marginTop: "1vh", height: 27, width: "100%" }}>
-        <Grid item xs={4.5}></Grid>
-        <Grid item xs={3} sx={{ border: 0 }}>
-          {have ? (
-            <Box sx={{ textAlign: "center" }}>
-              {StrokaMenuFooterBind("Отмена", 0, handleClose)}
-              {StrokaMenuFooterBind("Привязываем", 1, handleClose)}
-            </Box>
-          ) : (
-            <Box sx={{ textAlign: "center" }}>
-              {StrokaMenuFooterBind("Отмена", 0, handleClose)}
-            </Box>
-          )}
-        </Grid>
-        {!SvgB && <Grid item xs={4}></Grid>}
-      </Grid>
-    );
   };
 
   const hClFrom = (idx: number) => {
@@ -349,6 +256,42 @@ const MapRouteBind = (props: {
   const handleCloseIn = (i: number) => {
     beginMassTotal = i * kolFrom;
     setTrigger(!trigger);
+  };
+
+  const handleCloseTotal = (idx: number) => {
+    massTotal[idx].have = !massTotal[idx].have;
+    let pusto = massTotal[idx].have ? 1 : 0;
+    if (pusto && massTotTrIn[idx] < 0) {
+      massTotTrIn[idx] = masFormFrom[idx % kolFrom].intensTr;
+      massTotal[idx].intensTrIn += massTotTrIn[idx];
+    }
+    ReCalcIntensTr();
+    setTrigger(!trigger);
+  };
+  //========================================================
+  const FooterBind = () => {
+    let have = 0;
+    for (let i = 0; i < massTotal.length; i++) {
+      if (massTotal[i].have) have++;
+    }
+    return (
+      <Grid container sx={{ marginTop: "1vh", height: 27, width: "100%" }}>
+        <Grid item xs={3.5}></Grid>
+        <Grid item xs={5} sx={{ border: 0 }}>
+          {have ? (
+            <Box sx={{ textAlign: "center" }}>
+              {StrokaMenuFooterBind("Отмена", 0, handleClose)}
+              {StrokaMenuFooterBind("Сохранение связи", 1, handleClose)}
+            </Box>
+          ) : (
+            <Box sx={{ textAlign: "center" }}>
+              {StrokaMenuFooterBind("Отмена", 0, handleClose)}
+            </Box>
+          )}
+        </Grid>
+        {!SvgB && <Grid item xs={4}></Grid>}
+      </Grid>
+    );
   };
 
   const StrokaTablIn = () => {
@@ -401,17 +344,6 @@ const MapRouteBind = (props: {
         </Grid>
       </Grid>
     );
-  };
-
-  const handleCloseTotal = (idx: number) => {
-    massTotal[idx].have = !massTotal[idx].have;
-    let pusto = massTotal[idx].have ? 1 : 0;
-    if (pusto && massTotTrIn[idx] < 0) {
-      massTotTrIn[idx] = masFormFrom[idx % kolFrom].intensTr;
-      massTotal[idx].intensTrIn += massTotTrIn[idx];
-    }
-    ReCalcIntensTr();
-    setTrigger(!trigger);
   };
 
   const TablTotalContent = (idx: number) => {

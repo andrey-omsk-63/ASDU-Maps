@@ -8,7 +8,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 
-//import { Directions } from "./../App"; // интерфейс massForm
+import { Directions } from "./../App"; // интерфейс massForm
 
 import { FullscreenControl, GeolocationControl } from "react-yandex-maps";
 import { RulerControl, SearchControl } from "react-yandex-maps";
@@ -623,29 +623,31 @@ export const ShowFormalRoute = (flagDemo: boolean, PressButton: Function) => {
 
 export const MenuProcesRoute = (
   flagPusk: boolean,
-  flagBind: boolean,
+  //flagBind: boolean,
   flagRoute: boolean,
   PressButton: Function
 ) => {
   return (
     <>
-      {flagPusk && !flagBind && (
+      {/* {flagPusk && !flagBind && (
         <>{StrokaMenuGlob("Отм.назначений", PressButton, 77)}</>
-      )}
-      {flagPusk && flagRoute && !flagBind && (
+      )} */}
+      {/* {flagPusk && flagRoute && !flagBind && ( */}
+      {flagPusk && flagRoute && (
         <>
+          {StrokaMenuGlob("Отм.связь", PressButton, 77)}
           {StrokaMenuGlob("Сохр.связь", PressButton, 33)}
           {StrokaMenuGlob("Реверc связи", PressButton, 12)}
           {StrokaMenuGlob("Редакт.связи", PressButton, 69)}
         </>
       )}
-      {flagPusk && flagRoute && flagBind && (
+      {/* {flagPusk && flagRoute && flagBind && (
         <>
           {StrokaMenuGlob("Сохр.связь", PressButton, 33)}
           {StrokaMenuGlob("Отм.связь", PressButton, 77)}
           {StrokaMenuGlob("Редакт.связи", PressButton, 69)}
         </>
-      )}
+      )} */}
     </>
   );
 };
@@ -744,6 +746,7 @@ export const ChangeCrossFunc = (fromCross: any, toCross: any) => {
 export const DelVertexOrPoint = (
   openSetDelete: boolean,
   massdk: any,
+  massroute: any,
   idx: number,
   handleCloseDel: Function
 ) => {
@@ -769,6 +772,20 @@ export const DelVertexOrPoint = (
     textTransform: "unset !important",
     color: "black",
   };
+
+  let idV = massroute.vertexes[idx].id;
+  let areaV = massroute.vertexes[idx].area;
+  let have = 0;
+
+  for (let i = 0; i < massroute.ways.length; i++) {
+    let rec = massroute.ways[i];
+    if (
+      (rec.sourceArea === areaV && rec.sourceID === idV) ||
+      (rec.targetArea === areaV && rec.targetID === idV)
+    )
+      have++;
+  }
+  console.log("HAVE:", have, idV, areaV);
 
   return (
     <Modal
@@ -1253,6 +1270,23 @@ export const BindTablFrom = (
       </Grid>
     </Grid>
   );
+};
+export const MaskFormWay = () => {
+  const maskForm: Directions = {
+    name: "0121/0212",
+    satur: 0,
+    intensTr: 0,
+    dispers: 50,
+    peregon: 0,
+    wtStop: 1,
+    wtDelay: 1,
+    offsetBeginGreen: 0,
+    offsetEndGreen: 0,
+    intensFl: 1200,
+    phases: [],
+    edited: false,
+  };
+  return maskForm;
 };
 //=== WaysForma =======================================================
 export const WaysInput = (VALUE: any, SetValue: Function, MAX: number) => {

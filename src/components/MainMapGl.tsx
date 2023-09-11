@@ -49,9 +49,9 @@ let coordStopIn: any = []; // рабочий массив коллекции и�
 let massRoute: any = []; // рабочий массив сети связей
 let masSvg: any = ["", ""];
 
-let debugging: boolean,
-  flagOpen: boolean,
-  flagBind: boolean = false;
+let debugging: boolean = false;
+let flagOpen: boolean = false;
+let flagBind: boolean = false;
 let flagRevers: boolean, needLinkBind: boolean, FlagDemo: boolean;
 debugging = flagOpen = flagBind = flagRevers = needLinkBind = FlagDemo = false;
 let newPointCoord: any, homeRegion: any, pointCenter: any;
@@ -685,7 +685,7 @@ const MainMap = (props: {
   masSvg = ["", ""];
   if (!debugging) {
     if (props.svg !== oldPropsSvg) {
-      oldPropsSvg = props.svg
+      oldPropsSvg = props.svg;
       if (props.svg && pointAaIndex >= 0 && pointBbIndex >= 0) {
         masSvg[0] = props.svg[RecevKeySvg(massroute.vertexes[pointAaIndex])];
         masSvg[1] = props.svg[RecevKeySvg(massroute.vertexes[pointBbIndex])];
@@ -723,7 +723,7 @@ const MainMap = (props: {
       {InputMenu(handleChangeMode, currencyMode, currenciesMode)}
       {MakeRevers(makeRevers, needRevers, PressButton)}
       {ShowFormalRoute(flagDemo, PressButton)}
-      {MenuProcesRoute(flagPusk, flagBind, flagRoute, PressButton)}
+      {MenuProcesRoute(flagPusk, flagRoute, PressButton)}
       {flagPro && <>{StrokaMenuGlob("Протокол", PressButton, 24)}</>}
       {Object.keys(massroute).length && (
         <YMaps query={{ apikey: MyYandexKey, lang: "ru_RU" }}>
@@ -799,7 +799,13 @@ const MainMap = (props: {
               />
             )}
             {openSetDelete &&
-              DelVertexOrPoint(openSetDelete, massdk, idxDel, handleCloseDel)}
+              DelVertexOrPoint(
+                openSetDelete,
+                massdk,
+                massroute,
+                idxDel,
+                handleCloseDel
+              )}
             {openSetRevers && (
               <MapReversRoute
                 setOpen={setOpenSetRevers}
