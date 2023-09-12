@@ -13,6 +13,7 @@ import MapRouteBindForm from "./MapRouteBindForm";
 import { StrokaMenuFooterBind, ReplaceInSvg } from "./../MapServiceFunctions";
 import { HeaderBind, BindInput, MaskFormWay } from "./../MapServiceFunctions";
 import { HeaderTablBindContent, BindTablFrom } from "./../MapServiceFunctions";
+import { BadExit } from "./../MapServiceFunctions";
 
 import { styleSetImg, styleModalEndBind } from "./../MainMapStyle";
 import { styleBind042, MakeStyleBind00 } from "./../MainMapStyle";
@@ -43,6 +44,7 @@ let nameA = "";
 let nameB = "";
 let Route: any = null;
 let From = "";
+let HAVE = 0;
 
 let maskForm: Directions = JSON.parse(JSON.stringify(MaskFormWay()));
 let massForm: Directions = JSON.parse(JSON.stringify(MaskFormWay()));
@@ -65,6 +67,7 @@ const MapRouteBind = (props: {
   const [openSetBind, setOpenSetBind] = React.useState(true);
   const [openFormFrom, setOpenFormFrom] = React.useState(false);
   const [openFormIn, setOpenFormIn] = React.useState(false);
+  const [badExit, setBadExit] = React.useState(false);
   const [trigger, setTrigger] = React.useState(false);
 
   const CloseEnd = () => {
@@ -75,13 +78,24 @@ const MapRouteBind = (props: {
     props.setSvg(null);
   };
 
-  const handleCloseEnd = (event: any, reason: string) => {
-    if (reason === "escapeKeyDown") CloseEnd();
+  const handleCloseBadExit = (mode: boolean) => {
+    setBadExit(false);
+    mode && CloseEnd();
   };
 
-  const handleClose = (mode: any) => {
+  const handleCloseBad = () => {
+    HAVE && setBadExit(true);
+    !HAVE && CloseEnd();
+  };
+
+  const handleCloseEnd = (event: any, reason: string) => {
+    if (reason === "escapeKeyDown") handleCloseBad();
+  };
+
+  const handleCloseGood = () => {
     CloseEnd();
-    if (mode && typeof mode === "number") props.func(false, massBind);
+    props.func(false, massBind);
+    //if (mode && typeof mode === "number") props.func(false, massBind);
   };
 
   if (props.idxA < 0 && props.idxA < 0) {
@@ -101,6 +115,7 @@ const MapRouteBind = (props: {
   //=== инициализация ======================================
   if (oldIdxA !== props.idxA || oldIdxB !== props.idxB) {
     massBind = [1, 2];
+    HAVE = 0;
     oldIdxA = props.idxA;
     oldIdxB = props.idxB;
     masSvg = ["", ""];
@@ -176,6 +191,16 @@ const MapRouteBind = (props: {
     }
   };
 
+  const ReCalcIntensFl = () => {
+    let sumIntensTrIn = 0;
+    for (let i = 0; i < kolFrom; i++) {
+      if (massTotal[beginMassTotal + i].have)
+        sumIntensTrIn += massTotal[beginMassTotal + i].intensTrIn;
+    }
+    masFormIn[beginMassTotal / kolFrom].intensFl =
+      masFormIn[beginMassTotal / kolFrom].intensTr - sumIntensTrIn;
+  };
+
   const SetFrom = (mode: number, valueInp: number) => {
     masFormFrom[mode].intensTr = valueInp; // из левой верхней таблицы
     for (let i = 0; i < kolIn; i++) {
@@ -188,6 +213,7 @@ const MapRouteBind = (props: {
   const SetIn = (mode: number, valueInp: number) => {
     masFormIn[mode].intensTr = valueInp; // из правой верхней таблицы
     masFormIn[mode].edited = true;
+    ReCalcIntensFl();
     setTrigger(!trigger);
   };
 
@@ -195,6 +221,7 @@ const MapRouteBind = (props: {
     massTotTrIn[mode] = valueInp; // из нижней таблицы
     massTotal[mode].intensTrIn = valueInp;
     ReCalcIntensTr();
+    ReCalcIntensFl();
     setTrigger(!trigger);
   };
 
@@ -266,6 +293,7 @@ const MapRouteBind = (props: {
       massTotal[idx].intensTrIn += massTotTrIn[idx];
     }
     ReCalcIntensTr();
+    ReCalcIntensFl();
     setTrigger(!trigger);
   };
   //========================================================
@@ -274,18 +302,19 @@ const MapRouteBind = (props: {
     for (let i = 0; i < massTotal.length; i++) {
       if (massTotal[i].have) have++;
     }
+    HAVE = have;
     return (
       <Grid container sx={{ marginTop: "1vh", height: 27, width: "100%" }}>
         <Grid item xs={3.5}></Grid>
         <Grid item xs={5} sx={{ border: 0 }}>
           {have ? (
             <Box sx={{ textAlign: "center" }}>
-              {StrokaMenuFooterBind("Отмена", 0, handleClose)}
-              {StrokaMenuFooterBind("Сохранение связи", 1, handleClose)}
+              {StrokaMenuFooterBind("Отмена", 0, handleCloseBad)}
+              {StrokaMenuFooterBind("Сохранение связи", 1, handleCloseGood)}
             </Box>
           ) : (
             <Box sx={{ textAlign: "center" }}>
-              {StrokaMenuFooterBind("Отмена", 0, handleClose)}
+              {StrokaMenuFooterBind("Отмена", 0, handleCloseBad)}
             </Box>
           )}
         </Grid>
@@ -326,10 +355,15 @@ const MapRouteBind = (props: {
   };
 
   const BindTablIn = () => {
+    let nameRoute = "00" + massroute.vertexes[props.idxB].id;
+    nameRoute = nameRoute.slice(-3);
+    if (nameRoute.slice(0, 1) === "0") nameRoute = nameRoute.slice(1, 3);
     return (
       <Grid item xs sx={styleSetImg}>
         <Box sx={styleBind03}>
-          <em>Входящие направления</em>
+          <em>
+            Входящие направления <b>{nameRoute}</b>
+          </em>
         </Box>
         <Box sx={styleBind033}>
           <Grid container item xs={12}>
@@ -445,7 +479,7 @@ const MapRouteBind = (props: {
     <>
       <Modal open={openSetBind} onClose={handleCloseEnd}>
         <Box sx={styleBind00}>
-          <Button sx={styleModalEndBind} onClick={() => handleClose(0)}>
+          <Button sx={styleModalEndBind} onClick={() => handleCloseBad()}>
             <b>&#10006;</b>
           </Button>
           {HeaderBind(nameA, nameB, Route, heightImg, masSvg, SvgA, SvgB)}
@@ -488,6 +522,7 @@ const MapRouteBind = (props: {
           idxB={props.idxB}
         />
       )}
+      {badExit && <>{BadExit(badExit, handleCloseBadExit)}</>}
     </>
   );
 };

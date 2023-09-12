@@ -24,7 +24,7 @@ import { Pointer, Router } from "./../App";
 import { Vertex } from "./../interfaceRoute";
 
 import { styleModalMenu, styleModalEndMapGl } from "./MainMapStyle";
-import { styleInpKnop, styleBind05 } from "./MainMapStyle";
+import { styleInpKnop, styleBind05, styleModalEndAttent } from "./MainMapStyle";
 import { styleBind02, styleTypography, searchControl } from "./MainMapStyle";
 import { styleBind03, styleBind033, styleSetImg } from "./MainMapStyle";
 
@@ -751,6 +751,7 @@ export const DelVertexOrPoint = (
   handleCloseDel: Function
 ) => {
   let soob = massdk[idx].area === 0 ? "объект" : "перекрёсток";
+
   const styleSetPoint = {
     outline: "none",
     position: "absolute",
@@ -758,8 +759,8 @@ export const DelVertexOrPoint = (
     marginLeft: "24vh",
     width: 400,
     bgcolor: "background.paper",
-    border: "3px solid #000",
-    borderColor: "primary.main",
+    border: "1px solid #000",
+    borderColor: "red",
     borderRadius: 2,
     boxShadow: 24,
     textAlign: "center",
@@ -768,46 +769,23 @@ export const DelVertexOrPoint = (
 
   const styleModalMenu = {
     marginTop: 0.5,
+    maxHeight: "24px",
+    minHeight: "24px",
     backgroundColor: "#E6F5D6",
     textTransform: "unset !important",
     color: "black",
   };
 
-  let idV = massroute.vertexes[idx].id;
-  let areaV = massroute.vertexes[idx].area;
-  let have = 0;
-
-  for (let i = 0; i < massroute.ways.length; i++) {
-    let rec = massroute.ways[i];
-    if (
-      (rec.sourceArea === areaV && rec.sourceID === idV) ||
-      (rec.targetArea === areaV && rec.targetID === idV)
-    )
-      have++;
-  }
-  console.log("HAVE:", have, idV, areaV);
-
-  return (
-    <Modal
-      open={openSetDelete}
-      onClose={() => handleCloseDel(false)}
-      hideBackdrop
-    >
-      <Box sx={styleSetPoint}>
-        <Button sx={styleModalEndMapGl} onClick={() => handleCloseDel(false)}>
-          <b>&#10006;</b>
-        </Button>
-        <Typography variant="h6" sx={{ color: "red" }}>
-          Предупреждение
-        </Typography>
+  const NotHaveWays = () => {
+    return (
+      <>
         <Box>
-          Будут удалены {soob}&nbsp;
+          Будет удален {soob}&nbsp;
           <b>
             [{massdk[idx].area}, {massdk[idx].ID}
             ]&nbsp;&nbsp;
             {massdk[idx].nameCoordinates}
-          </b>{" "}
-          и все связи с ним
+          </b>
         </Box>
         <Box sx={{ marginTop: 1.2 }}>
           <Typography variant="h6" sx={{ color: "red" }}>
@@ -821,6 +799,50 @@ export const DelVertexOrPoint = (
             Нет
           </Button>
         </Box>
+      </>
+    );
+  };
+
+  const HaveWays = () => {
+    return (
+      <>
+        <Box>
+          Вы пытаетесь удалить {soob}&nbsp;
+          <b>
+            [{massdk[idx].area}, {massdk[idx].ID}
+            ]&nbsp;&nbsp;
+            {massdk[idx].nameCoordinates}
+          </b>
+          , который имеет связи с другими перекрёстками/объектами. Сначала нужно
+          удалить эти связи, после чего можно удалять данный {soob}.
+        </Box>
+      </>
+    );
+  };
+
+  let idV = massroute.vertexes[idx].id;
+  let areaV = massroute.vertexes[idx].area;
+  let have = 0;
+  for (let i = 0; i < massroute.ways.length; i++) {
+    let rec = massroute.ways[i];
+    if (
+      (rec.sourceArea === areaV && rec.sourceID === idV) ||
+      (rec.targetArea === areaV && rec.targetID === idV)
+    )
+      have++;
+  }
+
+  return (
+    <Modal open={openSetDelete} onClose={() => handleCloseDel(false)}>
+      <Box sx={styleSetPoint}>
+        <Button sx={styleModalEndAttent} onClick={() => handleCloseDel(false)}>
+          <b>&#10006;</b>
+        </Button>
+        <Typography variant="h6" sx={{ color: "red" }}>
+          Предупреждение
+        </Typography>
+        {have === 0 && <>{NotHaveWays()}</>}
+        {have !== 0 && <>{HaveWays()}</>}
       </Box>
     </Modal>
   );
@@ -834,7 +856,7 @@ export const NoVertex = (openSetErr: boolean, handleCloseErr: Function) => {
     marginLeft: "24vh",
     width: 400,
     bgcolor: "background.paper",
-    border: "3px solid #000",
+    border: "1px solid #000",
     borderColor: "primary.main",
     borderRadius: 2,
     boxShadow: 24,
@@ -844,6 +866,8 @@ export const NoVertex = (openSetErr: boolean, handleCloseErr: Function) => {
 
   const styleModalMenu = {
     marginTop: 0.5,
+    maxHeight: "24px",
+    minHeight: "24px",
     backgroundColor: "#E6F5D6",
     textTransform: "unset !important",
     color: "black",
@@ -1229,7 +1253,8 @@ export const BindTablFrom = (
   massPrFrom: any,
   SetMass: Function
 ) => {
-  //console.log('massPrFrom:',massPrFrom)
+  let nRoute = nameRoute;
+  if (nRoute.slice(0, 1) === "0") nRoute = nRoute.slice(1, 3);
   const StrTablFrom = () => {
     let resStr = [];
     for (let i = 0; i < kolFazFrom; i++) {
@@ -1255,7 +1280,9 @@ export const BindTablFrom = (
   return (
     <Grid item xs={5.5} sx={styleSetImg}>
       <Box sx={styleBind03}>
-        <em>Исходящие направления</em>
+        <em>
+          Исходящие направления <b>{nRoute}</b>
+        </em>
       </Box>
       <Box sx={styleBind033}>
         <Grid container item xs={12}>
@@ -1271,6 +1298,7 @@ export const BindTablFrom = (
     </Grid>
   );
 };
+
 export const MaskFormWay = () => {
   const maskForm: Directions = {
     name: "0121/0212",
@@ -1282,11 +1310,67 @@ export const MaskFormWay = () => {
     wtDelay: 1,
     offsetBeginGreen: 0,
     offsetEndGreen: 0,
-    intensFl: 1200,
+    intensFl: 9999,
     phases: [],
     edited: false,
   };
   return maskForm;
+};
+
+export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
+  const styleSetPoint = {
+    outline: "none",
+    position: "absolute",
+    left: "50%",
+    top: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "1px solid #000",
+    borderColor: "red",
+    borderRadius: 2,
+    boxShadow: 24,
+    textAlign: "center",
+    p: 1,
+  };
+
+  const styleModalMenu = {
+    marginTop: 0.5,
+    maxHeight: "24px",
+    minHeight: "24px",
+    backgroundColor: "#E6F5D6",
+    textTransform: "unset !important",
+    color: "black",
+  };
+
+  const handleClose = (mode: boolean) => {
+    handleCloseEnd(mode);
+  };
+
+  return (
+    <Modal open={badExit} onClose={() => handleClose(false)}>
+      <Box sx={styleSetPoint}>
+        <Button sx={styleModalEndAttent} onClick={() => handleClose(false)}>
+          <b>&#10006;</b>
+        </Button>
+        <Typography variant="h6" sx={{ color: "red" }}>
+          Предупреждение
+        </Typography>
+        <Box sx={{ marginTop: 0.5 }}>
+          <Box sx={{ marginBottom: 1.2 }}>
+            <b>Будет произведён выход без сохранения. Продолжать?</b>
+          </Box>
+          <Button sx={styleModalMenu} onClick={() => handleClose(true)}>
+            Да
+          </Button>
+          &nbsp;
+          <Button sx={styleModalMenu} onClick={() => handleClose(false)}>
+            Нет
+          </Button>
+        </Box>
+      </Box>
+    </Modal>
+  );
 };
 //=== WaysForma =======================================================
 export const WaysInput = (VALUE: any, SetValue: Function, MAX: number) => {

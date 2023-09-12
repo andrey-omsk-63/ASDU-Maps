@@ -4,14 +4,15 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 
-import { WaysInput } from "./../MapServiceFunctions";
+import { WaysInput, BadExit } from "./../MapServiceFunctions";
 
 import { Directions } from "./../../App"; // интерфейс massForm
 
 import { styleFW03, styleFormFWTabl } from "./../MainMapStyle";
 import { styleFormMenu } from "./../MainMapStyle";
 
-//let oldName = "";
+let oldName = "";
+let HAVE = 0;
 
 let massForm: Directions = {
   name: "0121/0212",
@@ -32,13 +33,15 @@ const MapWaysFormaMain = (props: {
   maskForm: Directions;
   setClose: Function;
 }) => {
+  const [badExit, setBadExit] = React.useState(false);
   const [trigger, setTrigger] = React.useState(false);
 
   //=== инициализация ======================================
-  // if (oldName !== props.maskForm.name) {
-  //   oldName = props.maskForm.name;
+  if (oldName !== props.maskForm.name) {
+    oldName = props.maskForm.name;
     massForm = props.maskForm;
-  //}
+  }
+  //========================================================
 
   const handleCloseFaz = (mode: number) => {
     if (massForm.phases[mode] === -1) {
@@ -89,46 +92,69 @@ const MapWaysFormaMain = (props: {
       </>
     );
   };
-
+/////======================================???????????
   const SaveForm = (mode: boolean) => {
-    //oldName = "";
-    props.setClose(mode, massForm);
+    if (mode) {
+      oldName = "";
+      props.setClose(mode, massForm);
+    } else {
+      setBadExit(true)
+    }
   };
 
   const SetSatur = (valueInp: number) => {
     massForm.satur = valueInp;
+    HAVE++
   };
 
   const SetIntensTr = (valueInp: number) => {
     massForm.intensTr = valueInp;
+    HAVE++
   };
 
   const SetDispers = (valueInp: number) => {
     massForm.dispers = valueInp;
+    HAVE++
   };
 
   const SetPeregon = (valueInp: number) => {
     massForm.peregon = valueInp;
+    HAVE++
   };
 
   const SetWtStop = (valueInp: number) => {
     massForm.wtStop = valueInp;
+    HAVE++
   };
 
   const SetWtDelay = (valueInp: number) => {
     massForm.wtDelay = valueInp;
+    HAVE++
   };
 
   const SetOffsetBeginGreen = (valueInp: number) => {
     massForm.offsetBeginGreen = valueInp;
+    HAVE++
   };
 
   const SetOffsetEndGreen = (valueInp: number) => {
     massForm.offsetEndGreen = valueInp;
+    HAVE++
+  };
+
+  const handleCloseBadExit = (mode: boolean) => {
+    setBadExit(false);
+    mode && SaveForm(true);
+  };
+
+  const handleCloseBad = () => {
+    HAVE && setBadExit(true);
+    !HAVE && SaveForm(true);
   };
 
   return (
     <>
+      {badExit && <>{BadExit(badExit, handleCloseBadExit)}</>}
       <Box sx={{ fontSize: 12, marginTop: 0.5 }}>Основные свойства</Box>
       {StrTab("№ Направления", massForm.name)}
       {StrTab("Насыщение(т.е./ч.)", WaysInput(massForm.satur, SetSatur, 10000))}
@@ -166,7 +192,7 @@ const MapWaysFormaMain = (props: {
           </Button>
         </Grid>
         <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>
-          <Button sx={styleFormMenu} onClick={() => SaveForm(false)}>
+          <Button sx={styleFormMenu} onClick={() => handleCloseBad()}>
             Выйти без сохранения
           </Button>
         </Grid>
