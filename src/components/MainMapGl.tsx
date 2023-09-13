@@ -635,6 +635,7 @@ const MainMap = (props: {
   };
 
   const SetOpenSetWaysForm = (mode: boolean) => {
+    console.log('SetOpenSetWaysForm:',mode)
     !mode && ZeroRoute(false);
     nomRoute = -1;
     setOpenSetWaysForm(mode);

@@ -32,6 +32,7 @@ let massForm: Directions = {
 const MapWaysFormaMain = (props: {
   maskForm: Directions;
   setClose: Function;
+  setHave: Function;
 }) => {
   const [badExit, setBadExit] = React.useState(false);
   const [trigger, setTrigger] = React.useState(false);
@@ -40,6 +41,8 @@ const MapWaysFormaMain = (props: {
   if (oldName !== props.maskForm.name) {
     oldName = props.maskForm.name;
     massForm = props.maskForm;
+    HAVE = 0;
+    console.log('Init:',oldName,HAVE)
   }
   //========================================================
 
@@ -92,54 +95,63 @@ const MapWaysFormaMain = (props: {
       </>
     );
   };
-/////======================================???????????
+  /////======================================???????????
   const SaveForm = (mode: boolean) => {
     if (mode) {
       oldName = "";
+      HAVE = 0;
       props.setClose(mode, massForm);
     } else {
-      setBadExit(true)
+      setBadExit(true);
     }
   };
 
   const SetSatur = (valueInp: number) => {
     massForm.satur = valueInp;
-    HAVE++
+    HAVE++;
+    props.setHave(HAVE);
   };
 
   const SetIntensTr = (valueInp: number) => {
     massForm.intensTr = valueInp;
-    HAVE++
+    HAVE++;
+    props.setHave(HAVE);
   };
 
   const SetDispers = (valueInp: number) => {
     massForm.dispers = valueInp;
-    HAVE++
+    HAVE++;
+    props.setHave(HAVE);
   };
 
   const SetPeregon = (valueInp: number) => {
     massForm.peregon = valueInp;
-    HAVE++
+    HAVE++;
+    props.setHave(HAVE);
   };
 
   const SetWtStop = (valueInp: number) => {
     massForm.wtStop = valueInp;
-    HAVE++
+    HAVE++;
+    props.setHave(HAVE);
   };
 
   const SetWtDelay = (valueInp: number) => {
     massForm.wtDelay = valueInp;
-    HAVE++
+    HAVE++;
+    props.setHave(HAVE);
   };
 
   const SetOffsetBeginGreen = (valueInp: number) => {
     massForm.offsetBeginGreen = valueInp;
-    HAVE++
+    HAVE++;
+    props.setHave(HAVE);
   };
 
   const SetOffsetEndGreen = (valueInp: number) => {
     massForm.offsetEndGreen = valueInp;
-    HAVE++
+    HAVE++;
+    props.setHave(HAVE);
   };
 
   const handleCloseBadExit = (mode: boolean) => {

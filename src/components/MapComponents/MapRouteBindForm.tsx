@@ -7,12 +7,16 @@ import Modal from "@mui/material/Modal";
 
 import MapWaysFormaMain from "./MapWaysFormaMain";
 
+import { BadExit } from "./../MapServiceFunctions";
+
 import { Directions } from "../../App"; // интерфейс massForm
 
 import { styleSetBindForm } from "../MainMapStyle";
 import { styleFormNameRoute, styleModalEnd } from "../MainMapStyle";
 
 //import { StrokaMenuFooterBind } from "./../MapServiceFunctions";
+
+let HAVE = 0;
 
 const MapRouteBindForm = (props: {
   setOpen: any;
@@ -28,40 +32,59 @@ const MapRouteBindForm = (props: {
   });
   //========================================================
   const [openSetForm, setOpenSetForm] = React.useState(true);
+  const [badExit, setBadExit] = React.useState(false);
+
+  const handleClose = (mode: boolean, mask: Directions) => {
+    HAVE = 0;
+    props.setOpen(mode, mask, props.IDX); // выход из формы
+    setOpenSetForm(false);
+  };
 
   const handleCloseSetEnd = () => {
-    props.setOpen(false, props.maskForm, props.IDX);
-    setOpenSetForm(false);
+ 
+    HAVE && setBadExit(true);
+    !HAVE && handleClose(false, props.maskForm); // выход без сохранения
+  };
+
+  const handleCloseBadExit = (mode: boolean) => {
+    setBadExit(false);
+    mode && handleClose(false, props.maskForm); // выход без сохранения
   };
 
   const handleCloseEnd = (event: any, reason: string) => {
-    //console.log("handleCloseEnd:", reason); // Заглушка
     if (reason === "escapeKeyDown") handleCloseSetEnd();
   };
 
-  const handleClose = (mode: boolean, mask: Directions) => {
-    props.setOpen(mode, mask, props.IDX);
-    setOpenSetForm(false);
+  const SetHave = (have: number) => {
+    console.log('!!!HAVE',have)
+    HAVE = have;
   };
 
   let soob1 = massdk[props.idxA].area ? " перекрёстка " : " объекта ";
   let soob2 = massdk[props.idxB].area ? " c перекрёстком " : " c объектом ";
 
   return (
-    <Modal open={openSetForm} onClose={handleCloseEnd}>
-      <Box sx={styleSetBindForm}>
-        <Button sx={styleModalEnd} onClick={handleCloseSetEnd}>
-          <b>&#10006;</b>
-        </Button>
-        <Box sx={styleFormNameRoute}>
-          Входящая связь {soob1}
-          <b>{massdk[props.idxA].nameCoordinates}</b>
-          {soob2}
-          <b>{massdk[props.idxB].nameCoordinates}</b>
+    <>
+      <Modal open={openSetForm} onClose={handleCloseEnd}>
+        <Box sx={styleSetBindForm}>
+          <Button sx={styleModalEnd} onClick={handleCloseSetEnd}>
+            <b>&#10006;</b>
+          </Button>
+          <Box sx={styleFormNameRoute}>
+            Входящая связь {soob1}
+            <b>{massdk[props.idxA].nameCoordinates}</b>
+            {soob2}
+            <b>{massdk[props.idxB].nameCoordinates}</b>
+          </Box>
+          <MapWaysFormaMain
+            maskForm={props.maskForm}
+            setClose={handleClose}
+            setHave={SetHave}
+          />
         </Box>
-        <MapWaysFormaMain maskForm={props.maskForm} setClose={handleClose} />
-      </Box>
-    </Modal>
+      </Modal>
+      {badExit && <>{BadExit(badExit, handleCloseBadExit)}</>}
+    </>
   );
 };
 

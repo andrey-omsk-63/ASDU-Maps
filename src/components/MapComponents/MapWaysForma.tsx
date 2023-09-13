@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 
 import MapWaysFormaMain from "./MapWaysFormaMain";
 
-import { ComplianceMapMassdk } from "./../MapServiceFunctions";
+import { ComplianceMapMassdk, BadExit } from "./../MapServiceFunctions";
 
 import { Directions } from "./../../App"; // интерфейс massForm
 
@@ -33,6 +33,8 @@ let massForm: Directions = {
   edited: false,
 };
 
+let HAVE = 0;
+
 const MapWaysForma = (props: {
   setOpen: any;
   idx: number;
@@ -56,6 +58,7 @@ const MapWaysForma = (props: {
   //console.log("massroute:", massroute);
   //========================================================
   //const [trigger, setTrigger] = React.useState(false);
+  const [badExit, setBadExit] = React.useState(false);
   const idxMap = ComplianceMapMassdk(props.idx, massdk, map);
   const MAP = map.dateMap.tflight[idxMap];
   const propsArea = massroute.vertexes[props.idx].area;
@@ -63,7 +66,7 @@ const MapWaysForma = (props: {
   //=== инициализация ======================================
   if (oldIdx !== props.idx) {
     oldIdx = props.idx;
-    //massFaz = [];
+    HAVE = 0;
     soob2 = " c перекрёстком ";
     massTargetRoute = [];
     massTargetName = [];
@@ -112,17 +115,48 @@ const MapWaysForma = (props: {
     for (let i = 0; i < lng; i++) maskForm.phases.push(-1);
   }
 
-  const handleCloseSetEnd = () => {
+  const handleCloseEnd = React.useCallback(() => {
+    console.log("Выход2", HAVE);
     oldIdx = -1;
     props.setOpen(false);
-  };
+  }, [props]);
+
+  const handleCloseSetEnd = React.useCallback(() => {
+    console.log("Выход", HAVE);
+    HAVE && setBadExit(true);
+    !HAVE && handleCloseEnd(); // выход без сохранения
+  }, [handleCloseEnd]);
 
   const SaveForm = (mode: boolean, massForm: Directions) => {
     console.log("SaveForm:", mode, massForm);
-    handleCloseSetEnd();
+    handleCloseEnd();
+  };
+
+  const SetHave = (have: number) => {
+    //console.log("HAVE:", have);
+    HAVE = have;
+  };
+
+  const handleCloseBadExit = (mode: boolean) => {
+    setBadExit(false);
+    mode && handleCloseEnd(); // выход без сохранения
   };
 
   let soob1 = massdk[props.idx].area ? " перекрёстка " : " объекта ";
+
+  //=== обработка Esc ======================================
+  const escFunction = React.useCallback(
+    (event) => {
+      if (event.keyCode === 27) handleCloseSetEnd();
+    },
+    [handleCloseSetEnd]
+  );
+
+  React.useEffect(() => {
+    document.addEventListener("keydown", escFunction);
+    return () => document.removeEventListener("keydown", escFunction);
+  }, [escFunction]);
+  //========================================================
 
   return (
     <>
@@ -138,10 +172,15 @@ const MapWaysForma = (props: {
               {soob2}
               <b>{massTargetName[props.nomInMass]}</b>
             </Box>
-            <MapWaysFormaMain maskForm={massForm} setClose={SaveForm} />
+            <MapWaysFormaMain
+              maskForm={massForm}
+              setClose={SaveForm}
+              setHave={SetHave}
+            />
           </>
         )}
       </Box>
+      {badExit && <>{BadExit(badExit, handleCloseBadExit)}</>}
     </>
   );
 };

@@ -80,7 +80,7 @@ const MapRouteBind = (props: {
 
   const handleCloseBadExit = (mode: boolean) => {
     setBadExit(false);
-    mode && CloseEnd();
+    mode && CloseEnd(); // выход
   };
 
   const handleCloseBad = () => {
