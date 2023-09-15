@@ -9,7 +9,7 @@ import { WaysInput, BadExit } from "./../MapServiceFunctions";
 import { Directions } from "./../../App"; // интерфейс massForm
 
 import { styleFW03, styleFormFWTabl } from "./../MainMapStyle";
-import { styleFormMenu } from "./../MainMapStyle";
+import { styleFormMenu, styleFW04 } from "./../MainMapStyle";
 
 let oldName = "";
 let HAVE = 0;
@@ -42,7 +42,6 @@ const MapWaysFormaMain = (props: {
     oldName = props.maskForm.name;
     massForm = props.maskForm;
     HAVE = 0;
-    console.log('Init:',oldName,HAVE)
   }
   //========================================================
 
@@ -52,6 +51,7 @@ const MapWaysFormaMain = (props: {
     } else {
       massForm.phases[mode] = -1;
     }
+    HAVE++;
     setTrigger(!trigger);
   };
 
@@ -59,18 +59,14 @@ const MapWaysFormaMain = (props: {
     let resStr = [];
     for (let i = 0; i < massForm.phases.length; i++) {
       let metka = massForm.phases[i] > 0 ? "✔" : "";
+      let illum = massForm.phases[i] > 0 ? styleFW04 : styleFW03;
       resStr.push(
         <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
           <Grid xs={2} item sx={{ marginTop: 1, textAlign: "center" }}>
             <b>{metka}</b>
           </Grid>
           <Grid xs item>
-            <Button
-              key={i}
-              sx={styleFW03}
-              variant="contained"
-              onClick={() => handleCloseFaz(i)}
-            >
+            <Button key={i} sx={illum} onClick={() => handleCloseFaz(i)}>
               <b>{i + 1} -я фаза</b>
             </Button>
           </Grid>
@@ -88,9 +84,15 @@ const MapWaysFormaMain = (props: {
           <Grid item xs={8.5} sx={{ fontSize: 15 }}>
             <b>{recLeft}</b>
           </Grid>
-          <Grid item xs sx={{ fontSize: 12 }}>
-            {recRight}
-          </Grid>
+          {typeof recRight === "object" ? (
+            <Grid item xs sx={{ fontSize: 12 }}>
+              {recRight}
+            </Grid>
+          ) : (
+            <Grid item xs sx={{ fontSize: 14, color: '#5B1080' }}>
+              <b>{recRight}</b>
+            </Grid>
+          )}
         </Grid>
       </>
     );

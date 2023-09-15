@@ -49,7 +49,6 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
     for (let i = 0; i < lng; i++) {
       massForm.phases.push(maskFaz);
     }
-    console.log("@@@:", massForm);
   }
 
   const handleCloseSetEnd = () => {
@@ -126,9 +125,15 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
           <Grid item xs={6}>
             <b>{recLeft}</b>
           </Grid>
-          <Grid item xs>
-            {recRight}
-          </Grid>
+          {typeof recRight === "object" ? (
+            <Grid item xs>
+              {recRight}
+            </Grid>
+          ) : (
+            <Grid item xs sx={{ color: "#5B1080" }}>
+              <b>{recRight}</b>
+            </Grid>
+          )}
         </Grid>
       </>
     );

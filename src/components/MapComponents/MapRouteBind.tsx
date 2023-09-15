@@ -16,7 +16,7 @@ import { HeaderTablBindContent, BindTablFrom } from "./../MapServiceFunctions";
 import { BadExit } from "./../MapServiceFunctions";
 
 import { styleSetImg, styleModalEndBind } from "./../MainMapStyle";
-import { styleBind042, MakeStyleBind00 } from "./../MainMapStyle";
+import { styleBind042, MakeStyleBind00, styleBind043 } from "./../MainMapStyle";
 import { styleBind03, styleBind033, styleBind041 } from "./../MainMapStyle";
 import { styleBind01, styleBind04, styleBind05 } from "./../MainMapStyle";
 
@@ -383,6 +383,7 @@ const MapRouteBind = (props: {
   const TablTotalContent = (idx: number) => {
     let i = beginMassTotal + idx;
     let metka = massTotal[i].have ? "✔" : "";
+    let illum = massTotal[i].have ? styleBind043 : styleBind04;
     let pusto = massTotal[i].have ? 1 : 0;
     if (pusto) {
       if (massTotTrFrom[i] && massTotTrIn[i] > 0 && !massTotal[i].editIntensPr)
@@ -394,7 +395,7 @@ const MapRouteBind = (props: {
           <b>{metka}</b>
         </Grid>
         <Grid item xs={0.5} sx={{ lineHeight: "3vh", textAlign: "center" }}>
-          <Button sx={styleBind04} onClick={() => handleCloseTotal(i)}>
+          <Button sx={illum} onClick={() => handleCloseTotal(i)}>
             {idx + 1}
           </Button>
         </Grid>

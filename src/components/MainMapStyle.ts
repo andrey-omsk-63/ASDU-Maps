@@ -299,7 +299,22 @@ export const styleBind04 = {
   borderRadius: 1,
   color: "black",
   textTransform: "unset !important",
-  boxShadow: 3,
+  boxShadow: 1,
+};
+
+export const styleBind043 = {
+  fontSize: 12,
+  border: "2px solid #000",
+  bgcolor: "#93D145",
+  maxWidth: 12,
+  minWidth: 12,
+  maxHeight: "21px",
+  minHeight: "21px",
+  borderColor: "#93D145",
+  borderRadius: 1,
+  color: "black",
+  textTransform: "unset !important",
+  boxShadow: 12,
 };
 
 export const styleBind041 = {
@@ -314,7 +329,7 @@ export const styleBind041 = {
   borderRadius: 1,
   color: "black",
   textTransform: "unset !important",
-  boxShadow: 3,
+  boxShadow: 1,
 };
 
 export const styleBind042 = {
@@ -329,7 +344,7 @@ export const styleBind042 = {
   borderRadius: 1,
   color: "black",
   textTransform: "unset !important",
-  boxShadow: 3,
+  boxShadow: 12,
 };
 
 export const styleBind05 = {
@@ -343,7 +358,7 @@ export const styleBind05 = {
   borderRadius: 1,
   color: "black",
   textTransform: "unset !important",
-  boxShadow: 3,
+  boxShadow: 4,
 };
 
 export const styleSetBindForm = {
@@ -473,7 +488,26 @@ export const styleFW03 = {
   backgroundColor: "#E9F5D8",
   color: "black",
   marginTop: 1,
+  border: "3px solid #000",
+  borderColor: "#E9F5D8",
+  borderRadius: 1,
   textTransform: "unset !important",
+  boxShadow: 1,
+};
+
+export const styleFW04 = {
+  fontSize: 15.2,
+  maxHeight: "21px",
+  minHeight: "21px",
+  width: 333,
+  backgroundColor: "#93D145",
+  color: "black",
+  marginTop: 1,
+  border: "2px solid #000",
+  borderColor: "#93D145",
+  borderRadius: 1,
+  textTransform: "unset !important",
+  boxShadow: 6,
 };
 
 export const styleFormNameRoute = {

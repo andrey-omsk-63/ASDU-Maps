@@ -116,13 +116,11 @@ const MapWaysForma = (props: {
   }
 
   const handleCloseEnd = React.useCallback(() => {
-    console.log("Выход2", HAVE);
     oldIdx = -1;
     props.setOpen(false);
   }, [props]);
 
   const handleCloseSetEnd = React.useCallback(() => {
-    console.log("Выход", HAVE);
     HAVE && setBadExit(true);
     !HAVE && handleCloseEnd(); // выход без сохранения
   }, [handleCloseEnd]);

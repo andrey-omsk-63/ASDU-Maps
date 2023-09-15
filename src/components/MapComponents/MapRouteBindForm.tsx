@@ -41,7 +41,6 @@ const MapRouteBindForm = (props: {
   };
 
   const handleCloseSetEnd = () => {
- 
     HAVE && setBadExit(true);
     !HAVE && handleClose(false, props.maskForm); // выход без сохранения
   };
@@ -56,7 +55,6 @@ const MapRouteBindForm = (props: {
   };
 
   const SetHave = (have: number) => {
-    console.log('!!!HAVE',have)
     HAVE = have;
   };
 

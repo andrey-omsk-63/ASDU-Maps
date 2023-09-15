@@ -19,13 +19,14 @@ import { SendSocketCreateWayToPoint } from "./../MapSocketFunctions";
 
 import { styleModalMenu, styleSetArea } from "../MapPointDataErrorStyle";
 import { styleBoxFormArea, styleSave } from "../MapPointDataErrorStyle";
-//import { styleSetNapr, styleBoxFormNapr } from "../MapPointDataErrorStyle";
+import { styleModalEditBind, styleHeadError } from "../MapPointDataErrorStyle";
+import { styleFooterError } from "../MapPointDataErrorStyle";
 
 let lengthRoute = 0;
 let index = -1;
 let fromIdx = -1;
-let onIdx = -1;
-let massBind = [-1, -1];
+let inIdx = -1;
+//let massBind = [-1, -1];
 let massBindNew = [-1, -1];
 
 let dlRoute1 = 0;
@@ -35,14 +36,15 @@ let sec = 0;
 let tmRouteBegin = 0;
 let sRoute0 = 0;
 let sRouteBegin = 0;
-let fromDirectBegin = 0;
-let inDirectBegin = 0;
 let tmRoute1 = "";
 
 let reqRoute: any = {
   dlRoute: 0,
   tmRoute: 0,
 };
+
+let whatFrom = "";
+let whatIn = "";
 
 const MapPointDataError = (props: {
   sErr: string;
@@ -52,7 +54,6 @@ const MapPointDataError = (props: {
   toCross: any;
   update: any;
 }) => {
-  console.log('PROPS:',props.fromCross, props.toCross)
   const WS = props.ws;
   //== Piece of Redux =======================================
   let massroute = useSelector((state: any) => {
@@ -84,25 +85,13 @@ const MapPointDataError = (props: {
     position: "absolute",
     marginTop: "18vh",
     marginLeft: "27vh",
-    width: 380,
+    width: 430,
     bgcolor: "background.paper",
     border: "1px solid #000",
     borderColor: colorBorder,
     borderRadius: 2,
     boxShadow: 24,
     p: 1.5,
-  };
-
-  const styleModalEditBind = {
-    fontSize: 15,
-    maxHeight: "21px",
-    minHeight: "21px",
-    backgroundColor: "#E6F5D6",
-    color: "black",
-    marginLeft: 0.6,
-    textTransform: "unset !important",
-    textAlign: "center",
-    boxShadow: 3,
   };
   //=== инициализация ======================================
   if (index < 0) flagSave = false;
@@ -132,37 +121,53 @@ const MapPointDataError = (props: {
     tmRoute1 = Math.round(sec2 / 60) + " мин";
     sRoute0 = Math.round(sRoute0 * 10) / 10;
     sRouteBegin = sRoute0;
-    fromDirectBegin = massroute.ways[index].lsource; // выход
-    inDirectBegin = massroute.ways[index].ltarget; // вход
+    //fromDirectBegin = massroute.ways[index].lsource; // выход
+    //inDirectBegin = massroute.ways[index].ltarget; // вход
     fromIdx = -1;
-    onIdx = -1;
+    inIdx = -1;
     for (let i = 0; i < massroute.vertexes.length; i++) {
       if (
         massroute.vertexes[i].region === massroute.ways[index].region &&
         massroute.vertexes[i].area === massroute.ways[index].sourceArea &&
         massroute.vertexes[i].id === massroute.ways[index].sourceID
-      )
+      ) {
         fromIdx = i; // выход
+        whatFrom = massroute.vertexes[i].area ? 'перекрёстка' : 'объекта'
+      } 
       if (
         massroute.vertexes[i].region === massroute.ways[index].region &&
         massroute.vertexes[i].area === massroute.ways[index].targetArea &&
         massroute.vertexes[i].id === massroute.ways[index].targetID
-      )
-        onIdx = i; // вход
+      ) {
+        inIdx = i; // вход
+        whatIn = massroute.vertexes[i].area ? 'перекрёстка' : 'объекта'
+      } 
     }
-    massBind = [-1, -1];
-    if (massroute.vertexes[fromIdx].area)
-      massBind[0] = massroute.vertexes[fromIdx].lin.indexOf(fromDirectBegin); // выход
-    if (massroute.vertexes[onIdx].area)
-      massBind[1] = massroute.vertexes[onIdx].lout.indexOf(inDirectBegin); // вход
-    massBindNew[0] = fromDirectBegin;
-    massBindNew[1] = inDirectBegin;
+    console.log(
+      "ВХОД-Выход:",
+      inIdx,
+      fromIdx,
+      props.fromCross.pointAaID,
+      props.toCross.pointBbID,
+      whatFrom,whatIn
+    );
+    //massBind = [-1, -1];
+    // if (massroute.vertexes[fromIdx].area)
+    //   massBind[0] = massroute.vertexes[fromIdx].lin.indexOf(fromDirectBegin); // выход
+    // if (massroute.vertexes[onIdx].area)
+    //   massBind[1] = massroute.vertexes[onIdx].lout.indexOf(inDirectBegin); // вход
+    // massBindNew[0] = fromDirectBegin;
+    // massBindNew[1] = inDirectBegin;
   }
 
   const handleCloseSetEnd = () => {
     index = -1;
     props.setOpen(false);
     setOpenSetEr(false);
+  };
+
+  const handleCloseEnd = (event: any, reason: string) => {
+    if (reason === "escapeKeyDown") handleCloseSetEnd();
   };
 
   const DeleteWay = () => {
@@ -207,11 +212,6 @@ const MapPointDataError = (props: {
   };
 
   const handleClose = () => {
-    // let reqRoute: any = {
-    //   dlRoute: 0,
-    //   tmRoute: 0,
-    // };
-
     massroute.ways[index].lsource = massBindNew[0];
     massroute.ways[index].ltarget = massBindNew[1];
     massroute.ways[index].lenght = Number(dlRoute1);
@@ -247,6 +247,7 @@ const MapPointDataError = (props: {
     let valueInp = event.target.value.replace(/^0+/, "");
     if (Number(valueInp) < 0) valueInp = 0;
     if (valueInp === "") valueInp = 0;
+    valueInp = Math.trunc(Number(valueInp));
     if (Number(valueInp) < 1000000) {
       valueInp = Math.trunc(Number(valueInp)).toString();
       dlRoute1 = valueInp;
@@ -264,6 +265,7 @@ const MapPointDataError = (props: {
     let valueInp = event.target.value.replace(/^0+/, "");
     if (Number(valueInp) < 0) valueInp = 0;
     if (valueInp === "") valueInp = 0;
+    valueInp = Math.trunc(Number(valueInp));
     if (Number(valueInp) < 66300) {
       valueInp = Math.trunc(Number(valueInp)).toString();
       sec = valueInp;
@@ -284,10 +286,11 @@ const MapPointDataError = (props: {
         <Box component="form" sx={styleBoxFormArea}>
           <TextField
             size="small"
-            type="number"
             onKeyPress={handleKey} //отключение Enter
-            value={value}
+            type="number"
+            //placeholder="Search..."
             InputProps={{ disableUnderline: true, style: { fontSize: 14.2 } }}
+            value={value}
             onChange={func}
             variant="standard"
             color="secondary"
@@ -307,27 +310,40 @@ const MapPointDataError = (props: {
 
   const [tmRoute2, setTmRoute2] = React.useState(tmRoute1);
 
+  const HeadError = () => {
+    return (
+      <>
+        {!flagSave ? (
+          <Typography variant="h6" sx={{ textAlign: "center", color: "red" }}>
+            {props.sErr}
+          </Typography>
+        ) : (
+          <Typography variant="h6" sx={styleHeadError}>
+            Редактирование параметров связи:
+          </Typography>
+        )}
+      </>
+    );
+  };
+
   return (
     // <Modal open={openSetEr} onClose={handleCloseSetEnd} hideBackdrop>
-    <Modal open={openSetEr} onClose={handleCloseSetEnd}>
+    <Modal open={openSetEr} onClose={handleCloseEnd}>
       <Box sx={styleSetInf}>
         <Button sx={styleModalEnd} onClick={handleCloseSetEnd}>
           <b>&#10006;</b>
         </Button>
-        {!flagSave && (
-          <Typography variant="h6" sx={{ textAlign: "center", color: "red" }}>
-            {props.sErr}
-          </Typography>
-        )}
-        {flagSave && (
-          <Typography variant="h6" sx={{ textAlign: "center" }}>
-            Редактирование параметров связи:
-          </Typography>
-        )}
+        {HeadError()}
         {props.sErr === "Дубликатная связь" && (
           <>
+            {/* {!flagSave && ( */}
+            <Box sx={{ p: 1 }}>
+              Вы пытаетесть создать дубликатную связь между перекрёстком ХХХ и
+              перекрёстком ХХХ
+            </Box>
+            {/* )} */}
             <Button sx={styleModalEditBind}>
-              <b>Редактирование привязки связи</b>
+              <b>Редактирование привязки исходной связи</b>
             </Button>
             <Grid container sx={{ marginLeft: 1.5, marginTop: 1.2 }}>
               <Grid item xs={3.5} sx={{ border: 0 }}>
@@ -345,7 +361,6 @@ const MapPointDataError = (props: {
                 </Grid>
               )}
             </Grid>
-
             <Grid container sx={{ marginLeft: 1.5, marginTop: 1.5 }}>
               <Grid item xs={5.4} sx={{ border: 0 }}>
                 <b>Время прохождения:</b>
@@ -363,24 +378,17 @@ const MapPointDataError = (props: {
                 сек)
               </Grid>
             </Grid>
-
             <Box sx={{ marginLeft: 1.5, marginTop: 1.5 }}>
               <b> Средняя скорость прохождения:</b>&nbsp;{sRoute0} км/ч
             </Box>
-
             {flagSave && (
-              <Box sx={{ fontSize: 12.5, marginLeft: 1.5, marginTop: 1.5 }}>
-                Исходное выходное направление: {fromDirectBegin}
-                <br />
-                Исходное входное направление: {inDirectBegin}
-                <br />
+              <Box sx={styleFooterError}>
                 Исходная длина связи: {dlRouteBegin} м<br />
                 Исходное время прохождения: {tmRouteBegin} сек
                 <br />
                 Исходная скорость прохождения: {sRouteBegin} км/ч
               </Box>
             )}
-
             {!flagSave && (
               <Box sx={{ textAlign: "center", marginTop: 1.2 }}>
                 <Typography variant="h6" sx={{ color: "red" }}>
@@ -403,102 +411,3 @@ const MapPointDataError = (props: {
 };
 
 export default MapPointDataError;
-
-// const InputDirect = (mode: number) => {
-//   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-//     setCurrency(Number(event.target.value));
-//     if (mode) {
-//       massBindNew[1] = massDat[Number(event.target.value)];
-//     } else {
-//       massBindNew[0] = massDat[Number(event.target.value)];
-//     }
-//     flagSave = true;
-//     setTrigger(!trigger);
-//   };
-
-//   let dat = massroute.vertexes[fromIdx].lin;
-//   if (mode) dat = massroute.vertexes[onIdx].lout;
-//   let massKey = [];
-//   let massDat: any[] = [];
-//   const currencies: any = [];
-//   for (let key in dat) {
-//     massKey.push(key);
-//     massDat.push(dat[key]);
-//   }
-//   for (let i = 0; i < massKey.length; i++) {
-//     let maskCurrencies = {
-//       value: "",
-//       label: "",
-//     };
-//     maskCurrencies.value = massKey[i];
-//     maskCurrencies.label = massDat[i];
-//     currencies.push(maskCurrencies);
-//   }
-//   const [currency, setCurrency] = React.useState(massBind[mode]);
-//   const [trigger, setTrigger] = React.useState(true);
-
-//   return (
-//     <Box sx={styleSetNapr}>
-//       <Box component="form" sx={styleBoxFormNapr}>
-//         <TextField
-//           select
-//           size="small"
-//           onKeyPress={handleKey} //отключение Enter
-//           value={currency}
-//           onChange={handleChange}
-//           InputProps={{ disableUnderline: true, style: { fontSize: 14 } }}
-//           variant="standard"
-//           color="secondary"
-//         >
-//           {currencies.map((option: any) => (
-//             <MenuItem
-//               key={option.value}
-//               value={option.value}
-//               sx={{ fontSize: 14 }}
-//             >
-//               {option.label}
-//             </MenuItem>
-//           ))}
-//         </TextField>
-//       </Box>
-//     </Box>
-//   );
-// };
-
-// {props.fromCross.pointAaArea !== "0" && (
-//   <Grid container sx={{ marginLeft: 1.5, marginTop: 1.2 }}>
-//     <Grid item xs={1.9} sx={{ border: 0 }}>
-//       <b>Выход</b>
-//     </Grid>
-//     <Grid item xs={2.8} sx={{ border: 0 }}>
-//       Район: <b>{massroute.ways[index].sourceArea}</b>
-//     </Grid>
-//     <Grid item xs={1.9} sx={{ border: 0 }}>
-//       ID: <b>{massroute.ways[index].sourceID}</b>
-//     </Grid>
-//     <Grid item xs={3.4} sx={{ border: 0 }}>
-//       Направление:
-//     </Grid>
-//     <Grid item xs sx={{ border: 0 }}>
-//       {InputDirect(0)}
-//     </Grid>
-//   </Grid>
-// )}  {props.toCross.pointBbArea !== "0" && (
-//   <Grid container sx={{ marginLeft: 1.5, marginTop: 1.2 }}>
-//     <Grid item xs={1.9} sx={{ border: 0 }}>
-//       <b>Вход</b>
-//     </Grid>
-//     <Grid item xs={2.8} sx={{ border: 0 }}>
-//       Район: <b>{massroute.ways[index].targetArea}</b>
-//     </Grid>
-//     <Grid item xs={1.9} sx={{ border: 0 }}>
-//       ID: <b>{massroute.ways[index].targetID}</b>
-//     </Grid>
-//     <Grid item xs={3.4} sx={{ border: 0 }}>
-//       Направление:
-//     </Grid>
-//     <Grid item xs sx={{ border: 0 }}>
-//       {InputDirect(1)}
-//     </Grid>
-//   </Grid>
-// )}

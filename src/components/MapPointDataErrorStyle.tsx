@@ -10,17 +10,22 @@ export const styleModalMenu = {
 
 export const styleSetArea = {
   width: "55px",
-  maxHeight: "6px",
-  minHeight: "6px",
+  maxHeight: "3px",
+  minHeight: "3px",
+  marginTop: "3px",
+  //border: "1px solid #000",
+  //borderColor: "#FFFBE5",
+  //borderRadius: 1,
   bgcolor: "#FFFBE5",
-  boxShadow: 3,
+  boxShadow: 6,
   textAlign: "center",
   p: 1,
 };
 
 export const styleBoxFormArea = {
   "& > :not(style)": {
-    marginTop: "-6px",
+    //marginTop: "-6px",
+    marginTop: "-9px",
     marginLeft: "-10px",
     width: "73px",
   },
@@ -56,4 +61,28 @@ export const styleSave = {
   borderRadius: 1,
   color: "black",
   textTransform: "unset !important",
+};
+
+export const styleModalEditBind = {
+  fontSize: 15,
+  maxHeight: "21px",
+  minHeight: "21px",
+  backgroundColor: "#E6F5D6",
+  color: "black",
+  marginLeft: 0.6,
+  textTransform: "unset !important",
+  textAlign: "center",
+  boxShadow: 3,
+};
+
+export const styleHeadError = {
+  color: "#5B1080",
+  textAlign: "center",
+};
+
+export const styleFooterError = {
+  fontSize: 12.5,
+  color: "#5B1080",
+  marginLeft: 1.5,
+  marginTop: 1.5,
 };

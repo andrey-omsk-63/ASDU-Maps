@@ -1196,7 +1196,7 @@ export const BindInput = (
     minHeight: "3px",
     borderRadius: 2,
     bgcolor: pusto ? "#FFFBE5" : "white",
-    boxShadow: pusto ? 3 : 0,
+    boxShadow: pusto ? 6 : 0,
     textAlign: "center",
     p: 1.5,
   };
@@ -1310,7 +1310,7 @@ export const MaskFormWay = () => {
     wtDelay: 1,
     offsetBeginGreen: 0,
     offsetEndGreen: 0,
-    intensFl: 9999,
+    intensFl: 0,
     phases: [],
     edited: false,
   };
@@ -1341,6 +1341,7 @@ export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
     backgroundColor: "#E6F5D6",
     textTransform: "unset !important",
     color: "black",
+    boxShadow: 3,
   };
 
   const handleClose = (mode: boolean) => {
@@ -1382,7 +1383,7 @@ export const WaysInput = (VALUE: any, SetValue: Function, MAX: number) => {
     minHeight: "1px",
     borderRadius: 1,
     bgcolor: "#FFFBE5",
-    boxShadow: 3,
+    boxShadow: 6,
     textAlign: "center",
     p: 1.5,
   };
