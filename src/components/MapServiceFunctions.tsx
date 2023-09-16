@@ -28,6 +28,9 @@ import { styleInpKnop, styleBind05, styleModalEndAttent } from "./MainMapStyle";
 import { styleBind02, styleTypography, searchControl } from "./MainMapStyle";
 import { styleBind03, styleBind033, styleSetImg } from "./MainMapStyle";
 
+import { styleModalMenuErr, styleHeadError } from "./MapPointDataErrorStyle";
+import { styleBoxFormArea, styleSetArea } from "./MapPointDataErrorStyle";
+
 const handleKey = (event: any) => {
   if (event.key === "Enter") event.preventDefault();
 };
@@ -1432,3 +1435,56 @@ export const WaysInput = (VALUE: any, SetValue: Function, MAX: number) => {
     </Box>
   );
 };
+//=== PointDataError ==================================================
+export const HeadDoublError = (flagSave: boolean, propsErr: string) => {
+  return (
+    <>
+      {!flagSave ? (
+        <Typography variant="h6" sx={{ textAlign: "center", color: "red" }}>
+          {propsErr}
+        </Typography>
+      ) : (
+        <Typography variant="h6" sx={styleHeadError}>
+          Редактирование параметров связи:
+        </Typography>
+      )}
+    </>
+  );
+};
+
+export const questionForDelete = (handleCloseDel: Function) => {
+  return (
+    <Box sx={{ textAlign: "center", marginTop: 1.2 }}>
+      <Typography variant="h6" sx={{ color: "red" }}>
+        Удалить исходную связь?
+      </Typography>
+      <Button sx={styleModalMenuErr} onClick={() => handleCloseDel(1)}>
+        Да
+      </Button>
+      &nbsp;
+      <Button sx={styleModalMenuErr} onClick={() => handleCloseDel(2)}>
+        Нет
+      </Button>
+    </Box>
+  );
+};
+
+export const InputerDlTm = (value: any, func: any) => {
+  return (
+    <Box sx={styleSetArea}>
+      <Box component="form" sx={styleBoxFormArea}>
+        <TextField
+          size="small"
+          onKeyPress={handleKey} //отключение Enter
+          type="number"
+          InputProps={{ disableUnderline: true, style: { fontSize: 14.2 } }}
+          value={value}
+          onChange={func}
+          variant="standard"
+          color="secondary"
+        />
+      </Box>
+    </Box>
+  );
+};
+//=====================================================================

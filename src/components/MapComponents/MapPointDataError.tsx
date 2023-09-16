@@ -6,9 +6,9 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
-//import MenuItem from "@mui/material/MenuItem";
+
+import { questionForDelete, HeadDoublError } from "./../MapServiceFunctions";
+import { InputerDlTm } from "./../MapServiceFunctions";
 
 import { SendSocketDeleteWay } from "./../MapSocketFunctions";
 import { SendSocketDeleteWayFromPoint } from "./../MapSocketFunctions";
@@ -17,16 +17,14 @@ import { SendSocketCreateWay } from "./../MapSocketFunctions";
 import { SendSocketCreateWayFromPoint } from "./../MapSocketFunctions";
 import { SendSocketCreateWayToPoint } from "./../MapSocketFunctions";
 
-import { styleModalMenu, styleSetArea } from "../MapPointDataErrorStyle";
-import { styleBoxFormArea, styleSave } from "../MapPointDataErrorStyle";
-import { styleModalEditBind, styleHeadError } from "../MapPointDataErrorStyle";
+import { styleSave } from "../MapPointDataErrorStyle";
+import { styleModalEditBind } from "../MapPointDataErrorStyle";
 import { styleFooterError } from "../MapPointDataErrorStyle";
 
 let lengthRoute = 0;
 let index = -1;
 let fromIdx = -1;
 let inIdx = -1;
-//let massBind = [-1, -1];
 let massBindNew = [-1, -1];
 
 let dlRoute1 = 0;
@@ -45,6 +43,8 @@ let reqRoute: any = {
 
 let whatFrom = "";
 let whatIn = "";
+let nameFrom = "";
+let nameIn = "";
 
 const MapPointDataError = (props: {
   sErr: string;
@@ -66,6 +66,7 @@ const MapPointDataError = (props: {
   });
   const dispatch = useDispatch();
   const [openSetEr, setOpenSetEr] = React.useState(true);
+  const [tmRoute2, setTmRoute2] = React.useState(tmRoute1);
   let colorBorder = props.sErr === "Дубликатная связь" ? "primary.main" : "red";
   let colorEnd = props.sErr === "Дубликатная связь" ? "black" : "red";
 
@@ -121,8 +122,6 @@ const MapPointDataError = (props: {
     tmRoute1 = Math.round(sec2 / 60) + " мин";
     sRoute0 = Math.round(sRoute0 * 10) / 10;
     sRouteBegin = sRoute0;
-    //fromDirectBegin = massroute.ways[index].lsource; // выход
-    //inDirectBegin = massroute.ways[index].ltarget; // вход
     fromIdx = -1;
     inIdx = -1;
     for (let i = 0; i < massroute.vertexes.length; i++) {
@@ -132,16 +131,18 @@ const MapPointDataError = (props: {
         massroute.vertexes[i].id === massroute.ways[index].sourceID
       ) {
         fromIdx = i; // выход
-        whatFrom = massroute.vertexes[i].area ? 'перекрёстка' : 'объекта'
-      } 
+        whatFrom = massroute.vertexes[i].area ? "перекрёстком" : "объектом";
+        nameFrom = massroute.vertexes[i].name;
+      }
       if (
         massroute.vertexes[i].region === massroute.ways[index].region &&
         massroute.vertexes[i].area === massroute.ways[index].targetArea &&
         massroute.vertexes[i].id === massroute.ways[index].targetID
       ) {
         inIdx = i; // вход
-        whatIn = massroute.vertexes[i].area ? 'перекрёстка' : 'объекта'
-      } 
+        whatIn = massroute.vertexes[i].area ? "перекрёстком" : "объектом";
+        nameIn = massroute.vertexes[i].name;
+      }
     }
     console.log(
       "ВХОД-Выход:",
@@ -149,15 +150,9 @@ const MapPointDataError = (props: {
       fromIdx,
       props.fromCross.pointAaID,
       props.toCross.pointBbID,
-      whatFrom,whatIn
+      whatFrom,
+      whatIn
     );
-    //massBind = [-1, -1];
-    // if (massroute.vertexes[fromIdx].area)
-    //   massBind[0] = massroute.vertexes[fromIdx].lin.indexOf(fromDirectBegin); // выход
-    // if (massroute.vertexes[onIdx].area)
-    //   massBind[1] = massroute.vertexes[onIdx].lout.indexOf(inDirectBegin); // вход
-    // massBindNew[0] = fromDirectBegin;
-    // massBindNew[1] = inDirectBegin;
   }
 
   const handleCloseSetEnd = () => {
@@ -173,7 +168,6 @@ const MapPointDataError = (props: {
   const DeleteWay = () => {
     massroute.ways.splice(index, 1); // удаление из базы
     dispatch(massrouteCreate(massroute));
-
     let idx = -1; // удаление из протокола
     for (let i = 0; i < massroutepro.ways.length; i++) {
       if (
@@ -238,11 +232,7 @@ const MapPointDataError = (props: {
 
   const [valueDl, setValueDl] = React.useState(dlRoute1);
   const [valueTm, setValueTm] = React.useState(sec);
-
-  const handleKey = (event: any) => {
-    if (event.key === "Enter") event.preventDefault();
-  };
-
+  
   const handleChangeDl = (event: any) => {
     let valueInp = event.target.value.replace(/^0+/, "");
     if (Number(valueInp) < 0) valueInp = 0;
@@ -280,51 +270,43 @@ const MapPointDataError = (props: {
     }
   };
 
-  const InputerDlTm = (value: any, func: any) => {
+  const StrokaMenu = () => {
     return (
-      <Box sx={styleSetArea}>
-        <Box component="form" sx={styleBoxFormArea}>
-          <TextField
-            size="small"
-            onKeyPress={handleKey} //отключение Enter
-            type="number"
-            //placeholder="Search..."
-            InputProps={{ disableUnderline: true, style: { fontSize: 14.2 } }}
-            value={value}
-            onChange={func}
-            variant="standard"
-            color="secondary"
-          />
-        </Box>
+      <Grid item xs sx={{ textAlign: "center", border: 0 }}>
+        <Button sx={styleSave} onClick={() => handleClose()}>
+          <b>Сохранить</b>
+        </Button>
+      </Grid>
+    );
+  };
+
+  const FooterError = () => {
+    return (
+      <Box sx={styleFooterError}>
+        Исходная длина связи: {dlRouteBegin} м<br />
+        Исходное время прохождения: {tmRouteBegin} сек
+        <br />
+        Исходная скорость прохождения: {sRouteBegin} км/ч
       </Box>
     );
   };
 
-  const StrokaMenu = () => {
-    return (
-      <Button variant="contained" sx={styleSave} onClick={() => handleClose()}>
-        <b>Сохранить</b>
-      </Button>
-    );
+  const CallEditor = () => {
+    console.log("Вызов привязки");
   };
 
-  const [tmRoute2, setTmRoute2] = React.useState(tmRoute1);
-
-  const HeadError = () => {
-    return (
-      <>
-        {!flagSave ? (
-          <Typography variant="h6" sx={{ textAlign: "center", color: "red" }}>
-            {props.sErr}
-          </Typography>
-        ) : (
-          <Typography variant="h6" sx={styleHeadError}>
-            Редактирование параметров связи:
-          </Typography>
-        )}
-      </>
-    );
+  const СontentStrErr = (xss: number, mode: number) => {
+    return(
+      <Grid item xs={xss} sx={{ border: 0 }}>
+      <b>Длина связи:</b>
+    </Grid>
+    )
   };
+
+
+  let soob = flagSave
+    ? "Редактирование ранее созданной связи между"
+    : "Вы пытаетесть создать дубликатную связь между";
 
   return (
     // <Modal open={openSetEr} onClose={handleCloseSetEnd} hideBackdrop>
@@ -333,16 +315,14 @@ const MapPointDataError = (props: {
         <Button sx={styleModalEnd} onClick={handleCloseSetEnd}>
           <b>&#10006;</b>
         </Button>
-        {HeadError()}
+        {HeadDoublError(flagSave, props.sErr)}
         {props.sErr === "Дубликатная связь" && (
           <>
-            {/* {!flagSave && ( */}
-            <Box sx={{ p: 1 }}>
-              Вы пытаетесть создать дубликатную связь между перекрёстком ХХХ и
-              перекрёстком ХХХ
+            <Box sx={{ textAlign: "center" }}>{soob}</Box>
+            <Box sx={{ marginTop: -1, p: 1 }}>
+              {whatFrom} <b>{nameFrom}</b> и {whatIn} <b>{nameIn}</b>
             </Box>
-            {/* )} */}
-            <Button sx={styleModalEditBind}>
+            <Button sx={styleModalEditBind} onClick={() => CallEditor()}>
               <b>Редактирование привязки исходной связи</b>
             </Button>
             <Grid container sx={{ marginLeft: 1.5, marginTop: 1.2 }}>
@@ -355,11 +335,7 @@ const MapPointDataError = (props: {
               <Grid item xs={0.5} sx={{ border: 0 }}>
                 м
               </Grid>
-              {flagSave && (
-                <Grid item xs sx={{ textAlign: "center", border: 0 }}>
-                  {StrokaMenu()}
-                </Grid>
-              )}
+              {flagSave && <>{StrokaMenu()}</>}
             </Grid>
             <Grid container sx={{ marginLeft: 1.5, marginTop: 1.5 }}>
               <Grid item xs={5.4} sx={{ border: 0 }}>
@@ -381,28 +357,8 @@ const MapPointDataError = (props: {
             <Box sx={{ marginLeft: 1.5, marginTop: 1.5 }}>
               <b> Средняя скорость прохождения:</b>&nbsp;{sRoute0} км/ч
             </Box>
-            {flagSave && (
-              <Box sx={styleFooterError}>
-                Исходная длина связи: {dlRouteBegin} м<br />
-                Исходное время прохождения: {tmRouteBegin} сек
-                <br />
-                Исходная скорость прохождения: {sRouteBegin} км/ч
-              </Box>
-            )}
-            {!flagSave && (
-              <Box sx={{ textAlign: "center", marginTop: 1.2 }}>
-                <Typography variant="h6" sx={{ color: "red" }}>
-                  Удалить исходную связь?
-                </Typography>
-                <Button sx={styleModalMenu} onClick={() => handleCloseDel(1)}>
-                  Да
-                </Button>
-                &nbsp;
-                <Button sx={styleModalMenu} onClick={() => handleCloseDel(2)}>
-                  Нет
-                </Button>
-              </Box>
-            )}
+            {flagSave && <>{FooterError()}</>}
+            {!flagSave && <>{questionForDelete(handleCloseDel)}</>}
           </>
         )}
       </Box>

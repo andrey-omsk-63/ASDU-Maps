@@ -1,4 +1,4 @@
-export const styleModalMenu = {
+export const styleModalMenuErr = {
   marginTop: 0.5,
   maxHeight: "21px",
   minHeight: "21px",
@@ -61,6 +61,7 @@ export const styleSave = {
   borderRadius: 1,
   color: "black",
   textTransform: "unset !important",
+  boxShadow: 3,
 };
 
 export const styleModalEditBind = {

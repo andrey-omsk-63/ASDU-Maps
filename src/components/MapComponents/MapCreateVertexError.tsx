@@ -17,7 +17,7 @@ import { SendSocketCreateWay } from "./../MapSocketFunctions";
 import { SendSocketCreateWayFromPoint } from "./../MapSocketFunctions";
 import { SendSocketCreateWayToPoint } from "./../MapSocketFunctions";
 
-import { styleModalMenu, styleSetArea } from "../MapPointDataErrorStyle";
+import { styleModalMenuErr, styleSetArea } from "../MapPointDataErrorStyle";
 import { styleBoxFormArea, styleBoxFormNapr } from "../MapPointDataErrorStyle";
 import { styleSetNapr, styleSave } from "../MapPointDataErrorStyle";
 
@@ -467,11 +467,11 @@ const MapPointDataError = (props: {
                 <Typography variant="h6" sx={{ color: "red" }}>
                   Удалить исходную связь?
                 </Typography>
-                <Button sx={styleModalMenu} onClick={() => handleCloseDel(1)}>
+                <Button sx={styleModalMenuErr} onClick={() => handleCloseDel(1)}>
                   Да
                 </Button>
                 &nbsp;
-                <Button sx={styleModalMenu} onClick={() => handleCloseDel(2)}>
+                <Button sx={styleModalMenuErr} onClick={() => handleCloseDel(2)}>
                   Нет
                 </Button>
               </Box>
