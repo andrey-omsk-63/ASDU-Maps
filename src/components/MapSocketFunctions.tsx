@@ -330,6 +330,7 @@ export const SendSocketGetSvg = (
   areaOn: number,
   idOn: number
 ) => {
+  console.log('SendSocketGetSvg:',region,areaIn,idIn,areaOn,idOn)
   const handleSendOpen = () => {
     if (ws.url !== "wss://localhost:3000/W") {
       if (ws.readyState === WebSocket.OPEN) {

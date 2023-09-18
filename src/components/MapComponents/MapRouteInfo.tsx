@@ -1,19 +1,20 @@
-import * as React from 'react';
-import { useSelector } from 'react-redux';
+import * as React from "react";
+import { useSelector } from "react-redux";
 
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Button from '@mui/material/Button';
-import Modal from '@mui/material/Modal';
-import TextField from '@mui/material/TextField';
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
+import Modal from "@mui/material/Modal";
 
-import { styleModalEnd, styleSetInf } from './../MainMapStyle';
-import { styleBoxFormArea, styleSetArea } from '../MapPointDataErrorStyle';
-import { styleSave } from '../MapPointDataErrorStyle';
+import { StrokaMenuErr, СontentStrErr } from "./../MapServiceFunctions";
+import { InputerDlTm } from "./../MapServiceFunctions";
+
+import { styleModalEnd, styleSetInf } from "./../MainMapStyle";
+import { styleFooterError } from "../MapPointDataErrorStyle";
 
 let dlRoute1 = 0;
 let dlRouteBegin = 0;
-let tmRoute1 = '';
+let tmRoute1 = "";
 let flagSave = false;
 let sec = 0;
 let tmRouteBegin = 0;
@@ -42,7 +43,7 @@ const MapRouteInfo = (props: {
 
   const [openSetInf, setOpenSetInf] = React.useState(true);
 
-//=== инициализация ======================================
+  //=== инициализация ======================================
   if (dlRoute1 === 0) {
     maskRoute = props.reqRoute;
     sec = maskRoute.tmRoute;
@@ -51,11 +52,11 @@ const MapRouteInfo = (props: {
     dlRouteBegin = maskRoute.dlRoute;
     sRoute1 = (dlRoute1 / 1000 / sec) * 3600;
     let sec2 = dlRoute1 / (sRoute1 / 3.6);
-    tmRoute1 = Math.round(sec2 / 60) + ' мин';
+    tmRoute1 = Math.round(sec2 / 60) + " мин";
     sRoute1 = Math.round(sRoute1 * 10) / 10;
     sRouteBegin = sRoute1;
   }
-//========================================================
+  //========================================================
   const [valueDl, setValueDl] = React.useState(dlRoute1);
   const [valueTm, setValueTm] = React.useState(sec);
 
@@ -73,19 +74,16 @@ const MapRouteInfo = (props: {
     handleCloseSetEndInf();
   };
 
-  const handleKey = (event: any) => {
-    if (event.key === 'Enter') event.preventDefault();
-  };
 
   const handleChangeDl = (event: any) => {
-    let valueInp = event.target.value.replace(/^0+/, '');
+    let valueInp = event.target.value.replace(/^0+/, "");
     if (Number(valueInp) < 0) valueInp = 0;
-    if (valueInp === '') valueInp = 0;
+    if (valueInp === "") valueInp = 0;
     if (Number(valueInp) < 1000000) {
       valueInp = Math.trunc(Number(valueInp)).toString();
       dlRoute1 = valueInp;
       let sec2 = dlRoute1 / (sRoute1 / 3.6);
-      tmRoute1 = Math.round(sec2 / 60) + ' мин';
+      tmRoute1 = Math.round(sec2 / 60) + " мин";
       flagSave = true;
       setValueDl(valueInp);
       setValueTm(Math.round(sec2));
@@ -94,15 +92,15 @@ const MapRouteInfo = (props: {
   };
 
   const handleChangeTm = (event: any) => {
-    let valueInp = event.target.value.replace(/^0+/, '');
+    let valueInp = event.target.value.replace(/^0+/, "");
     if (Number(valueInp) < 0) valueInp = 0;
-    if (valueInp === '') valueInp = 0;
+    if (valueInp === "") valueInp = 0;
     if (Number(valueInp) < 66300) {
       valueInp = Math.trunc(Number(valueInp)).toString();
       sec = valueInp;
       sRoute1 = (dlRoute1 / 1000 / sec) * 3600;
       let sec2 = dlRoute1 / (sRoute1 / 3.6);
-      tmRoute1 = Math.round(sec2 / 60) + ' мин';
+      tmRoute1 = Math.round(sec2 / 60) + " мин";
       flagSave = true;
       sRoute1 = Math.round(sRoute1 * 10) / 10;
       setValueTm(valueInp);
@@ -110,30 +108,16 @@ const MapRouteInfo = (props: {
     }
   };
 
-  const InputerDlTm = (value: any, func: any) => {
-    return (
-      <Box sx={styleSetArea}>
-        <Box component="form" sx={styleBoxFormArea}>
-          <TextField
-            size="small"
-            type="number"
-            onKeyPress={handleKey} //отключение Enter
-            value={value}
-            InputProps={{disableUnderline: true, style: { fontSize: 14.2 } }}
-            onChange={func}
-            variant="standard"
-            color="secondary"
-          />
-        </Box>
-      </Box>
-    );
-  };
+  
 
-  const StrokaMenu = () => {
+  const FooterError = () => {
     return (
-      <Button variant="contained" sx={styleSave} onClick={() => handleClose()}>
-        <b>Сохранить</b>
-      </Button>
+      <Box sx={styleFooterError}>
+        Исходная длина связи: {dlRouteBegin} м<br />
+        Исходное время прохождения: {tmRouteBegin} сек
+        <br />
+        Исходная скорость прохождения: {sRouteBegin} км/ч
+      </Box>
     );
   };
 
@@ -156,56 +140,26 @@ const MapRouteInfo = (props: {
           &nbsp;ID:&nbsp;<b>{massdk[props.idxB].ID}</b> <br />
           {massdk[props.idxB].nameCoordinates} <br /> <br />
         </Box>
-
         <Grid container>
-          <Grid item xs={3.5} sx={{ border: 0 }}>
-            <b>Длина связи:</b>
-          </Grid>
-          <Grid item xs={2.3} sx={{ border: 0 }}>
-            {InputerDlTm(valueDl, handleChangeDl)}
-          </Grid>
-          <Grid item xs={0.5} sx={{ border: 0 }}>
-            м
-          </Grid>
-          {flagSave && (
-            <Grid item xs sx={{ textAlign: 'center', border: 0 }}>
-              {StrokaMenu()}
-            </Grid>
-          )}
+          {СontentStrErr(3.5, "Длина связи:", 1)}
+          {СontentStrErr(2.3, InputerDlTm(valueDl, handleChangeDl), 0)}
+          {СontentStrErr(0.5, "м", 0)}
+          {flagSave && <>{StrokaMenuErr(handleClose)}</>}
         </Grid>
-
         <Grid container sx={{ marginTop: 1.5 }}>
-          <Grid item xs={5.4} sx={{ border: 0 }}>
-            <b>Время прохождения:</b>
-          </Grid>
-          <Grid item xs={2.3} sx={{ border: 0 }}>
-            {tmRoute2}
-          </Grid>
-          <Grid item xs={0.25} sx={{ border: 0 }}>
-            (
-          </Grid>
-          <Grid item xs={2.3} sx={{ border: 0 }}>
-            {InputerDlTm(valueTm, handleChangeTm)}
-          </Grid>
-          <Grid item xs sx={{ border: 0 }}>
-            сек)
-          </Grid>
+          {СontentStrErr(5.4, "Время прохождения:", 1)}
+          {СontentStrErr(2.3, tmRoute2, 0)}
+          {СontentStrErr(0.25, "(", 0)}
+          {СontentStrErr(2.3, InputerDlTm(valueTm, handleChangeTm), 0)}
+          {СontentStrErr(1.75, "сек)", 0)}
         </Grid>
-
         <Box sx={{ marginTop: 1.5 }}>
           <b>Средняя скорость прохождения:</b> {sRoute1} км/ч <br />
         </Box>
-        {props.activeRoute && props.activeRoute.properties.get('blocked') && (
+        {props.activeRoute && props.activeRoute.properties.get("blocked") && (
           <Box>Имеются участки с перекрытыми дорогами</Box>
         )}
-        {flagSave && (
-          <Box sx={{ fontSize: 12.5, marginTop: 1.5 }}>
-            Исходная длина связи: {dlRouteBegin} м<br />
-            Исходное время прохождения: {tmRouteBegin} сек
-            <br />
-            Исходная скорость прохождения: {sRouteBegin} км/ч
-          </Box>
-        )}
+        {flagSave && <>{FooterError()}</>}
       </Box>
     </Modal>
   );

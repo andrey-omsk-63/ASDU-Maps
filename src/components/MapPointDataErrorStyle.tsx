@@ -48,21 +48,21 @@ export const styleBoxFormNapr = {
   },
 };
 
-export const styleSave = {
-  fontSize: 14,
-  marginRight: 0.1,
-  border: "2px solid #000",
-  bgcolor: "#E6F5D6",
-  minWidth: "100px",
-  maxWidth: "100px",
-  maxHeight: "20px",
-  minHeight: "20px",
-  borderColor: "#E6F5D6",
-  borderRadius: 1,
-  color: "black",
-  textTransform: "unset !important",
-  boxShadow: 3,
-};
+// export const styleSave = {
+//   fontSize: 14,
+//   marginRight: 0.1,
+//   border: "2px solid #000",
+//   bgcolor: "#E6F5D6",
+//   minWidth: "100px",
+//   maxWidth: "100px",
+//   maxHeight: "20px",
+//   minHeight: "20px",
+//   borderColor: "#E6F5D6",
+//   borderRadius: 1,
+//   color: "black",
+//   textTransform: "unset !important",
+//   boxShadow: 4,
+// };
 
 export const styleModalEditBind = {
   fontSize: 15,
@@ -86,4 +86,35 @@ export const styleFooterError = {
   color: "#5B1080",
   marginLeft: 1.5,
   marginTop: 1.5,
+};
+
+export const styleModalEndErr = (colorEnd: string) => {
+  const styleModalEnd = {
+    position: "absolute",
+    top: "0%",
+    left: "auto",
+    right: "-0%",
+    height: "21px",
+    maxWidth: "2%",
+    minWidth: "2%",
+    color: colorEnd,
+  };
+  return styleModalEnd;
+};
+
+export const styleSetInfErr = (colorBorder: string) => {
+  const styleSetInf = {
+    outline: "none",
+    position: "absolute",
+    marginTop: "18vh",
+    marginLeft: "27vh",
+    width: 430,
+    bgcolor: "background.paper",
+    border: "1px solid #000",
+    borderColor: colorBorder,
+    borderRadius: 2,
+    boxShadow: 24,
+    p: 1.5,
+  };
+  return styleSetInf;
 };

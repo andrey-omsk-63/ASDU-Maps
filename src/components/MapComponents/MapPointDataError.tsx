@@ -7,8 +7,11 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 
+import MapRouteBind from "./MapRouteBind";
+
 import { questionForDelete, HeadDoublError } from "./../MapServiceFunctions";
-import { InputerDlTm } from "./../MapServiceFunctions";
+import { InputerDlTm, СontentStrErr } from "./../MapServiceFunctions";
+import { StrokaMenuErr } from "./../MapServiceFunctions";
 
 import { SendSocketDeleteWay } from "./../MapSocketFunctions";
 import { SendSocketDeleteWayFromPoint } from "./../MapSocketFunctions";
@@ -16,8 +19,9 @@ import { SendSocketDeleteWayToPoint } from "./../MapSocketFunctions";
 import { SendSocketCreateWay } from "./../MapSocketFunctions";
 import { SendSocketCreateWayFromPoint } from "./../MapSocketFunctions";
 import { SendSocketCreateWayToPoint } from "./../MapSocketFunctions";
+import { SendSocketGetSvg } from "./../MapSocketFunctions";
 
-import { styleSave } from "../MapPointDataErrorStyle";
+import { styleModalEndErr, styleSetInfErr } from "../MapPointDataErrorStyle";
 import { styleModalEditBind } from "../MapPointDataErrorStyle";
 import { styleFooterError } from "../MapPointDataErrorStyle";
 
@@ -53,7 +57,10 @@ const MapPointDataError = (props: {
   fromCross: any;
   toCross: any;
   update: any;
+  svg: any;
+  setSvg: any;
 }) => {
+  //console.log("MapPointDataError_svg:", props.svg);
   const WS = props.ws;
   //== Piece of Redux =======================================
   let massroute = useSelector((state: any) => {
@@ -67,33 +74,15 @@ const MapPointDataError = (props: {
   const dispatch = useDispatch();
   const [openSetEr, setOpenSetEr] = React.useState(true);
   const [tmRoute2, setTmRoute2] = React.useState(tmRoute1);
+  const [openSetBind, setOpenSetBind] = React.useState(false);
+
   let colorBorder = props.sErr === "Дубликатная связь" ? "primary.main" : "red";
   let colorEnd = props.sErr === "Дубликатная связь" ? "black" : "red";
-
-  const styleModalEnd = {
-    position: "absolute",
-    top: "0%",
-    left: "auto",
-    right: "-0%",
-    height: "21px",
-    maxWidth: "2%",
-    minWidth: "2%",
-    color: colorEnd,
-  };
-
-  const styleSetInf = {
-    outline: "none",
-    position: "absolute",
-    marginTop: "18vh",
-    marginLeft: "27vh",
-    width: 430,
-    bgcolor: "background.paper",
-    border: "1px solid #000",
-    borderColor: colorBorder,
-    borderRadius: 2,
-    boxShadow: 24,
-    p: 1.5,
-  };
+  let styleModalEnd = styleModalEndErr(colorEnd);
+  let styleSetInf = styleSetInfErr(colorBorder);
+  let soob = flagSave
+    ? "Редактирование ранее созданной связи между"
+    : "Вы пытаетесть создать дубликатную связь между";
   //=== инициализация ======================================
   if (index < 0) flagSave = false;
   if (index < 0 && props.sErr === "Дубликатная связь") {
@@ -115,6 +104,8 @@ const MapPointDataError = (props: {
     sec = massroute.ways[index].time;
     tmRouteBegin = sec;
     dlRouteBegin = dlRoute1;
+    reqRoute.dlRoute = Number(dlRoute1);
+    reqRoute.tmRoute = Number(sec);
     sRoute0 = 0;
     if (sec) sRoute0 = (dlRoute1 / 1000 / sec) * 3600;
     let sec2 = 0;
@@ -144,15 +135,13 @@ const MapPointDataError = (props: {
         nameIn = massroute.vertexes[i].name;
       }
     }
-    console.log(
-      "ВХОД-Выход:",
-      inIdx,
-      fromIdx,
-      props.fromCross.pointAaID,
-      props.toCross.pointBbID,
-      whatFrom,
-      whatIn
-    );
+    // console.log(
+    //   "ВХОД-Выход:",
+    //   inIdx,
+    //   fromIdx,
+    //   props.fromCross.pointAaID,
+    //   props.toCross.pointBbID
+    // );
   }
 
   const handleCloseSetEnd = () => {
@@ -232,7 +221,7 @@ const MapPointDataError = (props: {
 
   const [valueDl, setValueDl] = React.useState(dlRoute1);
   const [valueTm, setValueTm] = React.useState(sec);
-  
+
   const handleChangeDl = (event: any) => {
     let valueInp = event.target.value.replace(/^0+/, "");
     if (Number(valueInp) < 0) valueInp = 0;
@@ -241,6 +230,7 @@ const MapPointDataError = (props: {
     if (Number(valueInp) < 1000000) {
       valueInp = Math.trunc(Number(valueInp)).toString();
       dlRoute1 = valueInp;
+      reqRoute.dlRoute = Number(dlRoute1);
       let sec2 = 0;
       if (dlRoute1 && sRoute0) sec2 = dlRoute1 / (sRoute0 / 3.6);
       if (sec2) tmRoute1 = Math.round(sec2 / 60) + " мин";
@@ -259,6 +249,7 @@ const MapPointDataError = (props: {
     if (Number(valueInp) < 66300) {
       valueInp = Math.trunc(Number(valueInp)).toString();
       sec = valueInp;
+      reqRoute.tmRoute = Number(sec);
       if (dlRoute1) sRoute0 = (dlRoute1 / 1000 / sec) * 3600;
       let sec2 = 0;
       if (dlRoute1 && sRoute0) sec2 = dlRoute1 / (sRoute0 / 3.6);
@@ -268,16 +259,6 @@ const MapPointDataError = (props: {
       setValueTm(valueInp);
       setTmRoute2(tmRoute1);
     }
-  };
-
-  const StrokaMenu = () => {
-    return (
-      <Grid item xs sx={{ textAlign: "center", border: 0 }}>
-        <Button sx={styleSave} onClick={() => handleClose()}>
-          <b>Сохранить</b>
-        </Button>
-      </Grid>
-    );
   };
 
   const FooterError = () => {
@@ -291,78 +272,73 @@ const MapPointDataError = (props: {
     );
   };
 
-  const CallEditor = () => {
-    console.log("Вызов привязки");
+  const CallEditorBind = () => {
+    flagSave = true;
+    let homeRegion = massroute.vertexes[fromIdx].region;
+    let arIn = massroute.vertexes[fromIdx].area;
+    let idIn = massroute.vertexes[fromIdx].id;
+    let arOn = massroute.vertexes[inIdx].area;
+    let idOn = massroute.vertexes[inIdx].id;
+    SendSocketGetSvg(WS, homeRegion, arIn, idIn, arOn, idOn);
+    setOpenSetBind(true);
   };
 
-  const СontentStrErr = (xss: number, mode: number) => {
-    return(
-      <Grid item xs={xss} sx={{ border: 0 }}>
-      <b>Длина связи:</b>
-    </Grid>
-    )
+  const MakeRecordMassRoute = (mode: boolean, mass: any) => {
+    console.log("!!!MakeRecordMassRoute:", mode, mass);
+    //handleCloseSetEnd();
   };
-
-
-  let soob = flagSave
-    ? "Редактирование ранее созданной связи между"
-    : "Вы пытаетесть создать дубликатную связь между";
 
   return (
-    // <Modal open={openSetEr} onClose={handleCloseSetEnd} hideBackdrop>
-    <Modal open={openSetEr} onClose={handleCloseEnd}>
-      <Box sx={styleSetInf}>
-        <Button sx={styleModalEnd} onClick={handleCloseSetEnd}>
-          <b>&#10006;</b>
-        </Button>
-        {HeadDoublError(flagSave, props.sErr)}
-        {props.sErr === "Дубликатная связь" && (
-          <>
-            <Box sx={{ textAlign: "center" }}>{soob}</Box>
-            <Box sx={{ marginTop: -1, p: 1 }}>
-              {whatFrom} <b>{nameFrom}</b> и {whatIn} <b>{nameIn}</b>
-            </Box>
-            <Button sx={styleModalEditBind} onClick={() => CallEditor()}>
-              <b>Редактирование привязки исходной связи</b>
-            </Button>
-            <Grid container sx={{ marginLeft: 1.5, marginTop: 1.2 }}>
-              <Grid item xs={3.5} sx={{ border: 0 }}>
-                <b>Длина связи:</b>
+    <>
+      <Modal open={openSetEr} onClose={handleCloseEnd}>
+        <Box sx={styleSetInf}>
+          <Button sx={styleModalEnd} onClick={handleCloseSetEnd}>
+            <b>&#10006;</b>
+          </Button>
+          {HeadDoublError(flagSave, props.sErr)}
+          {props.sErr === "Дубликатная связь" && (
+            <>
+              <Box sx={{ textAlign: "center" }}>{soob}</Box>
+              <Box sx={{ marginTop: -1, p: 1 }}>
+                {whatFrom} <b>{nameFrom}</b> и {whatIn} <b>{nameIn}</b>
+              </Box>
+              <Button sx={styleModalEditBind} onClick={() => CallEditorBind()}>
+                <b>Редактирование привязки исходной связи</b>
+              </Button>
+              <Grid container sx={{ marginLeft: 1.5, marginTop: 1.2 }}>
+                {СontentStrErr(3.5, "Длина связи:", 1)}
+                {СontentStrErr(2.3, InputerDlTm(valueDl, handleChangeDl), 0)}
+                {СontentStrErr(0.5, "м", 0)}
+                {flagSave && <>{StrokaMenuErr(handleClose)}</>}
               </Grid>
-              <Grid item xs={2.3} sx={{ border: 0 }}>
-                {InputerDlTm(valueDl, handleChangeDl)}
+              <Grid container sx={{ marginLeft: 1.5, marginTop: 1.5 }}>
+                {СontentStrErr(5.4, "Время прохождения:", 1)}
+                {СontentStrErr(2.3, tmRoute2, 0)}
+                {СontentStrErr(0.25, "(", 0)}
+                {СontentStrErr(2.3, InputerDlTm(valueTm, handleChangeTm), 0)}
+                {СontentStrErr(1.75, "сек)", 0)}
               </Grid>
-              <Grid item xs={0.5} sx={{ border: 0 }}>
-                м
-              </Grid>
-              {flagSave && <>{StrokaMenu()}</>}
-            </Grid>
-            <Grid container sx={{ marginLeft: 1.5, marginTop: 1.5 }}>
-              <Grid item xs={5.4} sx={{ border: 0 }}>
-                <b>Время прохождения:</b>
-              </Grid>
-              <Grid item xs={2.3} sx={{ border: 0 }}>
-                {tmRoute2}
-              </Grid>
-              <Grid item xs={0.25} sx={{ border: 0 }}>
-                (
-              </Grid>
-              <Grid item xs={2.3} sx={{ border: 0 }}>
-                {InputerDlTm(valueTm, handleChangeTm)}
-              </Grid>
-              <Grid item xs sx={{ border: 0 }}>
-                сек)
-              </Grid>
-            </Grid>
-            <Box sx={{ marginLeft: 1.5, marginTop: 1.5 }}>
-              <b> Средняя скорость прохождения:</b>&nbsp;{sRoute0} км/ч
-            </Box>
-            {flagSave && <>{FooterError()}</>}
-            {!flagSave && <>{questionForDelete(handleCloseDel)}</>}
-          </>
-        )}
-      </Box>
-    </Modal>
+              <Box sx={{ marginLeft: 1.5, marginTop: 1.5 }}>
+                <b> Средняя скорость прохождения:</b>&nbsp;{sRoute0} км/ч
+              </Box>
+              {flagSave && <>{FooterError()}</>}
+              {!flagSave && <>{questionForDelete(handleCloseDel)}</>}
+            </>
+          )}
+        </Box>
+      </Modal>
+      {openSetBind && fromIdx >= 0 && inIdx >= 0 && (
+        <MapRouteBind
+          setOpen={setOpenSetBind}
+          svg={props.svg}
+          setSvg={props.setSvg}
+          idxA={fromIdx}
+          idxB={inIdx}
+          reqRoute={reqRoute}
+          func={MakeRecordMassRoute}
+        />
+      )}
+    </>
   );
 };
 

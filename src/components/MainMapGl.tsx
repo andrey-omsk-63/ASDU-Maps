@@ -87,6 +87,8 @@ let idxDel: number, nomRoute: number, idxRoute: number, pointAaIndex: number;
 let indexPoint: number, pointBbIndex: number;
 idxDel = nomRoute = idxRoute = indexPoint = pointAaIndex = pointBbIndex = -1;
 let oldPropsSvg: any = null;
+let fromIdx = -1;
+let inIdx = -1;
 
 const MainMap = (props: {
   ws: WebSocket;
@@ -96,6 +98,7 @@ const MainMap = (props: {
   setSvg: any;
   trigger: boolean;
 }) => {
+  //console.log("MainMap_svg:", props.svg);
   const WS = props.ws;
   if (WS.url === "wss://localhost:3000/W") debugging = true;
   //== Piece of Redux =======================================
@@ -172,6 +175,11 @@ const MainMap = (props: {
 
   const SoobOpenSetEr = (soob: string) => {
     soobError = soob;
+    if (soobError === "Дубликатная связь") {
+      fromIdx = pointAaIndex;
+      inIdx = pointBbIndex;
+    }
+    console.log("######:", soobError, pointAaIndex, pointBbIndex);
     setOpenSetEr(true);
   };
 
@@ -504,6 +512,8 @@ const MainMap = (props: {
               fromCross={fromCross}
               toCross={toCross}
               update={UpdateAddRoute}
+              svg={masSvg}
+              setSvg={props.setSvg}
             />
           )}
         </Box>
@@ -690,6 +700,15 @@ const MainMap = (props: {
         masSvg[0] = props.svg[RecevKeySvg(massroute.vertexes[pointAaIndex])];
         masSvg[1] = props.svg[RecevKeySvg(massroute.vertexes[pointBbIndex])];
       }
+      if (props.svg && openSetEr) {
+        masSvg[0] = props.svg[RecevKeySvg(massroute.vertexes[fromIdx])];
+        masSvg[1] = props.svg[RecevKeySvg(massroute.vertexes[inIdx])];
+      }
+      if (props.svg && openSetWaysFormMenu) {
+        // masSvg[0] = props.svg[RecevKeySvg(massroute.vertexes[fromIdx])];
+        // masSvg[1] = props.svg[RecevKeySvg(massroute.vertexes[inIdx])];
+        masSvg[0] = props.svg
+      }
     }
   }
   if (openSetBind && pointAaIndex < 0 && pointBbIndex < 0)
@@ -746,8 +765,11 @@ const MainMap = (props: {
             )}
             {openSetWaysFormMenu && !openSetVertForm && (
               <MapWaysFormMenu
+                ws={WS}
                 setOpen={SetOpenSetWaysFormMenu}
                 idx={idxRoute}
+                svg={masSvg}
+                setSvg={props.setSvg}
               />
             )}
             {openSetWaysForm && (
@@ -765,6 +787,8 @@ const MainMap = (props: {
                 fromCross={fromCross}
                 toCross={toCross}
                 update={UpdateAddRoute}
+                svg={masSvg}
+                setSvg={props.setSvg}
               />
             )}
             {openSetInf && (

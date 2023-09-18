@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { massrouteCreate, massrouteproCreate } from "./../../redux/actions";
+import { massrouteCreate, massrouteproCreate } from "../src/redux/actions";
 
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -10,16 +10,16 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import MenuItem from "@mui/material/MenuItem";
 
-import { SendSocketDeleteWay } from "./../MapSocketFunctions";
-import { SendSocketDeleteWayFromPoint } from "./../MapSocketFunctions";
-import { SendSocketDeleteWayToPoint } from "./../MapSocketFunctions";
-import { SendSocketCreateWay } from "./../MapSocketFunctions";
-import { SendSocketCreateWayFromPoint } from "./../MapSocketFunctions";
-import { SendSocketCreateWayToPoint } from "./../MapSocketFunctions";
+import { SendSocketDeleteWay } from "../src/components/MapSocketFunctions";
+import { SendSocketDeleteWayFromPoint } from "../src/components/MapSocketFunctions";
+import { SendSocketDeleteWayToPoint } from "../src/components/MapSocketFunctions";
+import { SendSocketCreateWay } from "../src/components/MapSocketFunctions";
+import { SendSocketCreateWayFromPoint } from "../src/components/MapSocketFunctions";
+import { SendSocketCreateWayToPoint } from "../src/components/MapSocketFunctions";
 
-import { styleModalMenuErr, styleSetArea } from "../MapPointDataErrorStyle";
-import { styleBoxFormArea, styleBoxFormNapr } from "../MapPointDataErrorStyle";
-import { styleSetNapr, styleSave } from "../MapPointDataErrorStyle";
+import { styleModalMenuErr, styleSetArea } from "../src/components/MapPointDataErrorStyle";
+import { styleBoxFormArea, styleBoxFormNapr } from "../src/components/MapPointDataErrorStyle";
+import { styleSetNapr, styleSave } from "../src/components/MapPointDataErrorStyle";
 
 let lengthRoute = 0;
 let index = -1;

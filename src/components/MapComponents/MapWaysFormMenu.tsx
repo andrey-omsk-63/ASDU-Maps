@@ -5,6 +5,9 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 
 import MapPointDataError from "./MapPointDataError";
+import MapRouteBind from "./MapRouteBind";
+
+import { SendSocketGetSvg } from "./../MapSocketFunctions";
 
 import { styleModalEnd, styleFW01, styleFW02 } from "./../MainMapStyle";
 
@@ -15,9 +18,27 @@ let massTargetRoute: Array<number> = [];
 let massTargetNum: Array<number> = [];
 let massTargetName: Array<string> = [];
 let oldIdx = -1;
-//let pusto = -1;
 
-const MapWaysFormMenu = (props: { setOpen: any; idx: number }) => {
+let fromIdx = -1;
+let inIdx = -1;
+
+let reqRoute: any = {
+  dlRoute: 0,
+  tmRoute: 0,
+};
+
+let masSvg: any = ["", ""];
+let propsSvg: any;
+
+const MapWaysFormMenu = (props: {
+  ws: any;
+  setOpen: any;
+  idx: number;
+  svg: any;
+  setSvg: any;
+}) => {
+  console.log("MapWaysFormMenu_svg:", props.svg);
+  const WS = props.ws;
   //== Piece of Redux =======================================
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;
@@ -29,6 +50,7 @@ const MapWaysFormMenu = (props: { setOpen: any; idx: number }) => {
   });
   //console.log("massroute:", massroute);
   //========================================================
+  const [openSetBind, setOpenSetBind] = React.useState(false);
   const propsArea = massroute.vertexes[props.idx].area;
   const propsId = massroute.vertexes[props.idx].id;
 
@@ -39,7 +61,9 @@ const MapWaysFormMenu = (props: { setOpen: any; idx: number }) => {
   //=== инициализация ======================================
   if (oldIdx !== props.idx) {
     oldIdx = props.idx;
+    inIdx = props.idx;
     openSetErr = false;
+    masSvg = ["", ""];
     //pusto = -1;
     OpenMenu = false;
     massTargetRoute = [];
@@ -82,7 +106,29 @@ const MapWaysFormMenu = (props: { setOpen: any; idx: number }) => {
       if (mode === 777) {
         handleCloseSetEnd();
       } else {
-        props.setOpen(mode, massTargetNum[mode], 1);
+        //props.setOpen(mode, massTargetNum[mode], 1);
+        fromIdx = massTargetNum[mode];
+
+        console.log(
+          "###:",
+          mode,
+          massTargetNum,
+          massTargetRoute,
+          inIdx,
+          fromIdx,
+          massTargetRoute[mode],
+          massroute.ways[massTargetRoute[mode]]
+        );
+
+        reqRoute.dlRoute = massroute.ways[massTargetRoute[mode]].lenght;
+        reqRoute.tmRoute = massroute.ways[massTargetRoute[mode]].time;
+        let homeRegion = massroute.vertexes[fromIdx].region;
+        let arIn = massroute.vertexes[fromIdx].area;
+        let idIn = massroute.vertexes[fromIdx].id;
+        let arOn = massroute.vertexes[inIdx].area;
+        let idOn = massroute.vertexes[inIdx].id;
+        SendSocketGetSvg(WS, homeRegion, arIn, idIn, arOn, idOn);
+        setOpenSetBind(true);
       }
     }
   };
@@ -106,12 +152,7 @@ const MapWaysFormMenu = (props: { setOpen: any; idx: number }) => {
     );
     for (let i = 0; i < massTargetName.length; i++) {
       resStr.push(
-        <Button
-          key={i}
-          sx={styleFW02}
-          variant="contained"
-          onClick={() => handleClose(i)}
-        >
+        <Button key={i} sx={styleFW02} onClick={() => handleClose(i)}>
           <b>{massTargetName[i].slice(0, 60)}</b>
         </Button>
       );
@@ -119,13 +160,25 @@ const MapWaysFormMenu = (props: { setOpen: any; idx: number }) => {
     return resStr;
   };
 
+  const MakeRecordMassRoute = (mode: boolean, mass: any) => {
+    console.log("###MakeRecordMassRoute:", mode, mass);
+    //handleCloseSetEnd();
+  };
+
+  if (props.svg[0] !== "") {
+    propsSvg = props.svg[0];
+    // masSvg[0] = propsSvg[RecevKeySvg(massroute.vertexes[fromIdx])];
+    // masSvg[1] = propsSvg[RecevKeySvg(massroute.vertexes[inIdx])];
+    console.log("propsSvg:",propsSvg);
+  }
+
   return (
     <>
       {OpenMenu && massTargetRoute.length > 1 && (
         <Box sx={styleFW01}>{SpisRoutes()}</Box>
       )}
       {OpenMenu && massTargetRoute.length === 1 && (
-        <>{ props.setOpen(0, massTargetNum[0], 1)}</>
+        <>{props.setOpen(0, massTargetNum[0], 1)}</>
       )}
       {openSetErr && (
         <MapPointDataError
@@ -135,6 +188,19 @@ const MapWaysFormMenu = (props: { setOpen: any; idx: number }) => {
           fromCross={0}
           toCross={0}
           update={0}
+          svg={{}}
+          setSvg={{}}
+        />
+      )}
+      {openSetBind && fromIdx >= 0 && inIdx >= 0 && (
+        <MapRouteBind
+          setOpen={setOpenSetBind}
+          svg={masSvg}
+          setSvg={props.setSvg}
+          idxA={fromIdx}
+          idxB={inIdx}
+          reqRoute={reqRoute}
+          func={MakeRecordMassRoute}
         />
       )}
     </>

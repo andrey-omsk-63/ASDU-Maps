@@ -332,6 +332,8 @@ const MapCreateVertex = (props: {
           fromCross={0}
           toCross={0}
           update={0}
+          svg={{}}
+          setSvg={{}}
         />
       )}
     </>

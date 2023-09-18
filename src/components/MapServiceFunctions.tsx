@@ -1487,4 +1487,44 @@ export const InputerDlTm = (value: any, func: any) => {
     </Box>
   );
 };
+
+export const СontentStrErr = (xss: number, soob: any, mode: number) => {
+  return (
+    <>
+      {mode > 0 ? (
+        <Grid item xs={xss} sx={{ border: 0 }}>
+          <b>{soob}</b>
+        </Grid>
+      ) : (
+        <Grid item xs={xss} sx={{ border: 0 }}>
+          {soob}
+        </Grid>
+      )}
+    </>
+  );
+};
+
+export const StrokaMenuErr = (handleClose: Function) => {
+  const styleSave = {
+    fontSize: 14,
+    marginRight: 0.1,
+    border: "2px solid #000",
+    bgcolor: "#E6F5D6",
+    width: "100px",
+    maxHeight: "20px",
+    minHeight: "20px",
+    borderColor: "#E6F5D6",
+    borderRadius: 1,
+    color: "black",
+    textTransform: "unset !important",
+    boxShadow: 4,
+  };
+  return (
+    <Grid item xs sx={{ textAlign: "center", border: 0 }}>
+      <Button sx={styleSave} onClick={() => handleClose()}>
+        <b>Сохранить</b>
+      </Button>
+    </Grid>
+  );
+};
 //=====================================================================

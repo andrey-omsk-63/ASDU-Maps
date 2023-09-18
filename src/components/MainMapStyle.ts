@@ -500,7 +500,7 @@ export const styleFW04 = {
   maxHeight: "21px",
   minHeight: "21px",
   width: 333,
-  backgroundColor: "#93D145",
+  backgroundColor: "#bae186",
   color: "black",
   marginTop: 1,
   border: "2px solid #000",
