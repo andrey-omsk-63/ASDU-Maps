@@ -58,6 +58,7 @@ const MapRouteBind = (props: {
   reqRoute: any;
   func: any;
 }) => {
+  //console.log("MapRouteBind_Svg:", props.svg);
   //== Piece of Redux ======================================
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
@@ -80,12 +81,18 @@ const MapRouteBind = (props: {
 
   const handleCloseBadExit = (mode: boolean) => {
     setBadExit(false);
-    mode && CloseEnd(); // выход
+    if (mode) {
+      props.func(false, massBind);  // выход без сохранения
+      CloseEnd();
+    }
   };
 
   const handleCloseBad = () => {
     HAVE && setBadExit(true);
-    !HAVE && CloseEnd();
+    if (!HAVE) {
+      props.func(false, massBind);
+      CloseEnd();
+    }
   };
 
   const handleCloseEnd = (event: any, reason: string) => {
@@ -94,7 +101,7 @@ const MapRouteBind = (props: {
 
   const handleCloseGood = () => {
     CloseEnd();
-    props.func(false, massBind);
+    props.func(true, massBind);
     //if (mode && typeof mode === "number") props.func(false, massBind);
   };
 
@@ -170,15 +177,17 @@ const MapRouteBind = (props: {
     }
   }
   //=== Ожидания получения изображений перекрёстков ========
-  React.useMemo(() => {
-    if (props.svg && masSvg[0] === "" && masSvg[1] === "") {
-      let dat = props.svg;
-      masSvg = [];
-      for (let key in dat) masSvg.push(dat[key]);
-      if (masSvg[0] !== "") masSvg[0] = ReplaceInSvg(masSvg, widthHeight, 0);
-      if (masSvg[1] !== "") masSvg[1] = ReplaceInSvg(masSvg, widthHeight, 1);
-    }
-  }, [props.svg, widthHeight]);
+  // React.useMemo(() => {
+  //   console.log("@@@useMemo:",props.svg, masSvg);
+  if (props.svg && masSvg[0] === "" && masSvg[1] === "") {
+    let dat = props.svg;
+    masSvg = [];
+    for (let key in dat) masSvg.push(dat[key]);
+    if (masSvg[0] !== "") masSvg[0] = ReplaceInSvg(masSvg, widthHeight, 0);
+    if (masSvg[1] !== "") masSvg[1] = ReplaceInSvg(masSvg, widthHeight, 1);
+    //console.log("@@@masSvg:", masSvg);
+  }
+  // }, [props.svg, widthHeight]);
   //=== Функции - обработчики ==============================
   const ReCalcIntensTr = () => {
     if (!masFormIn[beginMassTotal / kolFrom].edited) {

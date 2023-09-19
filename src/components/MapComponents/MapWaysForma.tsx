@@ -57,7 +57,6 @@ const MapWaysForma = (props: {
   });
   //console.log("massroute:", massroute);
   //========================================================
-  //const [trigger, setTrigger] = React.useState(false);
   const [badExit, setBadExit] = React.useState(false);
   const idxMap = ComplianceMapMassdk(props.idx, massdk, map);
   const MAP = map.dateMap.tflight[idxMap];

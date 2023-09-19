@@ -5,7 +5,11 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 
-import { ComplianceMapMassdk, WaysInput } from "./../MapServiceFunctions";
+import {
+  ComplianceMapMassdk,
+  WaysInput,
+  BadExit,
+} from "./../MapServiceFunctions";
 
 import { styleModalEnd, styleFormInf, styleFormName } from "./../MainMapStyle";
 import { styleFT02, styleFT03, styleFT033 } from "./../MainMapStyle";
@@ -14,6 +18,7 @@ import { styleFormTabl, styleFormMenu } from "./../MainMapStyle";
 let oldIdx = -1;
 let massForm: any = null;
 let idx = 0;
+let HAVE = 0;
 
 const MapVertexForma = (props: { setOpen: any; idx: number }) => {
   //== Piece of Redux =======================================
@@ -27,11 +32,13 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
     return massdkReducer.massdk;
   });
   //===========================================================
+  const [badExit, setBadExit] = React.useState(false);
   const idxMap = ComplianceMapMassdk(props.idx, massdk, map);
   const MAP = map.dateMap.tflight[idxMap];
   //=== инициализация ======================================
   if (oldIdx !== props.idx) {
     oldIdx = props.idx;
+    HAVE = 0;
     let maskForm: any = {
       kolFaz: idxMap >= 0 ? MAP.phases.length : 0,
       offset: 0,
@@ -51,11 +58,56 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
     }
   }
 
-  const handleCloseSetEnd = () => {
+  const CloseEnd = React.useCallback(() => {
+    console.log("CloseEnd:", HAVE);
     oldIdx = -1;
     props.setOpen(false);
+  }, [props]);
+
+  const handleCloseBad = React.useCallback(() => {
+    console.log("handleCloseBad:", HAVE);
+    HAVE && setBadExit(true);
+    !HAVE && CloseEnd(); // выход без сохранения
+  }, [CloseEnd]);
+
+  // const handleCloseEnd = (event: any, reason: string) => {
+  //   if (reason === "escapeKeyDown") handleCloseBad();
+  // };
+
+  const handleCloseBadExit = (mode: boolean) => {
+    console.log('handleCloseBadExit:',mode)
+    setBadExit(false);
+    mode && CloseEnd(); // выход без сохранения
   };
 
+  //=== Функции - обработчики ==============================
+  const SaveForm = (mode: boolean) => {
+    console.log("SaveForm:", typeof mode);
+    if (mode) {
+      CloseEnd(); // здесь должно быть сохранение
+    } else {
+      handleCloseBad();
+    }
+  };
+
+  const SetOffset = (valueInp: number) => {
+    massForm.offset = valueInp;
+    HAVE++;
+  };
+
+  const SetMinDuration = (valueInp: number) => {
+    massForm.phases[idx].MinDuration = valueInp;
+    HAVE++;
+  };
+  const SetStDuration = (valueInp: number) => {
+    massForm.phases[idx].StartDuration = valueInp;
+    HAVE++;
+  };
+  const SetPhaseOrder = (valueInp: number) => {
+    massForm.phases[idx].PhaseOrder = valueInp;
+    HAVE++;
+  };
+  //========================================================
   const HeaderTablFaz = () => {
     return (
       <Grid container>
@@ -73,16 +125,6 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
         </Grid>
       </Grid>
     );
-  };
-
-  const SetMinDuration = (valueInp: number) => {
-    massForm.phases[idx].MinDuration = valueInp;
-  };
-  const SetStDuration = (valueInp: number) => {
-    massForm.phases[idx].StartDuration = valueInp;
-  };
-  const SetPhaseOrder = (valueInp: number) => {
-    massForm.phases[idx].PhaseOrder = valueInp;
   };
 
   const StrokaMainTabl = () => {
@@ -139,13 +181,22 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
     );
   };
 
-  const SaveForm = (mode: boolean) => {
-    handleCloseSetEnd();
-  };
+  //=== обработка Esc ======================================
+  const escFunction = React.useCallback(
+    (event) => {
+      if (event.keyCode === 27) {
+        console.log("ESC!!!", HAVE);
+        handleCloseBad();
+      }
+    },
+    [handleCloseBad]
+  );
 
-  const SetOffset = (valueInp: number) => {
-    massForm.offset = valueInp;
-  };
+  React.useEffect(() => {
+    document.addEventListener("keydown", escFunction);
+    return () => document.removeEventListener("keydown", escFunction);
+  }, [escFunction]);
+  //========================================================
 
   let aa = idxMap >= 0 ? MAP.area.nameArea : "";
   let bb = massdk.length > props.idx ? massdk[props.idx].area : "";
@@ -153,49 +204,52 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
   let soob2 = idxMap >= 0 ? MAP.phases.length : "нет информации";
 
   return (
-    <Box sx={styleFormInf}>
-      <Button sx={styleModalEnd} onClick={() => handleCloseSetEnd()}>
-        <b>&#10006;</b>
-      </Button>
-      {massdk.length > props.idx && (
-        <>
-          <Box sx={styleFormName}>
-            <b>
-              <em>{massdk[props.idx].nameCoordinates}</em>
-            </b>
-          </Box>
-          <Box sx={{ fontSize: 12, marginTop: 0.5 }}>Общие</Box>
-          {StrokaTabl("Район", soob1)}
-          {StrokaTabl("Номер перекрёстка", massdk[props.idx].ID)}
-          {StrokaTabl("Время цикла cек.", "80 сек.")}
-          <Box sx={{ fontSize: 12, marginTop: 2.5 }}>Свойства фаз</Box>
-          {StrokaTabl("Количество фаз", soob2)}
-          {StrokaTabl(
-            "Начальное смещение сек.",
-            WaysInput(massForm.offset, SetOffset, 100)
-          )}
-          <Box sx={{ fontSize: 12, marginTop: 2.5 }}>
-            Таблица параметров фаз
-          </Box>
-          <Box sx={styleFormTabl}>
-            {HeaderTablFaz()}
-            {StrokaMainTabl()}
-          </Box>
-          <Grid container>
-            <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>
-              <Button sx={styleFormMenu} onClick={() => SaveForm(true)}>
-                Сохранить изменения
-              </Button>
+    <>
+      {badExit && <>{BadExit(badExit, handleCloseBadExit)}</>}
+      <Box sx={styleFormInf}>
+        <Button sx={styleModalEnd} onClick={() => handleCloseBad()}>
+          <b>&#10006;</b>
+        </Button>
+        {massdk.length > props.idx && (
+          <>
+            <Box sx={styleFormName}>
+              <b>
+                <em>{massdk[props.idx].nameCoordinates}</em>
+              </b>
+            </Box>
+            <Box sx={{ fontSize: 12, marginTop: 0.5 }}>Общие</Box>
+            {StrokaTabl("Район", soob1)}
+            {StrokaTabl("Номер перекрёстка", massdk[props.idx].ID)}
+            {StrokaTabl("Время цикла cек.", "80 сек.")}
+            <Box sx={{ fontSize: 12, marginTop: 2.5 }}>Свойства фаз</Box>
+            {StrokaTabl("Количество фаз", soob2)}
+            {StrokaTabl(
+              "Начальное смещение сек.",
+              WaysInput(massForm.offset, SetOffset, 100)
+            )}
+            <Box sx={{ fontSize: 12, marginTop: 2.5 }}>
+              Таблица параметров фаз
+            </Box>
+            <Box sx={styleFormTabl}>
+              {HeaderTablFaz()}
+              {StrokaMainTabl()}
+            </Box>
+            <Grid container>
+              <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>
+                <Button sx={styleFormMenu} onClick={() => SaveForm(true)}>
+                  Сохранить изменения
+                </Button>
+              </Grid>
+              <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>
+                <Button sx={styleFormMenu} onClick={() => SaveForm(false)}>
+                  Выйти без сохранения
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>
-              <Button sx={styleFormMenu} onClick={() => SaveForm(false)}>
-                Выйти без сохранения
-              </Button>
-            </Grid>
-          </Grid>
-        </>
-      )}
-    </Box>
+          </>
+        )}
+      </Box>
+    </>
   );
 };
 

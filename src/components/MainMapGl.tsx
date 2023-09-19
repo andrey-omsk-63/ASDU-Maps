@@ -17,7 +17,7 @@ import MapRouteProtokol from "./MapComponents/MapRouteProtokol";
 import MapReversRoute from "./MapComponents/MapReversRoute";
 import MapVertexForma from "./MapComponents/MapVertexForma";
 import MapWaysFormMenu from "./MapComponents/MapWaysFormMenu";
-import MapWaysForma from "./MapComponents/MapWaysForma";
+//import MapWaysForma from "./MapComponents/MapWaysForma";
 
 import { RecordMassRoute, MakeNewPointContent } from "./MapServiceFunctions";
 import { YandexServices, ShowFormalRoute } from "./MapServiceFunctions";
@@ -189,34 +189,38 @@ const MainMap = (props: {
   };
 
   const MakeRecordMassRoute = (mode: boolean, mass: any) => {
-    console.log("MakeRecordMassRoute:", mode, mass);
-    let aRou = reqRoute;
-    fromCross.pointAcod = CodingCoord(pointAa);
-    toCross.pointBcod = CodingCoord(pointBb);
-    if (DoublRoute(massroute.ways, pointAa, pointBb)) {
-      SoobOpenSetEr("Дубликатная связь");
-    } else {
-      let mask = RecordMassRoute(fromCross, toCross, mass, aRou);
-      massroute.ways.push(mask);
-      massroutepro.ways.push(mask);
-      dispatch(massrouteCreate(massroute));
-      dispatch(massrouteproCreate(massroutepro));
-      if (massroute.vertexes[pointAaIndex].area === 0) {
-        SendSocketCreateWayFromPoint(WS, fromCross, toCross, mass, aRou);
-      } else {
-        if (massroute.vertexes[pointBbIndex].area === 0) {
-          SendSocketCreateWayToPoint(WS, fromCross, toCross, mass, aRou);
-        } else {
-          SendSocketCreateWay(WS, fromCross, toCross, mass, aRou);
-        }
-      }
-      setFlagPro(true); //включение протокола
-    }
-    if (flagRevers && needRevers !== 3) {
-      setOpenSetRevers(true);
-      flagRevers = false;
-    } else {
+    if (!mode) {
       ZeroRoute(mode);
+    } else {
+      console.log("MakeRecordMassRoute:", mode, mass);
+      let aRou = reqRoute;
+      fromCross.pointAcod = CodingCoord(pointAa);
+      toCross.pointBcod = CodingCoord(pointBb);
+      if (DoublRoute(massroute.ways, pointAa, pointBb)) {
+        SoobOpenSetEr("Дубликатная связь");
+      } else {
+        let mask = RecordMassRoute(fromCross, toCross, mass, aRou);
+        massroute.ways.push(mask);
+        massroutepro.ways.push(mask);
+        dispatch(massrouteCreate(massroute));
+        dispatch(massrouteproCreate(massroutepro));
+        if (massroute.vertexes[pointAaIndex].area === 0) {
+          SendSocketCreateWayFromPoint(WS, fromCross, toCross, mass, aRou);
+        } else {
+          if (massroute.vertexes[pointBbIndex].area === 0) {
+            SendSocketCreateWayToPoint(WS, fromCross, toCross, mass, aRou);
+          } else {
+            SendSocketCreateWay(WS, fromCross, toCross, mass, aRou);
+          }
+        }
+        setFlagPro(true); //включение протокола
+      }
+      if (flagRevers && needRevers !== 3) {
+        setOpenSetRevers(true);
+        flagRevers = false;
+      } else {
+        ZeroRoute(mode);
+      }
     }
     setNeedRevers(0);
     flagDemo && FillMassRoute();
@@ -644,21 +648,21 @@ const MainMap = (props: {
     setOpenSetVertForm(mode);
   };
 
-  const SetOpenSetWaysForm = (mode: boolean) => {
-    !mode && ZeroRoute(false);
-    nomRoute = -1;
-    setOpenSetWaysForm(mode);
-  };
+  // const SetOpenSetWaysForm = (mode: boolean) => {
+  //   !mode && ZeroRoute(false);
+  //   nomRoute = -1;
+  //   setOpenSetWaysForm(mode);
+  // };
 
   const SetOpenSetWaysFormMenu = (mode: number, idx: number, pusto: number) => {
     setOpenSetWaysFormMenu(false);
-    if (pusto > 0) {
-      nomRoute = mode;
-      pointBbIndex = idx; // номер в massdk
-      setOpenSetWaysForm(true);
-    } else {
-      ZeroRoute(false);
-    }
+    // if (pusto > 0) {
+    //   nomRoute = mode;
+    //   pointBbIndex = idx; // номер в massdk
+    //   setOpenSetWaysForm(true);
+    // } else {
+    ZeroRoute(false);
+    //}
   };
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(massroute).length) {
@@ -697,17 +701,18 @@ const MainMap = (props: {
     if (props.svg !== oldPropsSvg) {
       oldPropsSvg = props.svg;
       if (props.svg && pointAaIndex >= 0 && pointBbIndex >= 0) {
+        // передача изображений в обычную привязку
         masSvg[0] = props.svg[RecevKeySvg(massroute.vertexes[pointAaIndex])];
         masSvg[1] = props.svg[RecevKeySvg(massroute.vertexes[pointBbIndex])];
       }
       if (props.svg && openSetEr) {
+        // передача изображений в привязку через "дубликатные связи"
         masSvg[0] = props.svg[RecevKeySvg(massroute.vertexes[fromIdx])];
         masSvg[1] = props.svg[RecevKeySvg(massroute.vertexes[inIdx])];
       }
       if (props.svg && openSetWaysFormMenu) {
-        // masSvg[0] = props.svg[RecevKeySvg(massroute.vertexes[fromIdx])];
-        // masSvg[1] = props.svg[RecevKeySvg(massroute.vertexes[inIdx])];
-        masSvg[0] = props.svg
+        // передача изображений в привязку через меню "перекрёстки"
+        masSvg[0] = props.svg;
       }
     }
   }
@@ -772,13 +777,13 @@ const MainMap = (props: {
                 setSvg={props.setSvg}
               />
             )}
-            {openSetWaysForm && (
+            {/* {openSetWaysForm && (
               <MapWaysForma
                 setOpen={SetOpenSetWaysForm}
                 idx={idxRoute}
                 nomInMass={nomRoute}
               />
-            )}
+            )} */}
             {openSetEr && (
               <MapPointDataError
                 sErr={soobError}
