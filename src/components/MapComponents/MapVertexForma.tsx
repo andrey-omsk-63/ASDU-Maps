@@ -1,19 +1,15 @@
-import * as React from "react";
-import { useSelector } from "react-redux";
+import * as React from 'react';
+import { useSelector } from 'react-redux';
 
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 
-import {
-  ComplianceMapMassdk,
-  WaysInput,
-  BadExit,
-} from "./../MapServiceFunctions";
+import { ComplianceMapMassdk, WaysInput, BadExit } from './../MapServiceFunctions';
 
-import { styleModalEnd, styleFormInf, styleFormName } from "./../MainMapStyle";
-import { styleFT02, styleFT03, styleFT033 } from "./../MainMapStyle";
-import { styleFormTabl, styleFormMenu } from "./../MainMapStyle";
+import { styleModalEnd, styleFormInf, styleFormName } from './../MainMapStyle';
+import { styleFT02, styleFT03, styleFT033 } from './../MainMapStyle';
+import { styleFormTabl, styleFormMenu } from './../MainMapStyle';
 
 let oldIdx = -1;
 let massForm: any = null;
@@ -36,6 +32,7 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
   const idxMap = ComplianceMapMassdk(props.idx, massdk, map);
   const MAP = map.dateMap.tflight[idxMap];
   //=== инициализация ======================================
+  console.log('MapVertexForma', oldIdx, props.idx);
   if (oldIdx !== props.idx) {
     oldIdx = props.idx;
     HAVE = 0;
@@ -59,13 +56,13 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
   }
 
   const CloseEnd = React.useCallback(() => {
-    console.log("CloseEnd:", HAVE);
+    console.log('CloseEnd:', HAVE);
     oldIdx = -1;
     props.setOpen(false);
   }, [props]);
 
   const handleCloseBad = React.useCallback(() => {
-    console.log("handleCloseBad:", HAVE);
+    console.log('handleCloseBad:', HAVE);
     HAVE && setBadExit(true);
     !HAVE && CloseEnd(); // выход без сохранения
   }, [CloseEnd]);
@@ -75,14 +72,14 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
   // };
 
   const handleCloseBadExit = (mode: boolean) => {
-    console.log('handleCloseBadExit:',mode)
+    console.log('handleCloseBadExit:', mode);
     setBadExit(false);
     mode && CloseEnd(); // выход без сохранения
   };
 
   //=== Функции - обработчики ==============================
   const SaveForm = (mode: boolean) => {
-    console.log("SaveForm:", typeof mode);
+    console.log('SaveForm:', typeof mode);
     if (mode) {
       CloseEnd(); // здесь должно быть сохранение
     } else {
@@ -139,21 +136,21 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
             <Box sx={{ p: 0.2 }}>{i + 1}</Box>
           </Grid>
           <Grid xs={3.5} item sx={styleFT03}>
-            <Box sx={{ display: "grid", justifyContent: "center" }}>
+            <Box sx={{ display: 'grid', justifyContent: 'center' }}>
               {WaysInput(massForm.phases[i].MinDuration, SetMinDuration, 20)}
             </Box>
           </Grid>
           <Grid xs={3.5} item sx={styleFT03}>
-            <Box sx={{ display: "grid", justifyContent: "center" }}>
+            <Box sx={{ display: 'grid', justifyContent: 'center' }}>
               {WaysInput(massForm.phases[i].StartDuration, SetStDuration, 20)}
             </Box>
           </Grid>
           <Grid xs={4} item sx={styleFT033}>
-            <Box sx={{ display: "grid", justifyContent: "center" }}>
+            <Box sx={{ display: 'grid', justifyContent: 'center' }}>
               {WaysInput(massForm.phases[i].PhaseOrder, SetPhaseOrder, 20)}
             </Box>
           </Grid>
-        </Grid>
+        </Grid>,
       );
     }
     return resStr;
@@ -167,12 +164,12 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
           <Grid item xs={6}>
             <b>{recLeft}</b>
           </Grid>
-          {typeof recRight === "object" ? (
+          {typeof recRight === 'object' ? (
             <Grid item xs>
               {recRight}
             </Grid>
           ) : (
-            <Grid item xs sx={{ color: "#5B1080" }}>
+            <Grid item xs sx={{ color: '#5B1080' }}>
               <b>{recRight}</b>
             </Grid>
           )}
@@ -185,31 +182,31 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
   const escFunction = React.useCallback(
     (event) => {
       if (event.keyCode === 27) {
-        console.log("ESC!!!", HAVE);
+        console.log('ESC!!!', HAVE);
         handleCloseBad();
       }
     },
-    [handleCloseBad]
+    [handleCloseBad],
   );
 
   React.useEffect(() => {
-    document.addEventListener("keydown", escFunction);
-    return () => document.removeEventListener("keydown", escFunction);
+    document.addEventListener('keydown', escFunction);
+    return () => document.removeEventListener('keydown', escFunction);
   }, [escFunction]);
   //========================================================
 
-  let aa = idxMap >= 0 ? MAP.area.nameArea : "";
-  let bb = massdk.length > props.idx ? massdk[props.idx].area : "";
-  let soob1 = bb + " " + aa;
-  let soob2 = idxMap >= 0 ? MAP.phases.length : "нет информации";
+  let aa = idxMap >= 0 ? MAP.area.nameArea : '';
+  let bb = massdk.length > props.idx ? massdk[props.idx].area : '';
+  let soob1 = bb + ' ' + aa;
+  let soob2 = idxMap >= 0 ? MAP.phases.length : 'нет информации';
 
   return (
     <>
-      {badExit && <>{BadExit(badExit, handleCloseBadExit)}</>}
       <Box sx={styleFormInf}>
         <Button sx={styleModalEnd} onClick={() => handleCloseBad()}>
           <b>&#10006;</b>
         </Button>
+        {badExit && <>{BadExit(badExit, handleCloseBadExit)}</>}
         {massdk.length > props.idx && (
           <>
             <Box sx={styleFormName}>
@@ -218,29 +215,24 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
               </b>
             </Box>
             <Box sx={{ fontSize: 12, marginTop: 0.5 }}>Общие</Box>
-            {StrokaTabl("Район", soob1)}
-            {StrokaTabl("Номер перекрёстка", massdk[props.idx].ID)}
-            {StrokaTabl("Время цикла cек.", "80 сек.")}
+            {StrokaTabl('Район', soob1)}
+            {StrokaTabl('Номер перекрёстка', massdk[props.idx].ID)}
+            {StrokaTabl('Время цикла cек.', '80 сек.')}
             <Box sx={{ fontSize: 12, marginTop: 2.5 }}>Свойства фаз</Box>
-            {StrokaTabl("Количество фаз", soob2)}
-            {StrokaTabl(
-              "Начальное смещение сек.",
-              WaysInput(massForm.offset, SetOffset, 100)
-            )}
-            <Box sx={{ fontSize: 12, marginTop: 2.5 }}>
-              Таблица параметров фаз
-            </Box>
+            {StrokaTabl('Количество фаз', soob2)}
+            {StrokaTabl('Начальное смещение сек.', WaysInput(massForm.offset, SetOffset, 100))}
+            <Box sx={{ fontSize: 12, marginTop: 2.5 }}>Таблица параметров фаз</Box>
             <Box sx={styleFormTabl}>
               {HeaderTablFaz()}
               {StrokaMainTabl()}
             </Box>
             <Grid container>
-              <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>
+              <Grid item xs={6} sx={{ marginTop: 1, textAlign: 'center' }}>
                 <Button sx={styleFormMenu} onClick={() => SaveForm(true)}>
                   Сохранить изменения
                 </Button>
               </Grid>
-              <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>
+              <Grid item xs={6} sx={{ marginTop: 1, textAlign: 'center' }}>
                 <Button sx={styleFormMenu} onClick={() => SaveForm(false)}>
                   Выйти без сохранения
                 </Button>
