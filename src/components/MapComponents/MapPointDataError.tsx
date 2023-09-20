@@ -336,6 +336,7 @@ const MapPointDataError = (props: {
           idxB={inIdx}
           reqRoute={reqRoute}
           func={MakeRecordMassRoute}
+          mode={2}
         />
       )}
     </>

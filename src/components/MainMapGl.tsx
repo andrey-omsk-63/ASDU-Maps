@@ -4,7 +4,6 @@ import { massdkCreate, massrouteCreate } from "./../redux/actions";
 import { coordinatesCreate, massrouteproCreate } from "./../redux/actions";
 
 import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { YMaps, Map, Placemark, YMapsApi } from "react-yandex-maps";
 
@@ -17,7 +16,6 @@ import MapRouteProtokol from "./MapComponents/MapRouteProtokol";
 import MapReversRoute from "./MapComponents/MapReversRoute";
 import MapVertexForma from "./MapComponents/MapVertexForma";
 import MapWaysFormMenu from "./MapComponents/MapWaysFormMenu";
-//import MapWaysForma from "./MapComponents/MapWaysForma";
 
 import { RecordMassRoute, MakeNewPointContent } from "./MapServiceFunctions";
 import { YandexServices, ShowFormalRoute } from "./MapServiceFunctions";
@@ -39,8 +37,6 @@ import { PreparCurrenciesMode } from "./MapServiceFunctions";
 import { SendSocketCreateWay, SendSocketGetSvg } from "./MapSocketFunctions";
 import { SendSocketCreateWayFromPoint } from "./MapSocketFunctions";
 import { SendSocketCreateWayToPoint } from "./MapSocketFunctions";
-
-import { styleSetPoint } from "./MainMapStyle";
 
 let coordStart: any = []; // рабочий массив коллекции входящих связей
 let coordStop: any = []; // рабочий массив коллекции входящих связей
@@ -98,7 +94,6 @@ const MainMap = (props: {
   setSvg: any;
   trigger: boolean;
 }) => {
-  //console.log("MainMap_svg:", props.svg);
   const WS = props.ws;
   if (WS.url === "wss://localhost:3000/W") debugging = true;
   //== Piece of Redux =======================================
@@ -179,7 +174,6 @@ const MainMap = (props: {
       fromIdx = pointAaIndex;
       inIdx = pointBbIndex;
     }
-    console.log("######:", soobError, pointAaIndex, pointBbIndex);
     setOpenSetEr(true);
   };
 
@@ -189,10 +183,10 @@ const MainMap = (props: {
   };
 
   const MakeRecordMassRoute = (mode: boolean, mass: any) => {
+    console.log("MakeRecordMassRoute:", mode, flagRevers, needRevers);
     if (!mode) {
       ZeroRoute(mode);
     } else {
-      console.log("MakeRecordMassRoute:", mode, mass);
       let aRou = reqRoute;
       fromCross.pointAcod = CodingCoord(pointAa);
       toCross.pointBcod = CodingCoord(pointBb);
@@ -265,16 +259,6 @@ const MainMap = (props: {
     return noDoublRoute;
   };
 
-  const LinkBind = () => {
-    let arIn = massroute.vertexes[pointAaIndex].area;
-    let idIn = massroute.vertexes[pointAaIndex].id;
-    let arOn = massroute.vertexes[pointBbIndex].area;
-    let idOn = massroute.vertexes[pointBbIndex].id;
-    SendSocketGetSvg(WS, homeRegion, arIn, idIn, arOn, idOn);
-    flagBind = true;
-    setOpenSetBind(true);
-  };
-
   const PressButton = (mode: number) => {
     switch (mode) {
       case 3: // режим включения Demo сети связей
@@ -341,7 +325,7 @@ const MainMap = (props: {
         ZeroRoute(false);
     }
   };
-
+  //========================================================
   const addRoute = (ymaps: any) => {
     mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
     let massPolyRoute: any = []; // cеть связей
@@ -386,21 +370,13 @@ const MainMap = (props: {
     });
   };
 
-  const SetReqRoute = (mode: any, need: boolean) => {
-    reqRoute = JSON.parse(JSON.stringify(mode));
-    need && LinkBind();
-    needLinkBind = false;
-  };
-
-  const UpdateAddRoute = () => {
-    ymaps && addRoute(ymaps); // перерисовка связей
-  };
-
   const OnPlacemarkClickPoint = (index: number, coor: any) => {
+    //console.log('OnPlacemarkClickPoint:',index, pointAa, openSetWaysForm)
     let COORD = coor ? coor : MassCoord(massdk[index]);
     if (pointAa === 0) {
       if (!massdk[index].area && MODE === "1") return;
       if (!openSetWaysForm) {
+        ZeroRoute(false); //==================================
         pointAaIndex = index; // начальная точка
         pointAa = COORD;
         fromCross = MakeFromCross(massdk[index]);
@@ -496,40 +472,33 @@ const MainMap = (props: {
     };
 
     return (
-      <Modal open={openSet} onClose={() => setOpenSet(false)}>
-        <Box sx={styleSetPoint}>
+      <>
+        <Modal open={openSet} onClose={() => setOpenSet(false)}>
           {СontentModalPressBalloon(setOpenSet, handleClose, areaPoint)}
-          {openSetAdress && (
-            <MapChangeAdress
-              ws={WS}
-              iPoint={indexPoint}
-              setOpen={setOpenSetAdress}
-              zeroRoute={ZeroRoute}
-              funcClose={setOpenSet}
-            />
-          )}
-          {openSetErBall && (
-            <MapPointDataError
-              sErr={soobError}
-              setOpen={setOpenSetErBall}
-              ws={WS}
-              fromCross={fromCross}
-              toCross={toCross}
-              update={UpdateAddRoute}
-              svg={masSvg}
-              setSvg={props.setSvg}
-            />
-          )}
-        </Box>
-      </Modal>
+        </Modal>
+        {openSetAdress && (
+          <MapChangeAdress
+            ws={WS}
+            iPoint={indexPoint}
+            setOpen={setOpenSetAdress}
+            zeroRoute={ZeroRoute}
+            funcClose={setOpenSet}
+          />
+        )}
+        {openSetErBall && (
+          <MapPointDataError
+            sErr={soobError}
+            setOpen={setOpenSetErBall}
+            ws={WS}
+            fromCross={fromCross}
+            toCross={toCross}
+            update={UpdateAddRoute}
+            svg={masSvg}
+            setSvg={props.setSvg}
+          />
+        )}
+      </>
     );
-  };
-
-  const MakeNewPoint = (coords: any, avail: boolean) => {
-    MakeNewPointContent(WS, coords, avail, homeRegion, massroute);
-    coordinates.push(coords);
-    dispatch(coordinatesCreate(coordinates));
-    setOpenSetCreate(false);
   };
 
   const PlacemarkDo = () => {
@@ -572,24 +541,6 @@ const MainMap = (props: {
     );
   };
 
-  const handleCloseDel = (mode: boolean) => {
-    if (mode) {
-      let massRouteRab = DelPointVertexContent(WS, massroute, idxDel);
-      massroute.ways.splice(0, massroute.ways.length); // massroute = [];
-      massroute.ways = massRouteRab;
-      if (flagDemo) massRoute = massroute.ways;
-      DelCollectionRoutes(); // удаление колекции связей
-      massdk.splice(idxDel, 1); // удаление самой точки/перекрёстка
-      massroute.vertexes.splice(idxDel, 1);
-      dispatch(massdkCreate(massdk));
-      dispatch(massrouteCreate(massroute));
-      coordinates.splice(idxDel, 1);
-      dispatch(coordinatesCreate(coordinates));
-      ymaps && addRoute(ymaps); // перерисовка связей
-    }
-    setOpenSetDelete(false);
-  };
-
   const InstanceRefDo = (ref: React.Ref<any>) => {
     if (ref) {
       mapp.current = ref;
@@ -630,6 +581,51 @@ const MainMap = (props: {
       mapp.current.events.add("boundschange", funcBound);
     }
   };
+  //=== Функции - обработчики ==============================
+  const LinkBind = () => {
+    let arIn = massroute.vertexes[pointAaIndex].area;
+    let idIn = massroute.vertexes[pointAaIndex].id;
+    let arOn = massroute.vertexes[pointBbIndex].area;
+    let idOn = massroute.vertexes[pointBbIndex].id;
+    SendSocketGetSvg(WS, homeRegion, arIn, idIn, arOn, idOn);
+    flagBind = true;
+    setOpenSetBind(true);
+  };
+
+  const SetReqRoute = (mode: any, need: boolean) => {
+    reqRoute = JSON.parse(JSON.stringify(mode));
+    need && LinkBind();
+    needLinkBind = false;
+  };
+
+  const UpdateAddRoute = () => {
+    ymaps && addRoute(ymaps); // перерисовка связей
+  };
+
+  const handleCloseDel = (mode: boolean) => {
+    if (mode) {
+      let massRouteRab = DelPointVertexContent(WS, massroute, idxDel);
+      massroute.ways.splice(0, massroute.ways.length); // massroute = [];
+      massroute.ways = massRouteRab;
+      if (flagDemo) massRoute = massroute.ways;
+      DelCollectionRoutes(); // удаление колекции связей
+      massdk.splice(idxDel, 1); // удаление самой точки/перекрёстка
+      massroute.vertexes.splice(idxDel, 1);
+      dispatch(massdkCreate(massdk));
+      dispatch(massrouteCreate(massroute));
+      coordinates.splice(idxDel, 1);
+      dispatch(coordinatesCreate(coordinates));
+      ymaps && addRoute(ymaps); // перерисовка связей
+    }
+    setOpenSetDelete(false);
+  };
+
+  const MakeNewPoint = (coords: any, avail: boolean) => {
+    MakeNewPointContent(WS, coords, avail, homeRegion, massroute);
+    coordinates.push(coords);
+    dispatch(coordinatesCreate(coordinates));
+    setOpenSetCreate(false);
+  };
 
   const handleChangeArea = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrency(event.target.value);
@@ -644,25 +640,14 @@ const MainMap = (props: {
   };
 
   const SetOpenSetVertForm = (mode: boolean) => {
+    console.log("SetOpenSetVertForm:", mode);
     ZeroRoute(false);
     setOpenSetVertForm(mode);
   };
 
-  // const SetOpenSetWaysForm = (mode: boolean) => {
-  //   !mode && ZeroRoute(false);
-  //   nomRoute = -1;
-  //   setOpenSetWaysForm(mode);
-  // };
-
   const SetOpenSetWaysFormMenu = (mode: number, idx: number, pusto: number) => {
     setOpenSetWaysFormMenu(false);
-    // if (pusto > 0) {
-    //   nomRoute = mode;
-    //   pointBbIndex = idx; // номер в massdk
-    //   setOpenSetWaysForm(true);
-    // } else {
     ZeroRoute(false);
-    //}
   };
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(massroute).length) {
@@ -697,23 +682,21 @@ const MainMap = (props: {
     oldsErr = props.sErr;
   }
   masSvg = ["", ""];
-  if (!debugging) {
-    if (props.svg !== oldPropsSvg) {
-      oldPropsSvg = props.svg;
-      if (props.svg && pointAaIndex >= 0 && pointBbIndex >= 0) {
-        // передача изображений в обычную привязку
-        masSvg[0] = props.svg[RecevKeySvg(massroute.vertexes[pointAaIndex])];
-        masSvg[1] = props.svg[RecevKeySvg(massroute.vertexes[pointBbIndex])];
-      }
-      if (props.svg && openSetEr) {
-        // передача изображений в привязку через "дубликатные связи"
-        masSvg[0] = props.svg[RecevKeySvg(massroute.vertexes[fromIdx])];
-        masSvg[1] = props.svg[RecevKeySvg(massroute.vertexes[inIdx])];
-      }
-      if (props.svg && openSetWaysFormMenu) {
-        // передача изображений в привязку через меню "перекрёстки"
-        masSvg[0] = props.svg;
-      }
+  if (!debugging && props.svg !== oldPropsSvg) {
+    oldPropsSvg = props.svg;
+    if (props.svg && pointAaIndex >= 0 && pointBbIndex >= 0) {
+      // передача изображений в обычную привязку
+      masSvg[0] = props.svg[RecevKeySvg(massroute.vertexes[pointAaIndex])];
+      masSvg[1] = props.svg[RecevKeySvg(massroute.vertexes[pointBbIndex])];
+    }
+    if (props.svg && openSetEr) {
+      // передача изображений в привязку через "дубликатные связи"
+      masSvg[0] = props.svg[RecevKeySvg(massroute.vertexes[fromIdx])];
+      masSvg[1] = props.svg[RecevKeySvg(massroute.vertexes[inIdx])];
+    }
+    if (props.svg && openSetWaysFormMenu) {
+      // передача изображений в привязку через меню "перекрёстки"
+      masSvg[0] = props.svg;
     }
   }
   if (openSetBind && pointAaIndex < 0 && pointBbIndex < 0)
@@ -777,13 +760,6 @@ const MainMap = (props: {
                 setSvg={props.setSvg}
               />
             )}
-            {/* {openSetWaysForm && (
-              <MapWaysForma
-                setOpen={SetOpenSetWaysForm}
-                idx={idxRoute}
-                nomInMass={nomRoute}
-              />
-            )} */}
             {openSetEr && (
               <MapPointDataError
                 sErr={soobError}
@@ -816,6 +792,7 @@ const MainMap = (props: {
                 idxB={pointBbIndex}
                 reqRoute={reqRoute}
                 func={MakeRecordMassRoute}
+                mode={0}
               />
             )}
             {openSetCreate && (

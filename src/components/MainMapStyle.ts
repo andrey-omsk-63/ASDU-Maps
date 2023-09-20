@@ -32,6 +32,7 @@ export const styleModalEnd = {
 };
 
 export const styleSetInf = {
+  outline: "none",
   position: "absolute",
   marginTop: "15vh",
   marginLeft: "24vh",
@@ -250,9 +251,9 @@ export const styleAppBind = {
 };
 export const styleModalEndBind = {
   position: "absolute",
-  top: "-0.5%",
+  top: "-0.4%",
   left: "auto",
-  right: -7,
+  right: "-0.6%",
   height: "21px",
   maxWidth: "2%",
   minWidth: "2%",
@@ -304,8 +305,8 @@ export const styleBind04 = {
 
 export const styleBind043 = {
   fontSize: 12,
-  border: "2px solid #000",
-  bgcolor: "#93D145",
+  border: "1px solid #000",
+  bgcolor: "#BAE186",
   maxWidth: 12,
   minWidth: 12,
   maxHeight: "21px",
@@ -314,7 +315,7 @@ export const styleBind043 = {
   borderRadius: 1,
   color: "black",
   textTransform: "unset !important",
-  boxShadow: 12,
+  boxShadow: 8,
 };
 
 export const styleBind041 = {
@@ -334,8 +335,8 @@ export const styleBind041 = {
 
 export const styleBind042 = {
   fontSize: 12,
-  border: "2px solid #000",
-  bgcolor: "#93D145",
+  border: "1px solid #000",
+  bgcolor: "#BAE186",
   maxWidth: 44,
   minWidth: 44,
   maxHeight: "21px",
@@ -503,7 +504,7 @@ export const styleFW04 = {
   backgroundColor: "#bae186",
   color: "black",
   marginTop: 1,
-  border: "2px solid #000",
+  border: "1px solid #000",
   borderColor: "#93D145",
   borderRadius: 1,
   textTransform: "unset !important",

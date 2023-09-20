@@ -22,6 +22,10 @@ const MapRouteProtokol = (props: { setOpen: any }) => {
     setOpenMenu(false);
   };
 
+  const handleCloseEnd = (event: any, reason: string) => {
+    if (reason === "escapeKeyDown") handleCloseSetEndPro();
+  };
+
   let massPro = massroutepro.ways;
 
   let massProtokol: any = [];
@@ -50,49 +54,39 @@ const MapRouteProtokol = (props: { setOpen: any }) => {
   }
 
   const styleSetInf = {
+    outline: "none",
     position: "relative",
-    //marginTop: "-92vh",
     marginTop: "9vh",
     marginLeft: "auto",
+    marginRight: "3px",
     width: 460,
     bgcolor: "background.paper",
-    border: "3px solid #000",
+    border: "1px solid #000",
     borderColor: "primary.main",
     borderRadius: 2,
     boxShadow: 24,
     p: 1.5,
   };
 
-  // const styleSetInf = {
-  //   outline: "none",
-  //   position: "absolute",
-  //   right: 0,
-  //   transform: "translate(0%, -114%)",
-  //   width: 460,
-  //   bgcolor: "background.paper",
-  //   border: "3px solid #000",
-  //   borderColor: "primary.main",
-  //   borderRadius: 2,
-  //   boxShadow: 24,
-  //   p: 1.5,
-  // };
-
   const StrokaProtokol = () => {
     let resStr = [];
     for (let i = 0; i < massProtokol.length; i++) {
       resStr.push(
         <Grid key={i} container>
-          <Grid item xs={6}>
+          <Grid item xs={1.3}></Grid>
+          <Grid item xs={6.1}>
             &nbsp;&nbsp;Район: <b>{massProtokol[i].sourceArea}</b>
             &nbsp;ID:&nbsp;
-            <b>{massProtokol[i].sourceID}</b> Напр:&nbsp;
-            <b>{massProtokol[i].lsource}</b>
+            <b>{massProtokol[i].sourceID}</b>
+            {/* Напр:&nbsp;
+            <b>{massProtokol[i].lsource}</b> */}
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs>
             &nbsp;&nbsp;Район: <b>{massProtokol[i].targetArea}</b>
             &nbsp;ID:&nbsp;
-            <b>{massProtokol[i].targetID}</b> Напр:&nbsp;
-            <b>{massProtokol[i].ltarget}</b>
+            <b>{massProtokol[i].targetID}</b>
+            {/* Напр:&nbsp;
+            <b>{massProtokol[i].ltarget}</b> */}
           </Grid>
         </Grid>
       );
@@ -101,7 +95,7 @@ const MapRouteProtokol = (props: { setOpen: any }) => {
   };
 
   return (
-    <Modal open={openMenu} onClose={handleCloseSetEndPro} hideBackdrop>
+    <Modal open={openMenu} onClose={handleCloseEnd} hideBackdrop={false}>
       <Box sx={styleSetInf}>
         <Button sx={styleModalEnd} onClick={() => handleCloseSetEndPro()}>
           <b>&#10006;</b>
@@ -111,11 +105,11 @@ const MapRouteProtokol = (props: { setOpen: any }) => {
         </Box>
         <Box sx={{ marginTop: 0.5 }}>
           <Grid container sx={{ bgcolor: "#C0E2C3" }}>
-            <Grid item xs={6} sx={{ border: 0, textAlign: "center" }}>
-              <b>Выход</b>
+            <Grid item xs={6} sx={{ textAlign: "center" }}>
+              <b>Выход</b> (из)
             </Grid>
-            <Grid item xs={6} sx={{ border: 0, textAlign: "center" }}>
-              <b>Вход</b>
+            <Grid item xs={6} sx={{ textAlign: "center" }}>
+              <b>Вход</b> (в)
             </Grid>
           </Grid>
           <Box sx={{ border: 0, overflowX: "auto", height: "73vh" }}>

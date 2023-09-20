@@ -42,7 +42,11 @@ let masFormIn: any = []; // верхняя правая таблица
 
 let nameA = "";
 let nameB = "";
-let Route: any = null;
+let Route: any = {
+  dlRoute: 0,
+  tmRoute: 0,
+  mode: 0,
+};
 let From = "";
 let HAVE = 0;
 
@@ -57,8 +61,9 @@ const MapRouteBind = (props: {
   idxB: number;
   reqRoute: any;
   func: any;
+  mode: number;
 }) => {
-  //console.log("MapRouteBind_Svg:", props.svg);
+  //console.log("MapRouteBind:", props.mode, props.reqRoute);
   //== Piece of Redux ======================================
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
@@ -82,7 +87,7 @@ const MapRouteBind = (props: {
   const handleCloseBadExit = (mode: boolean) => {
     setBadExit(false);
     if (mode) {
-      props.func(false, massBind);  // выход без сохранения
+      props.func(false, massBind); // выход без сохранения
       CloseEnd();
     }
   };
@@ -102,7 +107,6 @@ const MapRouteBind = (props: {
   const handleCloseGood = () => {
     CloseEnd();
     props.func(true, massBind);
-    //if (mode && typeof mode === "number") props.func(false, massBind);
   };
 
   if (props.idxA < 0 && props.idxA < 0) {
@@ -110,7 +114,6 @@ const MapRouteBind = (props: {
   } else {
     nameA = massroute.vertexes[props.idxA].name;
     nameB = massroute.vertexes[props.idxB].name;
-    Route = props.reqRoute;
     From = ("00" + massroute.vertexes[props.idxA].id).slice(-3);
   }
 
@@ -125,6 +128,9 @@ const MapRouteBind = (props: {
     HAVE = 0;
     oldIdxA = props.idxA;
     oldIdxB = props.idxB;
+    Route.dlRoute = props.reqRoute.dlRoute;
+    Route.tmRoute = props.reqRoute.tmRoute;
+    Route.mode = props.mode;
     masSvg = ["", ""];
     SvgA = SvgB = true;
     if (!massroute.vertexes[props.idxA].area) {
@@ -312,6 +318,7 @@ const MapRouteBind = (props: {
       if (massTotal[i].have) have++;
     }
     HAVE = have;
+    let saveTitle = props.mode ? "Сохранение изменений" : "Сохранение связи";
     return (
       <Grid container sx={{ marginTop: "1vh", height: 27, width: "100%" }}>
         <Grid item xs={3.5}></Grid>
@@ -319,7 +326,7 @@ const MapRouteBind = (props: {
           {have ? (
             <Box sx={{ textAlign: "center" }}>
               {StrokaMenuFooterBind("Отмена", 0, handleCloseBad)}
-              {StrokaMenuFooterBind("Сохранение связи", 1, handleCloseGood)}
+              {StrokaMenuFooterBind(saveTitle, 1, handleCloseGood)}
             </Box>
           ) : (
             <Box sx={{ textAlign: "center" }}>
@@ -485,9 +492,11 @@ const MapRouteBind = (props: {
     );
   };
 
+  let hBD = props.mode === 2 ? true : false;
+
   return (
     <>
-      <Modal open={openSetBind} onClose={handleCloseEnd}>
+      <Modal open={openSetBind} onClose={handleCloseEnd} hideBackdrop={hBD}>
         <Box sx={styleBind00}>
           <Button sx={styleModalEndBind} onClick={() => handleCloseBad()}>
             <b>&#10006;</b>
