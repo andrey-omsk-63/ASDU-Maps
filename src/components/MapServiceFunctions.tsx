@@ -23,11 +23,8 @@ import { SendSocketDeleteVertex } from "./MapSocketFunctions";
 import { Pointer, Router } from "./../App";
 import { Vertex } from "./../interfaceRoute";
 
-import {
-  styleModalMenu,
-  styleModalEndMapGl,
-  styleSetPoint,
-} from "./MainMapStyle";
+import { styleModalMenu, styleModalEndMapGl } from "./MainMapStyle";
+import { styleSetPoint } from "./MainMapStyle";
 import { styleInpKnop, styleBind05, styleModalEndAttent } from "./MainMapStyle";
 import { styleBind02, styleTypography, searchControl } from "./MainMapStyle";
 import { styleBind03, styleBind033, styleSetImg } from "./MainMapStyle";
@@ -918,13 +915,14 @@ export const InputAdressVertex = (
   setValueAdr: Function
 ) => {
   const styleSetAdres = {
+    outline: "none",
     marginTop: "26vh",
     marginLeft: "46px",
     width: "318px",
     height: "7vh",
     border: "3px solid #000",
     borderColor: "#FFFEF7",
-    borderRadius: 2,
+    borderRadius: 1,
     boxShadow: 24,
     bgcolor: "#FFFEF7",
     opacity: 0.85,
@@ -1021,13 +1019,13 @@ export const StrokaMenuFooterBind = (
   const styleAppBind = {
     fontSize: 14,
     marginRight: 1,
-    border: "2px solid #000",
+    border: "1px solid #000",
     bgcolor: "#E6F5D6",
     width: (soob.length + 9) * 7,
     maxHeight: "21px",
     minHeight: "21px",
-    borderColor: "#E6F5D6",
     borderRadius: 1,
+    borderColor: "#d4d4d4",
     color: "black",
     textTransform: "unset !important",
     boxShadow: 3,
@@ -1201,20 +1199,26 @@ export const BindInput = (
 
   const styleSetID = {
     width: "28px",
-    maxHeight: "3px",
-    minHeight: "3px",
-    borderRadius: 2,
-    bgcolor: pusto ? "#FFFBE5" : "white",
-    boxShadow: pusto ? 6 : 0,
+    maxHeight: "1px",
+    minHeight: "1px",
+    bgcolor: "#FFFBE5",
+    border: 1,
+    borderRadius: 1,
+    borderColor: "#d4d4d4",
+    boxShadow: 6,
     textAlign: "center",
-    p: 1.5,
+    p: 1.6,
+  };
+
+  const styleSetIDpusto = {
+    bgcolor: "white",
   };
 
   const styleBoxFormID = {
     "& > :not(style)": {
-      marginTop: "-9px",
-      marginLeft: "-12px",
-      width: "52px",
+      marginTop: "-12px",
+      marginLeft: "-10px",
+      width: "49px",
     },
   };
 
@@ -1231,8 +1235,10 @@ export const BindInput = (
     }
   };
 
+  let styleSet = pusto ? styleSetID : styleSetIDpusto;
+
   return (
-    <Box sx={styleSetID}>
+    <Box sx={styleSet}>
       {pusto > 0 && (
         <Box component="form" sx={styleBoxFormID}>
           <TextField
@@ -1347,9 +1353,13 @@ export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
     marginTop: 0.5,
     maxHeight: "24px",
     minHeight: "24px",
+    border: "1px solid #000",
+    borderRadius: 1,
+    borderColor: "#d4d4d4", // серый
     backgroundColor: "#E6F5D6",
-    textTransform: "unset !important",
     color: "black",
+    textTransform: "unset !important",
+    
     boxShadow: 6,
   };
 
@@ -1391,10 +1401,13 @@ export const WaysInput = (VALUE: any, SetValue: Function, MAX: number) => {
   const [value, setValue] = React.useState(VALUE);
 
   const styleSetID = {
-    width: "28px",
+    width: "33px",
     maxHeight: "1px",
     minHeight: "1px",
+    border: 1,
     borderRadius: 1,
+    borderColor: "#d4d4d4",
+    //borderColor:"black",
     bgcolor: "#FFFBE5",
     boxShadow: 6,
     textAlign: "center",
@@ -1404,8 +1417,8 @@ export const WaysInput = (VALUE: any, SetValue: Function, MAX: number) => {
   const styleBoxFormID = {
     "& > :not(style)": {
       marginTop: "0px",
-      marginLeft: "-12px",
-      width: "52px",
+      marginLeft: "-9px",
+      width: "53px",
     },
   };
 
@@ -1432,7 +1445,8 @@ export const WaysInput = (VALUE: any, SetValue: Function, MAX: number) => {
             style: {
               maxHeight: "1px",
               minHeight: "1px",
-              fontSize: 13.3,
+              // fontSize: 13.3,
+              fontSize: 14,
               backgroundColor: "#FFFBE5",
             },
           }}

@@ -52,6 +52,7 @@ const MapWaysFormaMain = (props: {
       massForm.phases[mode] = -1;
     }
     HAVE++;
+    props.setHave(HAVE);
     setTrigger(!trigger);
   };
 
@@ -89,7 +90,7 @@ const MapWaysFormaMain = (props: {
               {recRight}
             </Grid>
           ) : (
-            <Grid item xs sx={{ fontSize: 14, color: '#5B1080' }}>
+            <Grid item xs sx={{ fontSize: 14.5, color: "#5B1080" }}>
               <b>{recRight}</b>
             </Grid>
           )}
@@ -106,6 +107,16 @@ const MapWaysFormaMain = (props: {
     } else {
       setBadExit(true);
     }
+  };
+
+  const handleCloseBadExit = (mode: boolean) => {
+    setBadExit(false);
+    mode && SaveForm(true);
+  };
+
+  const handleCloseBad = () => {
+    HAVE && setBadExit(true);
+    !HAVE && SaveForm(true);
   };
 
   const SetSatur = (valueInp: number) => {
@@ -154,16 +165,6 @@ const MapWaysFormaMain = (props: {
     massForm.offsetEndGreen = valueInp;
     HAVE++;
     props.setHave(HAVE);
-  };
-
-  const handleCloseBadExit = (mode: boolean) => {
-    setBadExit(false);
-    mode && SaveForm(true);
-  };
-
-  const handleCloseBad = () => {
-    HAVE && setBadExit(true);
-    !HAVE && SaveForm(true);
   };
 
   return (

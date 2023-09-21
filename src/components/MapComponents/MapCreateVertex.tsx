@@ -51,9 +51,6 @@ const MapCreateVertex = (props: {
   const dispatch = useDispatch();
   //====== инициализация ===================================
   if (oldCoord !== props.coord) {
-    // console.log("massdk:", massdk);
-    // console.log("massroute:", massroute);
-    console.log("MAP:", map);
     oldCoord = props.coord;
     propsCoord = [0, 0];
   }

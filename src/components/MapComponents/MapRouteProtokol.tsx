@@ -78,15 +78,11 @@ const MapRouteProtokol = (props: { setOpen: any }) => {
             &nbsp;&nbsp;Район: <b>{massProtokol[i].sourceArea}</b>
             &nbsp;ID:&nbsp;
             <b>{massProtokol[i].sourceID}</b>
-            {/* Напр:&nbsp;
-            <b>{massProtokol[i].lsource}</b> */}
           </Grid>
           <Grid item xs>
             &nbsp;&nbsp;Район: <b>{massProtokol[i].targetArea}</b>
             &nbsp;ID:&nbsp;
             <b>{massProtokol[i].targetID}</b>
-            {/* Напр:&nbsp;
-            <b>{massProtokol[i].ltarget}</b> */}
           </Grid>
         </Grid>
       );

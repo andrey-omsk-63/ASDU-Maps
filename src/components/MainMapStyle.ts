@@ -290,13 +290,13 @@ export const styleBind033 = {
 
 export const styleBind04 = {
   fontSize: 12,
-  border: "2px solid #000",
+  border: "1px solid #000",
   bgcolor: "#E6F5D6",
-  maxWidth: 12,
-  minWidth: 12,
+  maxWidth: 15,
+  minWidth: 15,
   maxHeight: "21px",
   minHeight: "21px",
-  borderColor: "#E6F5D6",
+  borderColor: "#d4d4d4", // серый
   borderRadius: 1,
   color: "black",
   textTransform: "unset !important",
@@ -320,13 +320,14 @@ export const styleBind043 = {
 
 export const styleBind041 = {
   fontSize: 12,
-  border: "2px solid #000",
+  border: "1px solid #000",
   bgcolor: "#E6F5D6",
   maxWidth: 44,
   minWidth: 44,
   maxHeight: "21px",
   minHeight: "21px",
-  borderColor: "#E6F5D6",
+  //borderColor: "#93D145",
+  borderColor: "#d4d4d4", // серый
   borderRadius: 1,
   color: "black",
   textTransform: "unset !important",
@@ -350,16 +351,16 @@ export const styleBind042 = {
 
 export const styleBind05 = {
   fontSize: 12,
-  border: "2px solid #000",
+  border: "1px solid #000",
   bgcolor: "#E6F5D6",
   width: 150,
   maxHeight: "21px",
   minHeight: "21px",
-  borderColor: "#E6F5D6",
   borderRadius: 1,
+  borderColor: "#d4d4d4",
   color: "black",
   textTransform: "unset !important",
-  boxShadow: 4,
+  boxShadow: 6,
 };
 
 export const styleSetBindForm = {
@@ -421,8 +422,11 @@ export const styleFormMenu = {
   maxHeight: "21px",
   minHeight: "21px",
   backgroundColor: "#E6F5D6",
+  border: "1px solid #000",
+  borderRadius: 1,
+  borderColor: "#d4d4d4", // серый
   textTransform: "unset !important",
-  boxShadow: 3,
+  boxShadow: 6,
   color: "black",
 };
 
@@ -440,6 +444,7 @@ export const styleFormTabl = {
   marginLeft: -0.5,
   marginRight: -0.5,
   height: 306,
+  overflowX: "auto",
 };
 
 export const styleFT03 = {
@@ -489,8 +494,8 @@ export const styleFW03 = {
   backgroundColor: "#E9F5D8",
   color: "black",
   marginTop: 1,
-  border: "3px solid #000",
-  borderColor: "#E9F5D8",
+  border: "1px solid #000",
+  borderColor: "#d4d4d4", // серый
   borderRadius: 1,
   textTransform: "unset !important",
   boxShadow: 1,
