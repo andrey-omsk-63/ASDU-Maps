@@ -109,10 +109,9 @@ const MapWaysFormMenu = (props: {
     }
     if (!massTargetRoute.length) {
       openSetErr = true;
+      let what = propsArea ? "На перекрёстке " : "На точке ";
       soobErr =
-        "На перекрёстке " +
-        massroute.vertexes[props.idx].name +
-        " нет входящих направлений";
+        what + massroute.vertexes[props.idx].name + " нет входящих направлений";
     } else {
       if (massTargetRoute.length === 1) {
         fromIdx = massTargetNum[0];

@@ -4,26 +4,32 @@ import { useSelector } from "react-redux";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import MenuItem from "@mui/material/MenuItem";
 
 import { ComplianceMapMassdk, WaysInput } from "./../MapServiceFunctions";
-import { BadExit } from "./../MapServiceFunctions";
+import { BadExit, InputFromList } from "./../MapServiceFunctions";
+import { HeaderTablFaz } from "./../MapServiceFunctions";
 
 import { styleModalEnd, styleFormInf, styleFormName } from "./../MainMapStyle";
-import { styleFT02, styleFT03, styleFT033 } from "./../MainMapStyle";
+import { styleFT03, styleFT033 } from "./../MainMapStyle";
 import { styleFormTabl, styleFormMenu } from "./../MainMapStyle";
 
 let oldIdx = -1;
 let massForm: any = null;
-let idx = 0;
+//let idx = 0;
 let HAVE = 0;
 
 let currenciesPlan: any = [];
 let currenciesFaza: any = [];
 let FAZA = 0;
+let newFAZA = 0;
 
-const MapVertexForma = (props: { setOpen: any; idx: number }) => {
+const maskFaz: any = {
+  MinDuration: 0,
+  StartDuration: 0,
+  PhaseOrder: 0,
+};
+
+const MapVertexForma = (props: { setOpen: any; idx: number; forma: any }) => {
   //== Piece of Redux =======================================
   const map = useSelector((state: any) => {
     const { mapReducer } = state;
@@ -41,14 +47,14 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
   const maxFaz = 8;
 
   const [badExit, setBadExit] = React.useState(false);
-  const [currencyPlan, setCurrencyPlan] = React.useState("0");
-  const [currencyFaza, setCurrencyFaza] = React.useState(
-    (MAP.phases.length - 1).toString()
+  const [currencyPlan, setCurrencyPlan] = React.useState(
+    props.forma === null ? "0" : (props.forma.nomPlan - 1).toString()
   );
-
-  const handleKey = (event: any) => {
-    if (event.key === "Enter") event.preventDefault();
-  };
+  const [currencyFaza, setCurrencyFaza] = React.useState(
+    props.forma === null
+      ? (MAP.phases.length - 1).toString()
+      : (props.forma.kolFaz - 1).toString()
+  );
 
   const PreparCurrenciesPlan = (sumPlan: number) => {
     const currencies: any = [];
@@ -75,7 +81,7 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
   const PreparCurrenciesFaza = (mazFaz: number) => {
     const currencies: any = [];
     let dat: Array<string> = [];
-    for (let i = 1; i < mazFaz - 1; i++) dat.push(i.toString());
+    for (let i = 1; i < mazFaz + 1; i++) dat.push(i.toString());
     let massKey: any = [];
     let massDat: any = [];
     for (let key in dat) {
@@ -91,47 +97,43 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
       maskCurrencies.label = massDat[i];
       currencies.push({ ...maskCurrencies });
     }
-    console.log("currencies:", currencies);
     return currencies;
   };
-
   //=== инициализация ======================================
-  console.log("MapVertexForma", oldIdx, props.idx);
+  console.log("Inic:", oldIdx, props.idx, props.forma);
   if (oldIdx !== props.idx) {
     oldIdx = props.idx;
-    HAVE = 0;
-    FAZA = idxMap >= 0 ? MAP.phases.length : 0;
     currenciesPlan = PreparCurrenciesPlan(sumPlan);
     currenciesFaza = PreparCurrenciesFaza(maxFaz);
-    let maskForm: any = {
-      nomPlan: 1,
-      kolFaz: idxMap >= 0 ? MAP.phases.length : 0,
-      offset: 0,
-      phases: [],
-    };
+    if (props.forma === null) {
+      HAVE = 0;
+      FAZA = idxMap >= 0 ? MAP.phases.length : 0;
+      let maskForm: any = {
+        nomPlan: 1,
+        kolFaz: idxMap >= 0 ? MAP.phases.length : 0,
+        offset: 0,
+        phases: [],
+      };
+      massForm = maskForm;
 
-    let maskFaz: any = {
-      MinDuration: 0,
-      StartDuration: 0,
-      PhaseOrder: 0,
-    };
-
-    massForm = maskForm;
-    let lng = idxMap >= 0 ? MAP.phases.length : 0;
-    for (let i = 0; i < lng; i++) {
-      massForm.phases.push(maskFaz);
+      for (let i = 0; i < FAZA; i++) {
+        massForm.phases.push({ ...maskFaz });
+      }
+      console.log("111MapVertexForma", FAZA, massForm);
+    } else {
+      massForm = props.forma;
+      FAZA = massForm.kolFaz;
+      console.log("222MapVertexForma", FAZA, massForm);
     }
   }
   //========================================================
   const CloseEnd = React.useCallback(() => {
-    console.log("CloseEnd:", HAVE);
     oldIdx = -1;
     HAVE = 0;
-    props.setOpen(false);
+    props.setOpen(false, massForm); // полный выход
   }, [props]);
 
   const handleCloseBad = React.useCallback(() => {
-    console.log("handleCloseBad:", HAVE);
     HAVE && setBadExit(true);
     !HAVE && CloseEnd(); // выход без сохранения
   }, [CloseEnd]);
@@ -141,14 +143,12 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
   // };
 
   const handleCloseBadExit = (mode: boolean) => {
-    console.log("handleCloseBadExit:", mode);
     setBadExit(false);
     mode && CloseEnd(); // выход без сохранения
   };
 
   //=== Функции - обработчики ==============================
   const SaveForm = (mode: boolean) => {
-    console.log("SaveForm:", typeof mode);
     if (mode) {
       CloseEnd(); // здесь должно быть сохранение
     } else {
@@ -161,102 +161,52 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
     HAVE++;
   };
 
-  const SetMinDuration = (valueInp: number) => {
+  const SetMinDuration = (valueInp: number, idx: number) => {
     massForm.phases[idx].MinDuration = valueInp;
     HAVE++;
   };
-  const SetStDuration = (valueInp: number) => {
+  const SetStDuration = (valueInp: number, idx: number) => {
     massForm.phases[idx].StartDuration = valueInp;
     HAVE++;
   };
-  const SetPhaseOrder = (valueInp: number) => {
+
+  const SetPhaseOrder = (valueInp: number, idx: number) => {
     massForm.phases[idx].PhaseOrder = valueInp;
     HAVE++;
   };
 
   const handleChangePlan = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrencyPlan(event.target.value);
-    massForm.nomPlan = Number(event.target.value);
+    massForm.nomPlan = Number(event.target.value) + 1;
+    HAVE++;
   };
 
   const handleChangeFaza = (event: React.ChangeEvent<HTMLInputElement>) => {
-    massForm.kolFaz = FAZA = Number(event.target.value)+1;
-    console.log("FAZA", FAZA);
+    newFAZA = Number(event.target.value) + 1;
+    if (newFAZA === FAZA) return;
+    let massRab = JSON.parse(JSON.stringify(massForm));
+    if (newFAZA < FAZA) {
+      // количество фаз уменьшилось
+      massRab.phases.splice(0, massRab.phases.length); // massRab.phases = [];
+      for (let i = 0; i < newFAZA; i++) massRab.phases.push(massForm.phases[i]);
+    }
+    if (newFAZA > FAZA) {
+      // количество фаз увеличелось
+      for (let i = 0; i < newFAZA - FAZA; i++)
+        massRab.phases.push({ ...maskFaz });
+    }
+    massRab.kolFaz = newFAZA;
+    HAVE++;
+    // console.log("FAZA", event.target.value, FAZA, massForm.phases);
+    oldIdx = -1;
+    props.setOpen(true, massRab);
     setCurrencyFaza(event.target.value);
   };
   //========================================================
-  const InputFromList = (func: any, currency: any, currencies: any) => {
-    const styleSet = {
-      width: "36px",
-      maxHeight: "2px",
-      minHeight: "2px",
-      bgcolor: "#FFFBE5",
-      border: 1,
-      borderRadius: 1,
-      borderColor: "#d4d4d4",
-      textAlign: "center",
-      p: 1.25,
-      boxShadow: 6,
-    };
-
-    const styleBoxForm = {
-      "& > :not(style)": {
-        marginTop: "-10px",
-        marginLeft: "-27px",
-        width: "72px",
-      },
-    };
-
-    return (
-      <Box sx={styleSet}>
-        <Box component="form" sx={styleBoxForm}>
-          <TextField
-            select
-            size="small"
-            onKeyPress={handleKey} //отключение Enter
-            value={currency}
-            onChange={func}
-            InputProps={{ disableUnderline: true, style: { fontSize: 14 } }}
-            variant="standard"
-            color="secondary"
-          >
-            {currencies.map((option: any) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-        </Box>
-      </Box>
-    );
-  };
-
-  const HeaderTablFaz = () => {
-    return (
-      <Grid container>
-        <Grid item xs={1} sx={styleFT02}>
-          №
-        </Grid>
-        <Grid item xs={3.5} sx={styleFT02}>
-          Мин.длит.фаз(с)
-        </Grid>
-        <Grid item xs={3.5} sx={styleFT02}>
-          Нач.длит.фаз(с)
-        </Grid>
-        <Grid item xs={4} sx={styleFT02}>
-          Порядок фаз
-        </Grid>
-      </Grid>
-    );
-  };
-
-  const StrokaMainTabl = (FAZA: number) => {
+  const StrokaMainTabl = () => {
     let resStr = [];
     let lng = idxMap >= 0 ? FAZA : 0;
-    console.log("1StrokaMainTabl:", FAZA, lng);
-    //lng = 8; // для отладки, потом убрать !!!
     for (let i = 0; i < lng; i++) {
-      idx = i;
       resStr.push(
         <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
           <Grid xs={1} item sx={styleFT03}>
@@ -264,23 +214,27 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
           </Grid>
           <Grid xs={3.5} item sx={styleFT03}>
             <Box sx={{ display: "grid", justifyContent: "center" }}>
-              {WaysInput(massForm.phases[i].MinDuration, SetMinDuration, 20)}
+              {WaysInput(i, massForm.phases[i].MinDuration, SetMinDuration, 20)}
             </Box>
           </Grid>
           <Grid xs={3.5} item sx={styleFT03}>
             <Box sx={{ display: "grid", justifyContent: "center" }}>
-              {WaysInput(massForm.phases[i].StartDuration, SetStDuration, 20)}
+              {WaysInput(
+                i,
+                massForm.phases[i].StartDuration,
+                SetStDuration,
+                20
+              )}
             </Box>
           </Grid>
           <Grid xs={4} item sx={styleFT033}>
             <Box sx={{ display: "grid", justifyContent: "center" }}>
-              {WaysInput(massForm.phases[i].PhaseOrder, SetPhaseOrder, 20)}
+              {WaysInput(i, massForm.phases[i].PhaseOrder, SetPhaseOrder, 20)}
             </Box>
           </Grid>
         </Grid>
       );
     }
-    console.log("2StrokaMainTabl:", resStr.length);
     return resStr;
   };
 
@@ -307,15 +261,19 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
   };
 
   //=== обработка Esc ======================================
-  const escFunction = React.useCallback((event) => {
-    if (event.keyCode === 27) {
-      console.log("ESC!!!", HAVE);
-      oldIdx = -1;
-      HAVE = 0;
-      //event.preventDefault()
-      //handleCloseBad();
-    }
-  }, []);
+  const escFunction = React.useCallback(
+    (event) => {
+      if (event.keyCode === 27) {
+        console.log("ESC!!!", HAVE);
+        oldIdx = -1;
+        HAVE = 0;
+        props.setOpen(false, null); // полный выход
+        event.preventDefault()
+        // handleCloseBad();
+      }
+    },
+    [props]
+  );
 
   React.useEffect(() => {
     document.addEventListener("keydown", escFunction);
@@ -334,7 +292,6 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
         <Button sx={styleModalEnd} onClick={() => handleCloseBad()}>
           <b>&#10006;</b>
         </Button>
-        {badExit && <>{BadExit(badExit, handleCloseBadExit)}</>}
         {massdk.length > props.idx && (
           <>
             <Box sx={styleFormName}>
@@ -357,14 +314,16 @@ const MapVertexForma = (props: { setOpen: any; idx: number }) => {
             )}
             {StrokaTabl(
               "Начальное смещение сек.",
-              WaysInput(massForm.offset, SetOffset, 100)
+              WaysInput(0, massForm.offset, SetOffset, 100)
             )}
             <Box sx={{ fontSize: 12, marginTop: 2.5 }}>
               Таблица параметров фаз
             </Box>
             <Box sx={styleFormTabl}>
               {HeaderTablFaz()}
-              {StrokaMainTabl(FAZA)}
+              <Box sx={{ height: 230, overflowX: "auto" }}>
+                {StrokaMainTabl()}
+              </Box>
             </Box>
             <Grid container>
               <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>

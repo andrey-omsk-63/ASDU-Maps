@@ -85,6 +85,7 @@ idxDel = nomRoute = idxRoute = indexPoint = pointAaIndex = pointBbIndex = -1;
 let oldPropsSvg: any = null;
 let fromIdx = -1;
 let inIdx = -1;
+let VertexForma: any = null;
 
 const MainMap = (props: {
   ws: WebSocket;
@@ -120,6 +121,7 @@ const MainMap = (props: {
   });
   const dispatch = useDispatch();
   //===========================================================
+  const [triggerForm, setTriggerForm] = React.useState(false);
   const [currency, setCurrency] = React.useState("0");
   const [currencyMode, setCurrencyMode] = React.useState("0");
   const [openSetInf, setOpenSetInf] = React.useState(false);
@@ -371,7 +373,6 @@ const MainMap = (props: {
   };
 
   const OnPlacemarkClickPoint = (index: number, coor: any) => {
-    //console.log('OnPlacemarkClickPoint:',index, pointAa, openSetWaysForm)
     let COORD = coor ? coor : MassCoord(massdk[index]);
     if (pointAa === 0) {
       if (!massdk[index].area && MODE === "1") return;
@@ -383,7 +384,10 @@ const MainMap = (props: {
         MakeСollectionRoute(MODE === "1" ? false : true);
         setFlagPusk(true);
       }
-      if (MODE === "1" && !openSetWaysForm) setOpenSetVertForm(true);
+      if (MODE === "1" && !openSetWaysForm) {
+        VertexForma = null;
+        setOpenSetVertForm(true);
+      }
     } else {
       let soob = "Связь между перекрёстками в разных районах создовать нельзя";
       if (MODE === "0") {
@@ -639,10 +643,17 @@ const MainMap = (props: {
     PressButton(212);
   };
 
-  const SetOpenSetVertForm = (mode: boolean) => {
-    console.log("SetOpenSetVertForm:", mode);
-    ZeroRoute(false);
-    setOpenSetVertForm(mode);
+  const SetOpenSetVertForm = (mode: boolean, forma: any) => {
+    console.log("SetOpenSetVertForm:",  mode, forma);
+    setOpenSetVertForm(false); // закрыти старой формы
+    if (!mode) {
+      VertexForma = null;
+      ZeroRoute(false);
+    } else {
+      VertexForma = forma;
+      setOpenSetVertForm(true);
+      setTriggerForm(!triggerForm); // запуск новой формы
+    }
   };
 
   const SetOpenSetWaysFormMenu = (mode: number, idx: number, pusto: number) => {
@@ -748,8 +759,19 @@ const MainMap = (props: {
             <PlacemarkDo />
             <ModalPressBalloon />
             {openSetPro && <MapRouteProtokol setOpen={setOpenSetPro} />}
-            {openSetVertForm && pointAaIndex >= 0 && (
-              <MapVertexForma setOpen={SetOpenSetVertForm} idx={pointAaIndex} />
+            {openSetVertForm && pointAaIndex >= 0 && triggerForm && (
+              <MapVertexForma
+                setOpen={SetOpenSetVertForm}
+                idx={pointAaIndex}
+                forma={VertexForma}
+              />
+            )}
+            {openSetVertForm && pointAaIndex >= 0 && !triggerForm && (
+              <MapVertexForma
+                setOpen={SetOpenSetVertForm}
+                idx={pointAaIndex}
+                forma={VertexForma}
+              />
             )}
             {openSetWaysFormMenu && !openSetVertForm && (
               <MapWaysFormMenu

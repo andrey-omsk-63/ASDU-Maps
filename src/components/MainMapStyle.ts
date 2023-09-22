@@ -443,8 +443,8 @@ export const styleFormTabl = {
   marginTop: 1.5,
   marginLeft: -0.5,
   marginRight: -0.5,
-  height: 306,
-  overflowX: "auto",
+  //height: 306,
+  // overflowX: "auto",
 };
 
 export const styleFT03 = {

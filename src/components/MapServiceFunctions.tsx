@@ -24,7 +24,7 @@ import { Pointer, Router } from "./../App";
 import { Vertex } from "./../interfaceRoute";
 
 import { styleModalMenu, styleModalEndMapGl } from "./MainMapStyle";
-import { styleSetPoint } from "./MainMapStyle";
+import { styleSetPoint, styleFT02 } from "./MainMapStyle";
 import { styleInpKnop, styleBind05, styleModalEndAttent } from "./MainMapStyle";
 import { styleBind02, styleTypography, searchControl } from "./MainMapStyle";
 import { styleBind03, styleBind033, styleSetImg } from "./MainMapStyle";
@@ -1359,15 +1359,16 @@ export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
     backgroundColor: "#E6F5D6",
     color: "black",
     textTransform: "unset !important",
-    
     boxShadow: 6,
   };
 
   const handleClose = (mode: boolean) => {
+    //console.log('******')
     handleCloseEnd(mode);
   };
 
   const CloseEnd = (event: any, reason: string) => {
+    //console.log('***')
     if (reason === "escapeKeyDown") handleClose(false);
   };
 
@@ -1397,7 +1398,12 @@ export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
   );
 };
 //=== WaysForma =======================================================
-export const WaysInput = (VALUE: any, SetValue: Function, MAX: number) => {
+export const WaysInput = (
+  idx: number,
+  VALUE: any,
+  SetValue: Function,
+  MAX: number
+) => {
   const [value, setValue] = React.useState(VALUE);
 
   const styleSetID = {
@@ -1429,7 +1435,7 @@ export const WaysInput = (VALUE: any, SetValue: Function, MAX: number) => {
     valueInp = Math.trunc(Number(valueInp));
     if (valueInp <= MAX) {
       setValue(valueInp.toString());
-      SetValue(valueInp);
+      SetValue(valueInp,idx);
     }
   };
 
@@ -1459,6 +1465,72 @@ export const WaysInput = (VALUE: any, SetValue: Function, MAX: number) => {
     </Box>
   );
 };
+//=== WertexForma =====================================================
+export const InputFromList = (func: any, currency: any, currencies: any) => {
+  const styleSet = {
+    width: "36px",
+    maxHeight: "6px",
+    minHeight: "6px",
+    bgcolor: "#FFFBE5",
+    border: 1,
+    borderRadius: 1,
+    borderColor: "#d4d4d4",
+    textAlign: "center",
+    p: 1.25,
+    boxShadow: 6,
+  };
+
+  const styleBoxForm = {
+    "& > :not(style)": {
+      marginTop: "-10px",
+      marginLeft: "-27px",
+      width: "72px",
+    },
+  };
+
+  return (
+    <Box sx={styleSet}>
+      <Box component="form" sx={styleBoxForm}>
+        <TextField
+          select
+          size="small"
+          onKeyPress={handleKey} //отключение Enter
+          value={currency}
+          onChange={func}
+          InputProps={{ disableUnderline: true, style: { fontSize: 14 } }}
+          variant="standard"
+          color="secondary"
+        >
+          {currencies.map((option: any) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
+      </Box>
+    </Box>
+  );
+};
+
+export const HeaderTablFaz = () => {
+  return (
+    <Grid container>
+      <Grid item xs={1} sx={styleFT02}>
+        №
+      </Grid>
+      <Grid item xs={3.5} sx={styleFT02}>
+        Мин.длит.фаз(с)
+      </Grid>
+      <Grid item xs={3.5} sx={styleFT02}>
+        Нач.длит.фаз(с)
+      </Grid>
+      <Grid item xs={4} sx={styleFT02}>
+        Порядок фаз
+      </Grid>
+    </Grid>
+  );
+};
+
 //=== PointDataError ==================================================
 export const HeadDoublError = (flagSave: boolean, propsErr: string) => {
   return (

@@ -172,28 +172,28 @@ const MapWaysFormaMain = (props: {
       {badExit && <>{BadExit(badExit, handleCloseBadExit)}</>}
       <Box sx={{ fontSize: 12, marginTop: 0.5 }}>Основные свойства</Box>
       {StrTab("№ Направления", massForm.name)}
-      {StrTab("Насыщение(т.е./ч.)", WaysInput(massForm.satur, SetSatur, 10000))}
+      {StrTab("Насыщение(т.е./ч.)", WaysInput(0,massForm.satur, SetSatur, 10000))}
       {StrTab(
         "Интенсивность(т.е./ч.)",
-        WaysInput(massForm.intensTr, SetIntensTr, 10000)
+        WaysInput(0,massForm.intensTr, SetIntensTr, 10000)
       )}
       {StrTab(
         "Дисперсия пачки(%)",
-        WaysInput(massForm.dispers, SetDispers, 100)
+        WaysInput(0,massForm.dispers, SetDispers, 100)
       )}
       {StrTab(
         "Длинна перегона(м)",
-        WaysInput(massForm.peregon, SetPeregon, 99999)
+        WaysInput(0,massForm.peregon, SetPeregon, 99999)
       )}
-      {StrTab("Вес остановки", WaysInput(massForm.wtStop, SetWtStop, 10))}
-      {StrTab("Вес задержки", WaysInput(massForm.wtDelay, SetWtDelay, 10))}
+      {StrTab("Вес остановки", WaysInput(0,massForm.wtStop, SetWtStop, 10))}
+      {StrTab("Вес задержки", WaysInput(0,massForm.wtDelay, SetWtDelay, 10))}
       {StrTab(
         "Смещ.начала зелёного(сек)",
-        WaysInput(massForm.offsetBeginGreen, SetOffsetBeginGreen, 20)
+        WaysInput(0,massForm.offsetBeginGreen, SetOffsetBeginGreen, 20)
       )}
       {StrTab(
         "Смещ.конца зелёного(сек)",
-        WaysInput(massForm.offsetEndGreen, SetOffsetEndGreen, 20)
+        WaysInput(0,massForm.offsetEndGreen, SetOffsetEndGreen, 20)
       )}
       {StrTab("Интенсивность пост.потока(т.е./ч.)", massForm.intensFl)}
       <Box sx={{ fontSize: 12, marginTop: 1.5 }}>
