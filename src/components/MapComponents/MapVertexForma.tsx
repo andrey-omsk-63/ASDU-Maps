@@ -1,5 +1,6 @@
 import * as React from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { statsaveCreate } from "../../redux/actions";
 
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -40,6 +41,12 @@ const MapVertexForma = (props: { setOpen: any; idx: number; forma: any }) => {
     const { massdkReducer } = state;
     return massdkReducer.massdk;
   });
+  let datestat = useSelector((state: any) => {
+    const { statsaveReducer } = state;
+    return statsaveReducer.datestat;
+  });
+  //console.log("datestat:", datestat);
+  const dispatch = useDispatch();
   //===========================================================
   const idxMap = ComplianceMapMassdk(props.idx, massdk, map);
   const MAP = map.dateMap.tflight[idxMap];
@@ -100,9 +107,12 @@ const MapVertexForma = (props: { setOpen: any; idx: number; forma: any }) => {
     return currencies;
   };
   //=== инициализация ======================================
-  console.log("Inic:", oldIdx, props.idx, props.forma);
+  //console.log("Inic:", oldIdx, props.idx, datestat.oldIdxForm, props.forma);
+  if (datestat.oldIdxForm === -1 && props.forma === null) oldIdx = -1;
   if (oldIdx !== props.idx) {
     oldIdx = props.idx;
+    datestat.oldIdxForm = oldIdx;
+    dispatch(statsaveCreate(datestat));
     currenciesPlan = PreparCurrenciesPlan(sumPlan);
     currenciesFaza = PreparCurrenciesFaza(maxFaz);
     if (props.forma === null) {
@@ -119,11 +129,11 @@ const MapVertexForma = (props: { setOpen: any; idx: number; forma: any }) => {
       for (let i = 0; i < FAZA; i++) {
         massForm.phases.push({ ...maskFaz });
       }
-      console.log("111MapVertexForma", FAZA, massForm);
+      //console.log("111MapVertexForma", FAZA, massForm);
     } else {
       massForm = props.forma;
       FAZA = massForm.kolFaz;
-      console.log("222MapVertexForma", FAZA, massForm);
+      //console.log("222MapVertexForma", FAZA, massForm);
     }
   }
   //========================================================
@@ -197,7 +207,6 @@ const MapVertexForma = (props: { setOpen: any; idx: number; forma: any }) => {
     }
     massRab.kolFaz = newFAZA;
     HAVE++;
-    // console.log("FAZA", event.target.value, FAZA, massForm.phases);
     oldIdx = -1;
     props.setOpen(true, massRab);
     setCurrencyFaza(event.target.value);
@@ -268,7 +277,7 @@ const MapVertexForma = (props: { setOpen: any; idx: number; forma: any }) => {
         oldIdx = -1;
         HAVE = 0;
         props.setOpen(false, null); // полный выход
-        event.preventDefault()
+        event.preventDefault();
         // handleCloseBad();
       }
     },

@@ -4,11 +4,13 @@ import {
   MASSROUTE_CREATE,
   MASSROUTEPRO_CREATE,
   COORDINATES_CREATE,
+  STATSAVE_CREATE,
 } from "./types";
 
 import { DateMAP } from "./../interfaceMAP.d";
 import { DateRoute } from "./../interfaceRoute.d";
 import { Pointer } from "./../App";
+import { Stater } from './../App';
 
 export function massdkCreate(massDka: Pointer[] = []) {
   return {
@@ -42,5 +44,12 @@ export function coordinatesCreate(Coordinates: Array<Array<number>>) {
   return {
     type: COORDINATES_CREATE,
     data: Coordinates,
+  };
+}
+
+export function statsaveCreate(dateStat: Stater) {
+  return {
+    type: STATSAVE_CREATE,
+    data: dateStat,
   };
 }

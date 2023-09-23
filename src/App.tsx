@@ -1,12 +1,8 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  mapCreate,
-  massrouteCreate,
-  massrouteproCreate,
-  coordinatesCreate,
-  massdkCreate,
-} from "./redux/actions";
+import { mapCreate, massrouteCreate } from "./redux/actions";
+import { massrouteproCreate, coordinatesCreate } from "./redux/actions";
+import { massdkCreate, statsaveCreate } from "./redux/actions";
 
 import Grid from "@mui/material/Grid";
 
@@ -70,6 +66,18 @@ export interface Directions {
   edited: boolean;
 }
 
+export interface Stater {
+  ws: any;
+  debug: boolean;
+  oldIdxForm: number;
+}
+
+export let dateStat: Stater = {
+  ws: null,
+  debug: false,
+  oldIdxForm: -1,
+};
+
 export let massRoute: Router[] = [];
 export let massRoutePro: Router[] = [];
 export let Coordinates: Array<Array<number>> = []; // массив координат
@@ -108,6 +116,9 @@ const App = () => {
   if (flagOpenWS) {
     WS = new WebSocket(host);
     flagOpenWS = false;
+    dateStat.ws = WS;
+    if (WS.url === "wss://localhost:3000/W") dateStat.debug = true;
+    dispatch(statsaveCreate(dateStat));
     let pageUrl = new URL(window.location.href);
     homeRegion = Number(pageUrl.searchParams.get("Region"));
   }

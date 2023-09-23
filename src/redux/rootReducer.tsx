@@ -4,6 +4,7 @@ import { massrouteReducer } from './massrouteReducer';
 import { massrouteproReducer } from './massrouteproReducer';
 import { mapReducer } from './mapReducer';
 import { coordinatesReducer } from './coordinatesReducer';
+import { statsaveReducer } from './statsaveReducer';
 
 export const rootReducer = combineReducers({
   //commReducer,
@@ -12,4 +13,5 @@ export const rootReducer = combineReducers({
   massrouteReducer,
   massrouteproReducer,
   coordinatesReducer,
+  statsaveReducer,
 });

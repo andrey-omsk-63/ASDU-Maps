@@ -2,6 +2,7 @@ import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { massdkCreate, massrouteCreate } from "./../redux/actions";
 import { coordinatesCreate, massrouteproCreate } from "./../redux/actions";
+import { statsaveCreate } from "./../redux/actions";
 
 import Grid from "@mui/material/Grid";
 import Modal from "@mui/material/Modal";
@@ -119,6 +120,11 @@ const MainMap = (props: {
     const { mapReducer } = state;
     return mapReducer.map;
   });
+  let datestat = useSelector((state: any) => {
+    const { statsaveReducer } = state;
+    return statsaveReducer.datestat;
+  });
+  //console.log("datestat:", datestat);
   const dispatch = useDispatch();
   //===========================================================
   const [triggerForm, setTriggerForm] = React.useState(false);
@@ -386,7 +392,9 @@ const MainMap = (props: {
       }
       if (MODE === "1" && !openSetWaysForm) {
         VertexForma = null;
-        setOpenSetVertForm(true);
+        datestat.oldIdxForm = -1;
+        dispatch(statsaveCreate(datestat));
+        setOpenSetVertForm(true); // запуск новой формы
       }
     } else {
       let soob = "Связь между перекрёстками в разных районах создовать нельзя";
@@ -548,6 +556,7 @@ const MainMap = (props: {
   const InstanceRefDo = (ref: React.Ref<any>) => {
     if (ref) {
       mapp.current = ref;
+      //console.log('######Click',mapp.current.events.typesCount,)
       mapp.current.events.remove("contextmenu", funcContex); // нажата правая кнопка мыши
       funcContex = function (e: any) {
         if (mapp.current.hint) {
@@ -644,8 +653,7 @@ const MainMap = (props: {
   };
 
   const SetOpenSetVertForm = (mode: boolean, forma: any) => {
-    console.log("SetOpenSetVertForm:",  mode, forma);
-    setOpenSetVertForm(false); // закрыти старой формы
+    setOpenSetVertForm(false); // закрытие старой формы
     if (!mode) {
       VertexForma = null;
       ZeroRoute(false);
