@@ -325,7 +325,10 @@ export const InputMenu = (func: any, currency: any, currencies: any) => {
           onKeyPress={handleKey} //отключение Enter
           value={currency}
           onChange={func}
-          InputProps={{ disableUnderline: true, style: { fontSize: 14 } }}
+          InputProps={{
+            disableUnderline: true,
+            style: { fontWeight: 700, fontSize: 14 },
+          }}
           variant="standard"
           color="secondary"
         >
@@ -591,7 +594,7 @@ export const StrokaMenuGlob = (soob: string, func: Function, mode: number) => {
     minHeight: "21px",
     backgroundColor: "#C4EAA2",
     //backgroundColor: "#E9F5D8",
-    color: "black",
+    color: "#676767",
     textTransform: "unset !important",
     p: 1.5,
     boxShadow: 6,
@@ -599,7 +602,7 @@ export const StrokaMenuGlob = (soob: string, func: Function, mode: number) => {
 
   return (
     <Button sx={styleApp01} onClick={() => func(mode)}>
-      <b>{soob}</b>
+      {soob}
     </Button>
   );
 };
@@ -621,24 +624,19 @@ export const MakeRevers = (
 export const ShowFormalRoute = (flagDemo: boolean, PressButton: Function) => {
   return (
     <>
-      {!flagDemo && <>{StrokaMenuGlob("Формальн.Связи", PressButton, 3)}</>}
-      {flagDemo && <>{StrokaMenuGlob("Отключить ФС", PressButton, 6)}</>}
+      {!flagDemo && <>{StrokaMenuGlob("Формальн.связи", PressButton, 3)}</>}
+      {flagDemo && <>{StrokaMenuGlob("Отключить Фс", PressButton, 6)}</>}
     </>
   );
 };
 
 export const MenuProcesRoute = (
   flagPusk: boolean,
-  //flagBind: boolean,
   flagRoute: boolean,
   PressButton: Function
 ) => {
   return (
     <>
-      {/* {flagPusk && !flagBind && (
-        <>{StrokaMenuGlob("Отм.назначений", PressButton, 77)}</>
-      )} */}
-      {/* {flagPusk && flagRoute && !flagBind && ( */}
       {flagPusk && flagRoute && (
         <>
           {StrokaMenuGlob("Отм.связь", PressButton, 77)}
@@ -1413,7 +1411,6 @@ export const WaysInput = (
     border: 1,
     borderRadius: 1,
     borderColor: "#d4d4d4",
-    //borderColor:"black",
     bgcolor: "#FFFBE5",
     boxShadow: 6,
     textAlign: "center",
@@ -1435,7 +1432,7 @@ export const WaysInput = (
     valueInp = Math.trunc(Number(valueInp));
     if (valueInp <= MAX) {
       setValue(valueInp.toString());
-      SetValue(valueInp,idx);
+      SetValue(valueInp, idx);
     }
   };
 

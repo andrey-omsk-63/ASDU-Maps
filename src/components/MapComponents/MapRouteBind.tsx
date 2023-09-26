@@ -320,7 +320,7 @@ const MapRouteBind = (props: {
     HAVE = have;
     let saveTitle = props.mode ? "Сохранение изменений" : "Сохранение связи";
     return (
-      <Grid container sx={{ marginTop: "1vh", height: 27, width: "100%" }}>
+      <Grid container sx={{ marginTop: "2vh", height: 27, width: "100%" }}>
         <Grid item xs={3.5}></Grid>
         <Grid item xs={5} sx={{ border: 0 }}>
           {have ? (

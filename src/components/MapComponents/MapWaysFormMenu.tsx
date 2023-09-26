@@ -34,14 +34,14 @@ let propsSvg: any;
 let waitPict = false;
 
 const MapWaysFormMenu = (props: {
-  ws: any;
+  //ws: any;
   setOpen: any;
   idx: number;
   svg: any;
   setSvg: any;
 }) => {
   //console.log("MapWaysFormMenu:", oldIdx);
-  const WS = props.ws;
+ 
   //== Piece of Redux =======================================
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;
@@ -52,11 +52,16 @@ const MapWaysFormMenu = (props: {
     const { massrouteReducer } = state;
     return massrouteReducer.massroute;
   });
+  let datestat = useSelector((state: any) => {
+    const { statsaveReducer } = state;
+    return statsaveReducer.datestat;
+  });
   //console.log("massroute:", massroute);
   //========================================================
   const [openSetBind, setOpenSetBind] = React.useState(false);
   const [trigger, setTrigger] = React.useState(false);
 
+  const WS = datestat.ws;
   const propsArea = massroute.vertexes[props.idx].area;
   const propsId = massroute.vertexes[props.idx].id;
   let what = massdk[props.idx].area ? "перекрёстка" : "объекта";

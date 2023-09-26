@@ -87,6 +87,7 @@ let oldPropsSvg: any = null;
 let fromIdx = -1;
 let inIdx = -1;
 let VertexForma: any = null;
+let openErrForma = false;
 
 const MainMap = (props: {
   ws: WebSocket;
@@ -652,13 +653,15 @@ const MainMap = (props: {
     PressButton(212);
   };
 
-  const SetOpenSetVertForm = (mode: boolean, forma: any) => {
+  const SetOpenSetVertForm = (mode: boolean, forma: any, openErr: boolean) => {
     setOpenSetVertForm(false); // закрытие старой формы
     if (!mode) {
       VertexForma = null;
+      openErrForma = false;
       ZeroRoute(false);
     } else {
       VertexForma = forma;
+      openErrForma = openErr;
       setOpenSetVertForm(true);
       setTriggerForm(!triggerForm); // запуск новой формы
     }
@@ -772,6 +775,7 @@ const MainMap = (props: {
                 setOpen={SetOpenSetVertForm}
                 idx={pointAaIndex}
                 forma={VertexForma}
+                openErr={openErrForma}
               />
             )}
             {openSetVertForm && pointAaIndex >= 0 && !triggerForm && (
@@ -779,11 +783,12 @@ const MainMap = (props: {
                 setOpen={SetOpenSetVertForm}
                 idx={pointAaIndex}
                 forma={VertexForma}
+                openErr={openErrForma}
               />
             )}
             {openSetWaysFormMenu && !openSetVertForm && (
               <MapWaysFormMenu
-                ws={WS}
+                //ws={WS}
                 setOpen={SetOpenSetWaysFormMenu}
                 idx={idxRoute}
                 svg={masSvg}

@@ -172,28 +172,31 @@ const MapWaysFormaMain = (props: {
       {badExit && <>{BadExit(badExit, handleCloseBadExit)}</>}
       <Box sx={{ fontSize: 12, marginTop: 0.5 }}>Основные свойства</Box>
       {StrTab("№ Направления", massForm.name)}
-      {StrTab("Насыщение(т.е./ч.)", WaysInput(0,massForm.satur, SetSatur, 10000))}
+      {StrTab(
+        "Насыщение(т.е./ч.)",
+        WaysInput(0, massForm.satur, SetSatur, 10000)
+      )}
       {StrTab(
         "Интенсивность(т.е./ч.)",
-        WaysInput(0,massForm.intensTr, SetIntensTr, 10000)
+        WaysInput(0, massForm.intensTr, SetIntensTr, 10000)
       )}
       {StrTab(
         "Дисперсия пачки(%)",
-        WaysInput(0,massForm.dispers, SetDispers, 100)
+        WaysInput(0, massForm.dispers, SetDispers, 100)
       )}
       {StrTab(
         "Длинна перегона(м)",
-        WaysInput(0,massForm.peregon, SetPeregon, 99999)
+        WaysInput(0, massForm.peregon, SetPeregon, 99999)
       )}
-      {StrTab("Вес остановки", WaysInput(0,massForm.wtStop, SetWtStop, 10))}
-      {StrTab("Вес задержки", WaysInput(0,massForm.wtDelay, SetWtDelay, 10))}
+      {StrTab("Вес остановки", WaysInput(0, massForm.wtStop, SetWtStop, 10))}
+      {StrTab("Вес задержки", WaysInput(0, massForm.wtDelay, SetWtDelay, 10))}
       {StrTab(
         "Смещ.начала зелёного(сек)",
-        WaysInput(0,massForm.offsetBeginGreen, SetOffsetBeginGreen, 20)
+        WaysInput(0, massForm.offsetBeginGreen, SetOffsetBeginGreen, 20)
       )}
       {StrTab(
         "Смещ.конца зелёного(сек)",
-        WaysInput(0,massForm.offsetEndGreen, SetOffsetEndGreen, 20)
+        WaysInput(0, massForm.offsetEndGreen, SetOffsetEndGreen, 20)
       )}
       {StrTab("Интенсивность пост.потока(т.е./ч.)", massForm.intensFl)}
       <Box sx={{ fontSize: 12, marginTop: 1.5 }}>
@@ -201,16 +204,22 @@ const MapWaysFormaMain = (props: {
       </Box>
       <Box sx={styleFormFWTabl}>{StrokaMainTabl()}</Box>
       <Grid container>
-        <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>
-          <Button sx={styleFormMenu} onClick={() => SaveForm(true)}>
-            Сохранить изменения
-          </Button>
-        </Grid>
-        <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>
-          <Button sx={styleFormMenu} onClick={() => handleCloseBad()}>
-            Выйти без сохранения
-          </Button>
-        </Grid>
+        {HAVE > 0 ? (
+          <>
+            <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>
+              <Button sx={styleFormMenu} onClick={() => SaveForm(true)}>
+                Сохранить изменения
+              </Button>
+            </Grid>
+            <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>
+              <Button sx={styleFormMenu} onClick={() => handleCloseBad()}>
+                Выйти без сохранения
+              </Button>
+            </Grid>
+          </>
+        ) : (
+          <Box sx={{ marginTop: 1, height: "25px" }}> </Box>
+        )}
       </Grid>
     </>
   );

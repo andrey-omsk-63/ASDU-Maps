@@ -291,9 +291,9 @@ export const styleBind033 = {
 export const styleBind04 = {
   fontSize: 12,
   border: "1px solid #000",
-  bgcolor: "#E6F5D6",
-  maxWidth: 15,
-  minWidth: 15,
+  bgcolor: "#E6F5D6", // светло-салатовый
+  maxWidth: "21px",
+  minWidth: "21px",
   maxHeight: "21px",
   minHeight: "21px",
   borderColor: "#d4d4d4", // серый
@@ -306,9 +306,9 @@ export const styleBind04 = {
 export const styleBind043 = {
   fontSize: 12,
   border: "1px solid #000",
-  bgcolor: "#BAE186",
-  maxWidth: 12,
-  minWidth: 12,
+  bgcolor: "#BAE186", // тёмно-салатовый
+  maxWidth: "21px",
+  minWidth: "21px",
   maxHeight: "21px",
   minHeight: "21px",
   borderColor: "#93D145",
@@ -389,7 +389,7 @@ export const MakeStyleBind00 = (heightImg: number) => {
     borderColor: "#F0F0F0",
     borderRadius: 2,
     width: "98%",
-    height: heightImg + window.innerHeight * 0.659,
+    height: heightImg + window.innerHeight * 0.668,
     bgcolor: "#F0F0F0",
   };
   return styleBind00;

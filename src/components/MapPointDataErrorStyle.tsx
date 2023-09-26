@@ -86,8 +86,11 @@ export const styleSetInfErr = (colorBorder: string) => {
   const styleSetInf = {
     outline: "none",
     position: "absolute",
-    marginTop: "18vh",
-    marginLeft: "27vh",
+    // marginTop: "18vh",
+    // marginLeft: "27vh",
+    left: "50%",
+    top: "50%",
+    transform: "translate(-50%, -50%)",
     width: 430,
     bgcolor: "background.paper",
     border: "1px solid #000",

@@ -6,6 +6,8 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 
+import MapPointDataError from "./MapPointDataError";
+
 import { ComplianceMapMassdk, WaysInput } from "./../MapServiceFunctions";
 import { BadExit, InputFromList } from "./../MapServiceFunctions";
 import { HeaderTablFaz } from "./../MapServiceFunctions";
@@ -23,6 +25,8 @@ let currenciesPlan: any = [];
 let currenciesFaza: any = [];
 let FAZA = 0;
 let newFAZA = 0;
+let soobErr =
+  "Начальная длительность фаз не может быть больше минимальной длительности, будьте внимательны!";
 
 const maskFaz: any = {
   MinDuration: 0,
@@ -30,7 +34,12 @@ const maskFaz: any = {
   PhaseOrder: 0,
 };
 
-const MapVertexForma = (props: { setOpen: any; idx: number; forma: any }) => {
+const MapVertexForma = (props: {
+  setOpen: any;
+  idx: number;
+  forma: any;
+  openErr: boolean;
+}) => {
   //== Piece of Redux =======================================
   const map = useSelector((state: any) => {
     const { mapReducer } = state;
@@ -54,6 +63,7 @@ const MapVertexForma = (props: { setOpen: any; idx: number; forma: any }) => {
   const maxFaz = 8;
 
   const [badExit, setBadExit] = React.useState(false);
+  const [openSetErr, setOpenSetErr] = React.useState(props.openErr);
   const [currencyPlan, setCurrencyPlan] = React.useState(
     props.forma === null ? "0" : (props.forma.nomPlan - 1).toString()
   );
@@ -133,6 +143,7 @@ const MapVertexForma = (props: { setOpen: any; idx: number; forma: any }) => {
     } else {
       massForm = props.forma;
       FAZA = massForm.kolFaz;
+      //setOpenSetErr(props.openErr);
       //console.log("222MapVertexForma", FAZA, massForm);
     }
   }
@@ -173,11 +184,23 @@ const MapVertexForma = (props: { setOpen: any; idx: number; forma: any }) => {
 
   const SetMinDuration = (valueInp: number, idx: number) => {
     massForm.phases[idx].MinDuration = valueInp;
+    if (massForm.phases[idx].StartDuration > valueInp) {
+      massForm.phases[idx].StartDuration = valueInp;
+      console.log("!!!:", massForm.phases);
+      //setOpenSetErr(true);
+      props.setOpen(true, massForm, true); // полный ререндер
+    }
     HAVE++;
   };
   const SetStDuration = (valueInp: number, idx: number) => {
-    massForm.phases[idx].StartDuration = valueInp;
-    HAVE++;
+    if (massForm.phases[idx].MinDuration >= valueInp) {
+      massForm.phases[idx].StartDuration = valueInp;
+      HAVE++;
+    } else {
+      massForm.phases[idx].StartDuration = massForm.phases[idx].MinDuration;
+      //setOpenSetErr(true);
+      props.setOpen(true, massForm, true); // полный ререндер
+    }
   };
 
   const SetPhaseOrder = (valueInp: number, idx: number) => {
@@ -208,7 +231,7 @@ const MapVertexForma = (props: { setOpen: any; idx: number; forma: any }) => {
     massRab.kolFaz = newFAZA;
     HAVE++;
     oldIdx = -1;
-    props.setOpen(true, massRab);
+    props.setOpen(true, massRab, openSetErr);
     setCurrencyFaza(event.target.value);
   };
   //========================================================
@@ -335,20 +358,38 @@ const MapVertexForma = (props: { setOpen: any; idx: number; forma: any }) => {
               </Box>
             </Box>
             <Grid container>
-              <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>
-                <Button sx={styleFormMenu} onClick={() => SaveForm(true)}>
-                  Сохранить изменения
-                </Button>
-              </Grid>
-              <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>
-                <Button sx={styleFormMenu} onClick={() => SaveForm(false)}>
-                  Выйти без сохранения
-                </Button>
-              </Grid>
+              {HAVE > 0 ? (
+                <>
+                  <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>
+                    <Button sx={styleFormMenu} onClick={() => SaveForm(true)}>
+                      Сохранить изменения
+                    </Button>
+                  </Grid>
+                  <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>
+                    <Button sx={styleFormMenu} onClick={() => SaveForm(false)}>
+                      Выйти без сохранения
+                    </Button>
+                  </Grid>
+                </>
+              ) : (
+                <Box sx={{ marginTop: 1, height: "25px" }}> </Box>
+              )}
             </Grid>
           </>
         )}
       </Box>
+      {openSetErr && (
+        <MapPointDataError
+          sErr={soobErr}
+          setOpen={setOpenSetErr}
+          ws={{}}
+          fromCross={0}
+          toCross={0}
+          update={0}
+          svg={{}}
+          setSvg={{}}
+        />
+      )}
     </>
   );
 };
