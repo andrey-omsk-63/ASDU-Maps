@@ -53,7 +53,7 @@ let nameIn = "";
 const MapPointDataError = (props: {
   sErr: string;
   setOpen: any;
-  ws: any;
+  //ws: any;
   fromCross: any;
   toCross: any;
   update: any;
@@ -61,7 +61,6 @@ const MapPointDataError = (props: {
   setSvg: any;
 }) => {
   //console.log("MapPointDataError_svg:", props.svg);
-  const WS = props.ws;
   //== Piece of Redux =======================================
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
@@ -71,11 +70,17 @@ const MapPointDataError = (props: {
     const { massrouteproReducer } = state;
     return massrouteproReducer.massroutepro;
   });
+  let datestat = useSelector((state: any) => {
+    const { statsaveReducer } = state;
+    return statsaveReducer.datestat;
+  });
   const dispatch = useDispatch();
+  //========================================================
   const [openSetEr, setOpenSetEr] = React.useState(true);
   const [tmRoute2, setTmRoute2] = React.useState(tmRoute1);
   const [openSetBind, setOpenSetBind] = React.useState(false);
 
+  const WS = datestat.ws;
   let colorBorder = props.sErr === "Дубликатная связь" ? "primary.main" : "red";
   let colorEnd = props.sErr === "Дубликатная связь" ? "black" : "red";
   let styleModalEnd = styleModalEndErr(colorEnd);

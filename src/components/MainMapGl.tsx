@@ -502,7 +502,7 @@ const MainMap = (props: {
           <MapPointDataError
             sErr={soobError}
             setOpen={setOpenSetErBall}
-            ws={WS}
+            //ws={WS}
             fromCross={fromCross}
             toCross={toCross}
             update={UpdateAddRoute}
@@ -788,7 +788,6 @@ const MainMap = (props: {
             )}
             {openSetWaysFormMenu && !openSetVertForm && (
               <MapWaysFormMenu
-                //ws={WS}
                 setOpen={SetOpenSetWaysFormMenu}
                 idx={idxRoute}
                 svg={masSvg}
@@ -799,7 +798,6 @@ const MainMap = (props: {
               <MapPointDataError
                 sErr={soobError}
                 setOpen={setOpenSetEr}
-                ws={WS}
                 fromCross={fromCross}
                 toCross={toCross}
                 update={UpdateAddRoute}

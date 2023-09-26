@@ -189,7 +189,7 @@ const MapWaysFormMenu = (props: {
         <MapPointDataError
           sErr={soobErr}
           setOpen={handleCloseSetEnd}
-          ws={{}}
+          //ws={{}}
           fromCross={0}
           toCross={0}
           update={0}

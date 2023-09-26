@@ -382,7 +382,7 @@ const MapVertexForma = (props: {
         <MapPointDataError
           sErr={soobErr}
           setOpen={setOpenSetErr}
-          ws={{}}
+          //ws={{}}
           fromCross={0}
           toCross={0}
           update={0}
