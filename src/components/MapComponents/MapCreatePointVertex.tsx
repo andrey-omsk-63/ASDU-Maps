@@ -26,7 +26,7 @@ const MapCreatePointVertex = (props: {
     bgcolor: "background.paper",
     border: "1px solid #000",
     borderColor: "primary.main",
-    borderRadius: 2,
+    borderRadius: 1,
     boxShadow: 24,
     p: 1.5,
   };
@@ -47,7 +47,7 @@ const MapCreatePointVertex = (props: {
   };
 
   const handleClose = (mode: number) => {
-    console.log("handleClose:", mode);
+    //console.log("handleClose:", mode);
     if (typeof mode !== "number") {
       handleCloseSetEnd();
     } else {

@@ -95,7 +95,7 @@ export const styleSetInfErr = (colorBorder: string) => {
     bgcolor: "background.paper",
     border: "1px solid #000",
     borderColor: colorBorder,
-    borderRadius: 2,
+    borderRadius: 1,
     boxShadow: 24,
     p: 1.5,
   };

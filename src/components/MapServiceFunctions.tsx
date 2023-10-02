@@ -639,10 +639,13 @@ export const MenuProcesRoute = (
     <>
       {flagPusk && flagRoute && (
         <>
-          {StrokaMenuGlob("Отм.связь", PressButton, 77)}
-          {StrokaMenuGlob("Сохр.связь", PressButton, 33)}
+          {/* {StrokaMenuGlob("Отм.связь", PressButton, 77)}
+          {StrokaMenuGlob("Сохр.связь", PressButton, 33)} */}
+          {StrokaMenuGlob("Отмена", PressButton, 77)}
+          {StrokaMenuGlob("Сохранение", PressButton, 33)}
           {StrokaMenuGlob("Реверc связи", PressButton, 12)}
-          {StrokaMenuGlob("Редакт.связи", PressButton, 69)}
+          {/* {StrokaMenuGlob("Редакт.связи", PressButton, 69)} */}
+          {StrokaMenuGlob("Редактирование", PressButton, 69)}
         </>
       )}
       {/* {flagPusk && flagRoute && flagBind && (
@@ -765,7 +768,7 @@ export const DelVertexOrPoint = (
     bgcolor: "background.paper",
     border: "1px solid #000",
     borderColor: "red",
-    borderRadius: 2,
+    borderRadius: 1,
     boxShadow: 24,
     textAlign: "center",
     p: 1,
@@ -862,7 +865,7 @@ export const NoVertex = (openSetErr: boolean, handleCloseErr: Function) => {
     bgcolor: "background.paper",
     border: "1px solid #000",
     borderColor: "primary.main",
-    borderRadius: 2,
+    borderRadius: 1,
     boxShadow: 24,
     textAlign: "center",
     p: 1,
@@ -1341,7 +1344,7 @@ export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
     bgcolor: "background.paper",
     border: "1px solid #000",
     borderColor: "red",
-    borderRadius: 2,
+    borderRadius: 1,
     boxShadow: 24,
     textAlign: "center",
     p: 1,

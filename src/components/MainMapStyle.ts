@@ -46,7 +46,7 @@ export const styleSetInf = {
   bgcolor: "background.paper",
   border: "1px solid #000",
   borderColor: "primary.main",
-  borderRadius: 2,
+  borderRadius: 1,
   boxShadow: 24,
   p: 1.5,
 };
@@ -60,7 +60,7 @@ export const styleSetPoint = {
   bgcolor: "background.paper",
   border: "1px solid #000",
   borderColor: "primary.main",
-  borderRadius: 2,
+  borderRadius: 1,
   boxShadow: 24,
   p: 2,
 };
@@ -107,7 +107,7 @@ export const styleSet = {
   maxHeight: "4px",
   minHeight: "4px",
   bgcolor: "#FAFAFA",
-  boxShadow: 3,
+  boxShadow: 4,
   textAlign: "center",
   p: 1.5,
 };
@@ -179,7 +179,7 @@ export const styleSetArea = {
   maxHeight: "3px",
   minHeight: "3px",
   bgcolor: "#FAFAFA",
-  boxShadow: 3,
+  boxShadow: 4,
   textAlign: "center",
   p: 1.5,
 };
@@ -189,7 +189,7 @@ export const styleSetID = {
   maxHeight: "3px",
   minHeight: "3px",
   bgcolor: "#FAFAFA",
-  boxShadow: 3,
+  boxShadow: 4,
   textAlign: "center",
   p: 1.5,
 };
@@ -233,7 +233,7 @@ export const styleSetImg = {
   bgcolor: "background.paper",
   border: "1px solid #000",
   borderColor: "primary.main",
-  borderRadius: 1.5,
+  borderRadius: 1,
   boxShadow: 24,
 };
 
@@ -292,8 +292,8 @@ export const styleBind04 = {
   fontSize: 12,
   border: "1px solid #000",
   bgcolor: "#E6F5D6", // светло-салатовый
-  maxWidth: "21px",
-  minWidth: "21px",
+  maxWidth: "33px",
+  minWidth: "33px",
   maxHeight: "21px",
   minHeight: "21px",
   borderColor: "#d4d4d4", // серый
@@ -307,8 +307,8 @@ export const styleBind043 = {
   fontSize: 12,
   border: "1px solid #000",
   bgcolor: "#BAE186", // тёмно-салатовый
-  maxWidth: "21px",
-  minWidth: "21px",
+  maxWidth: "33px",
+  minWidth: "33px",
   maxHeight: "21px",
   minHeight: "21px",
   borderColor: "#93D145",
@@ -373,7 +373,7 @@ export const styleSetBindForm = {
   bgcolor: "background.paper",
   border: "1px solid #000",
   borderColor: "primary.main",
-  borderRadius: 2,
+  borderRadius: 1,
   boxShadow: 24,
   p: 1.5,
 };
@@ -387,7 +387,7 @@ export const MakeStyleBind00 = (heightImg: number) => {
     transform: "translate(-50%, -50%)",
     border: "3px solid #000",
     borderColor: "#F0F0F0",
-    borderRadius: 2,
+    borderRadius: 1,
     width: "98%",
     height: heightImg + window.innerHeight * 0.668,
     bgcolor: "#F0F0F0",
@@ -400,11 +400,12 @@ export const styleFormInf = {
   position: "relative",
   marginTop: "-92vh",
   marginLeft: "auto",
+  marginRight: "9px",
   width: 460,
   bgcolor: "background.paper",
   border: "1px solid #000",
   borderColor: "primary.main",
-  borderRadius: 2,
+  borderRadius: 1,
   boxShadow: 24,
   p: 1.5,
 };
@@ -467,11 +468,12 @@ export const styleFW01 = {
   position: "relative",
   marginTop: "-91vh",
   marginLeft: "auto",
+  marginRight: "9px",
   width: 555,
   bgcolor: "background.paper",
-  border: "2px solid #000",
+  border: "1px solid #000",
   borderColor: "primary.main",
-  borderRadius: 2,
+  borderRadius: 1,
   boxShadow: 24,
   p: 3,
 };
