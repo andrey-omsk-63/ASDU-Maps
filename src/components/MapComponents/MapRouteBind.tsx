@@ -530,6 +530,7 @@ const MapRouteBind = (props: {
           IDX={IDX}
           idxA={props.idxA}
           idxB={props.idxB}
+          kolDir={kolFrom}
         />
       )}
       {openFormIn && (
@@ -539,6 +540,7 @@ const MapRouteBind = (props: {
           IDX={IDX}
           idxA={props.idxA}
           idxB={props.idxB}
+          kolDir={kolIn}
         />
       )}
       {badExit && <>{BadExit(badExit, handleCloseBadExit)}</>}

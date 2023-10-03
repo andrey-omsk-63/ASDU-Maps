@@ -31,6 +31,7 @@ let massForm: Directions = {
   intensFl: 1200,
   phases: [],
   edited: false,
+  opponent: "",
 };
 
 let HAVE = 0;
@@ -105,6 +106,7 @@ const MapWaysForma = (props: {
       intensFl: 1200,
       phases: [],
       edited: false,
+      opponent: "",
     };
     massForm = maskForm;
     let lng = idxMap >= 0 ? MAP.phases.length : 0;
@@ -155,6 +157,8 @@ const MapWaysForma = (props: {
   }, [escFunction]);
   //========================================================
 
+  let massNameDir: Array<string> = [];
+
   return (
     <>
       <Box sx={styleFormInf}>
@@ -173,6 +177,7 @@ const MapWaysForma = (props: {
               maskForm={massForm}
               setClose={SaveForm}
               setHave={SetHave}
+              massDir={massNameDir}
             />
           </>
         )}

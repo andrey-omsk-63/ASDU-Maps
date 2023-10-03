@@ -32,7 +32,7 @@ import { styleBind03, styleBind033, styleSetImg } from "./MainMapStyle";
 import { styleModalMenuErr, styleHeadError } from "./MapPointDataErrorStyle";
 import { styleBoxFormArea, styleSetArea } from "./MapPointDataErrorStyle";
 
-const handleKey = (event: any) => {
+export const handleKey = (event: any) => {
   if (event.key === "Enter") event.preventDefault();
 };
 
@@ -1329,6 +1329,7 @@ export const MaskFormWay = () => {
     intensFl: 0,
     phases: [],
     edited: false,
+    opponent: "",
   };
   return maskForm;
 };
@@ -1462,6 +1463,70 @@ export const WaysInput = (
           color="secondary"
         />
       </Box>
+    </Box>
+  );
+};
+
+export const InputOpponent = (
+  func: any,
+  currency: any,
+  currencies: any,
+  pusto: string
+) => {
+  const styleSetOpp = {
+    width: "36px",
+    maxHeight: "6px",
+    minHeight: "6px",
+    marginTop: "-3px",
+    bgcolor: "#FFFBE5",
+    border: 1,
+    borderRadius: 1,
+    borderColor: "#d4d4d4",
+    textAlign: "center",
+    p: 1.25,
+    boxShadow: 6,
+  };
+
+  const styleSetOppNull = {
+    width: "36px",
+    maxHeight: "8px",
+    minHeight: "8px",
+    marginTop: "-3px",
+    p: 1.25,
+  };
+
+  const styleBoxForm = {
+    "& > :not(style)": {
+      marginTop: "-7px",
+      marginLeft: "-9px",
+      width: "59px",
+    },
+  };
+
+  let styleSet = pusto ? styleSetOpp : styleSetOppNull;
+
+  return (
+    <Box sx={styleSet}>
+      {pusto !== "" && (
+        <Box component="form" sx={styleBoxForm}>
+          <TextField
+            select
+            size="small"
+            onKeyPress={handleKey} //отключение Enter
+            value={currency}
+            onChange={func}
+            InputProps={{ disableUnderline: true, style: { fontSize: 14 } }}
+            variant="standard"
+            color="secondary"
+          >
+            {currencies.map((option: any) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Box>
+      )}
     </Box>
   );
 };

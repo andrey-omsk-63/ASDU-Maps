@@ -64,6 +64,7 @@ export interface Directions {
   intensFl: number;
   phases: Array<number>;
   edited: boolean;
+  opponent: string;
 }
 
 export interface Stater {

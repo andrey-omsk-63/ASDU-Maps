@@ -4,15 +4,18 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 
-import { WaysInput, BadExit } from "./../MapServiceFunctions";
+import { WaysInput, BadExit, InputOpponent } from "./../MapServiceFunctions";
 
 import { Directions } from "./../../App"; // интерфейс massForm
 
 import { styleFW03, styleFormFWTabl } from "./../MainMapStyle";
 import { styleFormMenu, styleFW04 } from "./../MainMapStyle";
+import { styleFW05, styleFW06 } from "./../MainMapStyle";
 
 let oldName = "";
 let HAVE = 0;
+let oldOpponent = "";
+let currenciesOpp: any = [];
 
 let massForm: Directions = {
   name: "0121/0212",
@@ -27,21 +30,53 @@ let massForm: Directions = {
   intensFl: 1200,
   phases: [],
   edited: false,
+  opponent: "",
 };
 
 const MapWaysFormaMain = (props: {
   maskForm: Directions;
   setClose: Function;
   setHave: Function;
+  massDir: Array<string>;
 }) => {
+  //console.log("massDir:", props.massDir);
   const [badExit, setBadExit] = React.useState(false);
   const [trigger, setTrigger] = React.useState(false);
+  const [currencyOpp, setCurrencyOpp] = React.useState(
+    props.maskForm.opponent === ""
+      ? "0"
+      : props.massDir.indexOf(props.maskForm.opponent)
+  );
+
+  const PreparCurrenciesOpponent = () => {
+    const currencies: any = [];
+    let dat = props.massDir;
+    let massKey: any = [];
+    let massDat: any = [];
+    for (let key in dat) {
+      massKey.push(key);
+      massDat.push(dat[key]);
+    }
+    let maskCurrencies = {
+      value: "0",
+      label: "Все режимы",
+    };
+    for (let i = 0; i < massKey.length; i++) {
+      maskCurrencies.value = massKey[i];
+      maskCurrencies.label = massDat[i];
+      currencies.push({ ...maskCurrencies });
+    }
+    return currencies;
+  };
 
   //=== инициализация ======================================
   if (oldName !== props.maskForm.name) {
     oldName = props.maskForm.name;
     massForm = props.maskForm;
     HAVE = 0;
+    oldOpponent = props.maskForm.opponent;
+    if (!oldOpponent) oldOpponent = props.massDir[0];
+    currenciesOpp = PreparCurrenciesOpponent();
   }
   //========================================================
 
@@ -63,7 +98,7 @@ const MapWaysFormaMain = (props: {
       let illum = massForm.phases[i] > 0 ? styleFW04 : styleFW03;
       resStr.push(
         <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
-          <Grid xs={2} item sx={{ marginTop: 1, textAlign: "center" }}>
+          <Grid xs={1.2} item sx={{ marginTop: 1, textAlign: "center" }}>
             <b>{metka}</b>
           </Grid>
           <Grid xs item>
@@ -167,6 +202,47 @@ const MapWaysFormaMain = (props: {
     props.setHave(HAVE);
   };
 
+  const handleCloseOpponent = () => {
+    if (massForm.opponent) {
+      massForm.opponent = "";
+    } else {
+      massForm.opponent = oldOpponent;
+    }
+    HAVE++;
+    props.setHave(HAVE);
+    setTrigger(!trigger);
+  };
+
+  const handleChangeOpp = (event: React.ChangeEvent<HTMLInputElement>) => {
+    oldOpponent = event.target.value;
+    HAVE++;
+    props.setHave(HAVE);
+    setCurrencyOpp(event.target.value);
+  };
+
+  const OpponentDirect = () => {
+    let illum = massForm.opponent ? styleFW06 : styleFW05;
+    let metka = massForm.opponent ? "✔" : "";
+    let vkl = massForm.opponent;
+    return (
+      <Box sx={{ marginTop: 1.5, marginLeft: -0.5, marginRight: -0.5 }}>
+        <Grid container>
+          <Grid item xs={1.2} sx={{ fontSize: 14, textAlign: "center" }}>
+            <b>{metka}</b>
+          </Grid>
+          <Grid item xs={7.5} sx={{ fontSize: 12.9, border: 0 }}>
+            <Button sx={illum} onClick={() => handleCloseOpponent()}>
+              Левый поворот конкурирует с направлением
+            </Button>
+          </Grid>
+          <Grid item xs>
+            {InputOpponent(handleChangeOpp, currencyOpp, currenciesOpp, vkl)}
+          </Grid>
+        </Grid>
+      </Box>
+    );
+  };
+
   return (
     <>
       {badExit && <>{BadExit(badExit, handleCloseBadExit)}</>}
@@ -199,6 +275,7 @@ const MapWaysFormaMain = (props: {
         WaysInput(0, massForm.offsetEndGreen, SetOffsetEndGreen, 20)
       )}
       {StrTab("Интенсивность пост.потока(т.е./ч.)", massForm.intensFl)}
+      {OpponentDirect()}
       <Box sx={{ fontSize: 12, marginTop: 1.5 }}>
         Выберите зелёные фазы для данного направления
       </Box>

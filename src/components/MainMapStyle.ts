@@ -366,8 +366,8 @@ export const styleBind05 = {
 export const styleSetBindForm = {
   outline: "none",
   position: "absolute",
-  left: "50%",
-  top: "50%",
+  left: "36%",
+  top: "45%",
   transform: "translate(-50%, -50%)",
   width: 460,
   bgcolor: "background.paper",
@@ -492,7 +492,7 @@ export const styleFW03 = {
   fontSize: 15.2,
   maxHeight: "21px",
   minHeight: "21px",
-  width: 333,
+  width: 369,
   backgroundColor: "#E9F5D8",
   color: "black",
   marginTop: 1,
@@ -507,10 +507,38 @@ export const styleFW04 = {
   fontSize: 15.2,
   maxHeight: "21px",
   minHeight: "21px",
-  width: 333,
+  width: 369,
   backgroundColor: "#bae186",
   color: "black",
   marginTop: 1,
+  border: "1px solid #000",
+  borderColor: "#93D145",
+  borderRadius: 1,
+  textTransform: "unset !important",
+  boxShadow: 6,
+};
+
+export const styleFW05 = {
+  fontSize: 11.5,
+  maxHeight: "21px",
+  minHeight: "21px",
+  width: 285,
+  backgroundColor: "#E9F5D8", // светло салатовый
+  color: "black",
+  border: "1px solid #000",
+  borderColor: "#d4d4d4", // серый
+  borderRadius: 1,
+  textTransform: "unset !important",
+  boxShadow: 1,
+};
+
+export const styleFW06 = {
+  fontSize: 11.5,
+  maxHeight: "21px",
+  minHeight: "21px",
+  width: 285,
+  backgroundColor: "#bae186",
+  color: "black",
   border: "1px solid #000",
   borderColor: "#93D145",
   borderRadius: 1,
@@ -531,6 +559,7 @@ export const styleFormFWTabl = {
   marginTop: 1.5,
   marginLeft: -0.5,
   marginRight: -0.5,
-  height: 121,
+  // height: 121,
+  height: 96,
   overflowX: "auto",
 };
