@@ -26,7 +26,7 @@ const MapRouteBindForm = (props: {
   idxB: number;
   kolDir: number;
 }) => {
-  console.log("MapRouteBindForm:", props.kolDir, props.maskForm);
+  //console.log("MapRouteBindForm:", props.kolDir, props.maskForm);
   //== Piece of Redux =======================================
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;
@@ -67,8 +67,7 @@ const MapRouteBindForm = (props: {
     let nameDir = NAME + i.toString();
     if (nameDir !== props.maskForm.name) massNameDir.push(nameDir);
   }
-  console.log("massNameDir:", massNameDir);
-
+ 
   let soob1 = massdk[props.idxA].area ? " перекрёстка " : " объекта ";
   let soob2 = massdk[props.idxB].area ? " c перекрёстком " : " c объектом ";
 
