@@ -276,8 +276,8 @@ export const styleBind03 = {
   height: "2vh",
   lineHeight: "1.8vh",
   textAlign: "center",
-  borderTopLeftRadius: 6,
-  borderTopRightRadius: 6,
+  borderTopLeftRadius: 5,
+  borderTopRightRadius: 5,
   bgcolor: "#C0E2C3",
 };
 
@@ -435,6 +435,8 @@ export const styleFT02 = {
   padding: 0.7,
   textAlign: "center",
   bgcolor: "#C0E2C3",
+  borderTopLeftRadius: 5,
+  borderTopRightRadius: 5,
 };
 
 export const styleFormTabl = {

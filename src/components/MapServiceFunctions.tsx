@@ -1579,17 +1579,17 @@ export const InputFromList = (func: any, currency: any, currencies: any) => {
 
 export const HeaderTablFaz = () => {
   return (
-    <Grid container>
-      <Grid item xs={1} sx={styleFT02}>
+    <Grid container sx={styleFT02}>
+      <Grid item xs={1}>
         №
       </Grid>
-      <Grid item xs={3.5} sx={styleFT02}>
+      <Grid item xs={3.5}>
         Мин.длит.фаз(с)
       </Grid>
-      <Grid item xs={3.5} sx={styleFT02}>
+      <Grid item xs={3.5}>
         Нач.длит.фаз(с)
       </Grid>
-      <Grid item xs={4} sx={styleFT02}>
+      <Grid item xs={4}>
         Порядок фаз
       </Grid>
     </Grid>
