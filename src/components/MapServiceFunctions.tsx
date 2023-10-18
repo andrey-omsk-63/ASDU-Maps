@@ -1,4 +1,5 @@
 import * as React from "react";
+//import { useSelector } from "react-redux";
 
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
@@ -31,6 +32,8 @@ import { styleBind03, styleBind033, styleSetImg } from "./MainMapStyle";
 
 import { styleModalMenuErr, styleHeadError } from "./MapPointDataErrorStyle";
 import { styleBoxFormArea, styleSetArea } from "./MapPointDataErrorStyle";
+
+
 
 export const handleKey = (event: any) => {
   if (event.key === "Enter") event.preventDefault();
@@ -418,7 +421,7 @@ export const getPointData = (
   };
 };
 
-export const getPointOptions = (
+export const GetPointOptions = (
   debug: boolean,
   index: number,
   AREA: string,
@@ -427,8 +430,18 @@ export const getPointOptions = (
   pointAaIndex: number,
   pointBbIndex: number,
   massdk: any,
-  massroute: any
+  massroute: any,
 ) => {
+  //== Piece of Redux =======================================
+  // let massdk = useSelector((state: any) => {
+  //   const { massdkReducer } = state;
+  //   return massdkReducer.massdk;
+  // });
+  // let massroute = useSelector((state: any) => {
+  //   const { massrouteReducer } = state;
+  //   return massrouteReducer.massroute;
+  // });
+  //=========================================================
   let idxMap = -1;
   let Area = massdk[index].area.toString();
   for (let i = 0; i < map.dateMap.tflight.length; i++) {
@@ -1375,7 +1388,7 @@ export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
   };
 
   return (
-    <Modal open={badExit} onClose={CloseEnd}>
+    <Modal open={badExit} onClose={CloseEnd} hideBackdrop>
       <Box sx={styleSetPoint}>
         <Button sx={styleModalEndAttent} onClick={() => handleClose(false)}>
           <b>&#10006;</b>

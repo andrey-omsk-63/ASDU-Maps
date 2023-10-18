@@ -367,7 +367,7 @@ export const styleSetBindForm = {
   outline: "none",
   position: "absolute",
   left: "36%",
-  top: "45%",
+  top: "50%",
   transform: "translate(-50%, -50%)",
   width: 460,
   bgcolor: "background.paper",

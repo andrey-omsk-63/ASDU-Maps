@@ -37,7 +37,7 @@ let massBind = [-1, -1];
 
 const MapChangeAdress = (props: {
   //debug: boolean;
-  ws: any;
+  //ws: any;
   iPoint: number;
   setOpen: any;
   zeroRoute: any;
@@ -56,9 +56,14 @@ const MapChangeAdress = (props: {
     const { coordinatesReducer } = state;
     return coordinatesReducer.coordinates;
   });
+  let datestat = useSelector((state: any) => {
+    const { statsaveReducer } = state;
+    return statsaveReducer.datestat;
+  });
   const dispatch = useDispatch();
   //========================================================
   const [openSetAdress, setOpenSetAdress] = React.useState(true);
+  const WS = datestat.ws;
 
   const [valuen, setValuen] = React.useState(
     massdk[props.iPoint].nameCoordinates
@@ -80,9 +85,9 @@ const MapChangeAdress = (props: {
   const handleCloseSetAdr = () => {
     if (massdk[props.iPoint].nameCoordinates !== valuen) {
       const handleSendOpen = () => {
-        if (props.ws.url !== "wss://localhost:3000/W") {
-          if (props.ws.readyState === WebSocket.OPEN) {
-            props.ws.send(
+        if (WS.url !== "wss://localhost:3000/W") {
+          if (WS.readyState === WebSocket.OPEN) {
+            WS.send(
               JSON.stringify({
                 type: "createPoint",
                 data: {
@@ -115,17 +120,17 @@ const MapChangeAdress = (props: {
           massroute.ways[i].sourceID === idPoint
         ) {
           massWays.push(massroute.ways[i]);
-          SocketDeleteWay(props.ws, massroute.ways[i]);
+          SocketDeleteWay(WS, massroute.ways[i]);
         }
         if (
           !massroute.ways[i].targetArea &&
           massroute.ways[i].targetID === idPoint
         ) {
           massWays.push(massroute.ways[i]);
-          SocketDeleteWay(props.ws, massroute.ways[i]);
+          SocketDeleteWay(WS, massroute.ways[i]);
         }
       }
-      SendSocketDeletePoint(props.ws, idPoint);
+      SendSocketDeletePoint(WS, idPoint);
       //SendSocketCreatePoint(deb, WS, coor, valuen);
       handleSendOpen(); // создание новой точки со старым ID
 
@@ -156,7 +161,7 @@ const MapChangeAdress = (props: {
         reqRoute.tmRoute = massWays[i].time;
         if (!massWays[i].sourceArea) {
           SendSocketCreateWayFromPoint(
-            props.ws,
+            WS,
             fromCross,
             toCross,
             massBind,
@@ -164,7 +169,7 @@ const MapChangeAdress = (props: {
           );
         } else {
           SendSocketCreateWayToPoint(
-            props.ws,
+            WS,
             fromCross,
             toCross,
             massBind,

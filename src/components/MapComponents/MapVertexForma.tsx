@@ -353,7 +353,7 @@ const MapVertexForma = (props: {
             </Box>
             <Box sx={styleFormTabl}>
               {HeaderTablFaz()}
-              <Box sx={{ height: 230, overflowX: "auto" }}>
+              <Box sx={{ height: 234, overflowX: "auto" }}>
                 {StrokaMainTabl()}
               </Box>
             </Box>

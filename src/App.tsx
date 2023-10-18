@@ -288,7 +288,7 @@ const App = () => {
       <Grid item xs>
         {openSetErr && <AppSocketError sErr={soob} setOpen={setOpenSetErr} />}
         <MainMap
-          ws={WS}
+          //ws={WS}
           region={homeRegion}
           sErr={soob}
           svg={svg}

@@ -26,7 +26,7 @@ import { getReferencePoints, CenterCoordBegin } from "./MapServiceFunctions";
 import { getMassPolyRouteOptions, NearestPoint } from "./MapServiceFunctions";
 import { getMassMultiRouteOptions, MakeToCross } from "./MapServiceFunctions";
 import { getMassMultiRouteInOptions, MakeRevers } from "./MapServiceFunctions";
-import { getPointData, getPointOptions } from "./MapServiceFunctions";
+import { getPointData, GetPointOptions } from "./MapServiceFunctions";
 import { СontentModalPressBalloon, MakeFromCross } from "./MapServiceFunctions";
 import { ChangeCrossFunc, PreparCurrencies } from "./MapServiceFunctions";
 import { RecevKeySvg, StrokaMenuGlob, MasskPoint } from "./MapServiceFunctions";
@@ -90,15 +90,12 @@ let VertexForma: any = null;
 let openErrForma = false;
 
 const MainMap = (props: {
-  ws: WebSocket;
   region: any;
   sErr: string;
   svg: any;
   setSvg: any;
   trigger: boolean;
 }) => {
-  const WS = props.ws;
-  if (WS.url === "wss://localhost:3000/W") debugging = true;
   //== Piece of Redux =======================================
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;
@@ -125,8 +122,9 @@ const MainMap = (props: {
     const { statsaveReducer } = state;
     return statsaveReducer.datestat;
   });
-  //console.log("datestat:", datestat);
   const dispatch = useDispatch();
+  const WS = datestat.ws;
+  if (WS.url === "wss://localhost:3000/W") debugging = true;
   //===========================================================
   const [triggerForm, setTriggerForm] = React.useState(false);
   const [currency, setCurrency] = React.useState("0");
@@ -192,7 +190,6 @@ const MainMap = (props: {
   };
 
   const MakeRecordMassRoute = (mode: boolean, mass: any) => {
-    console.log("MakeRecordMassRoute:", mode, flagRevers, needRevers);
     if (!mode) {
       ZeroRoute(mode);
     } else {
@@ -221,9 +218,7 @@ const MainMap = (props: {
       if (flagRevers && needRevers !== 3) {
         setOpenSetRevers(true);
         flagRevers = false;
-      } else {
-        ZeroRoute(mode);
-      }
+      } else ZeroRoute(mode);
     }
     setNeedRevers(0);
     flagDemo && FillMassRoute();
@@ -491,7 +486,6 @@ const MainMap = (props: {
         </Modal>
         {openSetAdress && (
           <MapChangeAdress
-            ws={WS}
             iPoint={indexPoint}
             setOpen={setOpenSetAdress}
             zeroRoute={ZeroRoute}
@@ -502,7 +496,6 @@ const MainMap = (props: {
           <MapPointDataError
             sErr={soobError}
             setOpen={setOpenSetErBall}
-            //ws={WS}
             fromCross={fromCross}
             toCross={toCross}
             update={UpdateAddRoute}
@@ -524,7 +517,7 @@ const MainMap = (props: {
             key={props.idx}
             geometry={props.coordinate}
             properties={getPointData(props.idx, pAaI, pBbI, massdk, map, MODE)}
-            options={getPointOptions(
+            options={GetPointOptions(
               debugging,
               props.idx,
               AREA,
@@ -557,7 +550,6 @@ const MainMap = (props: {
   const InstanceRefDo = (ref: React.Ref<any>) => {
     if (ref) {
       mapp.current = ref;
-      //console.log('######Click',mapp.current.events.typesCount,)
       mapp.current.events.remove("contextmenu", funcContex); // нажата правая кнопка мыши
       funcContex = function (e: any) {
         if (mapp.current.hint) {
