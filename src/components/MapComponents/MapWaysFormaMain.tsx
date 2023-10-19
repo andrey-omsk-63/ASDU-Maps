@@ -4,13 +4,13 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 
-import { WaysInput, BadExit, InputOpponent } from "./../MapServiceFunctions";
+import { WaysInput, BadExit, InputOpponent } from "../MapServiceFunctions";
 
-import { Directions } from "./../../App"; // интерфейс massForm
+import { Directions } from "../../App"; // интерфейс massForm
 
-import { styleFW03, styleFormFWTabl } from "./../MainMapStyle";
-import { styleFormMenu, styleFW04 } from "./../MainMapStyle";
-import { styleFW05, styleFW06 } from "./../MainMapStyle";
+import { styleFW03, styleFormFWTabl00 } from "../MainMapStyle";
+import { styleFormMenu, styleFW04 } from "../MainMapStyle";
+import { styleFW05, styleFW06 } from "../MainMapStyle";
 
 let oldName = "";
 let HAVE = 0;
@@ -279,7 +279,7 @@ const MapWaysFormaMain = (props: {
       <Box sx={{ fontSize: 12, marginTop: 1.5 }}>
         Выберите зелёные фазы для данного направления
       </Box>
-      <Box sx={styleFormFWTabl}>{StrokaMainTabl()}</Box>
+      <Box sx={styleFormFWTabl00}>{StrokaMainTabl()}</Box>
       <Grid container>
         {HAVE > 0 ? (
           <>

@@ -7,7 +7,7 @@ import Modal from "@mui/material/Modal";
 
 import MapWaysFormaMain from "./MapWaysFormaMain";
 
-import { BadExit } from "./../MapServiceFunctions";
+import { BadExit } from "../MapServiceFunctions";
 
 import { Directions } from "../../App"; // интерфейс massForm
 

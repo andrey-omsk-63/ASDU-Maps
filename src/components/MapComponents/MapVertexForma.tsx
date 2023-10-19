@@ -9,12 +9,14 @@ import Button from "@mui/material/Button";
 import MapPointDataError from "./MapPointDataError";
 
 import { ComplianceMapMassdk, WaysInput } from "./../MapServiceFunctions";
-import { BadExit, InputFromList } from "./../MapServiceFunctions";
-import { HeaderTablFaz } from "./../MapServiceFunctions";
+import { BadExit, InputFromList, StrTablVert } from "./../MapServiceFunctions";
+import { HeaderTablFaz, ShiftOptimal } from "./../MapServiceFunctions";
+import { DelStrokaMainTabl } from "./../MapServiceFunctions";
 
 import { styleModalEnd, styleFormInf, styleFormName } from "./../MainMapStyle";
 import { styleFT03, styleFT033 } from "./../MainMapStyle";
-import { styleFormTabl, styleFormMenu } from "./../MainMapStyle";
+import { styleFormTabl00, styleFormMenu } from "./../MainMapStyle";
+import { styleFormTabl01, styleFormTabl02 } from "./../MainMapStyle";
 
 let oldIdx = -1;
 let massForm: any = null;
@@ -25,6 +27,8 @@ let currenciesPlan: any = [];
 let currenciesFaza: any = [];
 let FAZA = 0;
 let newFAZA = 0;
+let nomDelFaz = -1;
+
 let soobErr =
   "Начальная длительность фаз не может быть больше минимальной длительности, будьте внимательны!";
 
@@ -64,6 +68,8 @@ const MapVertexForma = (props: {
 
   const [badExit, setBadExit] = React.useState(false);
   const [openSetErr, setOpenSetErr] = React.useState(props.openErr);
+  const [trigger, setTrigger] = React.useState(false);
+
   const [currencyPlan, setCurrencyPlan] = React.useState(
     props.forma === null ? "0" : (props.forma.nomPlan - 1).toString()
   );
@@ -127,9 +133,11 @@ const MapVertexForma = (props: {
     currenciesFaza = PreparCurrenciesFaza(maxFaz);
     if (props.forma === null) {
       HAVE = 0;
+      nomDelFaz = -1;
       FAZA = idxMap >= 0 ? MAP.phases.length : 0;
       let maskForm: any = {
         nomPlan: 1,
+        optimal: false,
         kolFaz: idxMap >= 0 ? MAP.phases.length : 0,
         offset: 0,
         phases: [],
@@ -139,12 +147,10 @@ const MapVertexForma = (props: {
       for (let i = 0; i < FAZA; i++) {
         massForm.phases.push({ ...maskFaz });
       }
-      //console.log("111MapVertexForma", FAZA, massForm);
     } else {
       massForm = props.forma;
       FAZA = massForm.kolFaz;
       //setOpenSetErr(props.openErr);
-      //console.log("222MapVertexForma", FAZA, massForm);
     }
   }
   //========================================================
@@ -211,6 +217,7 @@ const MapVertexForma = (props: {
   const handleChangePlan = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrencyPlan(event.target.value);
     massForm.nomPlan = Number(event.target.value) + 1;
+    massForm.optimal = false;
     HAVE++;
   };
 
@@ -234,64 +241,46 @@ const MapVertexForma = (props: {
     props.setOpen(true, massRab, openSetErr);
     setCurrencyFaza(event.target.value);
   };
+
+  const ChangeOptimal = () => {
+    massForm.optimal = !massForm.optimal;
+    HAVE++;
+    setTrigger(!trigger);
+  };
+
+  const ChangeStrDel = (idx: number) => {
+    nomDelFaz = idx;
+    setTrigger(!trigger);
+  };
   //========================================================
   const StrokaMainTabl = () => {
     let resStr = [];
     let lng = idxMap >= 0 ? FAZA : 0;
+
+    const MainTablInp = (xss: number, func: any, st: number) => {
+      let style = st === 3 ? styleFT03 : styleFT033;
+      return (
+        <Grid xs={xss} item sx={style}>
+          <Box sx={{ display: "grid", justifyContent: "center" }}>{func}</Box>
+        </Grid>
+      );
+    };
+
     for (let i = 0; i < lng; i++) {
+      let startDur = massForm.phases[i].StartDuration;
+      let minDur = massForm.phases[i].MinDuration;
+      let phOrder = massForm.phases[i].PhaseOrder;
       resStr.push(
         <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
-          <Grid xs={1} item sx={styleFT03}>
-            <Box sx={{ p: 0.2 }}>{i + 1}</Box>
-          </Grid>
-          <Grid xs={3.5} item sx={styleFT03}>
-            <Box sx={{ display: "grid", justifyContent: "center" }}>
-              {WaysInput(i, massForm.phases[i].MinDuration, SetMinDuration, 20)}
-            </Box>
-          </Grid>
-          <Grid xs={3.5} item sx={styleFT03}>
-            <Box sx={{ display: "grid", justifyContent: "center" }}>
-              {WaysInput(
-                i,
-                massForm.phases[i].StartDuration,
-                SetStDuration,
-                20
-              )}
-            </Box>
-          </Grid>
-          <Grid xs={4} item sx={styleFT033}>
-            <Box sx={{ display: "grid", justifyContent: "center" }}>
-              {WaysInput(i, massForm.phases[i].PhaseOrder, SetPhaseOrder, 20)}
-            </Box>
-          </Grid>
+          {MainTablInp(3, DelStrokaMainTabl(i, nomDelFaz, ChangeStrDel), 3)}
+          {MainTablInp(3, WaysInput(i, minDur, SetMinDuration, 20), 3)}
+          {MainTablInp(3, WaysInput(i, startDur, SetStDuration, 20), 3)}
+          {MainTablInp(3, WaysInput(i, phOrder, SetPhaseOrder, 20), 33)}
         </Grid>
       );
     }
     return resStr;
   };
-
-  const StrokaTabl = (recLeft: string, recRight: any) => {
-    return (
-      <>
-        <Grid container sx={{ marginTop: 1 }}>
-          <Grid item xs={0.25}></Grid>
-          <Grid item xs={6}>
-            <b>{recLeft}</b>
-          </Grid>
-          {typeof recRight === "object" ? (
-            <Grid item xs>
-              {recRight}
-            </Grid>
-          ) : (
-            <Grid item xs sx={{ fontSize: 15, color: "#5B1080" }}>
-              <b>{recRight}</b>
-            </Grid>
-          )}
-        </Grid>
-      </>
-    );
-  };
-
   //=== обработка Esc ======================================
   const escFunction = React.useCallback(
     (event) => {
@@ -301,7 +290,6 @@ const MapVertexForma = (props: {
         HAVE = 0;
         props.setOpen(false, null); // полный выход
         event.preventDefault();
-        // handleCloseBad();
       }
     },
     [props]
@@ -316,6 +304,29 @@ const MapVertexForma = (props: {
   let aa = idxMap >= 0 ? MAP.area.nameArea : "";
   let bb = massdk.length > props.idx ? massdk[props.idx].area : "";
   let soob1 = bb + " " + aa;
+
+  const SaveFormVert = (HAVE: number, SaveForm: any) => {
+    return (
+      <Grid container>
+        {HAVE > 0 ? (
+          <>
+            <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>
+              <Button sx={styleFormMenu} onClick={() => SaveForm(true)}>
+                Сохранить изменения
+              </Button>
+            </Grid>
+            <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>
+              <Button sx={styleFormMenu} onClick={() => SaveForm(false)}>
+                Выйти без сохранения
+              </Button>
+            </Grid>
+          </>
+        ) : (
+          <Box sx={{ marginTop: 1, height: "25px" }}> </Box>
+        )}
+      </Grid>
+    );
+  };
 
   return (
     <>
@@ -332,49 +343,36 @@ const MapVertexForma = (props: {
               </b>
             </Box>
             <Box sx={{ fontSize: 12, marginTop: 0.5 }}>Общие</Box>
-            {StrokaTabl("Район", soob1)}
-            {StrokaTabl("Номер перекрёстка", massdk[props.idx].ID)}
-            {StrokaTabl(
+            {StrTablVert("Время цикла cек.", "80 сек.")}
+            {StrTablVert("Район", soob1)}
+            {StrTablVert("Номер перекрёстка", massdk[props.idx].ID)}
+            {StrTablVert(
               "Номер плана координации",
               InputFromList(handleChangePlan, currencyPlan, currenciesPlan)
             )}
-            {StrokaTabl("Время цикла cек.", "80 сек.")}
+            {StrTablVert(
+              "Участвует в автоматической оптимизации",
+              ShiftOptimal(massForm.optimal, ChangeOptimal)
+            )}
             <Box sx={{ fontSize: 12, marginTop: 2.5 }}>Свойства фаз</Box>
-            {StrokaTabl(
+            {StrTablVert(
               "Количество фаз",
               InputFromList(handleChangeFaza, currencyFaza, currenciesFaza)
             )}
-            {StrokaTabl(
+            {StrTablVert(
               "Начальное смещение сек.",
               WaysInput(0, massForm.offset, SetOffset, 100)
             )}
             <Box sx={{ fontSize: 12, marginTop: 2.5 }}>
               Таблица параметров фаз
             </Box>
-            <Box sx={styleFormTabl}>
+            <Box sx={styleFormTabl00}>
               {HeaderTablFaz()}
-              <Box sx={{ height: 234, overflowX: "auto" }}>
-                {StrokaMainTabl()}
+              <Box sx={styleFormTabl01}>
+                <Box sx={styleFormTabl02}>{StrokaMainTabl()}</Box>
               </Box>
             </Box>
-            <Grid container>
-              {HAVE > 0 ? (
-                <>
-                  <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>
-                    <Button sx={styleFormMenu} onClick={() => SaveForm(true)}>
-                      Сохранить изменения
-                    </Button>
-                  </Grid>
-                  <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>
-                    <Button sx={styleFormMenu} onClick={() => SaveForm(false)}>
-                      Выйти без сохранения
-                    </Button>
-                  </Grid>
-                </>
-              ) : (
-                <Box sx={{ marginTop: 1, height: "25px" }}> </Box>
-              )}
-            </Grid>
+            {SaveFormVert(HAVE, SaveForm)}
           </>
         )}
       </Box>
@@ -382,7 +380,6 @@ const MapVertexForma = (props: {
         <MapPointDataError
           sErr={soobErr}
           setOpen={setOpenSetErr}
-          //ws={{}}
           fromCross={0}
           toCross={0}
           update={0}

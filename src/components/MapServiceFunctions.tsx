@@ -33,8 +33,6 @@ import { styleBind03, styleBind033, styleSetImg } from "./MainMapStyle";
 import { styleModalMenuErr, styleHeadError } from "./MapPointDataErrorStyle";
 import { styleBoxFormArea, styleSetArea } from "./MapPointDataErrorStyle";
 
-
-
 export const handleKey = (event: any) => {
   if (event.key === "Enter") event.preventDefault();
 };
@@ -430,7 +428,7 @@ export const GetPointOptions = (
   pointAaIndex: number,
   pointBbIndex: number,
   massdk: any,
-  massroute: any,
+  massroute: any
 ) => {
   //== Piece of Redux =======================================
   // let massdk = useSelector((state: any) => {
@@ -1436,7 +1434,7 @@ export const WaysInput = (
 
   const styleBoxFormID = {
     "& > :not(style)": {
-      marginTop: "0px",
+      marginTop: "3px",
       marginLeft: "-9px",
       width: "53px",
     },
@@ -1465,7 +1463,6 @@ export const WaysInput = (
             style: {
               maxHeight: "1px",
               minHeight: "1px",
-              // fontSize: 13.3,
               fontSize: 14,
               backgroundColor: "#FFFBE5",
             },
@@ -1590,25 +1587,131 @@ export const InputFromList = (func: any, currency: any, currencies: any) => {
   );
 };
 
+export const StrTablVert = (recLeft: string, recRight: any) => {
+  return (
+    <>
+      <Grid container sx={{ marginTop: 1 }}>
+        <Grid item xs={0.25}></Grid>
+        <Grid item xs={6}>
+          <b>{recLeft}</b>
+        </Grid>
+        {typeof recRight === "object" ? (
+          <Grid item xs>
+            {recRight}
+          </Grid>
+        ) : (
+          <Grid item xs sx={{ fontSize: 15, color: "#5B1080" }}>
+            <b>{recRight}</b>
+          </Grid>
+        )}
+      </Grid>
+    </>
+  );
+};
+
 export const HeaderTablFaz = () => {
   return (
     <Grid container sx={styleFT02}>
-      <Grid item xs={1}>
+      <Grid item xs={3}>
         №
       </Grid>
-      <Grid item xs={3.5}>
+      <Grid item xs={3}>
         Мин.длит.фаз(с)
       </Grid>
-      <Grid item xs={3.5}>
+      <Grid item xs={3}>
         Нач.длит.фаз(с)
       </Grid>
-      <Grid item xs={4}>
+      <Grid item xs={3}>
         Порядок фаз
       </Grid>
     </Grid>
   );
 };
 
+export const ShiftOptimal = (mode: boolean, ChangeOptimal: Function) => {
+  const styleOptimalNo = {
+    marginTop: 0.5,
+    marginRight: 1,
+    maxHeight: "27px",
+    minHeight: "27px",
+    maxWidth: 58,
+    minWidth: 58,
+    backgroundColor: "#E6F5D6", // светло салатовый
+    border: "1px solid #000",
+    borderRadius: 1,
+    borderColor: "#d4d4d4", // серый
+    textTransform: "unset !important",
+    boxShadow: 2,
+    color: "black",
+  };
+
+  const styleOptimalYes = {
+    marginTop: 0.5,
+    marginRight: 1,
+    maxHeight: "27px",
+    minHeight: "27px",
+    maxWidth: 58,
+    minWidth: 58,
+    backgroundColor: "#bae186", // тёмно салатовый
+    border: "1px solid #000",
+    borderRadius: 1,
+    borderColor: "#bae186", // тёмно салатовый
+    textTransform: "unset !important",
+    boxShadow: 6,
+    color: "black",
+  };
+
+  let illum = mode ? styleOptimalYes : styleOptimalNo;
+  let soob = mode ? "Да" : "Нет";
+
+  return (
+    <Button sx={illum} onClick={() => ChangeOptimal()}>
+      {soob}
+    </Button>
+  );
+};
+
+export const DelStrokaMainTabl = (
+  idx: number,
+  nomDelFaz: number,
+  ChangeStrDel: any
+) => {
+  const styleButtDelNo = {
+    marginRight: 1,
+    maxHeight: "27px",
+    minHeight: "27px",
+    maxWidth: 58,
+    minWidth: 58,
+    backgroundColor: "#E6F5D6", // светло салатовый
+    border: "1px solid #000",
+    borderRadius: 1,
+    borderColor: "#d4d4d4", // серый
+    boxShadow: 2,
+    color: "black",
+  };
+
+  const styleButtDelYes = {
+    marginRight: 1,
+    maxHeight: "27px",
+    minHeight: "27px",
+    maxWidth: 58,
+    minWidth: 58,
+    backgroundColor: "#bae186", // тёмно салатовый
+    border: "1px solid #000",
+    borderRadius: 1,
+    borderColor: "#bae186", // тёмно салатовый
+    boxShadow: 6,
+    color: "black",
+  };
+
+  let illum = idx === nomDelFaz ? styleButtDelYes : styleButtDelNo;
+
+  return (
+    <Button sx={illum} onClick={() => ChangeStrDel(idx)}>
+      {idx + 1}
+    </Button>
+  );
+};
 //=== PointDataError ==================================================
 export const HeadDoublError = (flagSave: boolean, propsErr: string) => {
   return (

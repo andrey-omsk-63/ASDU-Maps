@@ -22,5 +22,5 @@
   },
   "include": [
     "src"
-, "basket/otladkaRoutesOld.ts", "basket/MapRouteBindFormIn.tsx", "basket/MapCreateVertexError.tsx"  ]
+, "basket/otladkaRoutesOld.ts", "basket/MapRouteBindFormIn.tsx", "basket/MapCreateVertexError.tsx", "src/components/MapComponents/MapWaysFormaMain.tsx", "src/components/MapComponents/MapRouteBindForm.tsx"  ]
 }

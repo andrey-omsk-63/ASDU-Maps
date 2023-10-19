@@ -398,7 +398,8 @@ export const MakeStyleBind00 = (heightImg: number) => {
 export const styleFormInf = {
   outline: "none",
   position: "relative",
-  marginTop: "-92vh",
+  marginTop: "-97vh",
+  //top: '50%',
   marginLeft: "auto",
   marginRight: "9px",
   width: 460,
@@ -432,6 +433,7 @@ export const styleFormMenu = {
 };
 
 export const styleFT02 = {
+  fontSize: 15,
   padding: 0.7,
   textAlign: "center",
   bgcolor: "#C0E2C3",
@@ -439,7 +441,7 @@ export const styleFT02 = {
   borderTopRightRadius: 5,
 };
 
-export const styleFormTabl = {
+export const styleFormTabl00 = {
   border: 1,
   borderRadius: 1,
   borderColor: "primary.main",
@@ -449,6 +451,20 @@ export const styleFormTabl = {
   //height: 306,
   // overflowX: "auto",
 };
+
+export const styleFormTabl01 = {
+  height: 156,
+  backgroundColor: "#F0F0F0",
+  borderBottomLeftRadius: 5,
+  borderBottomRightRadius: 5,
+};
+
+export const styleFormTabl02 = {
+  height: 124,
+  backgroundColor: "#fff",
+  overflowX: "auto",
+};
+
 
 export const styleFT03 = {
   borderRight: 1,
@@ -539,7 +555,7 @@ export const styleFW06 = {
   maxHeight: "21px",
   minHeight: "21px",
   width: 285,
-  backgroundColor: "#bae186",
+  backgroundColor: "#bae186", // тёмно салатовый
   color: "black",
   border: "1px solid #000",
   borderColor: "#93D145",
@@ -554,14 +570,14 @@ export const styleFormNameRoute = {
   textAlign: "center",
 };
 
-export const styleFormFWTabl = {
+export const styleFormFWTabl00 = {
   border: 1,
   borderRadius: 1,
   borderColor: "primary.main",
   marginTop: 1.5,
   marginLeft: -0.5,
   marginRight: -0.5,
-  // height: 121,
   height: 96,
   overflowX: "auto",
 };
+
