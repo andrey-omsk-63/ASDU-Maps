@@ -76,8 +76,8 @@ const MapVertexForma = (props: {
   );
   const [currencyFaza, setCurrencyFaza] = React.useState(
     props.forma === null
-      ? (MAP.phases.length - 1).toString()
-      : (props.forma.kolFaz - 1).toString()
+      ? (MAP.phases.length - 2).toString()
+      : (props.forma.kolFaz - 2).toString()
   );
 
   const PreparCurrenciesPlan = (sumPlan: number) => {
@@ -105,7 +105,7 @@ const MapVertexForma = (props: {
   const PreparCurrenciesFaza = (mazFaz: number) => {
     const currencies: any = [];
     let dat: Array<string> = [];
-    for (let i = 1; i < mazFaz + 1; i++) dat.push(i.toString());
+    for (let i = 2; i < mazFaz + 1; i++) dat.push(i.toString());
     let massKey: any = [];
     let massDat: any = [];
     for (let key in dat) {
@@ -223,7 +223,7 @@ const MapVertexForma = (props: {
   };
 
   const handleChangeFaza = (event: React.ChangeEvent<HTMLInputElement>) => {
-    newFAZA = Number(event.target.value) + 1;
+    newFAZA = Number(event.target.value) + 2;
     if (newFAZA === FAZA) return;
     let massRab = JSON.parse(JSON.stringify(massForm));
     if (newFAZA < FAZA) {
@@ -239,7 +239,7 @@ const MapVertexForma = (props: {
     massRab.kolFaz = newFAZA;
     HAVE++;
     oldIdx = -1;
-    props.setOpen(true, massRab, openSetErr);
+    props.setOpen(true, massRab, openSetErr); // полный ререндер
     setCurrencyFaza(event.target.value);
   };
 
@@ -256,8 +256,19 @@ const MapVertexForma = (props: {
 
   const DeleteFaza = (mode: boolean) => {
     if (!mode) {
-      nomDelFaz = -1;
+      nomDelFaz = -1; // отмена удаления
       setTrigger(!trigger); // ререндер
+    } else {
+      // удаление
+      let massRab = JSON.parse(JSON.stringify(massForm));
+      massRab.phases.splice(0, massRab.phases.length); // massRab.phases = [];
+      for (let i = 0; i < massRab.kolFaz; i++)
+        if (i !== nomDelFaz) massRab.phases.push(massForm.phases[i]);
+      massRab.kolFaz--;
+      nomDelFaz = -1;
+      HAVE++;
+      oldIdx = -1;
+      props.setOpen(true, massRab, openSetErr); // полный ререндер
     }
   };
   //========================================================
@@ -312,35 +323,6 @@ const MapVertexForma = (props: {
   let aa = idxMap >= 0 ? MAP.area.nameArea : "";
   let bb = massdk.length > props.idx ? massdk[props.idx].area : "";
   let soob1 = bb + " " + aa;
-
-  // const DelStrokaFaz = (DeleteFaza: Function) => {
-  //   const styleFormMenu = {
-  //     maxHeight: "21px",
-  //     minHeight: "21px",
-  //     bgcolor: "#bae186", // тёмно салатовый
-  //     border: "1px solid #000",
-  //     borderRadius: 1,
-  //     borderColor: "#bae186", // тёмно салатовый
-  //     textTransform: "unset !important",
-  //     boxShadow: 6,
-  //     color: "black",
-  //   };
-  //   return (
-  //     <Grid container>
-  //       <Grid item xs={2.5}></Grid>
-  //       <Grid item xs={3.5} sx={{ marginTop: 0.4, textAlign: "center" }}>
-  //         <Button sx={styleFormMenu} onClick={() => DeleteFaza(true)}>
-  //           Удалить фазу
-  //         </Button>
-  //       </Grid>
-  //       <Grid item xs={3.5} sx={{ marginTop: 0.4, textAlign: "center" }}>
-  //         <Button sx={styleFormMenu} onClick={() => DeleteFaza(false)}>
-  //           Отмена
-  //         </Button>
-  //       </Grid>
-  //     </Grid>
-  //   );
-  // };
 
   return (
     <>

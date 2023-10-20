@@ -453,14 +453,14 @@ export const styleFormTabl00 = {
 };
 
 export const styleFormTabl01 = {
-  height: 156,
+  height: 196,
   backgroundColor: "#F0F0F0",
   borderBottomLeftRadius: 5,
   borderBottomRightRadius: 5,
 };
 
 export const styleFormTabl02 = {
-  height: 122,
+  height: 162,
   backgroundColor: "#fff",
   overflowX: "auto",
 };
