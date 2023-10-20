@@ -11,11 +11,12 @@ import MapPointDataError from "./MapPointDataError";
 import { ComplianceMapMassdk, WaysInput } from "./../MapServiceFunctions";
 import { BadExit, InputFromList, StrTablVert } from "./../MapServiceFunctions";
 import { HeaderTablFaz, ShiftOptimal } from "./../MapServiceFunctions";
-import { DelStrokaMainTabl } from "./../MapServiceFunctions";
+import { DelStrokaMainTabl, DelStrokaFaz } from "./../MapServiceFunctions";
+import { SaveFormVert } from "./../MapServiceFunctions";
 
 import { styleModalEnd, styleFormInf, styleFormName } from "./../MainMapStyle";
 import { styleFT03, styleFT033 } from "./../MainMapStyle";
-import { styleFormTabl00, styleFormMenu } from "./../MainMapStyle";
+import { styleFormTabl00 } from "./../MainMapStyle";
 import { styleFormTabl01, styleFormTabl02 } from "./../MainMapStyle";
 
 let oldIdx = -1;
@@ -245,12 +246,19 @@ const MapVertexForma = (props: {
   const ChangeOptimal = () => {
     massForm.optimal = !massForm.optimal;
     HAVE++;
-    setTrigger(!trigger);
+    setTrigger(!trigger); // ререндер
   };
 
   const ChangeStrDel = (idx: number) => {
     nomDelFaz = idx;
-    setTrigger(!trigger);
+    setTrigger(!trigger); // ререндер
+  };
+
+  const DeleteFaza = (mode: boolean) => {
+    if (!mode) {
+      nomDelFaz = -1;
+      setTrigger(!trigger); // ререндер
+    }
   };
   //========================================================
   const StrokaMainTabl = () => {
@@ -305,28 +313,34 @@ const MapVertexForma = (props: {
   let bb = massdk.length > props.idx ? massdk[props.idx].area : "";
   let soob1 = bb + " " + aa;
 
-  const SaveFormVert = (HAVE: number, SaveForm: any) => {
-    return (
-      <Grid container>
-        {HAVE > 0 ? (
-          <>
-            <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>
-              <Button sx={styleFormMenu} onClick={() => SaveForm(true)}>
-                Сохранить изменения
-              </Button>
-            </Grid>
-            <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>
-              <Button sx={styleFormMenu} onClick={() => SaveForm(false)}>
-                Выйти без сохранения
-              </Button>
-            </Grid>
-          </>
-        ) : (
-          <Box sx={{ marginTop: 1, height: "25px" }}> </Box>
-        )}
-      </Grid>
-    );
-  };
+  // const DelStrokaFaz = (DeleteFaza: Function) => {
+  //   const styleFormMenu = {
+  //     maxHeight: "21px",
+  //     minHeight: "21px",
+  //     bgcolor: "#bae186", // тёмно салатовый
+  //     border: "1px solid #000",
+  //     borderRadius: 1,
+  //     borderColor: "#bae186", // тёмно салатовый
+  //     textTransform: "unset !important",
+  //     boxShadow: 6,
+  //     color: "black",
+  //   };
+  //   return (
+  //     <Grid container>
+  //       <Grid item xs={2.5}></Grid>
+  //       <Grid item xs={3.5} sx={{ marginTop: 0.4, textAlign: "center" }}>
+  //         <Button sx={styleFormMenu} onClick={() => DeleteFaza(true)}>
+  //           Удалить фазу
+  //         </Button>
+  //       </Grid>
+  //       <Grid item xs={3.5} sx={{ marginTop: 0.4, textAlign: "center" }}>
+  //         <Button sx={styleFormMenu} onClick={() => DeleteFaza(false)}>
+  //           Отмена
+  //         </Button>
+  //       </Grid>
+  //     </Grid>
+  //   );
+  // };
 
   return (
     <>
@@ -370,6 +384,7 @@ const MapVertexForma = (props: {
               {HeaderTablFaz()}
               <Box sx={styleFormTabl01}>
                 <Box sx={styleFormTabl02}>{StrokaMainTabl()}</Box>
+                {nomDelFaz >= 0 && <>{DelStrokaFaz(DeleteFaza)}</>}
               </Box>
             </Box>
             {SaveFormVert(HAVE, SaveForm)}

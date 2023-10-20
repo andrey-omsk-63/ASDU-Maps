@@ -423,7 +423,7 @@ export const styleFormMenu = {
   marginRight: 1,
   maxHeight: "21px",
   minHeight: "21px",
-  backgroundColor: "#E6F5D6",
+  backgroundColor: "#E6F5D6", // светло салатовый
   border: "1px solid #000",
   borderRadius: 1,
   borderColor: "#d4d4d4", // серый
@@ -460,7 +460,7 @@ export const styleFormTabl01 = {
 };
 
 export const styleFormTabl02 = {
-  height: 124,
+  height: 122,
   backgroundColor: "#fff",
   overflowX: "auto",
 };

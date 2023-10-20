@@ -25,7 +25,7 @@ import { Pointer, Router } from "./../App";
 import { Vertex } from "./../interfaceRoute";
 
 import { styleModalMenu, styleModalEndMapGl } from "./MainMapStyle";
-import { styleSetPoint, styleFT02 } from "./MainMapStyle";
+import { styleSetPoint, styleFT02, styleFormMenu } from "./MainMapStyle";
 import { styleInpKnop, styleBind05, styleModalEndAttent } from "./MainMapStyle";
 import { styleBind02, styleTypography, searchControl } from "./MainMapStyle";
 import { styleBind03, styleBind033, styleSetImg } from "./MainMapStyle";
@@ -1696,7 +1696,7 @@ export const DelStrokaMainTabl = (
     minHeight: "27px",
     maxWidth: 58,
     minWidth: 58,
-    backgroundColor: "#bae186", // тёмно салатовый
+    bgcolor: "#bae186", // тёмно салатовый
     border: "1px solid #000",
     borderRadius: 1,
     borderColor: "#bae186", // тёмно салатовый
@@ -1708,8 +1708,66 @@ export const DelStrokaMainTabl = (
 
   return (
     <Button sx={illum} onClick={() => ChangeStrDel(idx)}>
-      {idx + 1}
+      {idx === nomDelFaz ? (
+        <Box sx={{ fontSize: 15.5 }}>
+          <b>{idx + 1}</b>
+        </Box>
+      ) : (
+        <Box>{idx + 1}</Box>
+      )}
     </Button>
+  );
+};
+
+export const SaveFormVert = (HAVE: number, SaveForm: any) => {
+  return (
+    <Grid container>
+      {HAVE > 0 ? (
+        <>
+          <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>
+            <Button sx={styleFormMenu} onClick={() => SaveForm(true)}>
+              Сохранить изменения
+            </Button>
+          </Grid>
+          <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>
+            <Button sx={styleFormMenu} onClick={() => SaveForm(false)}>
+              Выйти без сохранения
+            </Button>
+          </Grid>
+        </>
+      ) : (
+        <Box sx={{ marginTop: 1, height: "25px" }}> </Box>
+      )}
+    </Grid>
+  );
+};
+
+export const DelStrokaFaz = (DeleteFaza: Function) => {
+  const styleFormMenu = {
+    maxHeight: "21px",
+    minHeight: "21px",
+    bgcolor: "#bae186", // тёмно салатовый
+    border: "1px solid #000",
+    borderRadius: 1,
+    borderColor: "#bae186", // тёмно салатовый
+    textTransform: "unset !important",
+    boxShadow: 6,
+    color: "black",
+  };
+  return (
+    <Grid container>
+      <Grid item xs={2.5}></Grid>
+      <Grid item xs={3.5} sx={{ marginTop: 0.4, textAlign: "center" }}>
+        <Button sx={styleFormMenu} onClick={() => DeleteFaza(true)}>
+          Удалить фазу
+        </Button>
+      </Grid>
+      <Grid item xs={3.5} sx={{ marginTop: 0.4, textAlign: "center" }}>
+        <Button sx={styleFormMenu} onClick={() => DeleteFaza(false)}>
+          Отмена
+        </Button>
+      </Grid>
+    </Grid>
   );
 };
 //=== PointDataError ==================================================
