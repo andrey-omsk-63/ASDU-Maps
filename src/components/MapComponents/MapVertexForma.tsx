@@ -11,11 +11,12 @@ import MapPointDataError from "./MapPointDataError";
 import { ComplianceMapMassdk, WaysInput } from "./../MapServiceFunctions";
 import { BadExit, InputFromList, StrTablVert } from "./../MapServiceFunctions";
 import { HeaderTablFaz, ShiftOptimal } from "./../MapServiceFunctions";
-import { DelStrokaMainTabl } from "./../MapServiceFunctions";
+import { DelStrokaMainTabl, DelStrokaFaz } from "./../MapServiceFunctions";
+import { SaveFormVert } from "./../MapServiceFunctions";
 
 import { styleModalEnd, styleFormInf, styleFormName } from "./../MainMapStyle";
 import { styleFT03, styleFT033 } from "./../MainMapStyle";
-import { styleFormTabl00, styleFormMenu } from "./../MainMapStyle";
+import { styleFormTabl00 } from "./../MainMapStyle";
 import { styleFormTabl01, styleFormTabl02 } from "./../MainMapStyle";
 
 let oldIdx = -1;
@@ -75,8 +76,8 @@ const MapVertexForma = (props: {
   );
   const [currencyFaza, setCurrencyFaza] = React.useState(
     props.forma === null
-      ? (MAP.phases.length - 1).toString()
-      : (props.forma.kolFaz - 1).toString()
+      ? (MAP.phases.length - 2).toString()
+      : (props.forma.kolFaz - 2).toString()
   );
 
   const PreparCurrenciesPlan = (sumPlan: number) => {
@@ -104,7 +105,7 @@ const MapVertexForma = (props: {
   const PreparCurrenciesFaza = (mazFaz: number) => {
     const currencies: any = [];
     let dat: Array<string> = [];
-    for (let i = 1; i < mazFaz + 1; i++) dat.push(i.toString());
+    for (let i = 2; i < mazFaz + 1; i++) dat.push(i.toString());
     let massKey: any = [];
     let massDat: any = [];
     for (let key in dat) {
@@ -222,7 +223,7 @@ const MapVertexForma = (props: {
   };
 
   const handleChangeFaza = (event: React.ChangeEvent<HTMLInputElement>) => {
-    newFAZA = Number(event.target.value) + 1;
+    newFAZA = Number(event.target.value) + 2;
     if (newFAZA === FAZA) return;
     let massRab = JSON.parse(JSON.stringify(massForm));
     if (newFAZA < FAZA) {
@@ -238,19 +239,37 @@ const MapVertexForma = (props: {
     massRab.kolFaz = newFAZA;
     HAVE++;
     oldIdx = -1;
-    props.setOpen(true, massRab, openSetErr);
+    props.setOpen(true, massRab, openSetErr); // полный ререндер
     setCurrencyFaza(event.target.value);
   };
 
   const ChangeOptimal = () => {
     massForm.optimal = !massForm.optimal;
     HAVE++;
-    setTrigger(!trigger);
+    setTrigger(!trigger); // ререндер
   };
 
   const ChangeStrDel = (idx: number) => {
     nomDelFaz = idx;
-    setTrigger(!trigger);
+    setTrigger(!trigger); // ререндер
+  };
+
+  const DeleteFaza = (mode: boolean) => {
+    if (!mode) {
+      nomDelFaz = -1; // отмена удаления
+      setTrigger(!trigger); // ререндер
+    } else {
+      // удаление
+      let massRab = JSON.parse(JSON.stringify(massForm));
+      massRab.phases.splice(0, massRab.phases.length); // massRab.phases = [];
+      for (let i = 0; i < massRab.kolFaz; i++)
+        if (i !== nomDelFaz) massRab.phases.push(massForm.phases[i]);
+      massRab.kolFaz--;
+      nomDelFaz = -1;
+      HAVE++;
+      oldIdx = -1;
+      props.setOpen(true, massRab, openSetErr); // полный ререндер
+    }
   };
   //========================================================
   const StrokaMainTabl = () => {
@@ -305,29 +324,6 @@ const MapVertexForma = (props: {
   let bb = massdk.length > props.idx ? massdk[props.idx].area : "";
   let soob1 = bb + " " + aa;
 
-  const SaveFormVert = (HAVE: number, SaveForm: any) => {
-    return (
-      <Grid container>
-        {HAVE > 0 ? (
-          <>
-            <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>
-              <Button sx={styleFormMenu} onClick={() => SaveForm(true)}>
-                Сохранить изменения
-              </Button>
-            </Grid>
-            <Grid item xs={6} sx={{ marginTop: 1, textAlign: "center" }}>
-              <Button sx={styleFormMenu} onClick={() => SaveForm(false)}>
-                Выйти без сохранения
-              </Button>
-            </Grid>
-          </>
-        ) : (
-          <Box sx={{ marginTop: 1, height: "25px" }}> </Box>
-        )}
-      </Grid>
-    );
-  };
-
   return (
     <>
       {badExit && <>{BadExit(badExit, handleCloseBadExit)}</>}
@@ -370,6 +366,7 @@ const MapVertexForma = (props: {
               {HeaderTablFaz()}
               <Box sx={styleFormTabl01}>
                 <Box sx={styleFormTabl02}>{StrokaMainTabl()}</Box>
+                {nomDelFaz >= 0 && <>{DelStrokaFaz(DeleteFaza)}</>}
               </Box>
             </Box>
             {SaveFormVert(HAVE, SaveForm)}

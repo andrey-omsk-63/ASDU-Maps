@@ -423,7 +423,7 @@ export const styleFormMenu = {
   marginRight: 1,
   maxHeight: '21px',
   minHeight: '21px',
-  backgroundColor: '#E6F5D6',
+  backgroundColor: '#E6F5D6', // светло салатовый
   border: '1px solid #000',
   borderRadius: 1,
   borderColor: '#d4d4d4', // серый
@@ -453,15 +453,14 @@ export const styleFormTabl00 = {
 };
 
 export const styleFormTabl01 = {
-  height: 156,
-  //backgroundColor: "#F0F0F0", // светло серый
-  backgroundColor: '#FAF7F0', // светло серый
+  height: 196,
+  backgroundColor: '#F0F0F0',
   borderBottomLeftRadius: 5,
   borderBottomRightRadius: 5,
 };
 
 export const styleFormTabl02 = {
-  height: 121,
+  height: 162,
   backgroundColor: '#fff',
   overflowX: 'auto',
 };
