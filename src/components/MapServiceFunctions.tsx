@@ -254,7 +254,7 @@ export const DelPointVertexContent = (
 
 export const PreparCurrenciesMode = () => {
   const currencies: any = [];
-  let dat = ["Создание связей", "Перекрёстки"];
+  let dat = ["Создание связей", "Перекрёстки", "Маршруты",];
   let massKey: any = [];
   let massDat: any = [];
   for (let key in dat) {
@@ -1846,8 +1846,8 @@ export const StrokaMenuErr = (handleClose: Function) => {
     border: "2px solid #000",
     bgcolor: "#E6F5D6",
     width: "100px",
-    maxHeight: "20px",
-    minHeight: "20px",
+    maxHeight: "24px",
+    minHeight: "24px",
     borderColor: "#E6F5D6",
     borderRadius: 1,
     color: "black",

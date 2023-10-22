@@ -46,11 +46,11 @@ let coordStopIn: any = []; // рабочий массив коллекции и�
 let massRoute: any = []; // рабочий массив сети связей
 let masSvg: any = ["", ""];
 
-let debugging: boolean = false;
+let debug: boolean = false;
 let flagOpen: boolean = false;
 let flagBind: boolean = false;
 let flagRevers: boolean, needLinkBind: boolean, FlagDemo: boolean;
-debugging = flagOpen = flagBind = flagRevers = needLinkBind = FlagDemo = false;
+debug = flagOpen = flagBind = flagRevers = needLinkBind = FlagDemo = false;
 let newPointCoord: any, homeRegion: any, pointCenter: any;
 newPointCoord = homeRegion = pointCenter = 0;
 let soobError = "";
@@ -124,7 +124,7 @@ const MainMap = (props: {
   });
   const dispatch = useDispatch();
   const WS = datestat.ws;
-  if (WS.url === "wss://localhost:3000/W") debugging = true;
+  if (WS.url === "wss://localhost:3000/W") debug = true;
   //===========================================================
   const [triggerForm, setTriggerForm] = React.useState(false);
   const [currency, setCurrency] = React.useState("0");
@@ -511,15 +511,16 @@ const MainMap = (props: {
     let pAaI = pointAaIndex;
     let pBbI = pointBbIndex;
     const DoPlacemarkDo = (props: { coordinate: any; idx: number }) => {
+      const IDX = props.idx;
       const MemoPlacemarkDo = React.useMemo(
         () => (
           <Placemark
-            key={props.idx}
+            key={IDX}
             geometry={props.coordinate}
-            properties={getPointData(props.idx, pAaI, pBbI, massdk, map, MODE)}
+            properties={getPointData(IDX, pAaI, pBbI, massdk, map, MODE)}
             options={GetPointOptions(
-              debugging,
-              props.idx,
+              debug,
+              IDX,
               AREA,
               MODE,
               map,
@@ -529,10 +530,10 @@ const MainMap = (props: {
               massroute
             )}
             modules={["geoObject.addon.balloon", "geoObject.addon.hint"]}
-            onClick={() => OnPlacemarkClickPoint(props.idx, 0)}
+            onClick={() => OnPlacemarkClickPoint(IDX, 0)}
           />
         ),
-        [props.coordinate, props.idx]
+        [props.coordinate, IDX]
       );
       return MemoPlacemarkDo;
     };
@@ -696,7 +697,7 @@ const MainMap = (props: {
     oldsErr = props.sErr;
   }
   masSvg = ["", ""];
-  if (!debugging && props.svg !== oldPropsSvg) {
+  if (!debug && props.svg !== oldPropsSvg) {
     oldPropsSvg = props.svg;
     if (props.svg && pointAaIndex >= 0 && pointBbIndex >= 0) {
       // передача изображений в обычную привязку

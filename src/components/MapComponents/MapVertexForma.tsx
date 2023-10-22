@@ -250,6 +250,7 @@ const MapVertexForma = (props: {
   };
 
   const ChangeStrDel = (idx: number) => {
+    //====== сделать проверку ======
     nomDelFaz = idx;
     setTrigger(!trigger); // ререндер
   };

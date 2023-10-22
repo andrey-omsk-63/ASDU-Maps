@@ -183,17 +183,13 @@ const MapRouteBind = (props: {
     }
   }
   //=== Ожидания получения изображений перекрёстков ========
-  // React.useMemo(() => {
-  //   console.log("@@@useMemo:",props.svg, masSvg);
   if (props.svg && masSvg[0] === "" && masSvg[1] === "") {
     let dat = props.svg;
     masSvg = [];
     for (let key in dat) masSvg.push(dat[key]);
     if (masSvg[0] !== "") masSvg[0] = ReplaceInSvg(masSvg, widthHeight, 0);
     if (masSvg[1] !== "") masSvg[1] = ReplaceInSvg(masSvg, widthHeight, 1);
-    //console.log("@@@masSvg:", masSvg);
   }
-  // }, [props.svg, widthHeight]);
   //=== Функции - обработчики ==============================
   const ReCalcIntensTr = () => {
     if (!masFormIn[beginMassTotal / kolFrom].edited) {

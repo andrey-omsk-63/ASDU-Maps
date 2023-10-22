@@ -1,7 +1,7 @@
 export const styleModalMenuErr = {
   marginTop: 0.5,
-  maxHeight: "21px",
-  minHeight: "21px",
+  maxHeight: "22px",
+  minHeight: "22px",
   backgroundColor: "#E6F5D6",
   textTransform: "unset !important",
   color: "black",
@@ -10,13 +10,13 @@ export const styleModalMenuErr = {
 
 export const styleSetArea = {
   width: "55px",
-  maxHeight: "3px",
-  minHeight: "3px",
-  marginTop: "3px",
+  maxHeight: "1px",
+  minHeight: "1px",
+  marginTop: "-1px",
   bgcolor: "#FFFBE5",
   boxShadow: 6,
   textAlign: "center",
-  p: 1,
+  p: 1.6,
 };
 
 export const styleBoxFormArea = {
@@ -46,8 +46,8 @@ export const styleBoxFormNapr = {
 
 export const styleModalEditBind = {
   fontSize: 15,
-  maxHeight: "21px",
-  minHeight: "21px",
+  maxHeight: "24px",
+  minHeight: "24px",
   backgroundColor: "#E6F5D6",
   color: "black",
   marginLeft: 0.6,
@@ -65,7 +65,7 @@ export const styleFooterError = {
   fontSize: 12.5,
   color: "#5B1080",
   marginLeft: 1.5,
-  marginTop: 1.5,
+  marginTop: 2.5,
 };
 
 export const styleModalEndErr = (colorEnd: string) => {
@@ -86,8 +86,6 @@ export const styleSetInfErr = (colorBorder: string) => {
   const styleSetInf = {
     outline: "none",
     position: "absolute",
-    // marginTop: "18vh",
-    // marginLeft: "27vh",
     left: "50%",
     top: "50%",
     transform: "translate(-50%, -50%)",

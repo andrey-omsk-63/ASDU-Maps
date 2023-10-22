@@ -140,13 +140,6 @@ const MapPointDataError = (props: {
         nameIn = massroute.vertexes[i].name;
       }
     }
-    // console.log(
-    //   "ВХОД-Выход:",
-    //   inIdx,
-    //   fromIdx,
-    //   props.fromCross.pointAaID,
-    //   props.toCross.pointBbID
-    // );
   }
 
   const handleCloseSetEnd = () => {
