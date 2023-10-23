@@ -1,86 +1,84 @@
-import * as React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { massdkCreate, massrouteCreate } from "./../redux/actions";
-import { coordinatesCreate, massrouteproCreate } from "./../redux/actions";
-import { statsaveCreate } from "./../redux/actions";
+import * as React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { massdkCreate, massrouteCreate } from './../redux/actions';
+import { coordinatesCreate, massrouteproCreate } from './../redux/actions';
+import { statsaveCreate } from './../redux/actions';
 
-import Grid from "@mui/material/Grid";
-import Modal from "@mui/material/Modal";
-import { YMaps, Map, Placemark, YMapsApi } from "react-yandex-maps";
+import Grid from '@mui/material/Grid';
+import Modal from '@mui/material/Modal';
+import { YMaps, Map, Placemark, YMapsApi } from 'react-yandex-maps';
 
-import MapRouteInfo from "./MapComponents/MapRouteInfo";
-import MapChangeAdress from "./MapComponents/MapChangeAdress";
-import MapPointDataError from "./MapComponents/MapPointDataError";
-import MapRouteBind from "./MapComponents/MapRouteBind";
-import MapCreatePointVertex from "./MapComponents/MapCreatePointVertex";
-import MapRouteProtokol from "./MapComponents/MapRouteProtokol";
-import MapReversRoute from "./MapComponents/MapReversRoute";
-import MapVertexForma from "./MapComponents/MapVertexForma";
-import MapWaysFormMenu from "./MapComponents/MapWaysFormMenu";
-import MapCreatePK from "./MapComponents/MapCreatePK";
+import MapRouteInfo from './MapComponents/MapRouteInfo';
+import MapChangeAdress from './MapComponents/MapChangeAdress';
+import MapPointDataError from './MapComponents/MapPointDataError';
+import MapRouteBind from './MapComponents/MapRouteBind';
+import MapCreatePointVertex from './MapComponents/MapCreatePointVertex';
+import MapRouteProtokol from './MapComponents/MapRouteProtokol';
+import MapReversRoute from './MapComponents/MapReversRoute';
+import MapVertexForma from './MapComponents/MapVertexForma';
+import MapWaysFormMenu from './MapComponents/MapWaysFormMenu';
+import MapCreatePK from './MapComponents/MapCreatePK';
 
-import { RecordMassRoute, MakeNewPointContent } from "./MapServiceFunctions";
-import { YandexServices, ShowFormalRoute } from "./MapServiceFunctions";
-import { DecodingCoord, CodingCoord, InputMenu } from "./MapServiceFunctions";
-import { getMultiRouteOptions, DoublRoute } from "./MapServiceFunctions";
-import { getReferencePoints, CenterCoordBegin } from "./MapServiceFunctions";
-import { getMassPolyRouteOptions, NearestPoint } from "./MapServiceFunctions";
-import { getMassMultiRouteOptions, MakeToCross } from "./MapServiceFunctions";
-import { getMassMultiRouteInOptions, MakeRevers } from "./MapServiceFunctions";
-import { getPointData, GetPointOptions } from "./MapServiceFunctions";
-import { СontentModalPressBalloon, MakeFromCross } from "./MapServiceFunctions";
-import { ChangeCrossFunc, PreparCurrencies } from "./MapServiceFunctions";
-import { RecevKeySvg, StrokaMenuGlob, MasskPoint } from "./MapServiceFunctions";
-import { DelVertexOrPoint, MenuProcesRoute } from "./MapServiceFunctions";
-import { DelPointVertexContent, MassCoord } from "./MapServiceFunctions";
-import { FillMassRouteContent } from "./MapServiceFunctions";
-import { PreparCurrenciesMode } from "./MapServiceFunctions";
+import { RecordMassRoute, MakeNewPointContent } from './MapServiceFunctions';
+import { YandexServices, ShowFormalRoute } from './MapServiceFunctions';
+import { DecodingCoord, CodingCoord, InputMenu } from './MapServiceFunctions';
+import { getMultiRouteOptions, DoublRoute } from './MapServiceFunctions';
+import { getReferencePoints, CenterCoordBegin } from './MapServiceFunctions';
+import { getMassPolyRouteOptions, NearestPoint } from './MapServiceFunctions';
+import { getMassMultiRouteOptions, MakeToCross } from './MapServiceFunctions';
+import { getMassMultiRouteInOptions, MakeRevers } from './MapServiceFunctions';
+import { getPointData, GetPointOptions } from './MapServiceFunctions';
+import { СontentModalPressBalloon, MakeFromCross } from './MapServiceFunctions';
+import { ChangeCrossFunc, PreparCurrencies } from './MapServiceFunctions';
+import { RecevKeySvg, StrokaMenuGlob, MasskPoint } from './MapServiceFunctions';
+import { DelVertexOrPoint, MenuProcesRoute } from './MapServiceFunctions';
+import { DelPointVertexContent, MassCoord } from './MapServiceFunctions';
+import { FillMassRouteContent } from './MapServiceFunctions';
+import { PreparCurrenciesMode } from './MapServiceFunctions';
 
-import { SendSocketCreateWay, SendSocketGetSvg } from "./MapSocketFunctions";
-import { SendSocketCreateWayFromPoint } from "./MapSocketFunctions";
-import { SendSocketCreateWayToPoint } from "./MapSocketFunctions";
+import { SendSocketCreateWay, SendSocketGetSvg } from './MapSocketFunctions';
+import { SendSocketCreateWayFromPoint } from './MapSocketFunctions';
+import { SendSocketCreateWayToPoint } from './MapSocketFunctions';
 
 let coordStart: any = []; // рабочий массив коллекции входящих связей
 let coordStop: any = []; // рабочий массив коллекции входящих связей
 let coordStartIn: any = []; // рабочий массив коллекции исходящих связей
 let coordStopIn: any = []; // рабочий массив коллекции исходящих связей
 let massRoute: any = []; // рабочий массив сети связей
-let masSvg: any = ["", ""];
+let masSvg: any = ['', ''];
 
 export let debug: boolean = false;
-let flagOpen: boolean = false;
-let flagBind: boolean = false;
+let flagOpen: boolean, flagBind: boolean;
 let flagRevers: boolean, needLinkBind: boolean, FlagDemo: boolean;
 debug = flagOpen = flagBind = flagRevers = needLinkBind = FlagDemo = false;
-let newPointCoord: any, homeRegion: any, pointCenter: any;
-newPointCoord = homeRegion = pointCenter = 0;
-let soobError = "";
-let oldsErr = "";
+export let homeRegion: any = 0;
+let newPointCoord: any, pointCenter: any, pointAa: any, pointBb: any;
+newPointCoord = pointCenter = pointAa = pointBb = 0;
+let soobError = '';
+let oldsErr = '';
 let zoom = 10;
 let reqRoute: any = {
   dlRoute: 0,
   tmRoute: 0,
 };
-let pointAa: any = 0;
 let fromCross: any = {
-  pointAaRegin: "",
-  pointAaArea: "",
+  pointAaRegin: '',
+  pointAaArea: '',
   pointAaID: 0,
-  pointAcod: "",
+  pointAcod: '',
 };
-let pointBb: any = 0;
 let toCross: any = {
-  pointBbRegin: "",
-  pointBbArea: "",
+  pointBbRegin: '',
+  pointBbArea: '',
   pointBbID: 0,
-  pointBcod: "",
+  pointBcod: '',
 };
 let funcContex: any, funcBound: any, funcClick: any, activeRoute: any;
 funcContex = funcBound = funcClick = activeRoute = null;
 let currencies: any = [];
 let currenciesMode: any = [];
-export let AREA = "0";
-export let MODE = "0";
+export let AREA = '0';
+export let MODE = '0';
 let idxDel: number, nomRoute: number, idxRoute: number, pointAaIndex: number;
 let indexPoint: number, pointBbIndex: number;
 idxDel = nomRoute = idxRoute = indexPoint = pointAaIndex = pointBbIndex = -1;
@@ -90,13 +88,7 @@ let inIdx = -1;
 let VertexForma: any = null;
 let openEF = false;
 
-const MainMap = (props: {
-  region: any;
-  sErr: string;
-  svg: any;
-  setSvg: any;
-  trigger: boolean;
-}) => {
+const MainMap = (props: { region: any; sErr: string; svg: any; setSvg: any; trigger: boolean }) => {
   //== Piece of Redux =======================================
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;
@@ -124,11 +116,11 @@ const MainMap = (props: {
   });
   const dispatch = useDispatch();
   const WS = datestat.ws;
-  if (WS.url === "wss://localhost:3000/W") debug = true;
+  if (WS.url === 'wss://localhost:3000/W') debug = true;
   //===========================================================
   const [triggerForm, setTriggerForm] = React.useState(false);
-  const [currency, setCurrency] = React.useState("0");
-  const [currencyMode, setCurrencyMode] = React.useState("0");
+  const [currency, setCurrency] = React.useState('0');
+  const [currencyMode, setCurrencyMode] = React.useState('0');
   const [openInf, setOpenInf] = React.useState(false);
   const [openSetPro, setOpenSetPro] = React.useState(false);
   const [openVertForm, setOpenVertForm] = React.useState(false);
@@ -143,7 +135,7 @@ const MainMap = (props: {
   const [flagRoute, setFlagRoute] = React.useState(false);
   const [revers, setRevers] = React.useState(false); // для ререндера
   const [openSet, setOpenSet] = React.useState(false);
-  const [openSetCreate, setOpenSetCreate] = React.useState(false);
+  const [openCreate, setOpenCreate] = React.useState(false);
   const [openSetDelete, setOpenSetDelete] = React.useState(false);
   const [openSetAdress, setOpenSetAdress] = React.useState(false);
   const [openRevers, setOpenRevers] = React.useState(false);
@@ -151,7 +143,7 @@ const MainMap = (props: {
   const [needRevers, setNeedRevers] = React.useState(0);
   const [ymaps, setYmaps] = React.useState<YMapsApi | null>(null);
   const mapp = React.useRef<any>(null);
-  const MyYandexKey = "65162f5f-2d15-41d1-a881-6c1acf34cfa1";
+  const MyYandexKey = '65162f5f-2d15-41d1-a881-6c1acf34cfa1';
 
   const DelCollectionRoutes = () => {
     coordStart = [];
@@ -173,12 +165,12 @@ const MainMap = (props: {
       setOpenWaysFormMenu(false);
       ymaps && addRoute(ymaps); // перерисовка связей
     },
-    [ymaps]
+    [ymaps],
   );
 
   const SoobOpenSetEr = (soob: string) => {
     soobError = soob;
-    if (soobError === "Дубликатная связь") {
+    if (soobError === 'Дубликатная связь') {
       fromIdx = pointAaIndex;
       inIdx = pointBbIndex;
     }
@@ -198,7 +190,7 @@ const MainMap = (props: {
       fromCross.pointAcod = CodingCoord(pointAa);
       toCross.pointBcod = CodingCoord(pointBb);
       if (DoublRoute(massroute.ways, pointAa, pointBb)) {
-        SoobOpenSetEr("Дубликатная связь");
+        SoobOpenSetEr('Дубликатная связь');
       } else {
         let mask = RecordMassRoute(fromCross, toCross, mass, aRou);
         massroute.ways.push(mask);
@@ -254,7 +246,7 @@ const MainMap = (props: {
     pointBbIndex = pa;
     ChangeCrossFunc(fromCross, toCross); // поменялось внутри func через ссылки React
     if (DoublRoute(massroute.ways, pointAa, pointBb)) {
-      SoobOpenSetEr("Дубликатная связь");
+      SoobOpenSetEr('Дубликатная связь');
       ZeroRoute(false);
       noDoublRoute = false;
     } else {
@@ -328,7 +320,7 @@ const MainMap = (props: {
         break;
       case 212: // выбор режима работы
         ZeroRoute(false);
-        if (MODE === "2") setOpenPKForm(true);
+        if (MODE === '2') setOpenPKForm(true);
     }
   };
   //========================================================
@@ -338,8 +330,8 @@ const MainMap = (props: {
     for (let i = 0; i < massRoute.length; i++) {
       massPolyRoute[i] = new ymaps.Polyline(
         [DecodingCoord(massRoute[i].starts), DecodingCoord(massRoute[i].stops)],
-        { hintContent: "Формальная связь" },
-        getMassPolyRouteOptions()
+        { hintContent: 'Формальная связь' },
+        getMassPolyRouteOptions(),
       );
       mapp.current.geoObjects.add(massPolyRoute[i]);
     }
@@ -347,7 +339,7 @@ const MainMap = (props: {
     for (let i = 0; i < coordStart.length; i++) {
       massMultiRoute[i] = new ymaps.multiRouter.MultiRoute(
         getReferencePoints(coordStart[i], coordStop[i]),
-        getMassMultiRouteOptions()
+        getMassMultiRouteOptions(),
       );
       mapp.current.geoObjects.add(massMultiRoute[i]);
     }
@@ -355,22 +347,22 @@ const MainMap = (props: {
     for (let i = 0; i < coordStartIn.length; i++) {
       massMultiRouteIn[i] = new ymaps.multiRouter.MultiRoute(
         getReferencePoints(coordStartIn[i], coordStopIn[i]),
-        getMassMultiRouteInOptions()
+        getMassMultiRouteInOptions(),
       );
       mapp.current.geoObjects.add(massMultiRouteIn[i]);
     }
     const multiRoute = new ymaps.multiRouter.MultiRoute(
       getReferencePoints(pointAa, pointBb),
-      getMultiRouteOptions()
+      getMultiRouteOptions(),
     );
     activeRoute = null;
     mapp.current.geoObjects.add(multiRoute); // основная связь
-    multiRoute.model.events.add("requestsuccess", function () {
+    multiRoute.model.events.add('requestsuccess', function () {
       activeRoute = multiRoute.getActiveRoute();
       if (activeRoute) {
-        let dist = activeRoute.properties.get("distance").value;
+        let dist = activeRoute.properties.get('distance').value;
         reqRoute.dlRoute = Math.round(dist);
-        let duration = activeRoute.properties.get("duration").value;
+        let duration = activeRoute.properties.get('duration').value;
         reqRoute.tmRoute = Math.round(duration);
       }
     });
@@ -379,34 +371,34 @@ const MainMap = (props: {
   const OnPlacemarkClickPoint = (index: number, coor: any) => {
     let COORD = coor ? coor : MassCoord(massdk[index]);
     if (pointAa === 0) {
-      if (!massdk[index].area && MODE === "1") return;
+      if (!massdk[index].area && MODE === '1') return;
       if (!openWaysForm) {
         ZeroRoute(false); //==================================
         pointAaIndex = index; // начальная точка
         pointAa = COORD;
         fromCross = MakeFromCross(massdk[index]);
-        MakeСollectionRoute(MODE === "1" ? false : true);
+        MakeСollectionRoute(MODE === '1' ? false : true);
         setFlagPusk(true);
       }
-      if (MODE === "1" && !openWaysForm) {
+      if (MODE === '1' && !openWaysForm) {
         VertexForma = null;
         datestat.oldIdxForm = -1;
         dispatch(statsaveCreate(datestat));
         setOpenVertForm(true); // запуск новой формы
       }
     } else {
-      let soob = "Связь между перекрёстками в разных районах создовать нельзя";
-      if (MODE === "0") {
+      let soob = 'Связь между перекрёстками в разных районах создовать нельзя';
+      if (MODE === '0') {
         if (pointBb === 0) {
           if (pointAaIndex === index) {
-            SoobOpenSetEr("Начальная и конечная точки совпадают");
+            SoobOpenSetEr('Начальная и конечная точки совпадают');
           } else {
             pointBbIndex = index; // конечная точка
             let areaAa = massroute.vertexes[pointAaIndex].area;
             let areaBb = massroute.vertexes[pointBbIndex].area;
             if (areaAa === 0 && areaBb === 0) {
               pointBbIndex = 0; // конечная точка
-              SoobOpenSetEr("Связь между двумя точками создовать нельзя");
+              SoobOpenSetEr('Связь между двумя точками создовать нельзя');
             } else {
               if (areaAa !== areaBb && areaAa !== 0 && areaBb !== 0) {
                 pointBbIndex = 0; // конечная точка
@@ -415,7 +407,7 @@ const MainMap = (props: {
                 pointBb = COORD;
                 toCross = MakeToCross(massdk[index]);
                 if (DoublRoute(massroute.ways, pointAa, pointBb)) {
-                  SoobOpenSetEr("Дубликатная связь");
+                  SoobOpenSetEr('Дубликатная связь');
                   ZeroRoute(false);
                 } else {
                   setFlagRoute(true);
@@ -437,14 +429,13 @@ const MainMap = (props: {
     let pointRoute: any = 0;
     let areaPoint = -1;
     if (indexPoint >= 0) areaPoint = massdk[indexPoint].area;
-    if (indexPoint >= 0 && indexPoint < massdk.length)
-      pointRoute = MassCoord(massdk[indexPoint]);
+    if (indexPoint >= 0 && indexPoint < massdk.length) pointRoute = MassCoord(massdk[indexPoint]);
 
     const handleClose = (param: number) => {
       switch (param) {
         case 1: // Начальная точка
           if (pointBbIndex === indexPoint) {
-            soobError = "Начальная и конечная точки совпадают";
+            soobError = 'Начальная и конечная точки совпадают';
             setOpenSetErBall(true);
           } else {
             pointAaIndex = indexPoint;
@@ -455,20 +446,20 @@ const MainMap = (props: {
           break;
         case 2: // Конечная точка
           if (pointAaIndex === indexPoint) {
-            soobError = "Начальная и конечная точки совпадают";
+            soobError = 'Начальная и конечная точки совпадают';
             setOpenSetErBall(true);
           } else {
             if (
               massroute.vertexes[pointAaIndex].area === 0 &&
               massroute.vertexes[indexPoint].area === 0
             ) {
-              SoobOpenSetEr("Связь между двумя точками создовать нельзя");
+              SoobOpenSetEr('Связь между двумя точками создовать нельзя');
             } else {
               pointBbIndex = indexPoint;
               pointBb = pointRoute;
               toCross = MakeToCross(massdk[pointBbIndex]);
               if (DoublRoute(massroute.ways, pointAa, pointBb)) {
-                SoobOpenSetEr("Дубликатная связь");
+                SoobOpenSetEr('Дубликатная связь');
                 ZeroRoute(false);
               }
               ymaps && addRoute(ymaps); // перерисовка связей
@@ -520,11 +511,11 @@ const MainMap = (props: {
             geometry={props.coordinate}
             properties={getPointData(props.idx, pA, pB, massdk, map)}
             options={GetPointOptions(props.idx, map, pA, pB, massdk, massroute)}
-            modules={["geoObject.addon.balloon", "geoObject.addon.hint"]}
+            modules={['geoObject.addon.balloon', 'geoObject.addon.hint']}
             onClick={() => OnPlacemarkClickPoint(props.idx, 0)}
           />
         ),
-        [props.coordinate, props.idx]
+        [props.coordinate, props.idx],
       );
       return MemoPlacemarkDo;
     };
@@ -542,14 +533,14 @@ const MainMap = (props: {
   const InstanceRefDo = (ref: React.Ref<any>) => {
     if (ref) {
       mapp.current = ref;
-      mapp.current.events.remove("contextmenu", funcContex); // нажата правая кнопка мыши
+      mapp.current.events.remove('contextmenu', funcContex); // нажата правая кнопка мыши
       funcContex = function (e: any) {
         if (mapp.current.hint) {
-          newPointCoord = e.get("coords");
+          newPointCoord = e.get('coords');
           idxDel = NearestPoint(massdk, newPointCoord);
-          if (MODE === "0") {
+          if (MODE === '0') {
             idxDel >= 0 && setOpenSetDelete(true);
-            idxDel < 0 && setOpenSetCreate(true);
+            idxDel < 0 && setOpenCreate(true);
           } else {
             if (idxDel >= 0 && nomRoute < 0 && !openVertForm) {
               nomRoute = 0;
@@ -563,20 +554,19 @@ const MainMap = (props: {
           }
         }
       };
-      mapp.current.events.add("contextmenu", funcContex);
-      mapp.current.events.remove("click", funcClick); // нажата левая кнопка мыши
+      mapp.current.events.add('contextmenu', funcContex);
+      mapp.current.events.remove('click', funcClick); // нажата левая кнопка мыши
       funcClick = function (e: any) {
-        let idx = NearestPoint(massdk, e.get("coords"));
-        if (idx >= 0 && MODE === "0")
-          OnPlacemarkClickPoint(idx, e.get("coords"));
+        let idx = NearestPoint(massdk, e.get('coords'));
+        if (idx >= 0 && MODE === '0') OnPlacemarkClickPoint(idx, e.get('coords'));
       };
-      mapp.current.events.add("click", funcClick);
-      mapp.current.events.remove("boundschange", funcBound); // покрутили колёсико мыши
+      mapp.current.events.add('click', funcClick);
+      mapp.current.events.remove('boundschange', funcBound); // покрутили колёсико мыши
       funcBound = function () {
         pointCenter = mapp.current.getCenter();
         zoom = mapp.current.getZoom();
       };
-      mapp.current.events.add("boundschange", funcBound);
+      mapp.current.events.add('boundschange', funcBound);
     }
   };
   //=== Функции - обработчики ==============================
@@ -622,7 +612,7 @@ const MainMap = (props: {
     MakeNewPointContent(WS, coords, avail, homeRegion, massroute);
     coordinates.push(coords);
     dispatch(coordinatesCreate(coordinates));
-    setOpenSetCreate(false);
+    setOpenCreate(false);
   };
 
   const handleChangeArea = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -663,10 +653,8 @@ const MainMap = (props: {
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(massroute).length) {
     if (props.region) homeRegion = props.region;
-    if (!props.region && massroute.vertexes.length)
-      homeRegion = massroute.vertexes[0].region;
-    for (let i = 0; i < massroute.points.length; i++)
-      massroute.vertexes.push(massroute.points[i]);
+    if (!props.region && massroute.vertexes.length) homeRegion = massroute.vertexes[0].region;
+    for (let i = 0; i < massroute.points.length; i++) massroute.vertexes.push(massroute.points[i]);
     for (let i = 0; i < massroute.vertexes.length; i++) {
       massdk.push(MasskPoint(massroute.vertexes[i]));
       coordinates.push(DecodingCoord(massroute.vertexes[i].dgis));
@@ -679,8 +667,8 @@ const MainMap = (props: {
     currencies = PreparCurrencies(map.dateMap.areaInfo[homeReg]);
     currenciesMode = PreparCurrenciesMode();
     flagOpen = true;
-    console.log("massroute:", massroute);
-    console.log("map:", map);
+    console.log('massroute:', massroute);
+    console.log('map:', map);
   }
   //========================================================
   let mapState: any = {
@@ -692,7 +680,7 @@ const MainMap = (props: {
     ymaps && addRoute(ymaps); // перерисовка связей
     oldsErr = props.sErr;
   }
-  masSvg = ["", ""];
+  masSvg = ['', ''];
   if (!debug && props.svg !== oldPropsSvg) {
     oldPropsSvg = props.svg;
     if (props.svg && pointAaIndex >= 0 && pointBbIndex >= 0) {
@@ -720,34 +708,33 @@ const MainMap = (props: {
         if (openVertForm || openWaysForm) ZeroRoute(false);
       }
     },
-    [ZeroRoute, flagRoute, flagPusk, openVertForm, openWaysForm]
+    [ZeroRoute, flagRoute, flagPusk, openVertForm, openWaysForm],
   );
 
   React.useEffect(() => {
-    document.addEventListener("keydown", escFunction);
-    return () => document.removeEventListener("keydown", escFunction);
+    document.addEventListener('keydown', escFunction);
+    return () => document.removeEventListener('keydown', escFunction);
   }, [escFunction]);
   //========================================================
   return (
-    <Grid container sx={{ height: "99.9vh" }}>
+    <Grid container sx={{ height: '99.9vh' }}>
       {InputMenu(handleChangeArea, currency, currencies)}
       {InputMenu(handleChangeMode, currencyMode, currenciesMode)}
       {MakeRevers(makeRevers, needRevers, PressButton)}
       {ShowFormalRoute(flagDemo, PressButton)}
       {MenuProcesRoute(flagPusk, flagRoute, PressButton)}
-      {flagPro && <>{StrokaMenuGlob("Протокол", PressButton, 24)}</>}
+      {flagPro && <>{StrokaMenuGlob('Протокол', PressButton, 24)}</>}
       {Object.keys(massroute).length && (
-        <YMaps query={{ apikey: MyYandexKey, lang: "ru_RU" }}>
+        <YMaps query={{ apikey: MyYandexKey, lang: 'ru_RU' }}>
           <Map
-            modules={["multiRouter.MultiRoute", "Polyline"]}
+            modules={['multiRouter.MultiRoute', 'Polyline']}
             state={mapState}
             instanceRef={(ref) => InstanceRefDo(ref)}
             onLoad={(ref) => {
               ref && setYmaps(ref);
             }}
-            width={"99.8%"}
-            height={"97%"}
-          >
+            width={'99.8%'}
+            height={'97%'}>
             {YandexServices()}
             <PlacemarkDo />
             <ModalPressBalloon />
@@ -769,11 +756,7 @@ const MainMap = (props: {
               />
             )}
             {openPKForm && (
-              <MapCreatePK
-                setOpen={SetOpenPKForm}
-                idx={pointAaIndex}
-                openErr={openEF}
-              />
+              <MapCreatePK setOpen={SetOpenPKForm} idx={pointAaIndex} openErr={openEF} />
             )}
             {openWaysFormMenu && !openVertForm && (
               <MapWaysFormMenu
@@ -817,9 +800,9 @@ const MainMap = (props: {
                 mode={0}
               />
             )}
-            {openSetCreate && (
+            {openCreate && (
               <MapCreatePointVertex
-                setOpen={setOpenSetCreate}
+                setOpen={setOpenCreate}
                 region={homeRegion}
                 coord={newPointCoord}
                 createPoint={MakeNewPoint}
@@ -827,13 +810,7 @@ const MainMap = (props: {
               />
             )}
             {openSetDelete &&
-              DelVertexOrPoint(
-                openSetDelete,
-                massdk,
-                massroute,
-                idxDel,
-                handleCloseDel
-              )}
+              DelVertexOrPoint(openSetDelete, massdk, massroute, idxDel, handleCloseDel)}
             {openRevers && (
               <MapReversRoute
                 setOpen={setOpenRevers}
