@@ -17,6 +17,7 @@ import MapRouteProtokol from "./MapComponents/MapRouteProtokol";
 import MapReversRoute from "./MapComponents/MapReversRoute";
 import MapVertexForma from "./MapComponents/MapVertexForma";
 import MapWaysFormMenu from "./MapComponents/MapWaysFormMenu";
+import MapCreatePK from "./MapComponents/MapCreatePK";
 
 import { RecordMassRoute, MakeNewPointContent } from "./MapServiceFunctions";
 import { YandexServices, ShowFormalRoute } from "./MapServiceFunctions";
@@ -46,7 +47,7 @@ let coordStopIn: any = []; // рабочий массив коллекции и�
 let massRoute: any = []; // рабочий массив сети связей
 let masSvg: any = ["", ""];
 
-let debug: boolean = false;
+export let debug: boolean = false;
 let flagOpen: boolean = false;
 let flagBind: boolean = false;
 let flagRevers: boolean, needLinkBind: boolean, FlagDemo: boolean;
@@ -78,8 +79,8 @@ let funcContex: any, funcBound: any, funcClick: any, activeRoute: any;
 funcContex = funcBound = funcClick = activeRoute = null;
 let currencies: any = [];
 let currenciesMode: any = [];
-let AREA = "0";
-let MODE = "0";
+export let AREA = "0";
+export let MODE = "0";
 let idxDel: number, nomRoute: number, idxRoute: number, pointAaIndex: number;
 let indexPoint: number, pointBbIndex: number;
 idxDel = nomRoute = idxRoute = indexPoint = pointAaIndex = pointBbIndex = -1;
@@ -87,7 +88,7 @@ let oldPropsSvg: any = null;
 let fromIdx = -1;
 let inIdx = -1;
 let VertexForma: any = null;
-let openErrForma = false;
+let openEF = false;
 
 const MainMap = (props: {
   region: any;
@@ -101,7 +102,6 @@ const MainMap = (props: {
     const { massdkReducer } = state;
     return massdkReducer.massdk;
   });
-  //console.log("massdk:", massdk);
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
     return massrouteReducer.massroute;
@@ -129,13 +129,14 @@ const MainMap = (props: {
   const [triggerForm, setTriggerForm] = React.useState(false);
   const [currency, setCurrency] = React.useState("0");
   const [currencyMode, setCurrencyMode] = React.useState("0");
-  const [openSetInf, setOpenSetInf] = React.useState(false);
+  const [openInf, setOpenInf] = React.useState(false);
   const [openSetPro, setOpenSetPro] = React.useState(false);
-  const [openSetVertForm, setOpenSetVertForm] = React.useState(false);
-  const [openSetWaysForm, setOpenSetWaysForm] = React.useState(false);
-  const [openSetWaysFormMenu, setOpenSetWaysFormMenu] = React.useState(false);
+  const [openVertForm, setOpenVertForm] = React.useState(false);
+  const [openWaysForm, setOpenWaysForm] = React.useState(false);
+  const [openPKForm, setOpenPKForm] = React.useState(false);
+  const [openWaysFormMenu, setOpenWaysFormMenu] = React.useState(false);
   const [openSetEr, setOpenSetEr] = React.useState(false);
-  const [openSetBind, setOpenSetBind] = React.useState(false);
+  const [openBind, setOpenBind] = React.useState(false);
   const [flagDemo, setFlagDemo] = React.useState(false);
   const [flagPro, setFlagPro] = React.useState(false);
   const [flagPusk, setFlagPusk] = React.useState(false);
@@ -145,7 +146,7 @@ const MainMap = (props: {
   const [openSetCreate, setOpenSetCreate] = React.useState(false);
   const [openSetDelete, setOpenSetDelete] = React.useState(false);
   const [openSetAdress, setOpenSetAdress] = React.useState(false);
-  const [openSetRevers, setOpenSetRevers] = React.useState(false);
+  const [openRevers, setOpenRevers] = React.useState(false);
   const [makeRevers, setMakeRevers] = React.useState(false);
   const [needRevers, setNeedRevers] = React.useState(0);
   const [ymaps, setYmaps] = React.useState<YMapsApi | null>(null);
@@ -167,9 +168,9 @@ const MainMap = (props: {
       flagBind = false;
       setFlagRoute(false);
       setFlagPusk(mode);
-      setOpenSetVertForm(false);
-      setOpenSetWaysForm(false);
-      setOpenSetWaysFormMenu(false);
+      setOpenVertForm(false);
+      setOpenWaysForm(false);
+      setOpenWaysFormMenu(false);
       ymaps && addRoute(ymaps); // перерисовка связей
     },
     [ymaps]
@@ -216,7 +217,7 @@ const MainMap = (props: {
         setFlagPro(true); //включение протокола
       }
       if (flagRevers && needRevers !== 3) {
-        setOpenSetRevers(true);
+        setOpenRevers(true);
         flagRevers = false;
       } else ZeroRoute(mode);
     }
@@ -301,7 +302,7 @@ const MainMap = (props: {
           const ReadyRoute = () => {
             if (activeRoute) {
               needLinkBind = true;
-              setOpenSetInf(true);
+              setOpenInf(true);
             } else {
               setTimeout(() => {
                 ReadyRoute();
@@ -314,7 +315,7 @@ const MainMap = (props: {
         setNeedRevers(3);
         break;
       case 69: // редактирование связи
-        setOpenSetInf(true);
+        setOpenInf(true);
         setNeedRevers(0);
         break;
       case 77: // удаление связи / отмена назначений
@@ -327,6 +328,7 @@ const MainMap = (props: {
         break;
       case 212: // выбор режима работы
         ZeroRoute(false);
+        if (MODE === "2") setOpenPKForm(true);
     }
   };
   //========================================================
@@ -378,7 +380,7 @@ const MainMap = (props: {
     let COORD = coor ? coor : MassCoord(massdk[index]);
     if (pointAa === 0) {
       if (!massdk[index].area && MODE === "1") return;
-      if (!openSetWaysForm) {
+      if (!openWaysForm) {
         ZeroRoute(false); //==================================
         pointAaIndex = index; // начальная точка
         pointAa = COORD;
@@ -386,11 +388,11 @@ const MainMap = (props: {
         MakeСollectionRoute(MODE === "1" ? false : true);
         setFlagPusk(true);
       }
-      if (MODE === "1" && !openSetWaysForm) {
+      if (MODE === "1" && !openWaysForm) {
         VertexForma = null;
         datestat.oldIdxForm = -1;
         dispatch(statsaveCreate(datestat));
-        setOpenSetVertForm(true); // запуск новой формы
+        setOpenVertForm(true); // запуск новой формы
       }
     } else {
       let soob = "Связь между перекрёстками в разных районах создовать нельзя";
@@ -508,32 +510,21 @@ const MainMap = (props: {
   };
 
   const PlacemarkDo = () => {
-    let pAaI = pointAaIndex;
-    let pBbI = pointBbIndex;
+    let pA = pointAaIndex;
+    let pB = pointBbIndex;
     const DoPlacemarkDo = (props: { coordinate: any; idx: number }) => {
-      const IDX = props.idx;
       const MemoPlacemarkDo = React.useMemo(
         () => (
           <Placemark
-            key={IDX}
+            key={props.idx}
             geometry={props.coordinate}
-            properties={getPointData(IDX, pAaI, pBbI, massdk, map, MODE)}
-            options={GetPointOptions(
-              debug,
-              IDX,
-              AREA,
-              MODE,
-              map,
-              pAaI,
-              pBbI,
-              massdk,
-              massroute
-            )}
+            properties={getPointData(props.idx, pA, pB, massdk, map)}
+            options={GetPointOptions(props.idx, map, pA, pB, massdk, massroute)}
             modules={["geoObject.addon.balloon", "geoObject.addon.hint"]}
-            onClick={() => OnPlacemarkClickPoint(IDX, 0)}
+            onClick={() => OnPlacemarkClickPoint(props.idx, 0)}
           />
         ),
-        [props.coordinate, IDX]
+        [props.coordinate, props.idx]
       );
       return MemoPlacemarkDo;
     };
@@ -560,10 +551,10 @@ const MainMap = (props: {
             idxDel >= 0 && setOpenSetDelete(true);
             idxDel < 0 && setOpenSetCreate(true);
           } else {
-            if (idxDel >= 0 && nomRoute < 0 && !openSetVertForm) {
+            if (idxDel >= 0 && nomRoute < 0 && !openVertForm) {
               nomRoute = 0;
               idxRoute = idxDel;
-              setOpenSetWaysFormMenu(true);
+              setOpenWaysFormMenu(true);
               pointAaIndex = idxDel; // начальная точка
               pointAa = MassCoord(massdk[idxDel]);
               MakeСollectionRoute(false);
@@ -596,7 +587,7 @@ const MainMap = (props: {
     let idOn = massroute.vertexes[pointBbIndex].id;
     SendSocketGetSvg(WS, homeRegion, arIn, idIn, arOn, idOn);
     flagBind = true;
-    setOpenSetBind(true);
+    setOpenBind(true);
   };
 
   const SetReqRoute = (mode: any, need: boolean) => {
@@ -646,22 +637,27 @@ const MainMap = (props: {
     PressButton(212);
   };
 
-  const SetOpenSetVertForm = (mode: boolean, forma: any, openErr: boolean) => {
-    setOpenSetVertForm(false); // закрытие старой формы
+  const SetOpenVertForm = (mode: boolean, forma: any, openErr: boolean) => {
+    setOpenVertForm(false); // закрытие старой формы
     if (!mode) {
       VertexForma = null;
-      openErrForma = false;
+      openEF = false;
       ZeroRoute(false);
     } else {
       VertexForma = forma;
-      openErrForma = openErr;
-      setOpenSetVertForm(true);
+      openEF = openErr;
+      setOpenVertForm(true);
       setTriggerForm(!triggerForm); // запуск новой формы
     }
   };
 
-  const SetOpenSetWaysFormMenu = (mode: number, idx: number, pusto: number) => {
-    setOpenSetWaysFormMenu(false);
+  const SetOpenPKForm = (mode: boolean, forma: any, openErr: boolean) => {
+    setOpenPKForm(false); // закрытие формы
+    ZeroRoute(false);
+  };
+
+  const SetOpenWaysFormMenu = (mode: number, idx: number, pusto: number) => {
+    setOpenWaysFormMenu(false);
     ZeroRoute(false);
   };
   //=== инициализация ======================================
@@ -709,29 +705,22 @@ const MainMap = (props: {
       masSvg[0] = props.svg[RecevKeySvg(massroute.vertexes[fromIdx])];
       masSvg[1] = props.svg[RecevKeySvg(massroute.vertexes[inIdx])];
     }
-    if (props.svg && openSetWaysFormMenu) {
+    if (props.svg && openWaysFormMenu) {
       // передача изображений в привязку через меню "перекрёстки"
       masSvg[0] = props.svg;
     }
   }
-  if (openSetBind && pointAaIndex < 0 && pointBbIndex < 0)
-    setOpenSetBind(false); // отработка Esc из RouteBind
+  if (openBind && pointAaIndex < 0 && pointBbIndex < 0) setOpenBind(false); // отработка Esc из RouteBind
 
   //=== обработка Esc ======================================
   const escFunction = React.useCallback(
     (event) => {
-      if (event.keyCode === 27)
-        if (
-          pointAa ||
-          flagBind ||
-          flagRoute ||
-          flagPusk ||
-          openSetVertForm ||
-          openSetWaysForm
-        )
-          ZeroRoute(false);
+      if (event.keyCode === 27) {
+        if (pointAa || flagBind || flagRoute || flagPusk) ZeroRoute(false);
+        if (openVertForm || openWaysForm) ZeroRoute(false);
+      }
     },
-    [ZeroRoute, flagRoute, flagPusk, openSetVertForm, openSetWaysForm]
+    [ZeroRoute, flagRoute, flagPusk, openVertForm, openWaysForm]
   );
 
   React.useEffect(() => {
@@ -763,25 +752,32 @@ const MainMap = (props: {
             <PlacemarkDo />
             <ModalPressBalloon />
             {openSetPro && <MapRouteProtokol setOpen={setOpenSetPro} />}
-            {openSetVertForm && pointAaIndex >= 0 && triggerForm && (
+            {openVertForm && pointAaIndex >= 0 && triggerForm && (
               <MapVertexForma
-                setOpen={SetOpenSetVertForm}
+                setOpen={SetOpenVertForm}
                 idx={pointAaIndex}
                 forma={VertexForma}
-                openErr={openErrForma}
+                openErr={openEF}
               />
             )}
-            {openSetVertForm && pointAaIndex >= 0 && !triggerForm && (
+            {openVertForm && pointAaIndex >= 0 && !triggerForm && (
               <MapVertexForma
-                setOpen={SetOpenSetVertForm}
+                setOpen={SetOpenVertForm}
                 idx={pointAaIndex}
                 forma={VertexForma}
-                openErr={openErrForma}
+                openErr={openEF}
               />
             )}
-            {openSetWaysFormMenu && !openSetVertForm && (
+            {openPKForm && (
+              <MapCreatePK
+                setOpen={SetOpenPKForm}
+                idx={pointAaIndex}
+                openErr={openEF}
+              />
+            )}
+            {openWaysFormMenu && !openVertForm && (
               <MapWaysFormMenu
-                setOpen={SetOpenSetWaysFormMenu}
+                setOpen={SetOpenWaysFormMenu}
                 idx={idxRoute}
                 svg={masSvg}
                 setSvg={props.setSvg}
@@ -798,20 +794,20 @@ const MainMap = (props: {
                 setSvg={props.setSvg}
               />
             )}
-            {openSetInf && (
+            {openInf && (
               <MapRouteInfo
                 activeRoute={activeRoute}
                 idxA={pointAaIndex}
                 idxB={pointBbIndex}
-                setOpen={setOpenSetInf}
+                setOpen={setOpenInf}
                 reqRoute={reqRoute}
                 setReqRoute={SetReqRoute}
                 needLinkBind={needLinkBind}
               />
             )}
-            {openSetBind && pointAaIndex >= 0 && pointBbIndex >= 0 && (
+            {openBind && pointAaIndex >= 0 && pointBbIndex >= 0 && (
               <MapRouteBind
-                setOpen={setOpenSetBind}
+                setOpen={setOpenBind}
                 svg={masSvg}
                 setSvg={props.setSvg}
                 idxA={pointAaIndex}
@@ -838,9 +834,9 @@ const MainMap = (props: {
                 idxDel,
                 handleCloseDel
               )}
-            {openSetRevers && (
+            {openRevers && (
               <MapReversRoute
-                setOpen={setOpenSetRevers}
+                setOpen={setOpenRevers}
                 makeRevers={setMakeRevers}
                 needRevers={setNeedRevers}
               />

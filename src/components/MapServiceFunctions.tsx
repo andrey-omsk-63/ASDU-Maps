@@ -33,6 +33,8 @@ import { styleBind03, styleBind033, styleSetImg } from "./MainMapStyle";
 import { styleModalMenuErr, styleHeadError } from "./MapPointDataErrorStyle";
 import { styleBoxFormArea, styleSetArea } from "./MapPointDataErrorStyle";
 
+import { debug, AREA, MODE } from "./MainMapGl";
+
 export const handleKey = (event: any) => {
   if (event.key === "Enter") event.preventDefault();
 };
@@ -254,7 +256,7 @@ export const DelPointVertexContent = (
 
 export const PreparCurrenciesMode = () => {
   const currencies: any = [];
-  let dat = ["Создание связей", "Перекрёстки", "Маршруты",];
+  let dat = ["Создание связей", "Перекрёстки", "Модели (ПК)",];
   let massKey: any = [];
   let massDat: any = [];
   for (let key in dat) {
@@ -400,7 +402,7 @@ export const getPointData = (
   pointBbIndex: number,
   massdk: any,
   map: any,
-  MODE: string
+  //MODE: string
 ) => {
   let idxMap = ComplianceMapMassdk(index, massdk, map);
   let cont3 = ", null";
@@ -420,26 +422,13 @@ export const getPointData = (
 };
 
 export const GetPointOptions = (
-  debug: boolean,
   index: number,
-  AREA: string,
-  MODE: string,
   map: any,
   pointAaIndex: number,
   pointBbIndex: number,
   massdk: any,
   massroute: any
 ) => {
-  //== Piece of Redux =======================================
-  // let massdk = useSelector((state: any) => {
-  //   const { massdkReducer } = state;
-  //   return massdkReducer.massdk;
-  // });
-  // let massroute = useSelector((state: any) => {
-  //   const { massrouteReducer } = state;
-  //   return massrouteReducer.massroute;
-  // });
-  //=========================================================
   let idxMap = -1;
   let Area = massdk[index].area.toString();
   for (let i = 0; i < map.dateMap.tflight.length; i++) {
@@ -1034,8 +1023,8 @@ export const StrokaMenuFooterBind = (
     border: "1px solid #000",
     bgcolor: "#E6F5D6",
     width: (soob.length + 9) * 7,
-    maxHeight: "21px",
-    minHeight: "21px",
+    maxHeight: "24px",
+    minHeight: "24px",
     borderRadius: 1,
     borderColor: "#d4d4d4",
     color: "black",

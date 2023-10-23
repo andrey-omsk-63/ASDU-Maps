@@ -388,7 +388,7 @@ export const MakeStyleBind00 = (heightImg: number) => {
     borderColor: "#F0F0F0",
     borderRadius: 1,
     width: "98%",
-    height: heightImg + window.innerHeight * 0.668,
+    height: heightImg + window.innerHeight * 0.669,
     bgcolor: "#F0F0F0",
   };
   return styleBind00;
@@ -420,8 +420,8 @@ export const styleFormName = {
 export const styleFormMenu = {
   marginTop: 0.5,
   marginRight: 1,
-  maxHeight: "21px",
-  minHeight: "21px",
+  maxHeight: "24px",
+  minHeight: "24px",
   backgroundColor: "#E6F5D6", // светло салатовый
   border: "1px solid #000",
   borderRadius: 1,
