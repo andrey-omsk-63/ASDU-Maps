@@ -1,24 +1,24 @@
-import * as React from "react";
+import * as React from 'react';
 import {
   useSelector,
   //useDispatch
-} from "react-redux";
+} from 'react-redux';
 
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 
 //import MapPointDataError from "./MapPointDataError";
 
 //import { ComplianceMapMassdk } from "./../MapServiceFunctions";
-import { BadExit } from "./../MapServiceFunctions";
+import { BadExit } from './../MapServiceFunctions';
 //import { SaveFormVert } from "./../MapServiceFunctions";
 
-import { AREA } from "./../MainMapGl";
+import { AREA } from './../MainMapGl';
 
-import { styleModalEnd, styleFormPK00 } from "./../MainMapStyle";
-import { styleFormPK01, styleFormPK03, styleFormPK04 } from "./../MainMapStyle";
-import { MakeStyleFormPK022 } from "./../MainMapStyle";
+import { styleModalEnd, styleFormPK00 } from './../MainMapStyle';
+import { styleFormPK01, styleFormPK03, styleFormPK04 } from './../MainMapStyle';
+import { MakeStyleFormPK022 } from './../MainMapStyle';
 
 let massForm: any = null;
 let HAVE = 0;
@@ -26,11 +26,7 @@ let massVert: any = [];
 let isOpen = false;
 let oldArea = -1;
 
-const MapCreatePK = (props: {
-  setOpen: any;
-  idx: number;
-  openErr: boolean;
-}) => {
+const MapCreatePK = (props: { setOpen: any; idx: number; openErr: boolean }) => {
   //== Piece of Redux =======================================
 
   let massroute = useSelector((state: any) => {
@@ -43,18 +39,18 @@ const MapCreatePK = (props: {
   const [badExit, setBadExit] = React.useState(false);
   //const [openSetErr, setOpenSetErr] = React.useState(props.openErr);
   //const [trigger, setTrigger] = React.useState(false);
-  let AreA = AREA === "0" ? 1 : Number(AREA);
+  let AreA = AREA === '0' ? 1 : Number(AREA);
   //const styleFormPK02 = MakeStyleFormPK02();
 
   let massBoard = [
     {
       ID: 0,
-      title: "Откуда",
+      title: 'Откуда',
       items: [],
     },
     {
       ID: 1,
-      title: "Куда",
+      title: 'Куда',
       items: [],
     },
   ];
@@ -85,12 +81,13 @@ const MapCreatePK = (props: {
     massBoard[1].items = [];
     setBoards(massBoard);
 
-    console.log("Inic:", AreA, massBoard);
+    console.log('Inic:', AreA, massBoard);
 
-    console.log("###Inic:", boards);
+    console.log('###Inic:', boards);
 
     isOpen = true;
     oldArea = AreA;
+    HAVE = 1;
   }
 
   //========================================================
@@ -116,7 +113,7 @@ const MapCreatePK = (props: {
 
   //=== Функции - обработчики ==============================
   const SaveForm = (mode: boolean) => {
-    console.log("######Inic:", boards);
+    console.log('SaveForm:', boards);
     if (mode) {
       CloseEnd(); // здесь должно быть сохранение
     } else {
@@ -130,19 +127,19 @@ const MapCreatePK = (props: {
   const escFunction = React.useCallback(
     (event) => {
       if (event.keyCode === 27) {
-        console.log("ESC!!!", HAVE);
+        console.log('ESC!!!', HAVE);
         HAVE = 0;
         isOpen = false;
         props.setOpen(false, null); // полный выход
         event.preventDefault();
       }
     },
-    [props]
+    [props],
   );
 
   React.useEffect(() => {
-    document.addEventListener("keydown", escFunction);
-    return () => document.removeEventListener("keydown", escFunction);
+    document.addEventListener('keydown', escFunction);
+    return () => document.removeEventListener('keydown', escFunction);
   }, [escFunction]);
   //========================================================
 
@@ -173,62 +170,52 @@ const MapCreatePK = (props: {
   };
 
   const dragOverHandler = (e: any, mode: number) => {
-    //function dragOverHandler(e: any) {
-    //console.log("dragOverHandler", mode, e.target.className);
     e.preventDefault();
-    if (e.target.className === "item") {
-      e.target.style.boxShadow = "0 2px 3px gray";
-    }
   };
 
-  function dragLeaveHandler(e: any) {
-    console.log("dragLeaveHandler");
-    e.target.style.boxShadow = "none";
-  }
-
   const dragStartHandler = (e: any, board: any, item: any) => {
-    //function dragStartHandler(e: any, board: any, item: any) {
-    console.log("dragStartHandler", board, item);
+    //console.log('dragStartHandler', board, item);
     setCurrentBoard(board);
     setCurrentItem(item);
   };
 
-  function dragEndHandler(e: any) {
-    console.log("dragEndHandler");
-    e.target.style.boxShadow = "none";
-  }
-
-  function dropHandler(e: any, board: any, item: any) {
-    console.log("dropHandler");
+  const dropHandler = (e: any, board: any, item: any) => {
+    //function dropHandler(e: any, board: any, item: any) {
     e.preventDefault();
     const currentIndex = currentBoard.items.indexOf(currentItem);
-    currentBoard.items.splice(currentIndex, 1);
-    const dropIndex = board.items.indexOf(item);
-    board.items.splice(dropIndex + 1, 0, currentItem);
-    setBoards(
-      boards.map((b: any) => {
-        if (b.ID === board.id) return board;
-        if (b.id === currentBoard.id) return currentBoard;
-        return b;
-      })
-    );
-    e.target.style.boxShadow = "none";
-  }
 
-  function dropCardHandler(e: any, board: any) {
-    console.log("dropCardHandler");
-    board.items.push(currentItem);
-    const currentIndex = currentBoard.items.indexOf(currentItem);
-    currentBoard.items.splice(currentIndex, 1);
+    console.log('dropHandler', currentIndex, board, item, currentBoard);
+
+    if (currentIndex >= 0 && board.ID !== currentBoard.ID)
+      currentBoard.items.splice(currentIndex, 1);
+    //const dropIndex = board.items.indexOf(item);
+    //board.items.splice(dropIndex + 1, 0, currentItem);
     setBoards(
       boards.map((b: any) => {
         if (b.ID === board.ID) return board;
         if (b.ID === currentBoard.ID) return currentBoard;
         return b;
-      })
+      }),
     );
-    e.target.style.boxShadow = "none";
-  }
+  };
+
+  const dropCardHandler = (e: any, board: any) => {
+    //function dropCardHandler(e: any, board: any) {
+    if (board.ID !== currentBoard.ID) board.items.push(currentItem);
+    const currentIndex = currentBoard.items.indexOf(currentItem);
+
+    console.log('dropCardHandler', currentIndex, board, currentBoard);
+
+    if (currentIndex >= 0 && board.ID !== currentBoard.ID)
+      currentBoard.items.splice(currentIndex, 1);
+    setBoards(
+      boards.map((b: any) => {
+        if (b.ID === board.ID) return board;
+        if (b.ID === currentBoard.ID) return currentBoard;
+        return b;
+      }),
+    );
+  };
 
   return (
     <>
@@ -244,34 +231,29 @@ const MapCreatePK = (props: {
             key={board.ID}
             sx={MakeStyleFormPK022(board.ID)}
             onDragOver={(e) => dragOverHandler(e, 1)}
-            onDrop={(e) => dropCardHandler(e, board)}
-          >
+            onDrop={(e) => dropCardHandler(e, board)}>
             {board.items.map((item: any) => (
               <Box
                 key={item.id}
                 sx={styleFormPK04}
                 onDragOver={(e) => dragOverHandler(e, 2)}
-                onDragLeave={(e) => dragLeaveHandler(e)}
                 onDragStart={(e) => dragStartHandler(e, board, item)}
-                onDragEnd={(e) => dragEndHandler(e)}
                 onDrop={(e) => dropHandler(e, board, item)}
-                draggable={true}
-              >
+                draggable={true}>
                 {item.id} - {item.name}
               </Box>
             ))}
-            {/* {StrokaFormPkFrom(board.ID)} */}
           </Box>
         ))}
 
         <Grid container sx={{ marginTop: 0.8 }}>
-          <Grid item xs={5.57} sx={{ textAlign: "right" }}>
+          <Grid item xs={5.57} sx={{ textAlign: 'right' }}>
             <Button sx={styleFormPK03} onClick={() => SaveForm(true)}>
               Сохранить изменения
             </Button>
           </Grid>
           <Grid item xs={0.82}></Grid>
-          <Grid item xs sx={{ textAlign: "left" }}>
+          <Grid item xs sx={{ textAlign: 'left' }}>
             <Button sx={styleFormPK03} onClick={() => SaveForm(false)}>
               Выйти без сохранения
             </Button>
