@@ -617,7 +617,7 @@ export const MakeStyleFormPK02 = () => {
 
 export const MakeStyleFormPK022 = (idx: any) => {
   let mr = idx ? 0 : 1.5;
-  let ratio = window.innerHeight < 800 ? 0.755 : 0.784;
+  let ratio = window.innerHeight < 800 ? 0.75 : 0.784;
   const styleFormPK02 = {
     width: '340px',
     height: window.innerHeight * ratio,
@@ -640,7 +640,7 @@ export const MakeStyleFormPK022 = (idx: any) => {
 export const styleFormPK03 = {
   maxHeight: '24px',
   minHeight: '24px',
-  backgroundColor: '#E6F5D6', // светло салатовый 
+  backgroundColor: '#E6F5D6', // светло салатовый
   border: '1px solid #000',
   borderRadius: 1,
   borderColor: '#d4d4d4', // серый
@@ -651,7 +651,7 @@ export const styleFormPK03 = {
 
 export const styleFormPK04 = {
   fontSize: 14,
-  width: '97%',
+  width: '96%',
   border: '1px solid #000',
   borderColor: '#d4d4d4', // серый
   borderRadius: 1,
@@ -664,5 +664,11 @@ export const styleFormPK04 = {
   justifyContent: 'space-between',
   paddingLeft: 0.5,
   boxShadow: 4,
+};
+
+export const styleFormPK05 = {
+  marginTop: 1,
+  textAlign: 'center',
+  color: '#5B1080',
 };
 //=====================================================================

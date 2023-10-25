@@ -1,32 +1,32 @@
-import * as React from "react";
+import * as React from 'react';
 import {
   useSelector,
   //useDispatch
-} from "react-redux";
+} from 'react-redux';
 
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 //import TextField from "@mui/material/TextField";
 
 //import MapPointDataError from "./MapPointDataError";
 
-import { BadExit, UniqueName, InputFromList } from "./../MapServiceFunctions";
-import { PreparCurrenciesPlan, InputNamePK } from "./../MapServiceFunctions";
-import { SaveFormPK } from "./../MapServiceFunctions";
+import { BadExit, UniqueName, InputFromList } from './../MapServiceFunctions';
+import { PreparCurrenciesPlan, InputNamePK } from './../MapServiceFunctions';
+import { SaveFormPK } from './../MapServiceFunctions';
 
-import { AREA } from "./../MainMapGl";
+import { AREA } from './../MainMapGl';
 
-import { styleModalEnd, styleFormPK00 } from "./../MainMapStyle";
-import { styleFormPK01, styleFormPK04 } from "./../MainMapStyle";
-import { MakeStyleFormPK022 } from "./../MainMapStyle";
+import { styleModalEnd, styleFormPK00 } from './../MainMapStyle';
+import { styleFormPK01, styleFormPK04 } from './../MainMapStyle';
+import { MakeStyleFormPK022, styleFormPK05 } from './../MainMapStyle';
 
 let massForm: any = null;
 let HAVE = 0;
 let massVert: any = [];
 let isOpen = false;
 let oldArea = -1;
-let nameArea = "";
+let nameArea = '';
 
 let currenciesPlan: any = [];
 const sumPlan = 24;
@@ -39,28 +39,24 @@ interface NewPK {
 
 let NewCoordPlan: NewPK = {
   nomPK: 0,
-  namePK: "",
+  namePK: '',
   coordPlan: null,
 };
 
 let massBoard = [
   {
     ID: 0,
-    title: "Откуда",
+    title: 'Откуда',
     items: [],
   },
   {
     ID: 1,
-    title: "Куда",
+    title: 'Куда',
     items: [],
   },
 ];
 
-const MapCreatePK = (props: {
-  setOpen: any;
-  idx: number;
-  openErr: boolean;
-}) => {
+const MapCreatePK = (props: { setOpen: any; idx: number; openErr: boolean }) => {
   //== Piece of Redux =======================================
   const map = useSelector((state: any) => {
     const { mapReducer } = state;
@@ -77,8 +73,8 @@ const MapCreatePK = (props: {
   const [badExit, setBadExit] = React.useState(false);
   const [currentBoard, setCurrentBoard] = React.useState<any>(null);
   const [currentItem, setCurrentItem] = React.useState<any>(null);
-  const [currencyPlan, setCurrencyPlan] = React.useState("0");
-  let AreA = AREA === "0" ? 1 : Number(AREA);
+  const [currencyPlan, setCurrencyPlan] = React.useState('0');
+  let AreA = AREA === '0' ? 1 : Number(AREA);
   //=== инициализация ======================================
   if (!isOpen || AreA !== oldArea) {
     currenciesPlan = PreparCurrenciesPlan(sumPlan);
@@ -106,12 +102,12 @@ const MapCreatePK = (props: {
     massBoard[0].items = massVert;
     massBoard[1].items = [];
     NewCoordPlan.nomPK = 0;
-    NewCoordPlan.namePK = "План координации " + UniqueName();
+    NewCoordPlan.namePK = 'План координации ' + UniqueName();
     NewCoordPlan.coordPlan = null;
     isOpen = true;
     oldArea = AreA;
     HAVE = 0;
-    console.log("Inic:", AreA, massBoard);
+    console.log('Inic:', AreA, massBoard);
   }
   //========================================================
   const [boards, setBoards] = React.useState(massBoard);
@@ -133,9 +129,20 @@ const MapCreatePK = (props: {
     mode && CloseEnd(); // выход без сохранения
   };
 
+  const handleChangePlan = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCurrencyPlan(event.target.value);
+    NewCoordPlan.nomPK = Number(event.target.value) + 1;
+  };
+
+  const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.value) {
+      setValuen(event.target.value.trimStart()); // удаление пробелов в начале строки
+      NewCoordPlan.namePK = event.target.value.trimStart();
+    }
+  };
   //=== Функции - обработчики ==============================
   const SaveForm = (mode: boolean) => {
-    console.log("SaveForm:", boards);
+    console.log('SaveForm:', boards);
     if (mode) {
       CloseEnd(); // здесь должно быть сохранение
     } else {
@@ -145,19 +152,19 @@ const MapCreatePK = (props: {
   //=== Drag and Drop ======================================
   const dragOverHandler = (e: any, board: any) => {
     e.preventDefault();
-    e.target.className === "MuiBox-root css-3pfbt1" &&
+    e.target.className === 'MuiBox-root css-3pfbt1' &&
       currentBoard.ID === board.ID &&
-      (e.target.style.backgroundColor = "#bae186"); // тёмно салатовый
+      (e.target.style.backgroundColor = '#bae186'); // тёмно салатовый
   };
 
   const dragLeaveHandler = (e: any) => {
-    e.target.style.backgroundColor = "#F8FCF3"; // светло светло салатовый
+    e.target.style.backgroundColor = '#F8FCF3'; // светло светло салатовый
   };
 
   const dragStartHandler = (e: any, board: any, item: any) => {
     setCurrentBoard(board);
     setCurrentItem(item);
-    e.target.style.backgroundColor = "#bae186"; // тёмно салатовый
+    e.target.style.backgroundColor = '#bae186'; // тёмно салатовый
   };
 
   const dropHandler = (e: any, board: any, item: any) => {
@@ -174,9 +181,9 @@ const MapCreatePK = (props: {
         if (b.ID === board.ID) return board;
         if (b.ID === currentBoard.ID) return currentBoard;
         return b;
-      })
+      }),
     );
-    e.target.style.backgroundColor = "#F8FCF3"; // светло светло салатовый
+    e.target.style.backgroundColor = '#F8FCF3'; // светло светло салатовый
   };
 
   const dropCardHandler = (e: any, board: any) => {
@@ -194,42 +201,28 @@ const MapCreatePK = (props: {
         if (b.ID === board.ID) return board;
         if (b.ID === currentBoard.ID) return currentBoard;
         return b;
-      })
+      }),
     );
   };
   //=== обработка Esc ======================================
   const escFunction = React.useCallback(
     (event) => {
       if (event.keyCode === 27) {
-        console.log("ESC!!!", HAVE);
+        console.log('ESC!!!', HAVE);
         HAVE = 0;
         isOpen = false;
         props.setOpen(false, null); // полный выход
         event.preventDefault();
       }
     },
-    [props]
+    [props],
   );
 
   React.useEffect(() => {
-    document.addEventListener("keydown", escFunction);
-    return () => document.removeEventListener("keydown", escFunction);
+    document.addEventListener('keydown', escFunction);
+    return () => document.removeEventListener('keydown', escFunction);
   }, [escFunction]);
   //========================================================
-  const handleChangePlan = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrencyPlan(event.target.value);
-    NewCoordPlan.nomPK = Number(event.target.value) + 1;
-    HAVE++;
-  };
-
-  const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.value) {
-      setValuen(event.target.value.trimStart()); // удаление пробелов в начале строки
-      NewCoordPlan.namePK = event.target.value.trimStart();
-      HAVE++;
-    }
-  };
-
   const HeaderFormPK = () => {
     return (
       <>
@@ -273,8 +266,7 @@ const MapCreatePK = (props: {
             key={board.ID}
             sx={MakeStyleFormPK022(board.ID)}
             onDragOver={(e) => dragOverHandler(e, board)}
-            onDrop={(e) => dropCardHandler(e, board)}
-          >
+            onDrop={(e) => dropCardHandler(e, board)}>
             {board.items.map((item: any) => (
               <Box
                 key={item.id}
@@ -283,14 +275,19 @@ const MapCreatePK = (props: {
                 onDragLeave={(e) => dragLeaveHandler(e)}
                 onDragStart={(e) => dragStartHandler(e, board, item)}
                 onDrop={(e) => dropHandler(e, board, item)}
-                draggable={true}
-              >
+                draggable={true}>
                 {item.id} - {item.name}
               </Box>
             ))}
           </Box>
         ))}
-        {HAVE > 0 && <>{SaveFormPK(SaveForm)}</>}
+        {HAVE > 0 ? (
+          <>{SaveFormPK(SaveForm)}</>
+        ) : (
+          <Box sx={styleFormPK05}>
+            "Перетяните" курсором нужные элементы из левого окна в правое
+          </Box>
+        )}
       </Box>
       {/* {openSetErr && (
         <MapPointDataError
