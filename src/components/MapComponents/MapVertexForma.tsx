@@ -12,7 +12,7 @@ import { ComplianceMapMassdk, WaysInput } from "./../MapServiceFunctions";
 import { BadExit, InputFromList, StrTablVert } from "./../MapServiceFunctions";
 import { HeaderTablFaz, ShiftOptimal } from "./../MapServiceFunctions";
 import { DelStrokaMainTabl, DelStrokaFaz } from "./../MapServiceFunctions";
-import { SaveFormVert } from "./../MapServiceFunctions";
+import { SaveFormVert, PreparCurrenciesPlan } from "./../MapServiceFunctions";
 
 import { styleModalEnd, styleFormInf, styleFormName } from "./../MainMapStyle";
 import { styleFT03, styleFT033 } from "./../MainMapStyle";
@@ -80,27 +80,27 @@ const MapVertexForma = (props: {
       : (props.forma.kolFaz - 2).toString()
   );
 
-  const PreparCurrenciesPlan = (sumPlan: number) => {
-    const currencies: any = [];
-    let dat: Array<string> = [];
-    for (let i = 0; i < sumPlan; i++) dat.push((i + 1).toString());
-    let massKey: any = [];
-    let massDat: any = [];
-    for (let key in dat) {
-      massKey.push(key);
-      massDat.push(dat[key]);
-    }
-    let maskCurrencies = {
-      value: "0",
-      label: "Все режимы",
-    };
-    for (let i = 0; i < massKey.length; i++) {
-      maskCurrencies.value = massKey[i];
-      maskCurrencies.label = massDat[i];
-      currencies.push({ ...maskCurrencies });
-    }
-    return currencies;
-  };
+  // const PreparCurrenciesPlan = (sumPlan: number) => {
+  //   const currencies: any = [];
+  //   let dat: Array<string> = [];
+  //   for (let i = 0; i < sumPlan; i++) dat.push((i + 1).toString());
+  //   let massKey: any = [];
+  //   let massDat: any = [];
+  //   for (let key in dat) {
+  //     massKey.push(key);
+  //     massDat.push(dat[key]);
+  //   }
+  //   let maskCurrencies = {
+  //     value: "0",
+  //     label: "Все режимы",
+  //   };
+  //   for (let i = 0; i < massKey.length; i++) {
+  //     maskCurrencies.value = massKey[i];
+  //     maskCurrencies.label = massDat[i];
+  //     currencies.push({ ...maskCurrencies });
+  //   }
+  //   return currencies;
+  // };
 
   const PreparCurrenciesFaza = (mazFaz: number) => {
     const currencies: any = [];

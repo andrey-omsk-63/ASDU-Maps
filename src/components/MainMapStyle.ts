@@ -596,7 +596,7 @@ export const styleFormPK00 = {
 };
 
 export const styleFormPK01 = {
-  fontSize: 18,
+  fontSize: 21,
   textAlign: 'center',
   color: '#5B1080',
 };
@@ -617,7 +617,7 @@ export const MakeStyleFormPK02 = () => {
 
 export const MakeStyleFormPK022 = (idx: any) => {
   let mr = idx ? 0 : 1.5;
-  let ratio = window.innerHeight < 800 ? 0.765 : 0.794;
+  let ratio = window.innerHeight < 800 ? 0.755 : 0.784;
   const styleFormPK02 = {
     width: '340px',
     height: window.innerHeight * ratio,
@@ -625,7 +625,7 @@ export const MakeStyleFormPK022 = (idx: any) => {
     border: '1px solid #000',
     borderColor: 'primary.main',
     borderRadius: 1,
-    marginTop: 1,
+    marginTop: 0.8,
     marginRight: mr,
     //display: "flex",
     display: 'inline-block',
@@ -640,7 +640,7 @@ export const MakeStyleFormPK022 = (idx: any) => {
 export const styleFormPK03 = {
   maxHeight: '24px',
   minHeight: '24px',
-  backgroundColor: '#E6F5D6', // светло салатовый
+  backgroundColor: '#E6F5D6', // светло салатовый 
   border: '1px solid #000',
   borderRadius: 1,
   borderColor: '#d4d4d4', // серый
@@ -657,10 +657,12 @@ export const styleFormPK04 = {
   borderRadius: 1,
   margin: '1px 0 5px 5px',
   cursor: 'grab',
-  bgcolor: '#E9F5D8', // светло салатовый
+  //bgcolor: '#E9F5D8', // светло салатовый
+  bgcolor: '#F8FCF3', // светло светло салатовый
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
+  paddingLeft: 0.5,
   boxShadow: 4,
 };
 //=====================================================================

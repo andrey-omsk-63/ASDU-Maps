@@ -29,6 +29,7 @@ import { styleSetPoint, styleFT02, styleFormMenu } from "./MainMapStyle";
 import { styleInpKnop, styleBind05, styleModalEndAttent } from "./MainMapStyle";
 import { styleBind02, styleTypography, searchControl } from "./MainMapStyle";
 import { styleBind03, styleBind033, styleSetImg } from "./MainMapStyle";
+import { styleFormPK03 } from "./MainMapStyle";
 
 import { styleModalMenuErr, styleHeadError } from "./MapPointDataErrorStyle";
 import { styleBoxFormArea, styleSetArea } from "./MapPointDataErrorStyle";
@@ -41,6 +42,16 @@ export const handleKey = (event: any) => {
 
 export const MassCoord = (mass: any) => {
   return [mass.coordinates[0], mass.coordinates[1]];
+};
+
+export const UniqueName = () => {
+  let nameMode =
+    "(" +
+    new Date().toLocaleDateString() +
+    " " +
+    new Date().toLocaleTimeString() +
+    ")";
+  return nameMode;
 };
 
 export const MapssdkNewPoint = (
@@ -256,7 +267,7 @@ export const DelPointVertexContent = (
 
 export const PreparCurrenciesMode = () => {
   const currencies: any = [];
-  let dat = ["Создание связей", "Перекрёстки", "Модели (ПК)",];
+  let dat = ["Создание связей", "Перекрёстки", "Модели (ПК)"];
   let massKey: any = [];
   let massDat: any = [];
   for (let key in dat) {
@@ -401,7 +412,7 @@ export const getPointData = (
   pointAaIndex: number,
   pointBbIndex: number,
   massdk: any,
-  map: any,
+  map: any
   //MODE: string
 ) => {
   let idxMap = ComplianceMapMassdk(index, massdk, map);
@@ -1195,7 +1206,6 @@ export const BindInput = (
   MAX: number
 ) => {
   const [trigger, setTrigger] = React.useState(false);
-  //let value = massBind[mode];
   let value = massBind;
 
   const styleSetID = {
@@ -1546,8 +1556,8 @@ export const InputFromList = (func: any, currency: any, currencies: any) => {
 
   const styleBoxForm = {
     "& > :not(style)": {
-      marginTop: "-10px",
-      marginLeft: "-27px",
+      marginTop: "-7px",
+      marginLeft: "-24px",
       width: "72px",
     },
   };
@@ -1759,6 +1769,28 @@ export const DelStrokaFaz = (DeleteFaza: Function) => {
     </Grid>
   );
 };
+
+export const PreparCurrenciesPlan = (sumPlan: number) => {
+  const currencies: any = [];
+  let dat: Array<string> = [];
+  for (let i = 0; i < sumPlan; i++) dat.push((i + 1).toString());
+  let massKey: any = [];
+  let massDat: any = [];
+  for (let key in dat) {
+    massKey.push(key);
+    massDat.push(dat[key]);
+  }
+  let maskCurrencies = {
+    value: "0",
+    label: "Все режимы",
+  };
+  for (let i = 0; i < massKey.length; i++) {
+    maskCurrencies.value = massKey[i];
+    maskCurrencies.label = massDat[i];
+    currencies.push({ ...maskCurrencies });
+  }
+  return currencies;
+};
 //=== PointDataError ==================================================
 export const HeadDoublError = (flagSave: boolean, propsErr: string) => {
   return (
@@ -1848,6 +1880,67 @@ export const StrokaMenuErr = (handleClose: Function) => {
       <Button sx={styleSave} onClick={() => handleClose()}>
         <b>Сохранить</b>
       </Button>
+    </Grid>
+  );
+};
+//=== CreatePK ========================================================
+export const InputNamePK = (handleChangeName: any, valuen: string) => {
+  const styleFormPK05 = {
+    width: "585px",
+    maxHeight: "10px",
+    minHeight: "10px",
+    marginTop: -0.2,
+    bgcolor: "#FFFBE5",
+    border: "1px solid #000",
+    borderColor: "#d4d4d4", // серый
+    borderRadius: 1,
+    boxShadow: 4,
+    textAlign: "center",
+    p: 1,
+  };
+
+  const styleFormPK055 = {
+    "& > :not(style)": {
+      fontSize: 21,
+      marginTop: "-7px",
+      marginLeft: "-5px",
+      width: "600px",
+    },
+  };
+
+  return (
+    <Box sx={styleFormPK05}>
+      <Box component="form" sx={styleFormPK055}>
+        <TextField
+          size="small"
+          onKeyPress={handleKey} //отключение Enter
+          InputProps={{
+            disableUnderline: true,
+            style: { fontSize: 15 },
+          }}
+          value={valuen}
+          onChange={handleChangeName}
+          variant="standard"
+        />
+      </Box>
+    </Box>
+  );
+};
+
+export const SaveFormPK = (SaveForm: any) => {
+  return (
+    <Grid container sx={{ marginTop: 0.8 }}>
+      <Grid item xs={5.57} sx={{ textAlign: "right" }}>
+        <Button sx={styleFormPK03} onClick={() => SaveForm(true)}>
+          Сохранить изменения
+        </Button>
+      </Grid>
+      <Grid item xs={0.82}></Grid>
+      <Grid item xs sx={{ textAlign: "left" }}>
+        <Button sx={styleFormPK03} onClick={() => SaveForm(false)}>
+          Выйти без сохранения
+        </Button>
+      </Grid>
     </Grid>
   );
 };

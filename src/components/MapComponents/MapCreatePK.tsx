@@ -1,66 +1,94 @@
-import * as React from 'react';
+import * as React from "react";
 import {
   useSelector,
   //useDispatch
-} from 'react-redux';
+} from "react-redux";
 
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+//import TextField from "@mui/material/TextField";
 
 //import MapPointDataError from "./MapPointDataError";
 
-//import { ComplianceMapMassdk } from "./../MapServiceFunctions";
-import { BadExit } from './../MapServiceFunctions';
-//import { SaveFormVert } from "./../MapServiceFunctions";
+import { BadExit, UniqueName, InputFromList } from "./../MapServiceFunctions";
+import { PreparCurrenciesPlan, InputNamePK } from "./../MapServiceFunctions";
+import { SaveFormPK } from "./../MapServiceFunctions";
 
-import { AREA } from './../MainMapGl';
+import { AREA } from "./../MainMapGl";
 
-import { styleModalEnd, styleFormPK00 } from './../MainMapStyle';
-import { styleFormPK01, styleFormPK03, styleFormPK04 } from './../MainMapStyle';
-import { MakeStyleFormPK022 } from './../MainMapStyle';
+import { styleModalEnd, styleFormPK00 } from "./../MainMapStyle";
+import { styleFormPK01, styleFormPK04 } from "./../MainMapStyle";
+import { MakeStyleFormPK022 } from "./../MainMapStyle";
 
 let massForm: any = null;
 let HAVE = 0;
 let massVert: any = [];
 let isOpen = false;
 let oldArea = -1;
+let nameArea = "";
 
-const MapCreatePK = (props: { setOpen: any; idx: number; openErr: boolean }) => {
+let currenciesPlan: any = [];
+const sumPlan = 24;
+
+interface NewPK {
+  nomPK: number;
+  namePK: string;
+  coordPlan: any;
+}
+
+let NewCoordPlan: NewPK = {
+  nomPK: 0,
+  namePK: "",
+  coordPlan: null,
+};
+
+let massBoard = [
+  {
+    ID: 0,
+    title: "Откуда",
+    items: [],
+  },
+  {
+    ID: 1,
+    title: "Куда",
+    items: [],
+  },
+];
+
+const MapCreatePK = (props: {
+  setOpen: any;
+  idx: number;
+  openErr: boolean;
+}) => {
   //== Piece of Redux =======================================
-
+  const map = useSelector((state: any) => {
+    const { mapReducer } = state;
+    return mapReducer.map;
+  });
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
     return massrouteReducer.massroute;
   });
   //const dispatch = useDispatch();
   //===========================================================
-
-  const [badExit, setBadExit] = React.useState(false);
   //const [openSetErr, setOpenSetErr] = React.useState(props.openErr);
   //const [trigger, setTrigger] = React.useState(false);
-  let AreA = AREA === '0' ? 1 : Number(AREA);
-  //const styleFormPK02 = MakeStyleFormPK02();
-
-  let massBoard = [
-    {
-      ID: 0,
-      title: 'Откуда',
-      items: [],
-    },
-    {
-      ID: 1,
-      title: 'Куда',
-      items: [],
-    },
-  ];
-
-  const [boards, setBoards] = React.useState(massBoard);
+  const [badExit, setBadExit] = React.useState(false);
   const [currentBoard, setCurrentBoard] = React.useState<any>(null);
   const [currentItem, setCurrentItem] = React.useState<any>(null);
-
+  const [currencyPlan, setCurrencyPlan] = React.useState("0");
+  let AreA = AREA === "0" ? 1 : Number(AREA);
   //=== инициализация ======================================
   if (!isOpen || AreA !== oldArea) {
+    currenciesPlan = PreparCurrenciesPlan(sumPlan);
+    for (let i = 0; i < map.dateMap.tflight.length; i++) {
+      let num = Number(map.dateMap.tflight[i].area.num);
+      if (num === AreA) {
+        nameArea = map.dateMap.tflight[i].area.nameArea;
+        break;
+      }
+    }
     massVert = [];
     for (let i = 0; i < massroute.vertexes.length; i++) {
       if (massroute.vertexes[i].area === AreA) {
@@ -72,25 +100,23 @@ const MapCreatePK = (props: { setOpen: any; idx: number; openErr: boolean }) => 
         massVert.push(maskVert);
       }
     }
-
     massVert.sort(function Func(a: any, b: any) {
       return b.id < a.id ? 1 : b.id > a.id ? -1 : 0;
     });
-
     massBoard[0].items = massVert;
     massBoard[1].items = [];
-    setBoards(massBoard);
-
-    console.log('Inic:', AreA, massBoard);
-
-    console.log('###Inic:', boards);
-
+    NewCoordPlan.nomPK = 0;
+    NewCoordPlan.namePK = "План координации " + UniqueName();
+    NewCoordPlan.coordPlan = null;
     isOpen = true;
     oldArea = AreA;
-    HAVE = 1;
+    HAVE = 0;
+    console.log("Inic:", AreA, massBoard);
   }
-
   //========================================================
+  const [boards, setBoards] = React.useState(massBoard);
+  const [valuen, setValuen] = React.useState(NewCoordPlan.namePK);
+
   const CloseEnd = React.useCallback(() => {
     HAVE = 0;
     isOpen = false;
@@ -102,10 +128,6 @@ const MapCreatePK = (props: { setOpen: any; idx: number; openErr: boolean }) => 
     !HAVE && CloseEnd(); // выход без сохранения
   }, [CloseEnd]);
 
-  // const handleCloseEnd = (event: any, reason: string) => {
-  //   if (reason === "escapeKeyDown") handleCloseBad();
-  // };
-
   const handleCloseBadExit = (mode: boolean) => {
     setBadExit(false);
     mode && CloseEnd(); // выход без сохранения
@@ -113,35 +135,100 @@ const MapCreatePK = (props: { setOpen: any; idx: number; openErr: boolean }) => 
 
   //=== Функции - обработчики ==============================
   const SaveForm = (mode: boolean) => {
-    console.log('SaveForm:', boards);
+    console.log("SaveForm:", boards);
     if (mode) {
       CloseEnd(); // здесь должно быть сохранение
     } else {
       handleCloseBad();
     }
   };
+  //=== Drag and Drop ======================================
+  const dragOverHandler = (e: any, board: any) => {
+    e.preventDefault();
+    e.target.className === "MuiBox-root css-3pfbt1" &&
+      currentBoard.ID === board.ID &&
+      (e.target.style.backgroundColor = "#bae186"); // тёмно салатовый
+  };
 
-  //========================================================
+  const dragLeaveHandler = (e: any) => {
+    e.target.style.backgroundColor = "#F8FCF3"; // светло светло салатовый
+  };
 
+  const dragStartHandler = (e: any, board: any, item: any) => {
+    setCurrentBoard(board);
+    setCurrentItem(item);
+    e.target.style.backgroundColor = "#bae186"; // тёмно салатовый
+  };
+
+  const dropHandler = (e: any, board: any, item: any) => {
+    e.preventDefault();
+    const currentIndex = currentBoard.items.indexOf(currentItem);
+    if (currentIndex >= 0 && board.ID !== currentBoard.ID) {
+      currentBoard.items.splice(currentIndex, 1);
+      HAVE++;
+    }
+    //const dropIndex = board.items.indexOf(item);
+    //board.items.splice(dropIndex + 1, 0, currentItem);
+    setBoards(
+      boards.map((b: any) => {
+        if (b.ID === board.ID) return board;
+        if (b.ID === currentBoard.ID) return currentBoard;
+        return b;
+      })
+    );
+    e.target.style.backgroundColor = "#F8FCF3"; // светло светло салатовый
+  };
+
+  const dropCardHandler = (e: any, board: any) => {
+    if (board.ID !== currentBoard.ID) {
+      board.items.push(currentItem);
+      HAVE++;
+    }
+    const currentIndex = currentBoard.items.indexOf(currentItem);
+    if (currentIndex >= 0 && board.ID !== currentBoard.ID) {
+      currentBoard.items.splice(currentIndex, 1);
+      HAVE++;
+    }
+    setBoards(
+      boards.map((b: any) => {
+        if (b.ID === board.ID) return board;
+        if (b.ID === currentBoard.ID) return currentBoard;
+        return b;
+      })
+    );
+  };
   //=== обработка Esc ======================================
   const escFunction = React.useCallback(
     (event) => {
       if (event.keyCode === 27) {
-        console.log('ESC!!!', HAVE);
+        console.log("ESC!!!", HAVE);
         HAVE = 0;
         isOpen = false;
         props.setOpen(false, null); // полный выход
         event.preventDefault();
       }
     },
-    [props],
+    [props]
   );
 
   React.useEffect(() => {
-    document.addEventListener('keydown', escFunction);
-    return () => document.removeEventListener('keydown', escFunction);
+    document.addEventListener("keydown", escFunction);
+    return () => document.removeEventListener("keydown", escFunction);
   }, [escFunction]);
   //========================================================
+  const handleChangePlan = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCurrencyPlan(event.target.value);
+    NewCoordPlan.nomPK = Number(event.target.value) + 1;
+    HAVE++;
+  };
+
+  const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.value) {
+      setValuen(event.target.value.trimStart()); // удаление пробелов в начале строки
+      NewCoordPlan.namePK = event.target.value.trimStart();
+      HAVE++;
+    }
+  };
 
   const HeaderFormPK = () => {
     return (
@@ -153,67 +240,23 @@ const MapCreatePK = (props: { setOpen: any; idx: number; openErr: boolean }) => 
           <Grid item xs={1.6} sx={{ border: 0 }}>
             <b>Номер ПК</b>
           </Grid>
-          <Grid item xs={0.7} sx={{ border: 1 }}></Grid>
-          <Grid item xs={3.8}></Grid>
+          <Grid item xs={1} sx={{ marginTop: -0.8 }}>
+            {InputFromList(handleChangePlan, currencyPlan, currenciesPlan)}
+          </Grid>
+          <Grid item xs={3.5}></Grid>
           <Grid item xs sx={{ border: 0 }}>
-            <b>Район {AreA}</b>
+            <b>Район {AreA}</b> <em>{nameArea}</em>
           </Grid>
         </Grid>
         <Grid container sx={{ fontSize: 14, marginTop: 0.5 }}>
           <Grid item xs={1.6} sx={{ border: 0 }}>
             <b>Название ПК</b>
           </Grid>
-          <Grid item xs sx={{ border: 1 }}></Grid>
+          <Grid item xs sx={{ marginTop: -0.2 }}>
+            {InputNamePK(handleChangeName, valuen)}
+          </Grid>
         </Grid>
       </>
-    );
-  };
-
-  const dragOverHandler = (e: any, mode: number) => {
-    e.preventDefault();
-  };
-
-  const dragStartHandler = (e: any, board: any, item: any) => {
-    //console.log('dragStartHandler', board, item);
-    setCurrentBoard(board);
-    setCurrentItem(item);
-  };
-
-  const dropHandler = (e: any, board: any, item: any) => {
-    //function dropHandler(e: any, board: any, item: any) {
-    e.preventDefault();
-    const currentIndex = currentBoard.items.indexOf(currentItem);
-
-    console.log('dropHandler', currentIndex, board, item, currentBoard);
-
-    if (currentIndex >= 0 && board.ID !== currentBoard.ID)
-      currentBoard.items.splice(currentIndex, 1);
-    //const dropIndex = board.items.indexOf(item);
-    //board.items.splice(dropIndex + 1, 0, currentItem);
-    setBoards(
-      boards.map((b: any) => {
-        if (b.ID === board.ID) return board;
-        if (b.ID === currentBoard.ID) return currentBoard;
-        return b;
-      }),
-    );
-  };
-
-  const dropCardHandler = (e: any, board: any) => {
-    //function dropCardHandler(e: any, board: any) {
-    if (board.ID !== currentBoard.ID) board.items.push(currentItem);
-    const currentIndex = currentBoard.items.indexOf(currentItem);
-
-    console.log('dropCardHandler', currentIndex, board, currentBoard);
-
-    if (currentIndex >= 0 && board.ID !== currentBoard.ID)
-      currentBoard.items.splice(currentIndex, 1);
-    setBoards(
-      boards.map((b: any) => {
-        if (b.ID === board.ID) return board;
-        if (b.ID === currentBoard.ID) return currentBoard;
-        return b;
-      }),
     );
   };
 
@@ -225,40 +268,29 @@ const MapCreatePK = (props: { setOpen: any; idx: number; openErr: boolean }) => 
           <b>&#10006;</b>
         </Button>
         {HeaderFormPK()}
-
         {boards.map((board: any) => (
           <Box
             key={board.ID}
             sx={MakeStyleFormPK022(board.ID)}
-            onDragOver={(e) => dragOverHandler(e, 1)}
-            onDrop={(e) => dropCardHandler(e, board)}>
+            onDragOver={(e) => dragOverHandler(e, board)}
+            onDrop={(e) => dropCardHandler(e, board)}
+          >
             {board.items.map((item: any) => (
               <Box
                 key={item.id}
                 sx={styleFormPK04}
-                onDragOver={(e) => dragOverHandler(e, 2)}
+                onDragOver={(e) => dragOverHandler(e, board)}
+                onDragLeave={(e) => dragLeaveHandler(e)}
                 onDragStart={(e) => dragStartHandler(e, board, item)}
                 onDrop={(e) => dropHandler(e, board, item)}
-                draggable={true}>
+                draggable={true}
+              >
                 {item.id} - {item.name}
               </Box>
             ))}
           </Box>
         ))}
-
-        <Grid container sx={{ marginTop: 0.8 }}>
-          <Grid item xs={5.57} sx={{ textAlign: 'right' }}>
-            <Button sx={styleFormPK03} onClick={() => SaveForm(true)}>
-              Сохранить изменения
-            </Button>
-          </Grid>
-          <Grid item xs={0.82}></Grid>
-          <Grid item xs sx={{ textAlign: 'left' }}>
-            <Button sx={styleFormPK03} onClick={() => SaveForm(false)}>
-              Выйти без сохранения
-            </Button>
-          </Grid>
-        </Grid>
+        {HAVE > 0 && <>{SaveFormPK(SaveForm)}</>}
       </Box>
       {/* {openSetErr && (
         <MapPointDataError
@@ -276,35 +308,3 @@ const MapCreatePK = (props: { setOpen: any; idx: number; openErr: boolean }) => 
 };
 
 export default MapCreatePK;
-
-//{
-/* <Grid container sx={{ marginTop: 1 }}>
-  <Grid item xs={5.9} sx={styleFormPK02}>
-    {StrokaFormPkFrom()}
-  </Grid>
-  <Grid item xs={0.2}></Grid>
-  <Grid item xs sx={styleFormPK02}></Grid>
-</Grid>; */
-//}
-// <Grid key={i} container sx={{ fontSize: 12 }}>
-//   <Grid item xs={1} sx={{ paddingLeft: 0.5 }}>
-//     {massVert[i].id}
-//   </Grid>
-//   <Grid item xs>
-//     {massVert[i].name}
-//   </Grid>
-// </Grid>
-
-// const StrokaFormPkFrom = (idx: number) => {
-//   let resStr = [];
-//   if (!idx) {
-//     for (let i = 0; i < massVert.length; i++) {
-//       resStr.push(
-//         <Box sx={styleFormPK04}>
-//           {massVert[i].id} - {massVert[i].name}
-//         </Box>
-//       );
-//     }
-//   }
-//   return resStr;
-// };
