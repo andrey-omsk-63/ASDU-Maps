@@ -17,7 +17,8 @@ import MapRouteProtokol from "./MapComponents/MapRouteProtokol";
 import MapReversRoute from "./MapComponents/MapReversRoute";
 import MapVertexForma from "./MapComponents/MapVertexForma";
 import MapWaysFormMenu from "./MapComponents/MapWaysFormMenu";
-import MapCreatePK from "./MapComponents/MapCreatePK";
+import MapCreatePK from "./MapComponents/MapPKComponents/MapCreatePK";
+import MapSpisPK from "./MapComponents/MapPKComponents/MapSpisPK";
 
 import { RecordMassRoute, MakeNewPointContent } from "./MapServiceFunctions";
 import { YandexServices, ShowFormalRoute } from "./MapServiceFunctions";
@@ -31,7 +32,7 @@ import { getPointData, GetPointOptions } from "./MapServiceFunctions";
 import { СontentModalPressBalloon, MakeFromCross } from "./MapServiceFunctions";
 import { ChangeCrossFunc, PreparCurrencies } from "./MapServiceFunctions";
 import { RecevKeySvg, StrokaMenuGlob, MasskPoint } from "./MapServiceFunctions";
-import { DelVertexOrPoint, MenuProcesRoute } from "./MapServiceFunctions";
+import { DelVertexOrPoint, MainMenu } from "./MapServiceFunctions";
 import { DelPointVertexContent, MassCoord } from "./MapServiceFunctions";
 import { FillMassRouteContent } from "./MapServiceFunctions";
 import { PreparCurrenciesMode } from "./MapServiceFunctions";
@@ -47,11 +48,14 @@ let coordStopIn: any = []; // рабочий массив коллекции и�
 let massRoute: any = []; // рабочий массив сети связей
 let masSvg: any = ["", ""];
 
+export let AREA = "0";
+export let MODE = "0";
+export let homeRegion: any = 0;
 export let debug: boolean = false;
+export let MASSPK: any = [];
 let flagOpen: boolean, flagBind: boolean;
 let flagRevers: boolean, needLinkBind: boolean, FlagDemo: boolean;
-debug = flagOpen = flagBind = flagRevers = needLinkBind = FlagDemo = false;
-export let homeRegion: any = 0;
+flagOpen = flagBind = flagRevers = needLinkBind = FlagDemo = false;
 let newPointCoord: any, pointCenter: any, pointAa: any, pointBb: any;
 newPointCoord = pointCenter = pointAa = pointBb = 0;
 let soobError = "";
@@ -77,8 +81,7 @@ let funcContex: any, funcBound: any, funcClick: any, activeRoute: any;
 funcContex = funcBound = funcClick = activeRoute = null;
 let currencies: any = [];
 let currenciesMode: any = [];
-export let AREA = "0";
-export let MODE = "0";
+
 let idxDel: number, nomRoute: number, idxRoute: number, pointAaIndex: number;
 let indexPoint: number, pointBbIndex: number;
 idxDel = nomRoute = idxRoute = indexPoint = pointAaIndex = pointBbIndex = -1;
@@ -132,6 +135,7 @@ const MainMap = (props: {
   const [openVertForm, setOpenVertForm] = React.useState(false);
   const [openWaysForm, setOpenWaysForm] = React.useState(false);
   const [openPKForm, setOpenPKForm] = React.useState(false);
+  const [openPKSpis, setOpenPKSpis] = React.useState(false);
   const [openWaysFormMenu, setOpenWaysFormMenu] = React.useState(false);
   const [openSetEr, setOpenSetEr] = React.useState(false);
   const [openBind, setOpenBind] = React.useState(false);
@@ -170,6 +174,8 @@ const MainMap = (props: {
       setOpenWaysForm(false);
       setOpenWaysFormMenu(false);
       setOpenPKForm(false);
+      setOpenPKSpis(false);
+      MASSPK = [];
       ymaps && addRoute(ymaps); // перерисовка связей
     },
     [ymaps]
@@ -320,21 +326,27 @@ const MainMap = (props: {
       case 77: // удаление связи / отмена назначений
         ZeroRoute(false);
         break;
+
       case 121: // выбор района
         FillMassRoute();
         ZeroRoute(false);
         flagDemo && ymaps && addRoute(ymaps); // перерисовка связей
         break;
+      case 201: // список всех ПК
+        ZeroRoute(false);
+        setOpenPKSpis(true);
+        break;
+      case 202: // создание нового ПК
+        ZeroRoute(false);
+        if (AREA === "0") {
+          AREA = "1";
+          setCurrency("1");
+          FillMassRoute();
+        }
+        setOpenPKForm(true);
+        break;
       case 212: // выбор режима работы
         ZeroRoute(false);
-        if (MODE === "2") {
-          if (AREA === '0') {
-            AREA = '1'
-            setCurrency('1');
-            FillMassRoute();
-          }
-          setOpenPKForm(true);
-        }
     }
   };
   //========================================================
@@ -385,7 +397,8 @@ const MainMap = (props: {
   const OnPlacemarkClickPoint = (index: number, coor: any) => {
     let COORD = coor ? coor : MassCoord(massdk[index]);
     if (pointAa === 0) {
-      if (!massdk[index].area && MODE === "1") return;
+      if (!massdk[index].area && MODE === "1") return; // включён режим "Перекрёстки"
+      if (MODE === "2") return; // включён режим "Модели (ПК)"
       if (!openWaysForm) {
         ZeroRoute(false); //==================================
         pointAaIndex = index; // начальная точка
@@ -657,14 +670,23 @@ const MainMap = (props: {
     }
   };
 
-  const SetOpenPKForm = (mode: boolean, forma: any, openErr: boolean) => {
-    //setOpenPKForm(false); // закрытие формы
-    ZeroRoute(false);
-  };
+  // const SetOpenPKForm = () => {
+  //   ZeroRoute(false);
+  // };
+
+  // const SetOpenPKSpis = () => {
+  //   ZeroRoute(false);
+  // };
 
   const SetOpenWaysFormMenu = (mode: number, idx: number, pusto: number) => {
     setOpenWaysFormMenu(false);
     ZeroRoute(false);
+  };
+
+  const SetMassPkId = (massPkId: any) => {
+    console.log("massPkId:", massPkId);
+    MASSPK = massPkId;
+    setRevers(!revers); // ререндер
   };
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(massroute).length) {
@@ -740,7 +762,7 @@ const MainMap = (props: {
       {InputMenu(handleChangeMode, currencyMode, currenciesMode)}
       {MakeRevers(makeRevers, needRevers, PressButton)}
       {ShowFormalRoute(flagDemo, PressButton)}
-      {MenuProcesRoute(flagPusk, flagRoute, PressButton)}
+      {MainMenu(flagPusk, flagRoute, PressButton)}
       {flagPro && <>{StrokaMenuGlob("Протокол", PressButton, 24)}</>}
       {Object.keys(massroute).length && (
         <YMaps query={{ apikey: MyYandexKey, lang: "ru_RU" }}>
@@ -775,11 +797,10 @@ const MainMap = (props: {
               />
             )}
             {openPKForm && (
-              <MapCreatePK
-                setOpen={SetOpenPKForm}
-                idx={pointAaIndex}
-                openErr={openEF}
-              />
+              <MapCreatePK setOpen={ZeroRoute} SetMass={SetMassPkId} />
+            )}
+            {openPKSpis && (
+              <MapSpisPK setOpen={ZeroRoute} SetMass={SetMassPkId} />
             )}
             {openWaysFormMenu && !openVertForm && (
               <MapWaysFormMenu
