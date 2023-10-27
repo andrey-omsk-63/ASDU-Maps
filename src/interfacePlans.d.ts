@@ -1,6 +1,6 @@
 export interface DatePlan {
   type: string;
-  plans: PlanCoord[] | null;
+  plans: PlanCoord[];
 }
 
 export interface PlanCoord {

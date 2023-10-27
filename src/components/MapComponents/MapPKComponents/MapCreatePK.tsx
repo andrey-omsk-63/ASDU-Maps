@@ -1,8 +1,6 @@
 import * as React from "react";
-import {
-  useSelector,
-  //useDispatch
-} from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { massplanCreate } from "./../../../redux/actions";
 
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -15,9 +13,9 @@ import { BadExit, UniqueName, InputFromList } from "../../MapServiceFunctions";
 import { PreparCurrenciesPlan, InputNamePK } from "../../MapServiceFunctions";
 import { SaveFormPK } from "../../MapServiceFunctions";
 
-import { AREA } from "../../MainMapGl";
+import { AREA, SUMPK } from "../../MainMapGl";
 
-import { PlanCoord, PlanCoordData } from "../../../interfacePlans.d"; // интерфейс
+import { PlanCoord } from "../../../interfacePlans.d"; // интерфейс
 
 import { styleModalEnd, MakeStyleFormPK00 } from "../../MainMapStyle";
 import { styleFormPK01, styleFormPK04 } from "../../MainMapStyle";
@@ -31,7 +29,6 @@ let oldArea = -1;
 let nameArea = "";
 
 let currenciesPlan: any = [];
-const sumPlan = 24;
 
 let NewCoordPlan: PlanCoord = {
   nomPK: 0,
@@ -63,19 +60,31 @@ const MapCreatePK = (props: { setOpen: any; SetMass: Function }) => {
     const { massrouteReducer } = state;
     return massrouteReducer.massroute;
   });
-  //const dispatch = useDispatch();
+  let massplan = useSelector((state: any) => {
+    const { massplanReducer } = state;
+    return massplanReducer.massplan;
+  });
+  console.log("massplan:", massplan);
+  const dispatch = useDispatch();
   //===========================================================
   //const [openSetErr, setOpenSetErr] = React.useState(props.openErr);
-  //const [trigger, setTrigger] = React.useState(false);
   const [badExit, setBadExit] = React.useState(false);
   const [currentBoard, setCurrentBoard] = React.useState<any>(null);
   const [currentItem, setCurrentItem] = React.useState<any>(null);
   const [currencyPlan, setCurrencyPlan] = React.useState("0");
   let AreA = AREA === "0" ? 1 : Number(AREA);
+  const sumPlan = SUMPK;
   //=== инициализация ======================================
   if (!isOpen || AreA !== oldArea) {
-    currenciesPlan = PreparCurrenciesPlan(sumPlan);
-    massPkId = [];
+    let massNumPk: Array<number> = [];
+    for (let i = 0; i < massplan.plans.length; i++) {
+      for (let j = 0; j < sumPlan; j++) {
+        if (j + 1 === massplan.plans[i].nomPK)
+          massNumPk.push(massplan.plans[i].nomPK);
+      }
+    }
+    currenciesPlan = PreparCurrenciesPlan(sumPlan, massNumPk);
+
     for (let i = 0; i < map.dateMap.tflight.length; i++) {
       let num = Number(map.dateMap.tflight[i].area.num);
       if (num === AreA) {
@@ -83,6 +92,7 @@ const MapCreatePK = (props: { setOpen: any; SetMass: Function }) => {
         break;
       }
     }
+
     massVert = [];
     for (let i = 0; i < massroute.vertexes.length; i++) {
       if (massroute.vertexes[i].area === AreA) {
@@ -97,9 +107,11 @@ const MapCreatePK = (props: { setOpen: any; SetMass: Function }) => {
     massVert.sort(function Func(a: any, b: any) {
       return b.id < a.id ? 1 : b.id > a.id ? -1 : 0;
     });
+
+    massPkId = [];
     massBoard[0].items = massVert;
     massBoard[1].items = [];
-    NewCoordPlan.nomPK = 1;
+    NewCoordPlan.nomPK = Number(currenciesPlan[0].label);
     NewCoordPlan.areaPK = AreA;
     NewCoordPlan.namePK = "План координации " + UniqueName();
     NewCoordPlan.coordPlan = [];
@@ -114,6 +126,7 @@ const MapCreatePK = (props: { setOpen: any; SetMass: Function }) => {
 
   const CloseEnd = React.useCallback(() => {
     HAVE = 0;
+    oldArea = -1;
     isOpen = false;
     props.setOpen(false); // полный выход
   }, [props]);
@@ -127,10 +140,12 @@ const MapCreatePK = (props: { setOpen: any; SetMass: Function }) => {
     setBadExit(false);
     mode && CloseEnd(); // выход без сохранения
   };
-
+  //=== Функции - обработчики ==============================
   const handleChangePlan = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrencyPlan(event.target.value);
-    NewCoordPlan.nomPK = Number(event.target.value) + 1;
+    NewCoordPlan.nomPK = Number(
+      currenciesPlan[Number(event.target.value)].label
+    );
   };
 
   const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -139,18 +154,25 @@ const MapCreatePK = (props: { setOpen: any; SetMass: Function }) => {
       NewCoordPlan.namePK = event.target.value.trimStart();
     }
   };
-  //=== Функции - обработчики ==============================
+
   const SaveForm = (mode: boolean) => {
-    console.log("SaveForm:", boards);
     if (mode) {
-      console.log("!!!!!!", boards[1].items.length);
       if (boards[1].items.length) {
         NewCoordPlan.coordPlan = [];
         for (let i = 0; i < boards[1].items.length; i++) {
           let aa: any = boards[1].items[i];
-          NewCoordPlan.coordPlan.push(aa.id);
+          let mask = {
+            id: aa.id,
+          };
+          NewCoordPlan.coordPlan.push(mask);
         }
       }
+      massplan.plans.push({ ...NewCoordPlan });
+      massplan.plans.sort(function FuncSort(a: any, b: any) {
+        return b.nomPK < a.nomPK ? 1 : b.nomPK > a.nomPK ? -1 : 0;
+      });
+      dispatch(massplanCreate(massplan));
+      console.log("Finish:", massplan);
       CloseEnd();
     } else handleCloseBad();
   };

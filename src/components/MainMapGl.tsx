@@ -50,6 +50,7 @@ let masSvg: any = ["", ""];
 
 export let AREA = "0";
 export let MODE = "0";
+export const SUMPK = 24;
 export let homeRegion: any = 0;
 export let debug: boolean = false;
 export let MASSPK: any = [];
@@ -684,7 +685,6 @@ const MainMap = (props: {
   };
 
   const SetMassPkId = (massPkId: any) => {
-    console.log("massPkId:", massPkId);
     MASSPK = massPkId;
     setRevers(!revers); // ререндер
   };

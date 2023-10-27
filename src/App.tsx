@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { mapCreate, massrouteCreate } from "./redux/actions";
+import { mapCreate, massrouteCreate, massplanCreate } from "./redux/actions";
 import { massrouteproCreate, coordinatesCreate } from "./redux/actions";
 import { massdkCreate, statsaveCreate } from "./redux/actions";
 
@@ -17,15 +17,17 @@ import {
   SoobErrorDeleteWayFromPoint,
 } from "./components/MapSocketFunctions";
 
-//import { DateMAP } from './interfaceMAP.d';
+import { PlanCoord } from "./interfacePlans.d";
 //import { DateRoute } from "./interfaceRoute.d";
 //import { Tflight } from "./interfaceMAP.d";
 import { dataMap } from "./otladkaMaps";
 import { dataRoute } from "./otladkaRoutes";
+import { dataPlan } from "./otladkaPlans";
 
 export let dateMapGl: any;
 export let dateRouteGl: any;
 export let dateRouteProGl: any;
+export let datePlan: any;
 
 export interface Pointer {
   ID: number;
@@ -80,10 +82,12 @@ export let dateStat: Stater = {
 };
 
 export let massRoute: Router[] = [];
+export let massPlan: PlanCoord[] = [];
 export let massRoutePro: Router[] = [];
 export let Coordinates: Array<Array<number>> = []; // массив координат
 
 let flagOpen = true;
+let flagOpenКостыль = true;
 let flagOpenWS = true;
 let WS: any = null;
 let homeRegion: any = "";
@@ -268,6 +272,14 @@ const App = () => {
       }
     };
   }, [dispatch, massdk, coordinates, svg, trigger]);
+
+  if (flagOpenКостыль) {
+    //datePlan = { ...dataPlan.plans }; // временный костыль
+    datePlan = { ...dataPlan }; // временный костыль
+    dispatch(massplanCreate(datePlan));
+    console.log('datePlan:',datePlan )
+    flagOpenКостыль = false;
+  }
 
   if (WS.url === "wss://localhost:3000/W" && flagOpen) {
     console.log("РЕЖИМ ОТЛАДКИ!!!");

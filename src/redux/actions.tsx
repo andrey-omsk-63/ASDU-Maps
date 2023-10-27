@@ -5,10 +5,12 @@ import {
   MASSROUTEPRO_CREATE,
   COORDINATES_CREATE,
   STATSAVE_CREATE,
+  MASSPLAN_CREATE,
 } from "./types";
 
 import { DateMAP } from "./../interfaceMAP.d";
 import { DateRoute } from "./../interfaceRoute.d";
+import { DatePlan } from "./../interfacePlans.d";
 import { Pointer } from "./../App";
 import { Stater } from './../App';
 
@@ -30,6 +32,13 @@ export function massrouteCreate(massRouter: DateRoute) {
   return {
     type: MASSROUTE_CREATE,
     data: massRouter,
+  };
+}
+
+export function massplanCreate(massPlan: DatePlan) {
+  return {
+    type: MASSPLAN_CREATE,
+    data: massPlan,
   };
 }
 

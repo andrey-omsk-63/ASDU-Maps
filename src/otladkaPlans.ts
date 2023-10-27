@@ -1,4 +1,4 @@
-export const dataPlans = {
+export const dataPlan = {
   type: "planInfo",
   plans: [
     {
@@ -17,6 +17,25 @@ export const dataPlans = {
         },
         {
           id: 23,
+        },
+      ],
+    },
+    {
+      nomPK: 6,
+      areaPK: 1,
+      namePK: "План координации (25.10.2023 12:12:12)",
+      coordPlan: [
+        {
+          id: 57,
+        },
+        {
+          id: 139,
+        },
+        {
+          id: 237,
+        },
+        {
+          id: 61,
         },
       ],
     },

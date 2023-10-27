@@ -664,8 +664,9 @@ export const MainMenu = (
         </>
       )}
       {MODE === "2" && (
-        <>{StrokaMenuGlob("Существующие ПК", PressButton, 201)}
-        {StrokaMenuGlob("Создание нового ПК", PressButton, 202)}
+        <>
+          {StrokaMenuGlob("Существующие ПК", PressButton, 201)}
+          {StrokaMenuGlob("Создание нового ПК", PressButton, 202)}
         </>
       )}
     </>
@@ -1772,10 +1773,15 @@ export const DelStrokaFaz = (DeleteFaza: Function) => {
   );
 };
 
-export const PreparCurrenciesPlan = (sumPlan: number) => {
+export const PreparCurrenciesPlan = (
+  sumPlan: number,
+  contrast: Array<number>
+) => {
   const currencies: any = [];
   let dat: Array<string> = [];
-  for (let i = 0; i < sumPlan; i++) dat.push((i + 1).toString());
+  for (let i = 0; i < sumPlan; i++) {
+    if (contrast.indexOf(i + 1) < 0) dat.push((i + 1).toString());
+  }
   let massKey: any = [];
   let massDat: any = [];
   for (let key in dat) {
@@ -1933,14 +1939,14 @@ export const SaveFormPK = (SaveForm: any) => {
   return (
     <Grid container sx={{ marginTop: 0.8 }}>
       <Grid item xs={5.57} sx={{ textAlign: "right" }}>
-        <Button sx={styleFormPK03} onClick={() => SaveForm(true)}>
-          Сохранить изменения
+        <Button sx={styleFormPK03} onClick={() => SaveForm(false)}>
+          Выйти без сохранения
         </Button>
       </Grid>
       <Grid item xs={0.82}></Grid>
       <Grid item xs sx={{ textAlign: "left" }}>
-        <Button sx={styleFormPK03} onClick={() => SaveForm(false)}>
-          Выйти без сохранения
+        <Button sx={styleFormPK03} onClick={() => SaveForm(true)}>
+          Сохранить изменения
         </Button>
       </Grid>
     </Grid>
