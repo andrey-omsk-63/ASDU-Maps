@@ -595,7 +595,7 @@ export const MakeStyleFormPK00 = (wdth: number) => {
     boxShadow: 24,
     p: 1.5,
   };
-  return styleFormPK00
+  return styleFormPK00;
 };
 
 export const styleFormPK01 = {
@@ -624,7 +624,8 @@ export const MakeStyleFormPK022 = (idx: any) => {
   const styleFormPK02 = {
     width: "340px",
     height: window.innerHeight * ratio,
-    bgcolor: "#F0F0F0",
+    //bgcolor: "#F0F0F0",
+    bgcolor: "#F1F5FB",
     border: "1px solid #000",
     borderColor: "primary.main",
     borderRadius: 1,
@@ -673,5 +674,57 @@ export const styleFormPK05 = {
   marginTop: 1,
   textAlign: "center",
   color: "#5B1080",
+};
+//=== SpisPK ==========================================================
+export const MakeStylSpisPK01 = () => {
+  let ratio = window.innerHeight < 800 ? 0.803 : 0.84;
+  const styleSpisPK01 = {
+    width: "98.5%",
+    height: window.innerHeight * ratio,
+    //bgcolor: "#F0F0F0",
+    bgcolor: "#F1F5FB",
+    border: "1px solid #1976D2", // "primary.main"
+    borderRadius: 1,
+    marginTop: 1,
+    alignItems: "center",
+    overflowX: "auto",
+    boxShadow: 6,
+    padding: "5px 5px 0px 5px",
+  };
+  return styleSpisPK01;
+};
+
+export const MakeStylSpisPK02 = (mode: number, delMode: boolean) => {
+  const styleSpisPK02 = {
+    fontSize: delMode ? 12.9 : 14,
+    maxHeight: "24px",
+    minHeight: "24px",
+    width: "99%",
+    marginBottom: 0.7,
+    backgroundColor: delMode ? "#bae186" : "#E6F5D6", // тёмно салатовый/светло салатовый
+    border: "1px solid #000",
+    borderRadius: 1,
+    borderColor: delMode ? "#93D145" : "#d4d4d4", // тёмно салатовый/серый
+    textTransform: "unset !important",
+    color: delMode ? "red" : "black",
+    padding: "0px 5px 0px 5px",
+    justifyContent: mode ? "center" : "flex-start",
+    boxShadow: delMode ? 1 : 6,
+  };
+  return styleSpisPK02;
+};
+
+export const styleSpisPK03 = {
+  maxHeight: "24px",
+  minHeight: "24px",
+  width: 180,
+  marginBottom: 0.7,
+  backgroundColor: "#E6F5D6", // светло салатовый
+  border: "1px solid #000",
+  borderRadius: 1,
+  borderColor: "#d4d4d4", // серый
+  textTransform: "unset !important",
+  color: "black",
+  boxShadow: 6,
 };
 //=====================================================================
