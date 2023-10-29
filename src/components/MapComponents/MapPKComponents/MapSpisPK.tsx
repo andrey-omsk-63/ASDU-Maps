@@ -1,31 +1,29 @@
-import * as React from "react";
-import {
-  useSelector,
-  //useDispatch
-} from "react-redux";
+import * as React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { massplanCreate } from './../../../redux/actions';
 
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 //import TextField from "@mui/material/TextField";
 
 //import MapPointDataError from "./MapPointDataError";
 
-import { BadExit } from "../../MapServiceFunctions";
+import { BadExit } from '../../MapServiceFunctions';
 //import { PreparCurrenciesPlan, InputNamePK } from "../../MapServiceFunctions";
 //import { SaveFormPK } from "../../MapServiceFunctions";
 
-import { AREA } from "../../MainMapGl";
+import { AREA } from '../../MainMapGl';
 
-import { styleModalEnd, MakeStyleFormPK00 } from "../../MainMapStyle";
-import { styleFormPK01, MakeStylSpisPK01 } from "../../MainMapStyle";
-import { MakeStylSpisPK02, styleSpisPK03 } from "../../MainMapStyle";
+import { styleModalEnd, MakeStyleFormPK00 } from '../../MainMapStyle';
+import { styleFormPK01, MakeStylSpisPK01 } from '../../MainMapStyle';
+import { MakeStylSpisPK02, styleSpisPK03 } from '../../MainMapStyle';
 
 let HAVE = 0;
-let isOpen = false;
+//let isOpen = false;
 let flagDel = 0;
 
-let massSpis: Array<any>;
+let massSpis: Array<any> = [];
 
 const MapSpisPK = (props: { setOpen: any; SetMass: Function }) => {
   //== Piece of Redux =======================================
@@ -41,8 +39,8 @@ const MapSpisPK = (props: { setOpen: any; SetMass: Function }) => {
     const { massplanReducer } = state;
     return massplanReducer.massplan;
   });
-  console.log("massplan:", massplan);
-  //const dispatch = useDispatch();
+  console.log('massplan:', massplan);
+  const dispatch = useDispatch();
   //===========================================================
   //const [openSetErr, setOpenSetErr] = React.useState(props.openErr);
   const [trigger, setTrigger] = React.useState(false);
@@ -50,21 +48,32 @@ const MapSpisPK = (props: { setOpen: any; SetMass: Function }) => {
   // const [currentBoard, setCurrentBoard] = React.useState<any>(null);
   // const [currentItem, setCurrentItem] = React.useState<any>(null);
   // const [currencyPlan, setCurrencyPlan] = React.useState("0");
-  let AreA = AREA === "0" ? 1 : Number(AREA);
+  let AreA = AREA === '0' ? 1 : Number(AREA);
   //=== инициализация ======================================
-  if (!isOpen) {
-    isOpen = true;
+  if (massplan.plans.length !== massSpis.length) {
+    //isOpen = true;
     flagDel = 0;
-    massSpis = [];
+    //massSpis = [];
+    let massSp = [];
     for (let i = 0; i < massplan.plans.length; i++) {
       let mask = {
         nom: massplan.plans[i].nomPK,
         name: massplan.plans[i].namePK,
         del: false,
       };
-      massSpis.push(mask);
+      let have = false;
+      for (let j = 0; j < massSpis.length; j++) {
+        if (massSpis[j].nom === massplan.plans[i].nomPK) {
+          if (massSpis[j].del) flagDel++;
+          massSp.push({ ...massSpis[j] });
+          have = true;
+        }
+      }
+      !have && massSp.push(mask);
     }
-    console.log("Inic:", AreA);
+    massSpis = [];
+    massSpis = massSp;
+    console.log('Inic:', AreA);
   }
   //========================================================
   //const [boards, setBoards] = React.useState(massBoard);
@@ -72,7 +81,7 @@ const MapSpisPK = (props: { setOpen: any; SetMass: Function }) => {
 
   const CloseEnd = React.useCallback(() => {
     HAVE = 0;
-    isOpen = false;
+    //isOpen = false;
     props.setOpen(false); // полный выход
   }, [props]);
 
@@ -101,22 +110,22 @@ const MapSpisPK = (props: { setOpen: any; SetMass: Function }) => {
   const escFunction = React.useCallback(
     (event) => {
       if (event.keyCode === 27) {
-        console.log("ESC!!!", HAVE);
+        console.log('ESC!!!', HAVE);
         HAVE = 0;
-        isOpen = false;
+        //isOpen = false;
         props.setOpen(false); // полный выход
         event.preventDefault();
       }
     },
-    [props]
+    [props],
   );
 
   React.useEffect(() => {
-    document.addEventListener("keydown", escFunction);
-    return () => document.removeEventListener("keydown", escFunction);
+    document.addEventListener('keydown', escFunction);
+    return () => document.removeEventListener('keydown', escFunction);
   }, [escFunction]);
   //========================================================
- 
+
   const MarkSpis = (idx: number) => {
     massSpis[idx].del = !massSpis[idx].del;
     if (massSpis[idx].del) {
@@ -128,7 +137,7 @@ const MapSpisPK = (props: { setOpen: any; SetMass: Function }) => {
   const StrokaSpisPlan = () => {
     let resStr = [];
     for (let i = 0; i < massSpis.length; i++) {
-      let titleDel = massSpis[i].del ? "Восстановить" : "Удалить";
+      let titleDel = massSpis[i].del ? 'Восстановить' : 'Удалить';
       let del = massSpis[i].del;
       resStr.push(
         <Grid key={i} container>
@@ -147,15 +156,27 @@ const MapSpisPK = (props: { setOpen: any; SetMass: Function }) => {
               {titleDel}
             </Button>
           </Grid>
-        </Grid>
+        </Grid>,
       );
     }
     return resStr;
   };
 
-  const DelSpis = () => {};
+  const DelSpis = () => {
+    //let massSp = [];
+    let massplanPlans = [];
+    for (let i = 0; i < massSpis.length; i++) {
+      if (!massSpis[i].del) {
+        //massSp.push({ ...massSpis[i]})
+        massplanPlans.push({ ...massplan.plans[i] });
+      }
+    }
+    massplan.plans = [];
+    massplan.plans = massplanPlans;
+    dispatch(massplanCreate(massplan));
+    setTrigger(!trigger); // ререндер
+  };
 
-  
   return (
     <>
       {badExit && <>{BadExit(badExit, handleCloseBadExit)}</>}
@@ -169,7 +190,7 @@ const MapSpisPK = (props: { setOpen: any; SetMass: Function }) => {
         <Box sx={MakeStylSpisPK01()}>{StrokaSpisPlan()}</Box>
         {flagDel > 0 && (
           <>
-            <Box sx={{ marginTop: 1, textAlign: "center" }}>
+            <Box sx={{ marginTop: 1, textAlign: 'center' }}>
               <Button sx={styleSpisPK03} onClick={() => DelSpis()}>
                 Удалить отмеченные
               </Button>

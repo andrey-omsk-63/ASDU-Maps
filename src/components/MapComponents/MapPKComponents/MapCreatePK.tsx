@@ -1,51 +1,52 @@
-import * as React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { massplanCreate } from "./../../../redux/actions";
+import * as React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { massplanCreate } from './../../../redux/actions';
 
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 //import TextField from "@mui/material/TextField";
 
-//import MapPointDataError from "./MapPointDataError";
+import MapPointDataError from './../MapPointDataError';
 
-import { BadExit, UniqueName, InputFromList } from "../../MapServiceFunctions";
-import { PreparCurrenciesPlan, InputNamePK } from "../../MapServiceFunctions";
-import { SaveFormPK } from "../../MapServiceFunctions";
+import { BadExit, UniqueName, InputFromList } from '../../MapServiceFunctions';
+import { PreparCurrenciesPlan, InputNamePK } from '../../MapServiceFunctions';
+import { SaveFormPK } from '../../MapServiceFunctions';
 
-import { AREA, SUMPK } from "../../MainMapGl";
+import { AREA, SUMPK } from '../../MainMapGl';
 
-import { PlanCoord } from "../../../interfacePlans.d"; // интерфейс
+import { PlanCoord } from '../../../interfacePlans.d'; // интерфейс
 
-import { styleModalEnd, MakeStyleFormPK00 } from "../../MainMapStyle";
-import { styleFormPK01, styleFormPK04 } from "../../MainMapStyle";
-import { MakeStyleFormPK022, styleFormPK05 } from "../../MainMapStyle";
+import { styleModalEnd, MakeStyleFormPK00 } from '../../MainMapStyle';
+import { styleFormPK01, styleFormPK04 } from '../../MainMapStyle';
+import { MakeStyleFormPK022, styleFormPK05 } from '../../MainMapStyle';
 
 let HAVE = 0;
 let massVert: any = [];
 let massPkId: any = [];
 let isOpen = false;
 let oldArea = -1;
-let nameArea = "";
+let nameArea = '';
+let soobErr = '';
 
 let currenciesPlan: any = [];
 
 let NewCoordPlan: PlanCoord = {
   nomPK: 0,
   areaPK: 0,
-  namePK: "",
+  namePK: '',
   coordPlan: [],
 };
 
 let massBoard = [
   {
     ID: 0,
-    title: "Откуда",
+    title: 'Откуда',
     items: [],
   },
   {
     ID: 1,
-    title: "Куда",
+    title: 'Куда',
     items: [],
   },
 ];
@@ -64,23 +65,22 @@ const MapCreatePK = (props: { setOpen: any; SetMass: Function }) => {
     const { massplanReducer } = state;
     return massplanReducer.massplan;
   });
-  console.log("massplan:", massplan);
+  console.log('massplan:', massplan);
   const dispatch = useDispatch();
   //===========================================================
-  //const [openSetErr, setOpenSetErr] = React.useState(props.openErr);
+  const [openSetErr, setOpenSetErr] = React.useState(false);
   const [badExit, setBadExit] = React.useState(false);
   const [currentBoard, setCurrentBoard] = React.useState<any>(null);
   const [currentItem, setCurrentItem] = React.useState<any>(null);
-  const [currencyPlan, setCurrencyPlan] = React.useState("0");
-  let AreA = AREA === "0" ? 1 : Number(AREA);
+  const [currencyPlan, setCurrencyPlan] = React.useState('0');
+  let AreA = AREA === '0' ? 1 : Number(AREA);
   const sumPlan = SUMPK;
   //=== инициализация ======================================
   if (!isOpen || AreA !== oldArea) {
     let massNumPk: Array<number> = [];
     for (let i = 0; i < massplan.plans.length; i++) {
       for (let j = 0; j < sumPlan; j++) {
-        if (j + 1 === massplan.plans[i].nomPK)
-          massNumPk.push(massplan.plans[i].nomPK);
+        if (j + 1 === massplan.plans[i].nomPK) massNumPk.push(massplan.plans[i].nomPK);
       }
     }
     currenciesPlan = PreparCurrenciesPlan(sumPlan, massNumPk);
@@ -113,12 +113,12 @@ const MapCreatePK = (props: { setOpen: any; SetMass: Function }) => {
     massBoard[1].items = [];
     NewCoordPlan.nomPK = Number(currenciesPlan[0].label);
     NewCoordPlan.areaPK = AreA;
-    NewCoordPlan.namePK = "План координации " + UniqueName();
+    NewCoordPlan.namePK = 'План координации ' + UniqueName();
     NewCoordPlan.coordPlan = [];
     isOpen = true;
     oldArea = AreA;
     HAVE = 0;
-    console.log("Inic:", AreA, massBoard);
+    console.log('Inic:', AreA, massBoard);
   }
   //========================================================
   const [boards, setBoards] = React.useState(massBoard);
@@ -143,9 +143,7 @@ const MapCreatePK = (props: { setOpen: any; SetMass: Function }) => {
   //=== Функции - обработчики ==============================
   const handleChangePlan = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrencyPlan(event.target.value);
-    NewCoordPlan.nomPK = Number(
-      currenciesPlan[Number(event.target.value)].label
-    );
+    NewCoordPlan.nomPK = Number(currenciesPlan[Number(event.target.value)].label);
   };
 
   const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -157,7 +155,7 @@ const MapCreatePK = (props: { setOpen: any; SetMass: Function }) => {
 
   const SaveForm = (mode: boolean) => {
     if (mode) {
-      if (boards[1].items.length) {
+      if (boards[1].items.length > 2) {
         NewCoordPlan.coordPlan = [];
         for (let i = 0; i < boards[1].items.length; i++) {
           let aa: any = boards[1].items[i];
@@ -166,32 +164,35 @@ const MapCreatePK = (props: { setOpen: any; SetMass: Function }) => {
           };
           NewCoordPlan.coordPlan.push(mask);
         }
+        massplan.plans.push({ ...NewCoordPlan });
+        massplan.plans.sort(function FuncSort(a: any, b: any) {
+          return b.nomPK < a.nomPK ? 1 : b.nomPK > a.nomPK ? -1 : 0;
+        });
+        dispatch(massplanCreate(massplan));
+        console.log('Finish:', massplan);
+        CloseEnd();
+      } else {
+        soobErr = 'Количество перекрёстков в плане не может быть меньше 3-х';
+        setOpenSetErr(true);
       }
-      massplan.plans.push({ ...NewCoordPlan });
-      massplan.plans.sort(function FuncSort(a: any, b: any) {
-        return b.nomPK < a.nomPK ? 1 : b.nomPK > a.nomPK ? -1 : 0;
-      });
-      dispatch(massplanCreate(massplan));
-      console.log("Finish:", massplan);
-      CloseEnd();
     } else handleCloseBad();
   };
   //=== Drag and Drop ======================================
   const dragOverHandler = (e: any, board: any) => {
     e.preventDefault();
-    e.target.className === "MuiBox-root css-3pfbt1" &&
+    e.target.className === 'MuiBox-root css-3pfbt1' &&
       currentBoard.ID === board.ID &&
-      (e.target.style.backgroundColor = "#bae186"); // тёмно салатовый
+      (e.target.style.backgroundColor = '#bae186'); // тёмно салатовый
   };
 
   const dragLeaveHandler = (e: any) => {
-    e.target.style.backgroundColor = "#F8FCF3"; // светло светло салатовый
+    e.target.style.backgroundColor = '#F8FCF3'; // светло светло салатовый
   };
 
   const dragStartHandler = (e: any, board: any, item: any) => {
     setCurrentBoard(board);
     setCurrentItem(item);
-    e.target.style.backgroundColor = "#bae186"; // тёмно салатовый
+    e.target.style.backgroundColor = '#bae186'; // тёмно салатовый
   };
 
   const dropHandler = (e: any, board: any, item: any) => {
@@ -212,9 +213,9 @@ const MapCreatePK = (props: { setOpen: any; SetMass: Function }) => {
         if (b.ID === board.ID) return board;
         if (b.ID === currentBoard.ID) return currentBoard;
         return b;
-      })
+      }),
     );
-    e.target.style.backgroundColor = "#F8FCF3"; // светло светло салатовый
+    e.target.style.backgroundColor = '#F8FCF3'; // светло светло салатовый
   };
 
   const dropCardHandler = (e: any, board: any) => {
@@ -236,26 +237,26 @@ const MapCreatePK = (props: { setOpen: any; SetMass: Function }) => {
         if (b.ID === board.ID) return board;
         if (b.ID === currentBoard.ID) return currentBoard;
         return b;
-      })
+      }),
     );
   };
   //=== обработка Esc ======================================
   const escFunction = React.useCallback(
     (event) => {
       if (event.keyCode === 27) {
-        console.log("ESC!!!", HAVE);
+        console.log('ESC!!!', HAVE);
         HAVE = 0;
         isOpen = false;
         props.setOpen(false); // полный выход
         event.preventDefault();
       }
     },
-    [props]
+    [props],
   );
 
   React.useEffect(() => {
-    document.addEventListener("keydown", escFunction);
-    return () => document.removeEventListener("keydown", escFunction);
+    document.addEventListener('keydown', escFunction);
+    return () => document.removeEventListener('keydown', escFunction);
   }, [escFunction]);
   //========================================================
   const HeaderFormPK = () => {
@@ -301,8 +302,7 @@ const MapCreatePK = (props: { setOpen: any; SetMass: Function }) => {
             key={board.ID}
             sx={MakeStyleFormPK022(board.ID)}
             onDragOver={(e) => dragOverHandler(e, board)}
-            onDrop={(e) => dropCardHandler(e, board)}
-          >
+            onDrop={(e) => dropCardHandler(e, board)}>
             {board.items.map((item: any) => (
               <Box
                 key={item.id}
@@ -311,8 +311,7 @@ const MapCreatePK = (props: { setOpen: any; SetMass: Function }) => {
                 onDragLeave={(e) => dragLeaveHandler(e)}
                 onDragStart={(e) => dragStartHandler(e, board, item)}
                 onDrop={(e) => dropHandler(e, board, item)}
-                draggable={true}
-              >
+                draggable={true}>
                 {item.id} - {item.name}
               </Box>
             ))}
@@ -326,7 +325,7 @@ const MapCreatePK = (props: { setOpen: any; SetMass: Function }) => {
           </Box>
         )}
       </Box>
-      {/* {openSetErr && (
+      {openSetErr && (
         <MapPointDataError
           sErr={soobErr}
           setOpen={setOpenSetErr}
@@ -336,7 +335,7 @@ const MapCreatePK = (props: { setOpen: any; SetMass: Function }) => {
           svg={{}}
           setSvg={{}}
         />
-      )} */}
+      )}
     </>
   );
 };
