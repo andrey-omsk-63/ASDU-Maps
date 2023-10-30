@@ -51,7 +51,7 @@ let massBoard = [
   },
 ];
 
-const MapCreatePK = (props: { setOpen: any; mode: number; SetMass: Function }) => {
+const MapCreatePK = (props: { setOpen: any; SetMass: Function }) => {
   //== Piece of Redux =======================================
   const map = useSelector((state: any) => {
     const { mapReducer } = state;
