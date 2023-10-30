@@ -91,6 +91,7 @@ let fromIdx = -1;
 let inIdx = -1;
 let VertexForma: any = null;
 let openEF = false;
+let modePKForm = -1;
 
 const MainMap = (props: {
   region: any;
@@ -344,6 +345,7 @@ const MainMap = (props: {
           setCurrency("1");
           FillMassRoute();
         }
+        modePKForm = 0;
         setOpenPKForm(true);
         break;
       case 212: // выбор режима работы
@@ -671,14 +673,6 @@ const MainMap = (props: {
     }
   };
 
-  // const SetOpenPKForm = () => {
-  //   ZeroRoute(false);
-  // };
-
-  // const SetOpenPKSpis = () => {
-  //   ZeroRoute(false);
-  // };
-
   const SetOpenWaysFormMenu = (mode: number, idx: number, pusto: number) => {
     setOpenWaysFormMenu(false);
     ZeroRoute(false);
@@ -687,6 +681,9 @@ const MainMap = (props: {
   const SetMassPkId = (massPkId: any) => {
     MASSPK = massPkId;
     setRevers(!revers); // ререндер
+  };
+  const SetModePKForm = () => {
+    //setRevers(!revers); // ререндер
   };
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(massroute).length) {
@@ -797,10 +794,14 @@ const MainMap = (props: {
               />
             )}
             {openPKForm && (
-              <MapCreatePK setOpen={ZeroRoute} SetMass={SetMassPkId} />
+              <MapCreatePK
+                setOpen={ZeroRoute}
+                mode={modePKForm}
+                SetMass={SetMassPkId}
+              />
             )}
             {openPKSpis && (
-              <MapSpisPK setOpen={ZeroRoute} SetMass={SetMassPkId} />
+              <MapSpisPK setOpen={ZeroRoute} setMode={SetModePKForm} />
             )}
             {openWaysFormMenu && !openVertForm && (
               <MapWaysFormMenu

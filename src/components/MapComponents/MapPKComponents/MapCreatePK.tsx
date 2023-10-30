@@ -51,7 +51,7 @@ let massBoard = [
   },
 ];
 
-const MapCreatePK = (props: { setOpen: any; SetMass: Function }) => {
+const MapCreatePK = (props: { setOpen: any; mode: number; SetMass: Function }) => {
   //== Piece of Redux =======================================
   const map = useSelector((state: any) => {
     const { mapReducer } = state;
@@ -65,7 +65,7 @@ const MapCreatePK = (props: { setOpen: any; SetMass: Function }) => {
     const { massplanReducer } = state;
     return massplanReducer.massplan;
   });
-  console.log('massplan:', massplan);
+  //console.log('massplan:', massplan);
   const dispatch = useDispatch();
   //===========================================================
   const [openSetErr, setOpenSetErr] = React.useState(false);
@@ -155,7 +155,7 @@ const MapCreatePK = (props: { setOpen: any; SetMass: Function }) => {
 
   const SaveForm = (mode: boolean) => {
     if (mode) {
-      if (boards[1].items.length > 2) {
+      if (boards[1].items.length) {
         NewCoordPlan.coordPlan = [];
         for (let i = 0; i < boards[1].items.length; i++) {
           let aa: any = boards[1].items[i];
@@ -172,7 +172,7 @@ const MapCreatePK = (props: { setOpen: any; SetMass: Function }) => {
         console.log('Finish:', massplan);
         CloseEnd();
       } else {
-        soobErr = 'Количество перекрёстков в плане не может быть меньше 3-х';
+        soobErr = 'Количество перекрёстков в плане не может быть меньше 1-го';
         setOpenSetErr(true);
       }
     } else handleCloseBad();
@@ -321,7 +321,7 @@ const MapCreatePK = (props: { setOpen: any; SetMass: Function }) => {
           <>{SaveFormPK(SaveForm)}</>
         ) : (
           <Box sx={styleFormPK05}>
-            "Перетяните" курсором нужные элементы из левого окна в правое
+            "Перетяните" курсором нужные элементы из одного окна в другое
           </Box>
         )}
       </Box>
