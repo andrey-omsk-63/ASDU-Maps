@@ -1,20 +1,16 @@
-import * as React from "react";
-import { useSelector } from "react-redux";
+import * as React from 'react';
+import { useSelector } from 'react-redux';
 
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
 
-import { styleModalEnd, styleSpisPK05 } from "../../MainMapStyle";
-import { styleFormPK01, styleSpisPK04 } from "../../MainMapStyle";
-import { MakeStylSpisPK06 } from "../../MainMapStyle";
+import { styleModalEnd, styleSpisPK05 } from '../../MainMapStyle';
+import { styleFormPK01, styleSpisPK04 } from '../../MainMapStyle';
+import { MakeStylSpisPK06 } from '../../MainMapStyle';
 
-const MapViewPK = (props: {
-  view: boolean;
-  idx: number;
-  handleClose: Function;
-}) => {
+const MapViewPK = (props: { view: boolean; idx: number; handleClose: Function }) => {
   //== Piece of Redux =======================================
   const map = useSelector((state: any) => {
     const { mapReducer } = state;
@@ -26,12 +22,12 @@ const MapViewPK = (props: {
   });
   let massplan = useSelector((state: any) => {
     const { massplanReducer } = state;
-    return massplanReducer.massplan.plans;
+    return massplanReducer.massplan;
   });
   //console.log("massplan:", massplan);
   //=== инициализация ======================================
-  let plan = massplan[props.idx];
-  let nameArea = "";
+  let plan = massplan.plans[props.idx];
+  let nameArea = '';
   for (let i = 0; i < map.dateMap.tflight.length; i++) {
     let num = Number(map.dateMap.tflight[i].area.num);
     if (num === plan.areaPK) {
@@ -45,13 +41,13 @@ const MapViewPK = (props: {
   };
 
   const CloseEnd = (event: any, reason: string) => {
-    if (reason === "escapeKeyDown") handleClose(false);
+    if (reason === 'escapeKeyDown') handleClose(false);
   };
 
   const StrokaPK = () => {
     let resStr = [];
     for (let i = 0; i < plan.coordPlan.length; i++) {
-      let nameVert = "";
+      let nameVert = '';
       for (let j = 0; j < massroute.vertexes.length; j++) {
         if (
           massroute.vertexes[j].area === plan.areaPK &&
@@ -63,13 +59,13 @@ const MapViewPK = (props: {
       }
       resStr.push(
         <Grid key={i} container sx={{ marginBottom: 1.5 }}>
-          <Grid item xs={1} sx={{ padding: "1px 0px 1px 5px", border: 0 }}>
+          <Grid item xs={1} sx={{ padding: '1px 0px 1px 5px', border: 0 }}>
             {plan.coordPlan[i].id}
           </Grid>
           <Grid item xs sx={{ border: 0 }}>
             {nameVert}
           </Grid>
-        </Grid>
+        </Grid>,
       );
     }
     return resStr;

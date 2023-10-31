@@ -6,12 +6,12 @@ import {
   COORDINATES_CREATE,
   STATSAVE_CREATE,
   MASSPLAN_CREATE,
-} from "./types";
+} from './types';
 
-import { DateMAP } from "./../interfaceMAP.d";
-import { DateRoute } from "./../interfaceRoute.d";
-import { DatePlan } from "./../interfacePlans.d";
-import { Pointer } from "./../App";
+import { DateMAP } from './../interfaceMAP.d';
+import { DateRoute } from './../interfaceRoute.d';
+import { DatePlan } from './../interfacePlans.d';
+import { Pointer } from './../App';
 import { Stater } from './../App';
 
 export function massdkCreate(massDka: Pointer[] = []) {
@@ -36,7 +36,6 @@ export function massrouteCreate(massRouter: DateRoute) {
 }
 
 export function massplanCreate(massPlan: DatePlan) {
-  console.log('massplanCreate:',massPlan)
   return {
     type: MASSPLAN_CREATE,
     data: massPlan,

@@ -253,7 +253,7 @@ export const DelPointVertexContent = (WS: any, massroute: any, idxDel: number) =
 
 export const PreparCurrenciesMode = () => {
   const currencies: any = [];
-  let dat = ['Создание связей', 'Перекрёстки', 'Модели (ПК)'];
+  let dat = ['1. Создание связей', '2. Перекрёстки', '3. Модели (ПК)'];
   let massKey: any = [];
   let massDat: any = [];
   for (let key in dat) {

@@ -6,9 +6,9 @@ const intialState = {
 };
 
 export const massplanReducer = (state = intialState, action: any) => {
-  console.log('massplanReducer',action)
   switch (action.type) {
     case MASSPLAN_CREATE:
+      //console.log('massplanReducer', action.data, '!', state);
       return {
         ...state,
         massplan: action.data,
