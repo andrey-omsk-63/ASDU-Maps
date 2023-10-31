@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { massplanCreate } from "./../../../redux/actions";
+import { massplanCreate, statsaveCreate } from "./../../../redux/actions";
 
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -11,7 +11,7 @@ import MapViewPK from "./MapViewPK";
 
 //import { BadExit } from "../../MapServiceFunctions";
 
-import { AREA } from "../../MainMapGl";
+//import { AREA } from "../../MainMapGl";
 
 import { styleModalEnd, MakeStyleFormPK00 } from "../../MainMapStyle";
 import { styleFormPK01, MakeStylSpisPK01 } from "../../MainMapStyle";
@@ -32,19 +32,16 @@ const MapSpisPK = (props: {
   //SetMass: Function;
 }) => {
   //== Piece of Redux =======================================
-  // const map = useSelector((state: any) => {
-  //   const { mapReducer } = state;
-  //   return mapReducer.map;
-  // });
-  // let massroute = useSelector((state: any) => {
-  //   const { massrouteReducer } = state;
-  //   return massrouteReducer.massroute;
-  // });
   let massplan = useSelector((state: any) => {
     const { massplanReducer } = state;
-    return massplanReducer.massplan;
+    return massplanReducer.massplan.plans;
   });
-  //console.log("massplan:", massplan);
+  console.log("###massplan:", massplan);
+  let datestat = useSelector((state: any) => {
+    const { statsaveReducer } = state;
+    return statsaveReducer.datestat;
+  });
+  console.log("massplan:", massplan,massSpis);
   const dispatch = useDispatch();
   //===========================================================
   const [openSetErr, setOpenSetErr] = React.useState(false);
@@ -52,20 +49,22 @@ const MapSpisPK = (props: {
   //const [badExit, setBadExit] = React.useState(false);
   const [view, setView] = React.useState(false);
 
-  let AreA = AREA === "0" ? 1 : Number(AREA);
+  //let AreA = AREA === "0" ? 1 : Number(AREA);
   //=== инициализация ======================================
-  if (massplan.plans.length !== massSpis.length) {
+  if (massplan.length !== massSpis.length || datestat.needMakeSpisPK) {
     flagDel = 0;
+    console.log("massplan:", massplan);
     let massSp = [];
-    for (let i = 0; i < massplan.plans.length; i++) {
+    for (let i = 0; i < massplan.length; i++) {
       let mask = {
-        nom: massplan.plans[i].nomPK,
-        name: massplan.plans[i].namePK,
+        nom: massplan[i].nomPK,
+        name: massplan[i].namePK,
         del: false,
       };
       let have = false;
       for (let j = 0; j < massSpis.length; j++) {
-        if (massSpis[j].nom === massplan.plans[i].nomPK) {
+        if (massSpis[j].nom === massplan[i].nomPK) {
+          massSpis[j].name = massplan[i].namePK;
           if (massSpis[j].del) flagDel++;
           massSp.push({ ...massSpis[j] });
           have = true;
@@ -75,16 +74,24 @@ const MapSpisPK = (props: {
     }
     massSpis = [];
     massSpis = massSp;
-    console.log("Inic:", AreA);
+    console.log("InicSpis:", datestat.needMakeSpisPK, massSp);
+    if (datestat.needMakeSpisPK) {
+      datestat.needMakeSpisPK = false;
+      dispatch(statsaveCreate(datestat));
+    }
   }
   //========================================================
-  const CloseEnd = React.useCallback(() => {
-    props.setOpen(false); // полный выход
-  }, [props]);
+  // const CloseEnd = React.useCallback(() => {
+  //   props.setOpen(false); // полный выход
+  // }, [props]);
 
-  const handleCloseBad = React.useCallback(() => {
-    CloseEnd(); // выход без сохранения
-  }, [CloseEnd]);
+  const CloseEnd = () => {
+    props.setOpen(false); // полный выход
+  };
+
+  // const handleCloseBad = React.useCallback(() => {
+  //   CloseEnd(); // выход без сохранения
+  // }, [CloseEnd]);
 
   // const handleCloseBadExit = (mode: boolean) => {
   //   //setBadExit(false);
@@ -115,9 +122,10 @@ const MapSpisPK = (props: {
   };
 
   const EditPlan = (idx: number) => {
-    soobErr =
-      "Здесь будет корректировка плана координации №" + massSpis[idx].nom;
-    setOpenSetErr(true);
+    props.setMode(idx);
+    // soobErr =
+    //   "Здесь будет корректировка плана координации №" + massSpis[idx].nom;
+    // setOpenSetErr(true);
   };
 
   const ViewPlan = (idx: number) => {
@@ -141,8 +149,8 @@ const MapSpisPK = (props: {
           <Grid item xs={8} sx={{ border: 0 }}>
             <Button sx={MakeStylSpisPK02(0, del)} onClick={() => ViewPlan(i)}>
               {massSpis[i].nom < 10 && <Box>&nbsp;&nbsp;</Box>}
-              <Box>{massSpis[i].nom}</Box>
-              <Box>&nbsp;</Box>
+              <Box sx={{ color: "#5B1080" }}>{massSpis[i].nom}</Box>
+              <Box>&nbsp;&nbsp;</Box>
               <Box>
                 <b>{massSpis[i].name.slice(0, 45)}</b>
               </Box>
@@ -169,10 +177,10 @@ const MapSpisPK = (props: {
   const DelSpis = () => {
     let massplanPlans = [];
     for (let i = 0; i < massSpis.length; i++) {
-      if (!massSpis[i].del) massplanPlans.push({ ...massplan.plans[i] });
+      if (!massSpis[i].del) massplanPlans.push({ ...massplan[i] });
     }
-    massplan.plans = [];
-    massplan.plans = massplanPlans;
+    massplan = [];
+    massplan = massplanPlans;
     dispatch(massplanCreate(massplan));
     setTrigger(!trigger); // ререндер
   };
@@ -180,7 +188,7 @@ const MapSpisPK = (props: {
   return (
     <>
       <Box sx={MakeStyleFormPK00(590)}>
-        <Button sx={styleModalEnd} onClick={() => handleCloseBad()}>
+        <Button sx={styleModalEnd} onClick={() => CloseEnd()}>
           <b>&#10006;</b>
         </Button>
         <Box sx={styleFormPK01}>
@@ -188,13 +196,11 @@ const MapSpisPK = (props: {
         </Box>
         <Box sx={MakeStylSpisPK01()}>{StrokaSpisPlan()}</Box>
         {flagDel > 0 && (
-          <>
-            <Box sx={{ marginTop: 1, textAlign: "center" }}>
-              <Button sx={styleSpisPK03} onClick={() => DelSpis()}>
-                Удалить отмеченные
-              </Button>
-            </Box>
-          </>
+          <Box sx={{ marginTop: 1, textAlign: "center" }}>
+            <Button sx={styleSpisPK03} onClick={() => DelSpis()}>
+              Удалить отмеченные
+            </Button>
+          </Box>
         )}
       </Box>
       {view && <MapViewPK view={view} idx={IDX} handleClose={setView} />}

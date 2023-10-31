@@ -36,6 +36,7 @@ export function massrouteCreate(massRouter: DateRoute) {
 }
 
 export function massplanCreate(massPlan: DatePlan) {
+  console.log('massplanCreate:',massPlan)
   return {
     type: MASSPLAN_CREATE,
     data: massPlan,

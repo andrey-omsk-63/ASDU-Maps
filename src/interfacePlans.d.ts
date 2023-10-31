@@ -1,5 +1,9 @@
 export interface DatePlan {
   type: string;
+  data: DataPlan;
+}
+
+export interface DataPlan {
   plans: PlanCoord[];
 }
 

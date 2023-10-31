@@ -26,11 +26,11 @@ const MapViewPK = (props: {
   });
   let massplan = useSelector((state: any) => {
     const { massplanReducer } = state;
-    return massplanReducer.massplan;
+    return massplanReducer.massplan.plans;
   });
-  console.log("massplan:", massplan);
+  //console.log("massplan:", massplan);
   //=== инициализация ======================================
-  let plan = massplan.plans[props.idx];
+  let plan = massplan[props.idx];
   let nameArea = "";
   for (let i = 0; i < map.dateMap.tflight.length; i++) {
     let num = Number(map.dateMap.tflight[i].area.num);

@@ -73,12 +73,14 @@ export interface Stater {
   ws: any;
   debug: boolean;
   oldIdxForm: number;
+  needMakeSpisPK: boolean;
 }
 
 export let dateStat: Stater = {
   ws: null,
   debug: false,
   oldIdxForm: -1,
+  needMakeSpisPK: true,
 };
 
 export let massRoute: Router[] = [];
@@ -275,7 +277,7 @@ const App = () => {
 
   if (flagOpenКостыль) {
     //datePlan = { ...dataPlan.plans }; // временный костыль
-    datePlan = { ...dataPlan }; // временный костыль
+    datePlan = { ...dataPlan.data }; // временный костыль
     dispatch(massplanCreate(datePlan));
     console.log('datePlan:',datePlan )
     flagOpenКостыль = false;
