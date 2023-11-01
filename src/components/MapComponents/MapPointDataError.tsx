@@ -81,7 +81,7 @@ const MapPointDataError = (props: {
   const [openSetBind, setOpenSetBind] = React.useState(false);
 
   const WS = datestat.ws;
-  let colorBorder = props.sErr === "Дубликатная связь" ? "primary.main" : "red";
+  let colorBorder = props.sErr === "Дубликатная связь" ? "#FFFFFF" : "red";
   let colorEnd = props.sErr === "Дубликатная связь" ? "black" : "red";
   let styleModalEnd = styleModalEndErr(colorEnd);
   let styleSetInf = styleSetInfErr(colorBorder);

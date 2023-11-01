@@ -844,8 +844,8 @@ export const NoVertex = (openSetErr: boolean, handleCloseErr: Function) => {
     marginLeft: '24vh',
     width: 400,
     bgcolor: 'background.paper',
-    border: '1px solid #000',
-    borderColor: 'primary.main',
+    border: '1px solid ##FFFFFF',
+    //borderColor: 'primary.main',
     borderRadius: 1,
     boxShadow: 24,
     textAlign: 'center',
@@ -1497,7 +1497,7 @@ export const InputFromList = (func: any, currency: any, currencies: any) => {
   const styleBoxForm = {
     '& > :not(style)': {
       marginTop: '-7px',
-      marginLeft: '-24px',
+      marginLeft: '-27px',
       width: '72px',
     },
   };

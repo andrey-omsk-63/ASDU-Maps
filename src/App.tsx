@@ -6,6 +6,8 @@ import { massdkCreate, statsaveCreate } from "./redux/actions";
 
 import Grid from "@mui/material/Grid";
 
+import axios from "axios";
+
 import MainMap from "./components/MainMapGl";
 import AppSocketError from "./AppSocketError";
 import {
@@ -18,6 +20,7 @@ import {
 } from "./components/MapSocketFunctions";
 
 import { PlanCoord } from "./interfacePlans.d";
+//import { DatePlan } from "./interfacePlans.d";
 //import { DateRoute } from "./interfaceRoute.d";
 //import { Tflight } from "./interfaceMAP.d";
 import { dataMap } from "./otladkaMaps";
@@ -74,6 +77,7 @@ export interface Stater {
   debug: boolean;
   oldIdxForm: number;
   needMakeSpisPK: boolean;
+  lockUp: boolean;
 }
 
 export let dateStat: Stater = {
@@ -81,6 +85,7 @@ export let dateStat: Stater = {
   debug: false,
   oldIdxForm: -1,
   needMakeSpisPK: true,
+  lockUp: false,
 };
 
 export let massRoute: Router[] = [];
@@ -117,6 +122,7 @@ const App = () => {
     window.location.search;
 
   const [openSetErr, setOpenSetErr] = React.useState(false);
+  //const [plans, setPlans] = React.useState<Array<PlanCoord>>([]);
   const [trigger, setTrigger] = React.useState(false);
   const [svg, setSvg] = React.useState<any>(null);
 
@@ -275,14 +281,6 @@ const App = () => {
     };
   }, [dispatch, massdk, coordinates, svg, trigger]);
 
-  if (flagOpenКостыль) {
-    //datePlan = { ...dataPlan.plans }; // временный костыль
-    datePlan = { ...dataPlan.data }; // временный костыль
-    dispatch(massplanCreate(datePlan));
-    console.log('datePlan:',datePlan )
-    flagOpenКостыль = false;
-  }
-
   if (WS.url === "wss://localhost:3000/W" && flagOpen) {
     console.log("РЕЖИМ ОТЛАДКИ!!!");
     dateMapGl = dataMap;
@@ -295,6 +293,18 @@ const App = () => {
     flagOpen = false;
     dispatch(massrouteCreate(dateRouteGl));
     dispatch(massrouteproCreate(dateRouteProGl));
+    axios.get("http://localhost:3000/otladkaPlans.json").then(({ data }) => {
+      datePlan = data.data;
+      dispatch(massplanCreate(datePlan));
+      console.log("datePlan:", datePlan);
+    });
+  } else {
+    if (flagOpenКостыль) {
+      datePlan = { ...dataPlan.data }; // временный костыль
+      dispatch(massplanCreate(datePlan));
+      console.log("datePlan:", datePlan);
+      flagOpenКостыль = false;
+    }
   }
 
   return (
@@ -302,7 +312,6 @@ const App = () => {
       <Grid item xs>
         {openSetErr && <AppSocketError sErr={soob} setOpen={setOpenSetErr} />}
         <MainMap
-          //ws={WS}
           region={homeRegion}
           sErr={soob}
           svg={svg}

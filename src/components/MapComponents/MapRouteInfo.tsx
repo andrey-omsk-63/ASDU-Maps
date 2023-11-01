@@ -74,7 +74,6 @@ const MapRouteInfo = (props: {
     handleCloseSetEndInf();
   };
 
-
   const handleChangeDl = (event: any) => {
     let valueInp = event.target.value.replace(/^0+/, "");
     if (Number(valueInp) < 0) valueInp = 0;
@@ -108,8 +107,6 @@ const MapRouteInfo = (props: {
     }
   };
 
-  
-
   const FooterError = () => {
     return (
       <Box sx={styleFooterError}>
@@ -124,7 +121,6 @@ const MapRouteInfo = (props: {
   const [tmRoute2, setTmRoute2] = React.useState(tmRoute1);
 
   return (
-    // <Modal open={openSetInf} onClose={handleCloseSetEndInf} hideBackdrop>
     <Modal open={openSetInf} onClose={handleCloseSetEndInf}>
       <Box sx={styleSetInf}>
         <Button sx={styleModalEnd} onClick={handleCloseSetEndInf}>

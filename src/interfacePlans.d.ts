@@ -15,7 +15,6 @@ export interface PlanCoord {
 }
 
 export interface PlanCoordData {
-  // area: number;
   id: number;
   // name: string;
 }

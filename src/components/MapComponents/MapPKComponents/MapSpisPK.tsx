@@ -44,10 +44,7 @@ const MapSpisPK = (props: {
   //===========================================================
   const [openSetErr, setOpenSetErr] = React.useState(false);
   const [trigger, setTrigger] = React.useState(false);
-  //const [badExit, setBadExit] = React.useState(false);
   const [view, setView] = React.useState(false);
-
-  //let AreA = AREA === "0" ? 1 : Number(AREA);
   //=== инициализация ======================================
   if (massplan.plans.length !== massSpis.length || datestat.needMakeSpisPK) {
     flagDel = 0;
