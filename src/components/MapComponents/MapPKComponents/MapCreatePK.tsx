@@ -29,6 +29,8 @@ let oldArea = -1;
 let oldIdx = -2;
 let nameArea = "";
 let soobErr = "";
+let EscClinch = false;
+let needSort = false;
 
 let currenciesPlan: any = [];
 
@@ -58,7 +60,7 @@ const MapCreatePK = (props: {
   idx: number; // индекса редактируемого ПК
   setPuskMenu: Function; // перезапуск меню ПК после корректировки
 }) => {
-  //console.log('Props.IDX:', props.idx);
+  //console.log("Props.IDX:", EscClinch, props.idx);
   //== Piece of Redux =======================================
   const map = useSelector((state: any) => {
     const { mapReducer } = state;
@@ -88,92 +90,13 @@ const MapCreatePK = (props: {
   AreA = props.idx < 0 ? AreA : massplan.plans[props.idx].areaPK;
   const sumPlan = SUMPK;
   const modeWork = props.idx < 0 ? "create" : "edit";
-  //=== инициализация ======================================
-  if (!isOpen || AreA !== oldArea || props.idx !== oldIdx) {
-    for (let i = 0; i < map.dateMap.tflight.length; i++) {
-      let num = Number(map.dateMap.tflight[i].area.num); // установление названия района
-      if (num === AreA) {
-        nameArea = map.dateMap.tflight[i].area.nameArea;
-        break;
-      }
-    }
-    let massVert: any = [];
-    let massExist: any = [];
-    massPkId = []; // правое окно
-    let massNumPk: Array<number> = [];
-    //============
-    if (modeWork === "create") {
-      startPlan = "0";
-      // создания списка свободных номеров ПК
-      for (let i = 0; i < massplan.plans.length; i++) {
-        for (let j = 0; j < sumPlan; j++) {
-          if (j + 1 === massplan.plans[i].nomPK)
-            massNumPk.push(massplan.plans[i].nomPK);
-        }
-      }
-      currenciesPlan = PreparCurrenciesPlan(sumPlan, massNumPk);
-      NewCoordPlan.nomPK = Number(currenciesPlan[0].label);
-      NewCoordPlan.namePK = "План координации " + UniqueName();
-    } else {
-      NewCoordPlan.nomPK = massplan.plans[props.idx].nomPK;
-      NewCoordPlan.namePK = massplan.plans[props.idx].namePK;
-      // создания списка свободных номеров ПК
-      for (let i = 0; i < massplan.plans.length; i++) {
-        for (let j = 0; j < sumPlan; j++) {
-          if (j + 1 === massplan.plans[i].nomPK && j + 1 !== NewCoordPlan.nomPK)
-            massNumPk.push(massplan.plans[i].nomPK);
-        }
-      }
-      currenciesPlan = PreparCurrenciesPlan(sumPlan, massNumPk);
-      for (let i = 0; i < currenciesPlan.length; i++) {
-        if (currenciesPlan[i].label === NewCoordPlan.nomPK.toString())
-          startPlan = currenciesPlan[i].value;
-      }
-      // создание списка перекрёстков в правом окне
-      for (let i = 0; i < massplan.plans[props.idx].coordPlan.length; i++)
-        massPkId.push(massplan.plans[props.idx].coordPlan[i].id);
-    }
-    //============
-    NewCoordPlan.areaPK = AreA;
-    // создание списка перекрёстков для левого окна
-    for (let i = 0; i < massroute.vertexes.length; i++) {
-      let ID = massroute.vertexes[i].id;
-      if (massroute.vertexes[i].area === AreA) {
-        let maskVert = {
-          area: massroute.vertexes[i].area,
-          id: massroute.vertexes[i].id,
-          name: massroute.vertexes[i].name,
-        };
-        if (massPkId.indexOf(ID) < 0) {
-          massVert.push(maskVert); // левое окно
-        } else massExist.push(maskVert); // правое окно
-      }
-    }
-    massVert.sort(function Func(a: any, b: any) {
-      return b.id < a.id ? 1 : b.id > a.id ? -1 : 0;
-    });
-    let massRab: any = [];
-    for (let i = 0; i < massPkId.length; i++) {
-      for (let j = 0; j < massExist.length; j++)
-        if (massPkId[i] === massExist[j].id) massRab.push(massExist[j]);
-    }
-    massBoard[0].items = massVert; // левое окно
-    massBoard[1].items = massRab; // правое окно
-    isOpen = true;
-    oldArea = AreA;
-    oldIdx = props.idx;
-    HAVE = 0;
-    massPkId.length && props.SetMass(massPkId);
-  }
-  //========================================================
-  const [boards, setBoards] = React.useState(massBoard);
-  const [valuen, setValuen] = React.useState(NewCoordPlan.namePK);
-  const [currencyPlan, setCurrencyPlan] = React.useState(startPlan);
 
   const CloseEnd = React.useCallback(() => {
+    //console.log("Полный выход:", EscClinch, props.idx);
     HAVE = 0;
     oldArea = -1;
     isOpen = false;
+    massPkId = [];
     props.setOpen(false); // полный выход
     modeWork === "edit" && props.setPuskMenu(); // перезапуск меню ПК
   }, [props, modeWork]);
@@ -187,12 +110,106 @@ const MapCreatePK = (props: {
     setBadExit(false);
     mode && CloseEnd(); // выход без сохранения
   };
+  //=== инициализация ======================================
+  if (EscClinch) {
+    EscClinch = false;
+    //CloseEnd()
+    //handleCloseBad();
+  } else {
+    if (!isOpen || AreA !== oldArea || props.idx !== oldIdx) {
+      for (let i = 0; i < map.dateMap.tflight.length; i++) {
+        let num = Number(map.dateMap.tflight[i].area.num); // установление названия района
+        if (num === AreA) {
+          nameArea = map.dateMap.tflight[i].area.nameArea;
+          break;
+        }
+      }
+      let massVert: any = [];
+      let massExist: any = [];
+      massPkId = []; // правое окно
+      let massNumPk: Array<number> = [];
+      //============
+      if (modeWork === "create") {
+        startPlan = "0";
+        // создания списка свободных номеров ПК
+        for (let i = 0; i < massplan.plans.length; i++) {
+          for (let j = 0; j < sumPlan; j++) {
+            if (j + 1 === massplan.plans[i].nomPK)
+              massNumPk.push(massplan.plans[i].nomPK);
+          }
+        }
+        currenciesPlan = PreparCurrenciesPlan(sumPlan, massNumPk);
+        NewCoordPlan.nomPK = Number(currenciesPlan[0].label);
+        NewCoordPlan.namePK = "План координации " + UniqueName();
+      } else {
+        NewCoordPlan.nomPK = massplan.plans[props.idx].nomPK;
+        NewCoordPlan.namePK = massplan.plans[props.idx].namePK;
+        // создания списка свободных номеров ПК
+        for (let i = 0; i < massplan.plans.length; i++) {
+          for (let j = 0; j < sumPlan; j++) {
+            if (
+              j + 1 === massplan.plans[i].nomPK &&
+              j + 1 !== NewCoordPlan.nomPK
+            )
+              massNumPk.push(massplan.plans[i].nomPK);
+          }
+        }
+        currenciesPlan = PreparCurrenciesPlan(sumPlan, massNumPk);
+        for (let i = 0; i < currenciesPlan.length; i++) {
+          if (currenciesPlan[i].label === NewCoordPlan.nomPK.toString())
+            startPlan = currenciesPlan[i].value;
+        }
+        // создание списка перекрёстков в правом окне
+        for (let i = 0; i < massplan.plans[props.idx].coordPlan.length; i++)
+          massPkId.push(massplan.plans[props.idx].coordPlan[i].id);
+      }
+      //============
+      NewCoordPlan.areaPK = AreA;
+      // создание списка перекрёстков для левого окна
+      for (let i = 0; i < massroute.vertexes.length; i++) {
+        let ID = massroute.vertexes[i].id;
+        if (massroute.vertexes[i].area === AreA) {
+          let maskVert = {
+            area: massroute.vertexes[i].area,
+            id: massroute.vertexes[i].id,
+            name: massroute.vertexes[i].name,
+          };
+          if (massPkId.indexOf(ID) < 0) {
+            massVert.push(maskVert); // левое окно
+          } else massExist.push(maskVert); // правое окно
+        }
+      }
+      massVert.sort(function Func(a: any, b: any) {
+        return b.id < a.id ? 1 : b.id > a.id ? -1 : 0;
+      });
+      let massRab: any = [];
+      for (let i = 0; i < massPkId.length; i++) {
+        for (let j = 0; j < massExist.length; j++)
+          if (massPkId[i] === massExist[j].id) massRab.push(massExist[j]);
+      }
+      massBoard[0].items = massVert; // левое окно
+      massBoard[1].items = massRab; // правое окно
+      isOpen = true;
+      oldArea = AreA;
+      oldIdx = props.idx;
+      HAVE = 0;
+      needSort = false;
+      massPkId.length && props.SetMass(massPkId);
+    }
+  }
+  //========================================================
+  const [boards, setBoards] = React.useState(massBoard);
+  const [valuen, setValuen] = React.useState(NewCoordPlan.namePK);
+  const [currencyPlan, setCurrencyPlan] = React.useState(startPlan);
+
   //=== Функции - обработчики ==============================
   const handleChangePlan = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrencyPlan(event.target.value);
     NewCoordPlan.nomPK = Number(
       currenciesPlan[Number(event.target.value)].label
     );
+    HAVE++;
+    needSort = true;
   };
 
   const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -223,6 +240,14 @@ const MapCreatePK = (props: {
           massplan.plans[props.idx] = { ...NewCoordPlan }; // режим корректировки ПК
           datestat.needMakeSpisPK = true;
           dispatch(statsaveCreate(datestat));
+        }
+        if (needSort) {
+          massplan.plans.sort(function Func(a: any, b: any) {
+            return b.nomPK < a.nomPK ? 1 : b.nomPK > a.nomPK ? -1 : 0;
+          });
+          console.log("!!!:", massplan.plans);
+          // нужна сортировка
+          needSort = false;
         }
         dispatch(massplanCreate(massplan));
         //console.log('Finish:', massplan);
@@ -297,20 +322,19 @@ const MapCreatePK = (props: {
     );
   };
   //=== обработка Esc ======================================
-  const escFunction = React.useCallback(
-    (event) => {
-      if (event.keyCode === 27) {
-        console.log("ESC!!!", HAVE);
-        HAVE = 0;
-        isOpen = false;
-        datestat.lockUp = false; // разблокировка меню районов и меню режимов
-        dispatch(statsaveCreate(datestat));
-        props.setOpen(false); // полный выход
-        event.preventDefault();
-      }
-    },
-    [props, datestat, dispatch]
-  );
+  const escFunction = React.useCallback((event) => {
+    if (event.keyCode === 27) {
+      console.log("ESC!!!", HAVE);
+      // HAVE = 0;
+      // isOpen = false;
+      // datestat.lockUp = false; // разблокировка меню районов и меню режимов
+      //dispatch(statsaveCreate(datestat));
+      EscClinch = true;
+      // props.SetMass([])
+      // props.setOpen(false); // полный выход
+      event.preventDefault();
+    }
+  }, []);
 
   React.useEffect(() => {
     document.addEventListener("keydown", escFunction);
@@ -375,7 +399,11 @@ const MapCreatePK = (props: {
               >
                 {board.ID === 1 && (
                   <Box>
-                    {item.id === 6 ? <Box>&#11014;&#11015;</Box> : <Box>&#8657;&#8659;</Box>}
+                    {item.id === 6 ? (
+                      <Box>&#11014;&#11015;</Box>
+                    ) : (
+                      <Box>&#8657;&#8659;</Box>
+                    )}
                   </Box>
                 )}
                 <Box sx={{ marginLeft: 0.5, border: 0 }}>

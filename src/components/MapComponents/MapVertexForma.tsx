@@ -23,8 +23,8 @@ import { styleFormTabl01, styleFormTabl02 } from "./../MainMapStyle";
 
 let oldIdx = -1;
 let massForm: any = null;
-//let idx = 0;
 let HAVE = 0;
+//let EscClinch = false;
 
 let currenciesPlan: any = [];
 let currenciesFaza: any = [];
@@ -76,6 +76,7 @@ const MapVertexForma = (props: {
   const [currencyPlan, setCurrencyPlan] = React.useState(
     props.forma === null ? "0" : (props.forma.nomPlan - 1).toString()
   );
+
   const [currencyFaza, setCurrencyFaza] = React.useState(
     props.forma === null
       ? (MAP.phases.length - 2).toString()
@@ -104,7 +105,6 @@ const MapVertexForma = (props: {
     return currencies;
   };
   //=== инициализация ======================================
-  //console.log("Inic:", oldIdx, props.idx, datestat.oldIdxForm, props.forma);
   if (datestat.oldIdxForm === -1 && props.forma === null) oldIdx = -1;
   if (oldIdx !== props.idx) {
     oldIdx = props.idx;
@@ -288,11 +288,15 @@ const MapVertexForma = (props: {
         console.log("ESC!!!", HAVE);
         oldIdx = -1;
         HAVE = 0;
+        nomDelFaz = -1;
         props.setOpen(false, null); // полный выход
+        //EscClinch = true;
+        datestat.oldIdxForm = -1;
+        dispatch(statsaveCreate(datestat));
         event.preventDefault();
       }
     },
-    [props]
+    [props, datestat, dispatch]
   );
 
   React.useEffect(() => {

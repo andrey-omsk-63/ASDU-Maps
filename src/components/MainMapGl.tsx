@@ -51,6 +51,7 @@ let masSvg: any = ["", ""];
 export const SUMPK = 121;
 export let AREA = "0";
 export let MODE = "0";
+export let LockUp = false;
 export let homeRegion: any = 0;
 export let debug: boolean = false;
 export let MASSPK: any = [];
@@ -165,6 +166,15 @@ const MainMap = (props: {
     coordStopIn = [];
   };
 
+  const HandlLockUp = React.useCallback(
+    (mode: Boolean) => {
+      datestat.lockUp = mode; // блокировка/разблокировка меню районов и меню режимов
+      LockUp = datestat.lockUp;
+      dispatch(statsaveCreate(datestat));
+    },
+    [datestat, dispatch]
+  );
+
   const ZeroRoute = React.useCallback(
     (mode: boolean) => {
       pointAa = pointBb = 0;
@@ -180,11 +190,13 @@ const MainMap = (props: {
       setOpenPKSpis(false);
       MASSPK = [];
       idxPKForm = -1;
-      datestat.lockUp = false; // разблокировка меню районов и меню режимов
-      dispatch(statsaveCreate(datestat));
+      HandlLockUp(false); // разблокировка меню районов и меню режимов
+      // datestat.lockUp = false; // разблокировка меню районов и меню режимов
+      // LockUp = datestat.lockUp
+      // dispatch(statsaveCreate(datestat));
       ymaps && addRoute(ymaps); // перерисовка связей
     },
-    [ymaps, datestat, dispatch]
+    [ymaps, HandlLockUp]
   );
 
   const SoobOpenSetEr = (soob: string) => {
@@ -350,8 +362,10 @@ const MainMap = (props: {
           FillMassRoute();
         }
         idxPKForm = -1;
-        datestat.lockUp = true; // блокировка меню районов и меню режимов
-        dispatch(statsaveCreate(datestat));
+        HandlLockUp(true); // блокировка меню районов и меню режимов
+        //datestat.lockUp = true; // блокировка меню районов и меню режимов
+        //LockUp = datestat.lockUp;
+        //dispatch(statsaveCreate(datestat));
         setOpenPKForm(true);
         break;
       case 212: // выбор режима работы
@@ -690,11 +704,12 @@ const MainMap = (props: {
   };
 
   const SetModePKForm = (idx: number) => {
-    console.log("IDXPKFORM:", idx);
     idxPKForm = idx;
     setOpenPKSpis(false); // закрытие списка планов
-    datestat.lockUp = true; // блокировка меню районов и меню режимов
-    dispatch(statsaveCreate(datestat));
+    HandlLockUp(true); // блокировка меню районов и меню режимов
+    //datestat.lockUp = true; // блокировка меню районов и меню режимов
+    //LockUp = datestat.lockUp;
+    //dispatch(statsaveCreate(datestat));
     setOpenPKForm(true); // окрытие MapCreatePK
   };
 
@@ -779,7 +794,7 @@ const MainMap = (props: {
       )}
       {MakeRevers(makeRevers, needRevers, PressButton)}
       {ShowFormalRoute(flagDemo, PressButton)}
-      {MainMenu(flagPusk, flagRoute, PressButton)}
+      {MainMenu(flagPusk, flagRoute, PressButton, datestat.lockUp)}
       {flagPro && <>{StrokaMenuGlob("Протокол", PressButton, 24)}</>}
       {Object.keys(massroute).length && (
         <YMaps query={{ apikey: MyYandexKey, lang: "ru_RU" }}>

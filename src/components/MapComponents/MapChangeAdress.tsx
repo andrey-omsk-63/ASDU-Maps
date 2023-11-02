@@ -187,7 +187,7 @@ const MapChangeAdress = (props: {
     <Box>
       <Modal open={openSetAdress} onClose={handleCloseSet} hideBackdrop={false}>
         <Grid item container sx={styleSetAdress}>
-          <Grid item xs={9.5} sx={{ border: 0 }}>
+          <Grid item xs={9.6} sx={{ border: 0 }}>
             <Box sx={styleSet}>
               <Box component="form" sx={styleBoxForm}>
                 <TextField
@@ -206,15 +206,9 @@ const MapChangeAdress = (props: {
             </Box>
           </Grid>
           <Grid item xs sx={{ border: 0 }}>
-            <Box>
-              <Button
-                sx={styleInpKnop}
-                variant="contained"
-                onClick={handleCloseSetAdr}
-              >
-                Ввод
-              </Button>
-            </Box>
+            <Button sx={styleInpKnop} onClick={handleCloseSetAdr}>
+              Ввод
+            </Button>
           </Grid>
         </Grid>
       </Modal>

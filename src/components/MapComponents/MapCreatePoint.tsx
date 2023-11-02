@@ -97,11 +97,7 @@ const MapCreatePoint = (props: {
         </Grid>
         <Grid item xs sx={{ border: 0 }}>
           <Box>
-            <Button
-              sx={styleInpKnop}
-              variant="contained"
-              onClick={handleCloseSetAdr}
-            >
+            <Button sx={styleInpKnop} onClick={handleCloseSetAdr}>
               Ввод
             </Button>
           </Box>
