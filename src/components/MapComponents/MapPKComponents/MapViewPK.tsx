@@ -40,12 +40,12 @@ const MapViewPK = (props: {
     }
   }
   //========================================================
-  const handleClose = (mode: boolean) => {
-    props.handleClose(mode);
+  const handleClose = () => {
+    props.handleClose(false);
   };
 
   const CloseEnd = (event: any, reason: string) => {
-    if (reason === "escapeKeyDown") handleClose(false);
+    if (reason === "escapeKeyDown") handleClose();
   };
 
   const StrokaPK = () => {
@@ -82,7 +82,7 @@ const MapViewPK = (props: {
   return (
     <Modal open={props.view} onClose={CloseEnd} hideBackdrop={false}>
       <Box sx={styleSpisPK04}>
-        <Button sx={styleModalEnd} onClick={() => handleClose(false)}>
+        <Button sx={styleModalEnd} onClick={() => handleClose()}>
           <b>&#10006;</b>
         </Button>
         <Box sx={styleFormPK01}>

@@ -267,7 +267,38 @@ export const DelPointVertexContent = (
 
 export const PreparCurrenciesMode = () => {
   const currencies: any = [];
-  let dat = ["1. Создание связей", "2. Перекрёстки", "3. Модели (ПК)"];
+  let dat = [
+    "1. Создание связей",
+    "2. Перекрёстки",
+    "3. Модели (ПК)",
+    // "4. Таблич.данные",
+  ];
+  let massKey: any = [];
+  let massDat: any = [];
+  for (let key in dat) {
+    massKey.push(key);
+    massDat.push(dat[key]);
+  }
+  let maskCurrencies = {
+    value: "0",
+    label: "Все режимы",
+  };
+  for (let i = 0; i < massKey.length; i++) {
+    maskCurrencies.value = massKey[i];
+    maskCurrencies.label = massDat[i];
+    currencies.push({ ...maskCurrencies });
+  }
+  return currencies;
+};
+
+export const PreparCurrenciesForm = () => {
+  const currencies: any = [];
+  let dat = [
+    "Данные о перекрёстках",
+    "Начальные параметры перекрёстков",
+    "Выходные данные по направлениям",
+    "Начальные параметры направлений",
+  ];
   let massKey: any = [];
   let massDat: any = [];
   for (let key in dat) {
@@ -309,6 +340,7 @@ export const PreparCurrencies = (dat: any) => {
 
 export const InputMenu = (func: any, currency: any, currencies: any) => {
   const styleSet = {
+    //width: "150px",
     width: "150px",
     maxHeight: "2px",
     minHeight: "2px",
@@ -341,7 +373,7 @@ export const InputMenu = (func: any, currency: any, currencies: any) => {
           onChange={func}
           InputProps={{
             disableUnderline: true,
-            style: { fontWeight: 700, fontSize: 14 },
+            style: { fontWeight: 700, marginLeft: 10, fontSize: 14 },
           }}
           variant="standard"
           color="secondary"
@@ -606,7 +638,7 @@ export const StrokaMenuGlob = (soob: string, func: Function, mode: number) => {
 
   const styleApp01 = {
     fontSize: 14,
-    marginLeft: 0.2,
+    marginLeft: 0.4,
     width: MesssgeLength(soob, 14) + 32,
     maxHeight: "21px",
     minHeight: "21px",
@@ -666,7 +698,7 @@ export const MainMenu = (
       )}
       {MODE === "2" && !LockUp && (
         <>
-          {StrokaMenuGlob("Существующие ПК", PressButton, 201)}
+          {StrokaMenuGlob("Список ПК", PressButton, 201)}
           {StrokaMenuGlob("Создание нового ПК", PressButton, 202)}
         </>
       )}

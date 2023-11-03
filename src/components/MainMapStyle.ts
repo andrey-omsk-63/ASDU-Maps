@@ -695,7 +695,7 @@ export const MakeStylSpisPK01 = () => {
     height: window.innerHeight * ratio,
     bgcolor: "#F1F5FB",
     //border: "1px solid #1976D2", // "primary.main"
-    border: "1px solid #F1F5FB",
+    border: "1px solid #d4d4d4",
     borderRadius: 1,
     marginTop: 1,
     overflowX: "auto", // скролл
@@ -705,22 +705,48 @@ export const MakeStylSpisPK01 = () => {
   return styleSpisPK01;
 };
 
-export const MakeStylSpisPK02 = (mode: number, delMode: boolean) => {
+export const StylSpisPK02 = (
+  delMode: boolean,
+  illum: boolean
+) => {
   const styleSpisPK02 = {
-    fontSize: delMode ? 12.9 : 14,
-    maxHeight: delMode ? 23 : 24,
-    minHeight: delMode ? 23 : 24,
+    fontSize: illum ? 14 : delMode ? 12.9 : 14,
+    maxHeight: illum ? 23 : delMode ? 24 : 23,
+    minHeight: illum ? 23 : delMode ? 24 : 23,
     width: "99%",
-    marginBottom: delMode ? 0.9 : 0.8,
-    backgroundColor: delMode ? "#bae186" : "#E6F5D6", // тёмно салатовый/светло салатовый
+    marginBottom: illum ? 0.9 : delMode ? 0.8 : 0.9,
+    backgroundColor: illum ? "#bae186" : delMode ? "#bae186" : "#E6F5D6", // тёмно салатовый/светло салатовый
     border: "1px solid #000",
     borderRadius: 1,
-    borderColor: delMode ? "#93D145" : "#d4d4d4", // тёмно салатовый/серый
+    borderColor: illum ? "#93D145" : delMode ? "#93D145" : "#d4d4d4", // тёмно салатовый/серый
+    textTransform: "unset !important",
+    color: illum ? "black" : delMode ? "red" : "black",
+    padding: "0px 5px 0px 5px",
+    justifyContent: "center",
+    boxShadow: illum ? 6 : delMode ? 6 : 2,
+  };
+  return styleSpisPK02;
+};
+
+export const StylSpisPK022 = (
+  delMode: boolean,
+  illum: boolean
+) => {
+  const styleSpisPK02 = {
+    fontSize: delMode ? 12.9 : 14,
+    maxHeight: delMode ? 24 : 23,
+    minHeight: delMode ? 24 : 23,
+    width: "99%",
+    marginBottom: delMode ? 0.8 : 0.9,
+    backgroundColor: illum ? "#bae186" : "#E6F5D6", // тёмно салатовый/светло салатовый
+    border: "1px solid #000",
+    borderRadius: 1,
+    borderColor: illum ? "#93D145" : "#d4d4d4", // тёмно салатовый/серый
     textTransform: "unset !important",
     color: delMode ? "red" : "black",
     padding: "0px 5px 0px 5px",
-    justifyContent: mode ? "center" : "flex-start",
-    boxShadow: delMode ? 1 : 6,
+    justifyContent: "flex-start",
+    boxShadow: illum ? 6 : 2,
   };
   return styleSpisPK02;
 };

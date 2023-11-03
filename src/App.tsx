@@ -76,8 +76,9 @@ export interface Stater {
   ws: any;
   debug: boolean;
   oldIdxForm: number;
-  needMakeSpisPK: boolean;
-  lockUp: boolean;
+  needMakeSpisPK: boolean; // вызов списка ПК после корректровки ПК
+  lockUp: boolean; // блокировка меню районов и меню режимов
+  needMenuForm: boolean; // выводить меню форм ПК
 }
 
 export let dateStat: Stater = {
@@ -86,6 +87,7 @@ export let dateStat: Stater = {
   oldIdxForm: -1,
   needMakeSpisPK: true,
   lockUp: false,
+  needMenuForm: false
 };
 
 export let massRoute: Router[] = [];

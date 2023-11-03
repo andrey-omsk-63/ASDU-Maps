@@ -36,6 +36,7 @@ import { DelVertexOrPoint, MainMenu } from "./MapServiceFunctions";
 import { DelPointVertexContent, MassCoord } from "./MapServiceFunctions";
 import { FillMassRouteContent } from "./MapServiceFunctions";
 import { PreparCurrenciesMode } from "./MapServiceFunctions";
+import { PreparCurrenciesForm } from "./MapServiceFunctions";
 
 import { SendSocketCreateWay, SendSocketGetSvg } from "./MapSocketFunctions";
 import { SendSocketCreateWayFromPoint } from "./MapSocketFunctions";
@@ -51,6 +52,7 @@ let masSvg: any = ["", ""];
 export const SUMPK = 121;
 export let AREA = "0";
 export let MODE = "0";
+export let FORM = "0";
 export let LockUp = false;
 export let homeRegion: any = 0;
 export let debug: boolean = false;
@@ -83,6 +85,7 @@ let funcContex: any, funcBound: any, funcClick: any, activeRoute: any;
 funcContex = funcBound = funcClick = activeRoute = null;
 let currencies: any = [];
 let currenciesMode: any = [];
+let currenciesForm: any = [];
 
 let idxDel: number, nomRoute: number, idxRoute: number, pointAaIndex: number;
 let indexPoint: number, pointBbIndex: number;
@@ -134,6 +137,7 @@ const MainMap = (props: {
   const [triggerForm, setTriggerForm] = React.useState(false);
   const [currency, setCurrency] = React.useState("0");
   const [currencyMode, setCurrencyMode] = React.useState("0");
+  const [currencyForm, setCurrencyForm] = React.useState("0");
   const [openInf, setOpenInf] = React.useState(false);
   const [openSetPro, setOpenSetPro] = React.useState(false);
   const [openVertForm, setOpenVertForm] = React.useState(false);
@@ -352,6 +356,8 @@ const MainMap = (props: {
         break;
       case 201: // список всех ПК
         ZeroRoute(false);
+        datestat.needMenuForm = true; // выдавать меню форм
+        dispatch(statsaveCreate(datestat));
         setOpenPKSpis(true);
         break;
       case 202: // создание нового ПК
@@ -679,6 +685,12 @@ const MainMap = (props: {
     PressButton(212);
   };
 
+  const handleChangeForm = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCurrencyForm(event.target.value);
+    FORM = event.target.value;
+    //PressButton(212);
+  };
+
   const SetOpenVertForm = (mode: boolean, forma: any, openErr: boolean) => {
     setOpenVertForm(false); // закрытие старой формы
     if (!mode) {
@@ -706,14 +718,15 @@ const MainMap = (props: {
   const SetModePKForm = (idx: number) => {
     idxPKForm = idx;
     setOpenPKSpis(false); // закрытие списка планов
+    datestat.needMenuForm = false; //  не выдавать меню форм
+    dispatch(statsaveCreate(datestat));
     HandlLockUp(true); // блокировка меню районов и меню режимов
-    //datestat.lockUp = true; // блокировка меню районов и меню режимов
-    //LockUp = datestat.lockUp;
-    //dispatch(statsaveCreate(datestat));
     setOpenPKForm(true); // окрытие MapCreatePK
   };
 
   const SetPuskMenu = () => {
+    datestat.needMenuForm = true; // выдавать меню форм
+    dispatch(statsaveCreate(datestat));
     setOpenPKSpis(true); // открытие списка планов
   };
   //=== инициализация ======================================
@@ -734,6 +747,7 @@ const MainMap = (props: {
     let homeReg = map.dateMap.regionInfo[homeRegion]; // подготовка ввода района
     currencies = PreparCurrencies(map.dateMap.areaInfo[homeReg]);
     currenciesMode = PreparCurrenciesMode();
+    currenciesForm = PreparCurrenciesForm();
     flagOpen = true;
     console.log("massroute:", massroute);
     console.log("map:", map);
@@ -794,8 +808,13 @@ const MainMap = (props: {
       )}
       {MakeRevers(makeRevers, needRevers, PressButton)}
       {ShowFormalRoute(flagDemo, PressButton)}
+      {!datestat.lockUp && MODE === "2" && datestat.needMenuForm && (
+        <>{InputMenu(handleChangeForm, currencyForm, currenciesForm)}</>
+      )}
       {MainMenu(flagPusk, flagRoute, PressButton, datestat.lockUp)}
-      {flagPro && <>{StrokaMenuGlob("Протокол", PressButton, 24)}</>}
+      {flagPro && MODE === "0" && (
+        <>{StrokaMenuGlob("Протокол", PressButton, 24)}</>
+      )}
       {Object.keys(massroute).length && (
         <YMaps query={{ apikey: MyYandexKey, lang: "ru_RU" }}>
           <Map

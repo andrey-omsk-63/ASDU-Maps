@@ -245,8 +245,6 @@ const MapCreatePK = (props: {
           massplan.plans.sort(function Func(a: any, b: any) {
             return b.nomPK < a.nomPK ? 1 : b.nomPK > a.nomPK ? -1 : 0;
           });
-          console.log("!!!:", massplan.plans);
-          // нужна сортировка
           needSort = false;
         }
         dispatch(massplanCreate(massplan));
