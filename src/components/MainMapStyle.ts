@@ -598,7 +598,7 @@ export const MakeStyleFormPK00 = (wdth: number) => {
   const styleFormPK00 = {
     outline: 'none',
     position: 'relative',
-    marginTop: '-97vh',
+    marginTop: '-96.5vh',
     marginLeft: 'auto',
     marginRight: '9px',
     width: wdth,
@@ -772,7 +772,7 @@ export const styleSpisPK04 = {
   // maxHeight: "80%",
   // minHeight: "80%",
   bgcolor: 'background.paper',
-  border: '1px solid #FFFFFF', 
+  border: '1px solid #FFFFFF',
   borderRadius: 1,
   boxShadow: 24,
   textAlign: 'center',

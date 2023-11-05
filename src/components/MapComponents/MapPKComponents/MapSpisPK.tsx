@@ -20,7 +20,7 @@ import { StylSpisPK02, styleSpisPK03, StylSpisPK022 } from '../../MainMapStyle';
 
 //let HAVE = 0;
 let flagDel = 0;
-let makeDel = false;
+//let makeDel = false;
 let soobErr = '';
 let IDX = 0;
 
@@ -48,36 +48,37 @@ const MapSpisPK = (props: {
   const [view, setView] = React.useState(false);
   //=== инициализация ======================================
   //if (massplan.plans.length !== massSpis.length || datestat.needMakeSpisPK) {
-  if (makeDel) {
-    makeDel = false;
-  } else {
-    if (massplan.plans.length !== massSpis.length) IDX = 0;
-    flagDel = 0;
-    let massSp = [];
-    for (let i = 0; i < massplan.plans.length; i++) {
-      let mask = {
-        nom: massplan.plans[i].nomPK,
-        name: massplan.plans[i].namePK,
-        del: false,
-      };
-      let have = false;
-      for (let j = 0; j < massSpis.length; j++) {
-        if (massSpis[j].nom === massplan.plans[i].nomPK) {
-          massSpis[j].name = massplan.plans[i].namePK;
-          //if (massSpis[j].del) flagDel++;
-          if (massSpis[j].del) massSpis[j].del = false; // снятие отметки на удаление
-          massSp.push({ ...massSpis[j] });
-          have = true;
-        }
+  // if (makeDel) {
+  //   makeDel = false;
+  // } else {
+  console.log('INIC');
+  if (massplan.plans.length !== massSpis.length) IDX = 0;
+  flagDel = 0;
+  let massSp = [];
+  for (let i = 0; i < massplan.plans.length; i++) {
+    let mask = {
+      nom: massplan.plans[i].nomPK,
+      name: massplan.plans[i].namePK,
+      del: false,
+    };
+    let have = false;
+    for (let j = 0; j < massSpis.length; j++) {
+      if (massSpis[j].nom === massplan.plans[i].nomPK) {
+        massSpis[j].name = massplan.plans[i].namePK;
+        if (massSpis[j].del) flagDel++;
+        //if (massSpis[j].del) massSpis[j].del = false; // снятие отметки на удаление
+        massSp.push({ ...massSpis[j] });
+        have = true;
       }
-      !have && massSp.push(mask);
     }
-    massSpis = [];
-    massSpis = massSp;
-    if (datestat.needMakeSpisPK) datestat.needMakeSpisPK = false;
-    datestat.needMenuForm = true; // выдавать меню форм
-    dispatch(statsaveCreate(datestat));
+    !have && massSp.push(mask);
   }
+  massSpis = [];
+  massSpis = massSp;
+  if (datestat.needMakeSpisPK) datestat.needMakeSpisPK = false;
+  datestat.needMenuForm = true; // выдавать меню форм
+  dispatch(statsaveCreate(datestat));
+  //}
   //========================================================
   // const CloseEnd = React.useCallback(() => {
   //   props.setOpen(false); // полный выход
@@ -102,23 +103,27 @@ const MapSpisPK = (props: {
     massSpis[idx].del = !massSpis[idx].del;
     if (massSpis[idx].del) {
       flagDel++;
-    } else flagDel--;
-    if (idx === IDX) {
-      IDX = 0;
-      if (!idx) IDX = -1;
+    } else {
+      flagDel--;
     }
-    makeDel = true;
+    // if (idx === IDX) {
+    //   IDX = 0;
+    //   if (!idx) IDX = -1;
+    // }
+    //makeDel = true;
     setTrigger(!trigger); // ререндер
   };
 
   const EditPlan = (idx: number) => {
     if (idx !== IDX) IDX = idx;
     props.setMode(idx); // запуск редактирования ПК
+    //makeDel = true;
   };
 
   const ViewPlan = (idx: number) => {
     IDX = idx;
     setView(true);
+    //makeDel = true;
   };
 
   const MarkPlan = (idx: number) => {
@@ -129,6 +134,7 @@ const MapSpisPK = (props: {
       IDX = idx;
       setTrigger(!trigger); // ререндер
     }
+    //makeDel = true;
   };
 
   const DelSpis = () => {
