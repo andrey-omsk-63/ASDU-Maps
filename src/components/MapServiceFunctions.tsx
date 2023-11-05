@@ -294,6 +294,7 @@ export const PreparCurrenciesMode = () => {
 export const PreparCurrenciesForm = () => {
   const currencies: any = [];
   let dat = [
+    "Выхоные формы:",
     "Данные о перекрёстках",
     "Начальные параметры перекрёстков",
     "Выходные данные по направлениям",
@@ -340,7 +341,6 @@ export const PreparCurrencies = (dat: any) => {
 
 export const InputMenu = (func: any, currency: any, currencies: any) => {
   const styleSet = {
-    //width: "150px",
     width: "150px",
     maxHeight: "2px",
     minHeight: "2px",
@@ -363,29 +363,31 @@ export const InputMenu = (func: any, currency: any, currencies: any) => {
   };
 
   return (
-    <Box sx={styleSet}>
-      <Box component="form" sx={styleBoxForm}>
-        <TextField
-          select
-          size="small"
-          onKeyPress={handleKey} //отключение Enter
-          value={currency}
-          onChange={func}
-          InputProps={{
-            disableUnderline: true,
-            style: { fontWeight: 700, marginLeft: 10, fontSize: 14 },
-          }}
-          variant="standard"
-          color="secondary"
-        >
-          {currencies.map((option: any) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </TextField>
+    <>
+      <Box sx={styleSet}>
+        <Box component="form" sx={styleBoxForm}>
+          <TextField
+            select
+            size="small"
+            onKeyPress={handleKey} //отключение Enter
+            value={currency}
+            onChange={func}
+            InputProps={{
+              disableUnderline: true,
+              style: { fontWeight: 700, marginLeft: 10, fontSize: 14 },
+            }}
+            variant="standard"
+            color="secondary"
+          >
+            {currencies.map((option: any) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 };
 

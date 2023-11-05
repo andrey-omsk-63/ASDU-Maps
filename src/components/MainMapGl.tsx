@@ -144,6 +144,7 @@ const MainMap = (props: {
   const [openWaysForm, setOpenWaysForm] = React.useState(false);
   const [openPKForm, setOpenPKForm] = React.useState(false);
   const [openPKSpis, setOpenPKSpis] = React.useState(false);
+  const [dispPKForm, setDispPKForm] = React.useState(false);
   const [openWaysFormMenu, setOpenWaysFormMenu] = React.useState(false);
   const [openSetEr, setOpenSetEr] = React.useState(false);
   const [openBind, setOpenBind] = React.useState(false);
@@ -195,12 +196,11 @@ const MainMap = (props: {
       MASSPK = [];
       idxPKForm = -1;
       HandlLockUp(false); // разблокировка меню районов и меню режимов
-      // datestat.lockUp = false; // разблокировка меню районов и меню режимов
-      // LockUp = datestat.lockUp
-      // dispatch(statsaveCreate(datestat));
+      datestat.needMenuForm = false; //  не выдавать меню форм
+      dispatch(statsaveCreate(datestat));
       ymaps && addRoute(ymaps); // перерисовка связей
     },
-    [ymaps, HandlLockUp]
+    [ymaps, HandlLockUp, dispatch, datestat]
   );
 
   const SoobOpenSetEr = (soob: string) => {
@@ -369,10 +369,10 @@ const MainMap = (props: {
         }
         idxPKForm = -1;
         HandlLockUp(true); // блокировка меню районов и меню режимов
-        //datestat.lockUp = true; // блокировка меню районов и меню режимов
-        //LockUp = datestat.lockUp;
-        //dispatch(statsaveCreate(datestat));
         setOpenPKForm(true);
+        break;
+      case 203: // вызов диспетчера форм ПК
+        setDispPKForm(true);
         break;
       case 212: // выбор режима работы
         ZeroRoute(false);
@@ -688,7 +688,7 @@ const MainMap = (props: {
   const handleChangeForm = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrencyForm(event.target.value);
     FORM = event.target.value;
-    //PressButton(212);
+    PressButton(203);
   };
 
   const SetOpenVertForm = (mode: boolean, forma: any, openErr: boolean) => {
@@ -728,6 +728,37 @@ const MainMap = (props: {
     datestat.needMenuForm = true; // выдавать меню форм
     dispatch(statsaveCreate(datestat));
     setOpenPKSpis(true); // открытие списка планов
+  };
+
+  const DispPKForm = (props: { setOpen: any }) => {
+    let soob = "Здесь будет запуск формы ";
+    switch (FORM) {
+      case "1": // Данные о перекрёстках
+        soob += "Данные о перекрёстках";
+        break;
+      case "2": // Начальные параметры перекрёстков
+        soob += "Начальные параметры перекрёстков";
+        break;
+      case "3": // Выходные данные по направлениям
+        break;
+      case "4": // Начальные параметры направлений
+    }
+
+    return (
+      <>
+        {FORM !== "0" && (
+          <MapPointDataError
+            sErr={soob}
+            setOpen={props.setOpen}
+            fromCross={0}
+            toCross={0}
+            update={0}
+            svg={{}}
+            setSvg={{}}
+          />
+        )}
+      </>
+    );
   };
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(massroute).length) {
@@ -830,6 +861,7 @@ const MainMap = (props: {
             {YandexServices()}
             <PlacemarkDo />
             <ModalPressBalloon />
+            {dispPKForm && <DispPKForm setOpen={setDispPKForm} />}
             {openSetPro && <MapRouteProtokol setOpen={setOpenSetPro} />}
             {openVertForm && pointAaIndex >= 0 && triggerForm && (
               <MapVertexForma

@@ -458,6 +458,7 @@ export const styleFormTabl00 = {
   marginTop: 1.5,
   marginLeft: -0.5,
   marginRight: -0.5,
+  boxShadow: 6,
 };
 
 export const styleFormTabl01 = {
@@ -771,7 +772,7 @@ export const styleSpisPK04 = {
   // maxHeight: "80%",
   // minHeight: "80%",
   bgcolor: 'background.paper',
-  border: '1px solid #1976D2', // "primary.main"
+  border: '1px solid #FFFFFF', 
   borderRadius: 1,
   boxShadow: 24,
   textAlign: 'center',
