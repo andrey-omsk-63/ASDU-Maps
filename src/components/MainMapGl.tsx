@@ -19,6 +19,7 @@ import MapVertexForma from './MapComponents/MapVertexForma';
 import MapWaysFormMenu from './MapComponents/MapWaysFormMenu';
 import MapCreatePK from './MapComponents/MapPKComponents/MapCreatePK';
 import MapSpisPK from './MapComponents/MapPKComponents/MapSpisPK';
+import MapDispPKForm from './MapComponents/MapPKComponents/MapDispPKForm';
 
 import { RecordMassRoute, MakeNewPointContent } from './MapServiceFunctions';
 import { YandexServices, ShowFormalRoute } from './MapServiceFunctions';
@@ -722,36 +723,36 @@ const MainMap = (props: { region: any; sErr: string; svg: any; setSvg: any; trig
     setOpenPKSpis(true); // открытие списка планов
   };
 
-  const DispPKForm = (props: { setOpen: any }) => {
-    let soob = 'Здесь будет запуск формы ';
-    switch (FORM) {
-      case '1': // Данные о перекрёстках
-        soob += 'Данные о перекрёстках';
-        break;
-      case '2': // Начальные параметры перекрёстков
-        soob += 'Начальные параметры перекрёстков';
-        break;
-      case '3': // Выходные данные по направлениям
-        break;
-      case '4': // Начальные параметры направлений
-    }
+  // const DispPKForm = (props: { setOpen: any }) => {
+  //   let soob = 'Здесь будет запуск формы ';
+  //   switch (FORM) {
+  //     case '1': // Данные о перекрёстках
+  //       soob += 'Данные о перекрёстках';
+  //       break;
+  //     case '2': // Начальные параметры перекрёстков
+  //       soob += 'Начальные параметры перекрёстков';
+  //       break;
+  //     case '3': // Выходные данные по направлениям
+  //       break;
+  //     case '4': // Начальные параметры направлений
+  //   }
 
-    return (
-      <>
-        {FORM !== '0' && (
-          <MapPointDataError
-            sErr={soob}
-            setOpen={props.setOpen}
-            fromCross={0}
-            toCross={0}
-            update={0}
-            svg={{}}
-            setSvg={{}}
-          />
-        )}
-      </>
-    );
-  };
+  //   return (
+  //     <>
+  //       {FORM !== '0' && (
+  //         <MapPointDataError
+  //           sErr={soob}
+  //           setOpen={props.setOpen}
+  //           fromCross={0}
+  //           toCross={0}
+  //           update={0}
+  //           svg={{}}
+  //           setSvg={{}}
+  //         />
+  //       )}
+  //     </>
+  //   );
+  // };
 
   const SetDispPKForm = (mode: boolean) => {
     FORM = '0';
@@ -854,7 +855,7 @@ const MainMap = (props: { region: any; sErr: string; svg: any; setSvg: any; trig
             {YandexServices()}
             <PlacemarkDo />
             <ModalPressBalloon />
-            {dispPKForm && <DispPKForm setOpen={SetDispPKForm} />}
+            {dispPKForm && <MapDispPKForm setOpen={SetDispPKForm} />}
             {openSetPro && <MapRouteProtokol setOpen={setOpenSetPro} />}
             {openVertForm && pointAaIndex >= 0 && triggerForm && (
               <MapVertexForma
