@@ -1835,7 +1835,9 @@ export const HeadDoublError = (flagSave: boolean, propsErr: string) => {
   return (
     <>
       {!flagSave ? (
-        <Typography variant="h6" sx={{ textAlign: 'center', color: 'red' }}>
+        <Typography
+          variant="h6"
+          sx={{ textAlign: 'center', color: 'red', textShadow: '2px 2px 3px rgba(0,0,0,0.3)' }}>
           {propsErr}
         </Typography>
       ) : (
@@ -1850,7 +1852,7 @@ export const HeadDoublError = (flagSave: boolean, propsErr: string) => {
 export const questionForDelete = (handleCloseDel: Function) => {
   return (
     <Box sx={{ textAlign: 'center', marginTop: 1.2 }}>
-      <Typography variant="h6" sx={{ color: 'red' }}>
+      <Typography variant="h6" sx={{ color: 'red', textShadow: '2px 2px 3px rgba(0,0,0,0.3)' }}>
         Удалить исходную связь?
       </Typography>
       <Button sx={styleModalMenuErr} onClick={() => handleCloseDel(1)}>

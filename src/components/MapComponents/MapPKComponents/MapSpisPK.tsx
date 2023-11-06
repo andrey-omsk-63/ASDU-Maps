@@ -46,13 +46,20 @@ const MapSpisPK = (props: {
   const [openSetErr, setOpenSetErr] = React.useState(false);
   const [trigger, setTrigger] = React.useState(false);
   const [view, setView] = React.useState(false);
+
+  const ChangeIDX = (idx: number) => {
+    IDX = idx;
+    datestat.idxMenu = idx; //  не выдавать меню форм
+    dispatch(statsaveCreate(datestat));
+  };
   //=== инициализация ======================================
   //if (massplan.plans.length !== massSpis.length || datestat.needMakeSpisPK) {
   // if (makeDel) {
   //   makeDel = false;
   // } else {
   console.log('INIC');
-  if (massplan.plans.length !== massSpis.length) IDX = 0;
+  if (!massplan.plans.length) ChangeIDX(-1);
+  if (massplan.plans.length !== massSpis.length) ChangeIDX(0);
   flagDel = 0;
   let massSp = [];
   for (let i = 0; i < massplan.plans.length; i++) {
@@ -78,6 +85,7 @@ const MapSpisPK = (props: {
   if (datestat.needMakeSpisPK) datestat.needMakeSpisPK = false;
   datestat.needMenuForm = true; // выдавать меню форм
   dispatch(statsaveCreate(datestat));
+  console.log('£££:', datestat.needMenuForm);
   //}
   //========================================================
   // const CloseEnd = React.useCallback(() => {
@@ -106,22 +114,22 @@ const MapSpisPK = (props: {
     } else {
       flagDel--;
     }
-    // if (idx === IDX) {
-    //   IDX = 0;
-    //   if (!idx) IDX = -1;
-    // }
+    if (idx === IDX) {
+      ChangeIDX(0);
+      if (!idx) ChangeIDX(-1);
+    }
     //makeDel = true;
     setTrigger(!trigger); // ререндер
   };
 
   const EditPlan = (idx: number) => {
-    if (idx !== IDX) IDX = idx;
+    if (idx !== IDX) ChangeIDX(idx);
     props.setMode(idx); // запуск редактирования ПК
     //makeDel = true;
   };
 
   const ViewPlan = (idx: number) => {
-    IDX = idx;
+    ChangeIDX(idx);
     setView(true);
     //makeDel = true;
   };
@@ -131,7 +139,7 @@ const MapSpisPK = (props: {
       soobErr = 'План координации № ' + massSpis[idx].nom + ' помечен на удаление';
       setOpenSetErr(true);
     } else {
-      IDX = idx;
+      ChangeIDX(idx);
       setTrigger(!trigger); // ререндер
     }
     //makeDel = true;
@@ -145,7 +153,7 @@ const MapSpisPK = (props: {
     massplan.plans = [];
     massplan.plans = massplanPlans;
     dispatch(massplanCreate(massplan));
-    IDX = massplanPlans.length ? 0 : -1;
+    ChangeIDX(massplanPlans.length ? 0 : -1);
     setTrigger(!trigger); // ререндер
   };
   //========================================================

@@ -18,6 +18,7 @@ export const styleApp01 = {
 export const styleTypography = {
   textAlign: 'center',
   color: '#5B1080',
+  textShadow: '2px 2px 3px rgba(0,0,0,0.3)',
 };
 
 export const styleModalEnd = {
@@ -279,6 +280,7 @@ export const styleBind02 = {
   marginTop: -1.5,
   textAlign: 'center',
   color: '#5B1080',
+  textShadow: '2px 2px 3px rgba(0,0,0,0.3)',
 };
 
 export const styleBind03 = {
@@ -426,6 +428,7 @@ export const styleFormName = {
   marginTop: 0.5,
   marginBottom: 2,
   textAlign: 'center',
+  textShadow: '2px 2px 3px rgba(0,0,0,0.3)',
 };
 
 export const styleFormMenu = {
@@ -617,6 +620,7 @@ export const styleFormPK01 = {
   fontSize: 21,
   textAlign: 'center',
   color: '#5B1080',
+  textShadow: '2px 2px 3px rgba(0,0,0,0.3)',
 };
 
 export const MakeStyleFormPK02 = () => {

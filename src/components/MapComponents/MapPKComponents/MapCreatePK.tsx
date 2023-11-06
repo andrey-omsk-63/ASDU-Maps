@@ -79,6 +79,7 @@ const MapCreatePK = (props: {
     const { statsaveReducer } = state;
     return statsaveReducer.datestat;
   });
+  //console.log("massplan:", massplan);
   const dispatch = useDispatch();
   //===========================================================
   const [openSetErr, setOpenSetErr] = React.useState(false);
@@ -98,6 +99,7 @@ const MapCreatePK = (props: {
     isOpen = false;
     massPkId = [];
     props.setOpen(false); // полный выход
+    console.log('!!!:', datestat.needMenuForm, modeWork);
     if (modeWork === 'edit' || datestat.needMenuForm) props.setPuskMenu(); // перезапуск меню ПК
   }, [props, modeWork, datestat.needMenuForm]);
 

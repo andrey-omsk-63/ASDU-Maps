@@ -723,37 +723,6 @@ const MainMap = (props: { region: any; sErr: string; svg: any; setSvg: any; trig
     setOpenPKSpis(true); // открытие списка планов
   };
 
-  // const DispPKForm = (props: { setOpen: any }) => {
-  //   let soob = 'Здесь будет запуск формы ';
-  //   switch (FORM) {
-  //     case '1': // Данные о перекрёстках
-  //       soob += 'Данные о перекрёстках';
-  //       break;
-  //     case '2': // Начальные параметры перекрёстков
-  //       soob += 'Начальные параметры перекрёстков';
-  //       break;
-  //     case '3': // Выходные данные по направлениям
-  //       break;
-  //     case '4': // Начальные параметры направлений
-  //   }
-
-  //   return (
-  //     <>
-  //       {FORM !== '0' && (
-  //         <MapPointDataError
-  //           sErr={soob}
-  //           setOpen={props.setOpen}
-  //           fromCross={0}
-  //           toCross={0}
-  //           update={0}
-  //           svg={{}}
-  //           setSvg={{}}
-  //         />
-  //       )}
-  //     </>
-  //   );
-  // };
-
   const SetDispPKForm = (mode: boolean) => {
     FORM = '0';
     setCurrencyForm('0');

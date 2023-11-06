@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import MapPointDataError from './../MapPointDataError';
+import MapFormPK01 from './MapFormPK01';
 
 import { FORM } from '../../MainMapGl';
 
@@ -40,7 +41,8 @@ const MapDispPKForm = (props: { setOpen: any }) => {
 
   return (
     <>
-      {FORM !== '0' && (
+      {FORM === '1' && <MapFormPK01 view={true} handleClose={props.setOpen} />}
+      {Number(FORM) > 1 && (
         <MapPointDataError
           sErr={soob}
           setOpen={props.setOpen}
