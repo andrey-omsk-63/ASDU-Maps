@@ -643,17 +643,15 @@ export const MakeStyleFormPK022 = (idx: any) => {
   const styleFormPK02 = {
     width: '340px',
     height: window.innerHeight * ratio,
-    //bgcolor: "#F0F0F0",
     bgcolor: '#F1F5FB',
-    border: '1px solid #000',
-    borderColor: 'primary.main',
+    border: '1px solid #F1F5FB',
+    //borderColor: 'primary.main',
     borderRadius: 1,
     marginTop: 0.8,
     marginRight: mr,
     //display: "flex",
     display: 'inline-block',
     alignItems: 'center',
-    //flexDirection: "column",
     overflowX: 'auto',
     boxShadow: 6,
   };
@@ -809,38 +807,38 @@ export const MakeStylSpisPK06 = () => {
 //=== FormPK ==========================================================
 export const stylePKForm00 = {
   maxHeight: window.innerHeight * 0.8,
-  minHeight: "10px",
-  bgcolor: "#F1F5FB", // серо голубой
-  border: "1px solid #F1F5FB", // цвет фона
+  minHeight: '10px',
+  bgcolor: '#F1F5FB', // серо голубой
+  border: '1px solid #F1F5FB', // цвет фона
   borderBottomLeftRadius: 2,
   borderBottomRightRadius: 2,
-  textAlign: "center",
-  overflowX: "auto", // скролл
+  textAlign: 'center',
+  overflowX: 'auto', // скролл
   boxShadow: 6,
 };
 
 export const stylePKForm01 = {
-  outline: "none",
-  position: "absolute",
-  left: "50%",
-  top: "50%",
-  transform: "translate(-50%, -50%)",
-  width: "96%",
-  bgcolor: "background.paper",
-  border: "1px solid #FFFFFF",
+  outline: 'none',
+  position: 'absolute',
+  left: '50%',
+  top: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: '96%',
+  bgcolor: 'background.paper',
+  border: '1px solid #FFFFFF',
   borderRadius: 1,
   boxShadow: 24,
-  textAlign: "center",
-  padding: "5px 15px 15px 15px",
+  textAlign: 'center',
+  padding: '5px 15px 15px 15px',
 };
 
 export const stylePKForm02 = {
   fontSize: 15,
-  textAlign: "center",
-  bgcolor: "#C0E2C3",
+  textAlign: 'center',
+  bgcolor: '#C0E2C3',
   borderTopLeftRadius: 2,
   borderTopRightRadius: 2,
   boxShadow: 6,
-  padding: "3px 0px 3px 0px",
+  padding: '3px 0px 3px 0px',
 };
 //=====================================================================

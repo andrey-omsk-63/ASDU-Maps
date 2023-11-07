@@ -91,11 +91,11 @@ const MapSpisPK = (props: {
   //   props.setOpen(false); // полный выход
   // }, [props]);
 
-  const CloseEnd = () => {
+  const CloseEnd = React.useCallback(() => {
     datestat.needMenuForm = false; //  не выдавать меню форм
     dispatch(statsaveCreate(datestat));
     props.setOpen(false); // полный выход
-  };
+  }, [datestat, dispatch, props]);
 
   // const handleCloseBad = React.useCallback(() => {
   //   CloseEnd(); // выход без сохранения
@@ -203,11 +203,13 @@ const MapSpisPK = (props: {
   const escFunction = React.useCallback(
     (event) => {
       if (event.keyCode === 27) {
-        props.setOpen(false); // полный выход
+        //props.setOpen(false); // полный выход
+        datestat.lockUp = false; // разблокировка меню районов и меню режимов
+        CloseEnd();
         event.preventDefault();
       }
     },
-    [props],
+    [datestat, CloseEnd],
   );
 
   React.useEffect(() => {
