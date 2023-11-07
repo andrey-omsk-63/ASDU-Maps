@@ -14,7 +14,7 @@ import { styleFormPK01, stylePKForm01 } from "../../MainMapStyle";
 //import { StylSpisPK02, styleSpisPK03, StylSpisPK022 } from '../../MainMapStyle';
 import { stylePKForm02, styleSpisPK05 } from "../../MainMapStyle";
 
-const MapFormPK01 = (props: { view: boolean; handleClose: Function }) => {
+const MapFormPK02 = (props: { view: boolean; handleClose: Function }) => {
   //== Piece of Redux =======================================
   const map = useSelector((state: any) => {
     const { mapReducer } = state;
@@ -69,48 +69,74 @@ const MapFormPK01 = (props: { view: boolean; handleClose: Function }) => {
       }
       resStr.push(
         <Grid key={i} container sx={{ marginBottom: 1.5 }}>
-          <Grid item xs={0.25} sx={{ padding: "1px 0px 1px 0px", border: 0 }}>
+          <Grid item xs={0.125} sx={{ padding: "1px 0px 1px 0px", border: 0 }}>
             {i + 1}
           </Grid>
-          <Grid item xs={0.5} sx={{ padding: "1px 0px 1px 0px", border: 0 }}>
+          <Grid item xs={0.365} sx={{ padding: "1px 0px 1px 0px", border: 0 }}>
             {plan.coordPlan[i].id}
           </Grid>
-          <Grid item xs={3} sx={{ textAlign: "left", border: 0 }}>
+          <Grid item xs={2.125} sx={{ textAlign: "left", border: 0 }}>
             {nameVert}
           </Grid>
           <Grid item xs={0.5} sx={{ border: 0 }}>
             107
           </Grid>
-          <Grid item xs={0.75} sx={{ border: 0 }}>
+          <Grid item xs={0.5} sx={{ border: 0 }}>
             4
           </Grid>
-          <Grid item xs={0.75} sx={{ border: 0 }}>
+          <Grid item xs={0.5} sx={{ border: 0 }}>
             3
           </Grid>
-          <Grid item xs={0.775} sx={{ border: 0 }}>
+
+          <Grid item xs={0.99} sx={{ border: 0 }}>
+            1(2)
+          </Grid>
+          <Grid item xs={0.99} sx={{ border: 0 }}>
+            3(4)
+          </Grid>
+          <Grid item xs={0.99} sx={{ border: 0 }}>
+            4(5)
+          </Grid>
+          <Grid item xs={0.99} sx={{ border: 0 }}>
+            3(5)
+          </Grid>
+          <Grid item xs={0.99} sx={{ border: 0 }}>
+            4(5)
+          </Grid>
+          <Grid item xs={0.99} sx={{ border: 0 }}>
+            3(4)
+          </Grid>
+          <Grid item xs={0.99} sx={{ border: 0 }}>
+            4(6)
+          </Grid>
+          <Grid item xs sx={{ border: 0 }}>
+            3(5)
+          </Grid>
+
+          {/* <Grid item xs={0.497} sx={{ border: 0 }}>
             1
           </Grid>
-          <Grid item xs={0.775} sx={{ border: 0 }}>
+          <Grid item xs={0.497} sx={{ border: 0 }}>
             3
           </Grid>
-          <Grid item xs={0.775} sx={{ border: 0 }}>
+          <Grid item xs={0.497} sx={{ border: 0 }}>
             4
           </Grid>
-          <Grid item xs={0.775} sx={{ border: 0 }}>
+          <Grid item xs={0.497} sx={{ border: 0 }}>
             3
           </Grid>
-          <Grid item xs={0.775} sx={{ border: 0 }}>
+          <Grid item xs={0.497} sx={{ border: 0 }}>
             4
           </Grid>
-          <Grid item xs={0.775} sx={{ border: 0 }}>
+          <Grid item xs={0.497} sx={{ border: 0 }}>
             3
           </Grid>
-          <Grid item xs={0.775} sx={{ border: 0 }}>
+          <Grid item xs={0.497} sx={{ border: 0 }}>
             4
           </Grid>
           <Grid item xs sx={{ border: 0 }}>
             3
-          </Grid>
+          </Grid> */}
         </Grid>
       );
     }
@@ -120,48 +146,74 @@ const MapFormPK01 = (props: { view: boolean; handleClose: Function }) => {
   const HeaderTabl = () => {
     return (
       <Grid container sx={stylePKForm02}>
-        <Grid item xs={0.25} sx={{ padding: "1px 0px 1px 0px", border: 0 }}>
+        <Grid item xs={0.125} sx={{ padding: "1px 0px 1px 0px", border: 0 }}>
           №
         </Grid>
-        <Grid item xs={0.5} sx={{ border: 0 }}>
+        <Grid item xs={0.365} sx={{ border: 0 }}>
           №пер
         </Grid>
-        <Grid item xs={3} sx={{ border: 0 }}>
+        <Grid item xs={2.125} sx={{ border: 0 }}>
           Название
         </Grid>
         <Grid item xs={0.5} sx={{ border: 0 }}>
-          ТЦ
-        </Grid>
-        <Grid item xs={0.75} sx={{ border: 0 }}>
-          Кол-во напр.
-        </Grid>
-        <Grid item xs={0.75} sx={{ border: 0 }}>
           Кол-во фаз
         </Grid>
-        <Grid item xs={0.775} sx={{ border: 0 }}>
+        <Grid item xs={0.5} sx={{ border: 0 }}>
+          Кол-во напр
+        </Grid>
+        <Grid item xs={0.5} sx={{ border: 0 }}>
+          Смещ
+        </Grid>
+
+        <Grid item xs={0.99} sx={{ border: 0 }}>
+          Длит / (мин.длит) 1Ф
+        </Grid>
+        <Grid item xs={0.99} sx={{ border: 0 }}>
+          Длит / (мин.длит) 2Ф
+        </Grid>
+        <Grid item xs={0.99} sx={{ border: 0 }}>
+          Длит / (мин.длит) 3Ф
+        </Grid>
+        <Grid item xs={0.99} sx={{ border: 0 }}>
+          Длит / (мин.длит) 4Ф
+        </Grid>
+        <Grid item xs={0.99} sx={{ border: 0 }}>
+          Длит / (мин.длит) 5Ф
+        </Grid>
+        <Grid item xs={0.99} sx={{ border: 0 }}>
+          Длит / (мин.длит) 6Ф
+        </Grid>
+        <Grid item xs={0.99} sx={{ border: 0 }}>
+          Длит / (мин.длит) 7Ф
+        </Grid>
+        <Grid item xs sx={{ border: 0 }}>
+          Длит / (мин.длит) 8Ф
+        </Grid>
+
+        {/* <Grid item xs={0.497} sx={{ border: 0 }}>
           Мин дл.1Ф
         </Grid>
-        <Grid item xs={0.775} sx={{ border: 0 }}>
+        <Grid item xs={0.497} sx={{ border: 0 }}>
           Мин дл.2Ф
         </Grid>
-        <Grid item xs={0.775} sx={{ border: 0 }}>
+        <Grid item xs={0.497} sx={{ border: 0 }}>
           Мин дл.3Ф
         </Grid>
-        <Grid item xs={0.775} sx={{ border: 0 }}>
+        <Grid item xs={0.497} sx={{ border: 0 }}>
           Мин дл.4Ф
         </Grid>
-        <Grid item xs={0.775} sx={{ border: 0 }}>
+        <Grid item xs={0.497} sx={{ border: 0 }}>
           Мин дл.5Ф
         </Grid>
-        <Grid item xs={0.775} sx={{ border: 0 }}>
+        <Grid item xs={0.497} sx={{ border: 0 }}>
           Мин дл.6Ф
         </Grid>
-        <Grid item xs={0.775} sx={{ border: 0 }}>
+        <Grid item xs={0.497} sx={{ border: 0 }}>
           Мин дл.7Ф
         </Grid>
         <Grid item xs>
           Мин дл.8Ф
-        </Grid>
+        </Grid> */}
       </Grid>
     );
   };
@@ -173,7 +225,7 @@ const MapFormPK01 = (props: { view: boolean; handleClose: Function }) => {
           <b>&#10006;</b>
         </Button>
         <Box sx={styleFormPK01}>
-          <b>Данные о перекрёстках ПК №{plan.nomPK}</b>
+          <b>Начальные параметры перекрёстков ПК №{plan.nomPK}</b>
         </Box>
         <Grid container>
           <Grid item xs={8} sx={{ border: 0 }}>
@@ -199,11 +251,15 @@ const MapFormPK01 = (props: { view: boolean; handleClose: Function }) => {
             </Box>
           </Grid>
         </Grid>
+        {/* <Box sx={{ width: "100%", overflowY: "auto" }}>
+          <Box sx={{ width: "121%" }}> */}
         {HeaderTabl()}
         <Box sx={stylePKForm00}>{StrokaFormPK01()}</Box>
+        {/* </Box>
+        </Box> */}
       </Box>
     </Modal>
   );
 };
 
-export default MapFormPK01;
+export default MapFormPK02;

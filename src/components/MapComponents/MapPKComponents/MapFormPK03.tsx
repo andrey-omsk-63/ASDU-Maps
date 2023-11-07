@@ -14,7 +14,7 @@ import { styleFormPK01, stylePKForm01 } from "../../MainMapStyle";
 //import { StylSpisPK02, styleSpisPK03, StylSpisPK022 } from '../../MainMapStyle';
 import { stylePKForm02, styleSpisPK05 } from "../../MainMapStyle";
 
-const MapFormPK01 = (props: { view: boolean; handleClose: Function }) => {
+const MapFormPK03 = (props: { view: boolean; handleClose: Function }) => {
   //== Piece of Redux =======================================
   const map = useSelector((state: any) => {
     const { mapReducer } = state;
@@ -124,7 +124,7 @@ const MapFormPK01 = (props: { view: boolean; handleClose: Function }) => {
           №
         </Grid>
         <Grid item xs={0.5} sx={{ border: 0 }}>
-          №пер
+          № пер
         </Grid>
         <Grid item xs={3} sx={{ border: 0 }}>
           Название
@@ -173,7 +173,7 @@ const MapFormPK01 = (props: { view: boolean; handleClose: Function }) => {
           <b>&#10006;</b>
         </Button>
         <Box sx={styleFormPK01}>
-          <b>Данные о перекрёстках ПК №{plan.nomPK}</b>
+          <b>Выходные данные по направлениям ПК №{plan.nomPK}</b>
         </Box>
         <Grid container>
           <Grid item xs={8} sx={{ border: 0 }}>
@@ -206,4 +206,4 @@ const MapFormPK01 = (props: { view: boolean; handleClose: Function }) => {
   );
 };
 
-export default MapFormPK01;
+export default MapFormPK03;

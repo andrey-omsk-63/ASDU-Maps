@@ -792,7 +792,7 @@ export const styleSpisPK05 = {
 
 export const MakeStylSpisPK06 = () => {
   const styleSpisPK06 = {
-    width: '97.75%',
+    //width: '97.75%',
     maxHeight: window.innerHeight * 0.8,
     minHeight: '10px',
     bgcolor: '#F1F5FB', // серо голубой
@@ -805,5 +805,42 @@ export const MakeStylSpisPK06 = () => {
     padding: '5px 5px 5px 5px',
   };
   return styleSpisPK06;
+};
+//=== FormPK ==========================================================
+export const stylePKForm00 = {
+  maxHeight: window.innerHeight * 0.8,
+  minHeight: "10px",
+  bgcolor: "#F1F5FB", // серо голубой
+  border: "1px solid #F1F5FB", // цвет фона
+  borderBottomLeftRadius: 2,
+  borderBottomRightRadius: 2,
+  textAlign: "center",
+  overflowX: "auto", // скролл
+  boxShadow: 6,
+};
+
+export const stylePKForm01 = {
+  outline: "none",
+  position: "absolute",
+  left: "50%",
+  top: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "96%",
+  bgcolor: "background.paper",
+  border: "1px solid #FFFFFF",
+  borderRadius: 1,
+  boxShadow: 24,
+  textAlign: "center",
+  padding: "5px 15px 15px 15px",
+};
+
+export const stylePKForm02 = {
+  fontSize: 15,
+  textAlign: "center",
+  bgcolor: "#C0E2C3",
+  borderTopLeftRadius: 2,
+  borderTopRightRadius: 2,
+  boxShadow: 6,
+  padding: "3px 0px 3px 0px",
 };
 //=====================================================================

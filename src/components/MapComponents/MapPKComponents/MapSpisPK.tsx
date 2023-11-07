@@ -57,7 +57,6 @@ const MapSpisPK = (props: {
   // if (makeDel) {
   //   makeDel = false;
   // } else {
-  console.log('INIC');
   if (!massplan.plans.length) ChangeIDX(-1);
   if (massplan.plans.length !== massSpis.length) ChangeIDX(0);
   flagDel = 0;
@@ -84,8 +83,8 @@ const MapSpisPK = (props: {
   massSpis = massSp;
   if (datestat.needMakeSpisPK) datestat.needMakeSpisPK = false;
   datestat.needMenuForm = true; // выдавать меню форм
+  datestat.lockUp = true; // блокировка/разблокировка меню районов и меню режимов
   dispatch(statsaveCreate(datestat));
-  console.log('£££:', datestat.needMenuForm);
   //}
   //========================================================
   // const CloseEnd = React.useCallback(() => {

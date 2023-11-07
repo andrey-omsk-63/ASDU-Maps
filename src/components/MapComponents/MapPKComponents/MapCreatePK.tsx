@@ -93,13 +93,11 @@ const MapCreatePK = (props: {
   const modeWork = props.idx < 0 ? 'create' : 'edit';
 
   const CloseEnd = React.useCallback(() => {
-    //console.log("Полный выход:", EscClinch, props.idx);
     HAVE = 0;
     oldArea = -1;
     isOpen = false;
     massPkId = [];
     props.setOpen(false); // полный выход
-    console.log('!!!:', datestat.needMenuForm, modeWork);
     if (modeWork === 'edit' || datestat.needMenuForm) props.setPuskMenu(); // перезапуск меню ПК
   }, [props, modeWork, datestat.needMenuForm]);
 
@@ -115,8 +113,6 @@ const MapCreatePK = (props: {
   //=== инициализация ======================================
   if (EscClinch) {
     EscClinch = false;
-    //CloseEnd()
-    //handleCloseBad();
   } else {
     if (!isOpen || AreA !== oldArea || props.idx !== oldIdx) {
       for (let i = 0; i < map.dateMap.tflight.length; i++) {
@@ -235,6 +231,7 @@ const MapCreatePK = (props: {
         } else {
           massplan.plans[props.idx] = { ...NewCoordPlan }; // режим корректировки ПК
           datestat.needMakeSpisPK = true;
+          datestat.lockUp = true; // блокировка меню районов и меню режимов
           dispatch(statsaveCreate(datestat));
         }
         if (needSort) {
