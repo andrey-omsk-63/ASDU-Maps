@@ -67,48 +67,58 @@ const MapFormPK01 = (props: { view: boolean; handleClose: Function }) => {
           break;
         }
       }
+      const stylePKForm03 = {
+        padding: "10px 0px 10px 0px",
+        borderBottom: 1,
+      };
+
+      const stylePKForm033 = {
+        textAlign: "left",
+        padding: "10px 0px 10px 0px",
+        borderBottom: 1,
+      };
       resStr.push(
-        <Grid key={i} container sx={{ marginBottom: 1.5 }}>
-          <Grid item xs={0.25} sx={{ padding: "1px 0px 1px 0px", border: 0 }}>
+        <Grid key={i} container sx={{ marginBottom: 0 }}>
+          <Grid item xs={0.25} sx={stylePKForm03}>
             {i + 1}
           </Grid>
-          <Grid item xs={0.5} sx={{ padding: "1px 0px 1px 0px", border: 0 }}>
+          <Grid item xs={0.5} sx={stylePKForm03}>
             {plan.coordPlan[i].id}
           </Grid>
-          <Grid item xs={3} sx={{ textAlign: "left", border: 0 }}>
+          <Grid item xs={3} sx={stylePKForm033}>
             {nameVert}
           </Grid>
-          <Grid item xs={0.5} sx={{ border: 0 }}>
+          <Grid item xs={0.5} sx={stylePKForm03}>
             107
           </Grid>
-          <Grid item xs={0.75} sx={{ border: 0 }}>
+          <Grid item xs={0.75} sx={stylePKForm03}>
             4
           </Grid>
-          <Grid item xs={0.75} sx={{ border: 0 }}>
+          <Grid item xs={0.75} sx={stylePKForm03}>
             3
           </Grid>
-          <Grid item xs={0.775} sx={{ border: 0 }}>
+          <Grid item xs={0.775} sx={stylePKForm03}>
             1
           </Grid>
-          <Grid item xs={0.775} sx={{ border: 0 }}>
+          <Grid item xs={0.775} sx={stylePKForm03}>
             3
           </Grid>
-          <Grid item xs={0.775} sx={{ border: 0 }}>
+          <Grid item xs={0.775} sx={stylePKForm03}>
             4
           </Grid>
-          <Grid item xs={0.775} sx={{ border: 0 }}>
+          <Grid item xs={0.775} sx={stylePKForm03}>
             3
           </Grid>
-          <Grid item xs={0.775} sx={{ border: 0 }}>
+          <Grid item xs={0.775} sx={stylePKForm03}>
             4
           </Grid>
-          <Grid item xs={0.775} sx={{ border: 0 }}>
+          <Grid item xs={0.775} sx={stylePKForm03}>
             3
           </Grid>
-          <Grid item xs={0.775} sx={{ border: 0 }}>
+          <Grid item xs={0.775} sx={stylePKForm03}>
             4
           </Grid>
-          <Grid item xs sx={{ border: 0 }}>
+          <Grid item xs sx={stylePKForm03}>
             3
           </Grid>
         </Grid>
@@ -120,46 +130,46 @@ const MapFormPK01 = (props: { view: boolean; handleClose: Function }) => {
   const HeaderTabl = () => {
     return (
       <Grid container sx={stylePKForm02}>
-        <Grid item xs={0.25} sx={{ padding: "1px 0px 1px 0px", border: 0 }}>
+        <Grid item xs={0.25} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
           №
         </Grid>
-        <Grid item xs={0.5} sx={{ border: 0 }}>
+        <Grid item xs={0.5} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
           №пер
         </Grid>
-        <Grid item xs={3} sx={{ border: 0 }}>
+        <Grid item xs={3} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
           Название
         </Grid>
-        <Grid item xs={0.5} sx={{ border: 0 }}>
+        <Grid item xs={0.5} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
           ТЦ
         </Grid>
-        <Grid item xs={0.75} sx={{ border: 0 }}>
+        <Grid item xs={0.75} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
           Кол-во напр.
         </Grid>
-        <Grid item xs={0.75} sx={{ border: 0 }}>
+        <Grid item xs={0.75} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
           Кол-во фаз
         </Grid>
-        <Grid item xs={0.775} sx={{ border: 0 }}>
+        <Grid item xs={0.775} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
           Мин дл.1Ф
         </Grid>
-        <Grid item xs={0.775} sx={{ border: 0 }}>
+        <Grid item xs={0.775} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
           Мин дл.2Ф
         </Grid>
-        <Grid item xs={0.775} sx={{ border: 0 }}>
+        <Grid item xs={0.775} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
           Мин дл.3Ф
         </Grid>
-        <Grid item xs={0.775} sx={{ border: 0 }}>
+        <Grid item xs={0.775} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
           Мин дл.4Ф
         </Grid>
-        <Grid item xs={0.775} sx={{ border: 0 }}>
+        <Grid item xs={0.775} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
           Мин дл.5Ф
         </Grid>
-        <Grid item xs={0.775} sx={{ border: 0 }}>
+        <Grid item xs={0.775} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
           Мин дл.6Ф
         </Grid>
-        <Grid item xs={0.775} sx={{ border: 0 }}>
+        <Grid item xs={0.775} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
           Мин дл.7Ф
         </Grid>
-        <Grid item xs>
+        <Grid item xs sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
           Мин дл.8Ф
         </Grid>
       </Grid>

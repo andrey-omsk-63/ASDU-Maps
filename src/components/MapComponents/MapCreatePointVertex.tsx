@@ -9,6 +9,7 @@ import MapCreatePoint from "./MapCreatePoint";
 import MapCreateVertex from "./MapCreateVertex";
 
 import { styleModalEnd, styleModalMenu } from "./../MainMapStyle";
+import { styleTypography } from "./../MainMapStyle";
 
 const MapCreatePointVertex = (props: {
   setOpen: any;
@@ -18,7 +19,7 @@ const MapCreatePointVertex = (props: {
   area: string;
 }) => {
   const styleSet = {
-    outline: 'none',
+    outline: "none",
     position: "absolute",
     marginTop: "24vh",
     marginLeft: "27vh",
@@ -68,7 +69,9 @@ const MapCreatePointVertex = (props: {
             <b>&#10006;</b>
           </Button>
           <Box sx={{ textAlign: "center" }}>
-            <Typography variant="h6">Что создаём?</Typography>
+            <Typography variant="h6" sx={styleTypography}>
+              Что создаём?
+            </Typography>
             <br />
             <Button sx={styleModalMenu} onClick={() => handleClose(1)}>
               Точку
