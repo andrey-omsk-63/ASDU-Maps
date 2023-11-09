@@ -87,7 +87,7 @@ const MapFormPK05 = (props: { view: boolean; handleClose: Function }) => {
           break;
         }
       }
-      let brb = i === plan.coordPlan.length - 1 ? 0 : 1;
+      let brb: any = i === plan.coordPlan.length - 1 ? 0 : '1px solid #d4d4d4';
       const stylePKForm03 = {
         padding: "10px 0px 10px 0px",
         borderBottom: brb,

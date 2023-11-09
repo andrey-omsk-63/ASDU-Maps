@@ -74,7 +74,7 @@ const MapFormPK03 = (props: { view: boolean; handleClose: Function }) => {
       let coler = i === 1 || i === 3 ? "#ffdbec" : !i ? "#D5E9F9" : "#F1F5FB";
       const stylePKForm03 = {
         padding: "10px 0px 10px 0px",
-        borderBottom: 1,
+        borderBottom: '1px solid #d4d4d4',
         bgcolor: coler,
       };
       resStr.push(

@@ -450,14 +450,14 @@ export const styleFT02 = {
   padding: 0.7,
   textAlign: 'center',
   bgcolor: '#C0E2C3',
-  borderTopLeftRadius: 5,
-  borderTopRightRadius: 5,
+  borderTopLeftRadius: 3,
+  borderTopRightRadius: 3,
 };
 
 export const styleFormTabl00 = {
-  border: 1,
+  border: '1px solid #d4d4d4',
   borderRadius: 1,
-  borderColor: 'primary.main',
+  //borderColor: 'primary.main',
   marginTop: 1.5,
   marginLeft: -0.5,
   marginRight: -0.5,
@@ -480,16 +480,16 @@ export const styleFormTabl02 = {
 };
 
 export const styleFT03 = {
-  borderRight: 1,
-  borderBottom: 1,
-  borderColor: 'primary.main',
+  borderRight: '1px solid #d4d4d4',
+  borderBottom: '1px solid #d4d4d4',
+  //borderColor: 'primary.main',
   padding: 0.7,
   textAlign: 'center',
 };
 
 export const styleFT033 = {
-  borderBottom: 1,
-  borderColor: 'primary.main',
+  borderBottom: '1px solid #d4d4d4',
+  //borderColor: 'primary.main',
   padding: 0.7,
   textAlign: 'center',
 };

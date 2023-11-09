@@ -67,15 +67,16 @@ const MapFormPK01 = (props: { view: boolean; handleClose: Function }) => {
           break;
         }
       }
+      let brb: any = i === plan.coordPlan.length - 1 ? 0 : '1px solid #d4d4d4';
       const stylePKForm03 = {
         padding: "10px 0px 10px 0px",
-        borderBottom: 1,
+        borderBottom: brb,
       };
 
       const stylePKForm033 = {
         textAlign: "left",
         padding: "10px 0px 10px 0px",
-        borderBottom: 1,
+        borderBottom: brb,
       };
       resStr.push(
         <Grid key={i} container sx={{ marginBottom: 0 }}>
