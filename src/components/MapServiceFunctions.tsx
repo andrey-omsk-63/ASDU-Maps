@@ -1972,13 +1972,13 @@ export const InputNamePK = (handleChangeName: any, valuen: string) => {
 export const SaveFormPK = (SaveForm: any) => {
   return (
     <Grid container sx={{ marginTop: 0.8 }}>
-      <Grid item xs={5.57} sx={{ textAlign: 'right' }}>
+      <Grid item xs={5.59} sx={{ textAlign: 'right', border: 0}}>
         <Button sx={styleFormPK03} onClick={() => SaveForm(false)}>
           Выйти без сохранения
         </Button>
       </Grid>
-      <Grid item xs={0.82}></Grid>
-      <Grid item xs sx={{ textAlign: 'left' }}>
+      <Grid item xs={0.82}sx={{ border: 0}}></Grid>
+      <Grid item xs sx={{ border: 0, textAlign: 'left' }}>
         <Button sx={styleFormPK03} onClick={() => SaveForm(true)}>
           Сохранить изменения
         </Button>

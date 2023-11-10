@@ -95,6 +95,7 @@ let fromIdx = -1;
 let inIdx = -1;
 let openEF = false;
 let idxPKForm = -1;
+let polygonMass: any = [];
 
 const MainMap = (props: {
   region: any;
@@ -112,6 +113,7 @@ const MainMap = (props: {
     const { massrouteReducer } = state;
     return massrouteReducer.massroute;
   });
+  //console.log('GLmassroute:', massroute);
   let massroutepro = useSelector((state: any) => {
     const { massrouteproReducer } = state;
     return massrouteproReducer.massroutepro;
@@ -193,6 +195,8 @@ const MainMap = (props: {
       MASSPK = [];
       idxPKForm = -1;
       HandlLockUp(false); // разблокировка меню районов и меню режимов
+      //datestat.needMenuForm = false; //  не выдавать меню форм
+      //dispatch(statsaveCreate(datestat));
       ymaps && addRoute(ymaps); // перерисовка связей
     },
     [ymaps, HandlLockUp]
@@ -353,6 +357,7 @@ const MainMap = (props: {
         ZeroRoute(false);
         datestat.needMenuForm = true; // выдавать меню форм
         HandlLockUp(true); // блокировка меню районов и меню режимов
+        //dispatch(statsaveCreate(datestat));
         setOpenPKSpis(true);
         break;
       case 202: // создание нового ПК
@@ -435,6 +440,7 @@ const MainMap = (props: {
         VertexForma = null;
         datestat.oldIdxForm = -1;
         HandlLockUp(true);
+        //dispatch(statsaveCreate(datestat));
         setOpenVertForm(true); // запуск новой формы
       }
     } else {
@@ -582,22 +588,21 @@ const MainMap = (props: {
     );
   };
 
-  const ContentContextmenu = (e: any) => {
-    newPointCoord = e.get("coords");
-    idxDel = NearestPoint(massdk, newPointCoord);
-    if (MODE === "0") {
-      idxDel >= 0 && setOpenSetDelete(true);
-      idxDel < 0 && setOpenCreate(true);
-    }
-    if (MODE === "1" && idxDel >= 0 && nomRoute < 0 && !openVertForm) {
-      nomRoute = 0;
-      idxRoute = idxDel;
-      setOpenWaysFormMenu(true);
-      pointAaIndex = idxDel; // начальная точка
-      pointAa = MassCoord(massdk[idxDel]);
-      MakeСollectionRoute(false);
-      setRevers(!revers); // ререндер
-    }
+  const addPoligon = (ymaps: any) => {
+    console.log("2Init", pointCenter);
+    polygonMass = [
+      [pointCenter[0] - 0.1, pointCenter[1] + 0.2],
+      [pointCenter[0] + 0.1, pointCenter[1] + 0.2],
+      [pointCenter[0] + 0.1, pointCenter[1] - 0.2],
+      [pointCenter[0] - 0.1, pointCenter[1] - 0.2],
+    ];
+    // Создаем многоугольник в виде прямоугольника.
+    let polygon = new ymaps.Polygon([polygonMass]);
+    // Добавляем многоугольник на карту.
+    mapp.current.geoObjects.add(polygon);
+    console.log("4Init", polygonMass);
+    // Включаем режим масштабирования.
+    polygon.editor.startFraming();
   };
 
   const InstanceRefDo = (ref: React.Ref<any>) => {
@@ -605,7 +610,29 @@ const MainMap = (props: {
       mapp.current = ref;
       mapp.current.events.remove("contextmenu", funcContex); // нажата правая кнопка мыши
       funcContex = function (e: any) {
-        mapp.current.hint && ContentContextmenu(e);
+        console.log("contextmenu:", e);
+        if (mapp.current.hint) {
+          newPointCoord = e.get("coords");
+          idxDel = NearestPoint(massdk, newPointCoord);
+          if (MODE === "0") {
+            idxDel >= 0 && setOpenSetDelete(true);
+            idxDel < 0 && setOpenCreate(true);
+          }
+          if (MODE === "1") {
+            if (idxDel >= 0 && nomRoute < 0 && !openVertForm) {
+              nomRoute = 0;
+              idxRoute = idxDel;
+              setOpenWaysFormMenu(true);
+              pointAaIndex = idxDel; // начальная точка
+              pointAa = MassCoord(massdk[idxDel]);
+              MakeСollectionRoute(false);
+              setRevers(!revers); // ререндер
+            }
+          }
+          if (MODE === "2") {
+            ymaps && addPoligon(ymaps);
+          }
+        }
       };
       mapp.current.events.add("contextmenu", funcContex);
       mapp.current.events.remove("click", funcClick); // нажата левая кнопка мыши
@@ -617,6 +644,7 @@ const MainMap = (props: {
       mapp.current.events.add("click", funcClick);
       mapp.current.events.remove("boundschange", funcBound); // покрутили колёсико мыши
       funcBound = function () {
+        console.log("boundschange:");
         pointCenter = mapp.current.getCenter();
         zoom = mapp.current.getZoom();
       };
@@ -724,6 +752,7 @@ const MainMap = (props: {
   const SetPuskMenu = () => {
     datestat.needMenuForm = true; // выдавать меню форм
     HandlLockUp(true); // блокировка меню районов и меню режимов
+    //dispatch(statsaveCreate(datestat));
     setOpenPKSpis(true); // открытие списка планов
   };
 
@@ -802,6 +831,8 @@ const MainMap = (props: {
     return () => document.removeEventListener("keydown", escFunction);
   }, [escFunction]);
   //========================================================
+  console.log("5Init", polygonMass);
+
   return (
     <Grid container sx={{ height: "99.9vh" }}>
       {!datestat.lockUp && (
@@ -822,7 +853,12 @@ const MainMap = (props: {
       {Object.keys(massroute).length && (
         <YMaps query={{ apikey: MyYandexKey, lang: "ru_RU" }}>
           <Map
-            modules={["multiRouter.MultiRoute", "Polyline"]}
+            modules={[
+              "multiRouter.MultiRoute",
+              "Polyline",
+              "Polygon",
+              "geoObject.addon.editor",
+            ]}
             state={mapState}
             instanceRef={(ref) => InstanceRefDo(ref)}
             onLoad={(ref) => {
