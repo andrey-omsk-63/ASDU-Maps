@@ -557,10 +557,12 @@ export const GetPointOptions = (
       host = 'http://localhost:3000/4.svg';
       if (!debug) host = window.location.origin + '/free/img/trafficLights/4.svg';
     };
+
     if (MODE === '1') {
       if (index === pointBbIndex || index === pointAaIndex) HosterIllum();
     }
-    if (MODE === '2') {
+    if (MODE === '2' && Area === AREA) {
+      //console.log('!!!',index,massdk[index].ID,MASSPK )
       if (MASSPK.indexOf(massdk[index].ID) >= 0) HosterIllum();
     }
 

@@ -117,20 +117,17 @@ const MapSpisPK = (props: {
       ChangeIDX(0);
       if (!idx) ChangeIDX(-1);
     }
-    //makeDel = true;
     setTrigger(!trigger); // ререндер
   };
 
   const EditPlan = (idx: number) => {
     if (idx !== IDX) ChangeIDX(idx);
     props.setMode(idx); // запуск редактирования ПК
-    //makeDel = true;
   };
 
   const ViewPlan = (idx: number) => {
     ChangeIDX(idx);
     setView(true);
-    //makeDel = true;
   };
 
   const MarkPlan = (idx: number) => {
@@ -141,7 +138,6 @@ const MapSpisPK = (props: {
       ChangeIDX(idx);
       setTrigger(!trigger); // ререндер
     }
-    //makeDel = true;
   };
 
   const DelSpis = () => {
@@ -203,7 +199,6 @@ const MapSpisPK = (props: {
   const escFunction = React.useCallback(
     (event) => {
       if (event.keyCode === 27) {
-        //props.setOpen(false); // полный выход
         datestat.lockUp = false; // разблокировка меню районов и меню режимов
         CloseEnd();
         event.preventDefault();

@@ -128,6 +128,10 @@ const MainMap = (props: {
     const { statsaveReducer } = state;
     return statsaveReducer.datestat;
   });
+  let massplan = useSelector((state: any) => {
+    const { massplanReducer } = state;
+    return massplanReducer.massplan;
+  });
   const dispatch = useDispatch();
   const WS = datestat.ws;
   if (WS.url === "wss://localhost:3000/W") debug = true;
@@ -286,6 +290,15 @@ const MainMap = (props: {
     return noDoublRoute;
   };
 
+  const BeginPK = () => {
+    ZeroRoute(false);
+    if (AREA === "0") {
+      AREA = "1";
+      setCurrency("1");
+      FillMassRoute();
+    }
+  };
+
   const PressButton = (mode: number) => {
     switch (mode) {
       case 3: // режим включения Demo сети связей
@@ -343,25 +356,19 @@ const MainMap = (props: {
       case 77: // удаление связи / отмена назначений
         ZeroRoute(false);
         break;
-
       case 121: // выбор района
         FillMassRoute();
         ZeroRoute(false);
         flagDemo && ymaps && addRoute(ymaps); // перерисовка связей
         break;
       case 201: // список всех ПК
-        ZeroRoute(false);
+        BeginPK();
         datestat.needMenuForm = true; // выдавать меню форм
         HandlLockUp(true); // блокировка меню районов и меню режимов
         setOpenPKSpis(true);
         break;
       case 202: // создание нового ПК
-        ZeroRoute(false);
-        if (AREA === "0") {
-          AREA = "1";
-          setCurrency("1");
-          FillMassRoute();
-        }
+        BeginPK();
         idxPKForm = -1;
         HandlLockUp(true); // блокировка меню районов и меню режимов
         setOpenPKForm(true);
@@ -714,6 +721,11 @@ const MainMap = (props: {
 
   const SetModePKForm = (idx: number) => {
     idxPKForm = idx;
+    let area = massplan.plans[idx].areaPK.toString();
+    AREA = area;
+    setCurrency(area);
+    FillMassRoute();
+    ymaps && addRoute(ymaps); // перерисовка связей
     setOpenPKSpis(false); // закрытие списка планов
     datestat.needMenuForm = false; //  не выдавать меню форм
     dispatch(statsaveCreate(datestat));
