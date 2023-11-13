@@ -332,19 +332,6 @@ const MapCreatePK = (props: {
       );
     }
   };
-  //=== обработка Esc ======================================
-  const escFunction = React.useCallback((event) => {
-    if (event.keyCode === 27) {
-      console.log("ESC!!!", HAVE);
-      EscClinch = true;
-      event.preventDefault();
-    }
-  }, []);
-
-  React.useEffect(() => {
-    document.addEventListener("keydown", escFunction);
-    return () => document.removeEventListener("keydown", escFunction);
-  }, [escFunction]);
   //========================================================
   const HeaderFormPK = () => {
     let soob = modeWork === "create" ? "Создание нового " : "Корректировка ";
@@ -378,7 +365,6 @@ const MapCreatePK = (props: {
   };
 
   const MoveLeftWind = () => {
-    //console.log("1###:", boards[0].items.length);
     let leng = boards[0].items.length;
     for (let i = 0; i < leng; i++) {
       let aa: Stroka = boards[0].items[0];
@@ -401,7 +387,6 @@ const MapCreatePK = (props: {
       boards[1].items.splice(0, 1); // удаление из правого окна
       boards[0].items.push(rec); // добавление в левое окно
     }
-    //console.log("12###:", boards[1].items);
     massPkId = []; // удаление подсветки из правого окна
     props.SetMass(massPkId, AreA);
     HAVE++;
@@ -437,7 +422,20 @@ const MapCreatePK = (props: {
       </Grid>
     );
   };
+  //=== обработка Esc ======================================
+  const escFunction = React.useCallback((event) => {
+    if (event.keyCode === 27) {
+      console.log("ESC!!!", HAVE);
+      EscClinch = true;
+      event.preventDefault();
+    }
+  }, []);
 
+  React.useEffect(() => {
+    document.addEventListener("keydown", escFunction);
+    return () => document.removeEventListener("keydown", escFunction);
+  }, [escFunction]);
+  //========================================================
   return (
     <>
       {badExit && <>{BadExit(badExit, handleCloseBadExit)}</>}
@@ -464,12 +462,10 @@ const MapCreatePK = (props: {
                 draggable={true}
               >
                 {board.ID === 1 && (
-                  <Box>
-                    {item.id === 6 ? (
-                      <Box>&#11014;&#11015;</Box>
-                    ) : (
-                      <Box>&#8657;&#8659;</Box>
-                    )}
+                  <Box sx={{ display: "flex", justifyContent: "left" }}>
+                    <Box sx={{ color: "#9265ff" }}>&#8659;</Box>
+                    <Box sx={{ color: "#7dc36b" }}>&#8657;</Box>
+                    {/* <Box sx={{color: "#24a319" }}>&#8659;</Box> */}
                   </Box>
                 )}
                 <Box sx={{ marginLeft: 0.5, border: 0 }}>

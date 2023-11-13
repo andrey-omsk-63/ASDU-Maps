@@ -7,12 +7,13 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 
-//import { AREA } from "../../MainMapGl";
+import { TablStr } from "../../MapServiceFunctions";
 
 import { styleModalEndBind, stylePKForm00 } from "../../MainMapStyle";
 import { styleFormPK01, stylePKForm01 } from "../../MainMapStyle";
-//import { StylSpisPK02, styleSpisPK03, StylSpisPK022 } from '../../MainMapStyle';
+import { stylePKForm03, stylePKForm033 } from "../../MainMapStyle";
 import { stylePKForm02, styleSpisPK05 } from "../../MainMapStyle";
+import { stylePKForm04 } from "../../MainMapStyle";
 
 const MapFormPK02 = (props: { view: boolean; handleClose: Function }) => {
   //== Piece of Redux =======================================
@@ -53,7 +54,7 @@ const MapFormPK02 = (props: { view: boolean; handleClose: Function }) => {
     if (reason === "escapeKeyDown") handleClose();
   };
   //========================================================
-   const StrokaFormPK02 = () => {
+  const StrokaFormPK02 = () => {
     let resStr = [];
     for (let i = 0; i < plan.coordPlan.length; i++) {
       let nameVert = "";
@@ -66,61 +67,23 @@ const MapFormPK02 = (props: { view: boolean; handleClose: Function }) => {
           break;
         }
       }
-      const stylePKForm03 = {
-        padding: "10px 0px 10px 0px",
-        borderBottom: '1px solid #d4d4d4',
-      };
-
-      const stylePKForm033 = {
-        textAlign: "left",
-        padding: "10px 0px 10px 0px",
-        borderBottom: '1px solid #d4d4d4',
-      };
+      let brb: any = i === plan.coordPlan.length - 1 ? 0 : "1px solid #d4d4d4";
       resStr.push(
         <Grid key={i} container sx={{ marginBottom: 0 }}>
-          <Grid item xs={0.125} sx={stylePKForm03}>
-            {i + 1}
-          </Grid>
-          <Grid item xs={0.365} sx={stylePKForm03}>
-            {plan.coordPlan[i].id}
-          </Grid>
-          <Grid item xs={2.125} sx={stylePKForm033}>
-            {nameVert}
-          </Grid>
-          <Grid item xs={0.5} sx={stylePKForm03}>
-            107
-          </Grid>
-          <Grid item xs={0.5} sx={stylePKForm03}>
-            4
-          </Grid>
-          <Grid item xs={0.5} sx={stylePKForm03}>
-            3
-          </Grid>
-
-          <Grid item xs={0.99} sx={stylePKForm03}>
-            1(2)
-          </Grid>
-          <Grid item xs={0.99} sx={stylePKForm03}>
-            3(4)
-          </Grid>
-          <Grid item xs={0.99} sx={stylePKForm03}>
-            4(5)
-          </Grid>
-          <Grid item xs={0.99} sx={stylePKForm03}>
-            3(5)
-          </Grid>
-          <Grid item xs={0.99} sx={stylePKForm03}>
-            4(5)
-          </Grid>
-          <Grid item xs={0.99} sx={stylePKForm03}>
-            3(4)
-          </Grid>
-          <Grid item xs={0.99} sx={stylePKForm03}>
-            4(6)
-          </Grid>
-          <Grid item xs sx={stylePKForm03}>
-            3(5)
-          </Grid>
+          {TablStr(0.125, i + 1, stylePKForm03(brb))}
+          {TablStr(0.365, plan.coordPlan[i].id, stylePKForm03(brb))}
+          {TablStr(2.125, nameVert, stylePKForm033(brb))}
+          {TablStr(0.5, 107, stylePKForm03(brb))}
+          {TablStr(0.5, 4, stylePKForm03(brb))}
+          {TablStr(0.5, 3, stylePKForm03(brb))}
+          {TablStr(0.99, "1(2)", stylePKForm03(brb))}
+          {TablStr(0.99, "3(4)", stylePKForm03(brb))}
+          {TablStr(0.99, "4(5)", stylePKForm03(brb))}
+          {TablStr(0.99, "3(5)", stylePKForm03(brb))}
+          {TablStr(0.99, "4(5)", stylePKForm03(brb))}
+          {TablStr(0.99, "3(4)", stylePKForm03(brb))}
+          {TablStr(0.99, "4(6)", stylePKForm03(brb))}
+          {TablStr(0, "3(5)", stylePKForm03(brb))}
         </Grid>
       );
     }
@@ -130,49 +93,20 @@ const MapFormPK02 = (props: { view: boolean; handleClose: Function }) => {
   const HeaderTabl = () => {
     return (
       <Grid container sx={stylePKForm02}>
-        <Grid item xs={0.125} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
-          №
-        </Grid>
-        <Grid item xs={0.365} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
-          №пер
-        </Grid>
-        <Grid item xs={2.125} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
-          Название
-        </Grid>
-        <Grid item xs={0.5} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
-          Кол-во фаз
-        </Grid>
-        <Grid item xs={0.5} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
-          Кол-во напр
-        </Grid>
-        <Grid item xs={0.5} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
-          Смещ
-        </Grid>
-
-        <Grid item xs={0.99} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
-          Длит / (мин.длит) 1Ф
-        </Grid>
-        <Grid item xs={0.99} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
-          Длит / (мин.длит) 2Ф
-        </Grid>
-        <Grid item xs={0.99} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
-          Длит / (мин.длит) 3Ф
-        </Grid>
-        <Grid item xs={0.99} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
-          Длит / (мин.длит) 4Ф
-        </Grid>
-        <Grid item xs={0.99} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
-          Длит / (мин.длит) 5Ф
-        </Grid>
-        <Grid item xs={0.99} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
-          Длит / (мин.длит) 6Ф
-        </Grid>
-        <Grid item xs={0.99} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
-          Длит / (мин.длит) 7Ф
-        </Grid>
-        <Grid item xs sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
-          Длит / (мин.длит) 8Ф
-        </Grid>
+        {TablStr(0.125, "№", stylePKForm04)}
+        {TablStr(0.365, "№пер", stylePKForm04)}
+        {TablStr(2.125, "Название", stylePKForm04)}
+        {TablStr(0.5, "Кол-во фаз", stylePKForm04)}
+        {TablStr(0.5, "Кол-во напр", stylePKForm04)}
+        {TablStr(0.5, "Смещ", stylePKForm04)}
+        {TablStr(0.99, "Длит / (мин.длит) 1Ф", stylePKForm04)}
+        {TablStr(0.99, "Длит / (мин.длит) 2Ф", stylePKForm04)}
+        {TablStr(0.99, "Длит / (мин.длит) 3Ф", stylePKForm04)}
+        {TablStr(0.99, "Длит / (мин.длит) 4Ф", stylePKForm04)}
+        {TablStr(0.99, "Длит / (мин.длит) 5Ф", stylePKForm04)}
+        {TablStr(0.99, "Длит / (мин.длит) 6Ф", stylePKForm04)}
+        {TablStr(0.99, "Длит / (мин.длит) 7Ф", stylePKForm04)}
+        {TablStr(0, "Длит / (мин.длит) 8Ф", stylePKForm04)}
       </Grid>
     );
   };

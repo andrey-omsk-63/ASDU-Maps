@@ -1,17 +1,17 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
-//import { massplanCreate, statsaveCreate } from './../../../redux/actions';
 
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 
-//import { AREA } from "../../MainMapGl";
+import { TablStr } from "../../MapServiceFunctions";
 
 import { styleModalEndBind, stylePKForm00 } from "../../MainMapStyle";
 import { styleFormPK01, stylePKForm01 } from "../../MainMapStyle";
-import { stylePKForm02,styleSpisPK05 } from "../../MainMapStyle";
+import { stylePKForm02, styleSpisPK05 } from "../../MainMapStyle";
+import { stylePKForm04 } from "../../MainMapStyle";
 
 const MapFormPK03 = (props: { view: boolean; handleClose: Function }) => {
   //== Piece of Redux =======================================
@@ -19,20 +19,15 @@ const MapFormPK03 = (props: { view: boolean; handleClose: Function }) => {
     const { mapReducer } = state;
     return mapReducer.map;
   });
-  // let massroute = useSelector((state: any) => {
-  //   const { massrouteReducer } = state;
-  //   return massrouteReducer.massroute;
-  // });
   let massplan = useSelector((state: any) => {
     const { massplanReducer } = state;
     return massplanReducer.massplan;
   });
-  console.log('###massplan:', massplan);
+  //console.log('###massplan:', massplan);
   let datestat = useSelector((state: any) => {
     const { statsaveReducer } = state;
     return statsaveReducer.datestat;
   });
-  //console.log('massplan:', massplan, massSpis);
   //=== инициализация ======================================
   let plan = massplan.plans[datestat.idxMenu];
   let nameArea = "";
@@ -74,38 +69,24 @@ const MapFormPK03 = (props: { view: boolean; handleClose: Function }) => {
       let coler = i === 1 || i === 3 ? "#ffdbec" : !i ? "#D5E9F9" : "#F1F5FB";
       const stylePKForm03 = {
         padding: "10px 0px 10px 0px",
-        borderBottom: '1px solid #d4d4d4',
+        borderBottom: "1px solid #d4d4d4",
         bgcolor: coler,
       };
       resStr.push(
         <Grid key={i} container sx={{ marginBottom: 0 }}>
-          <Grid item xs={0.25} sx={stylePKForm03}>
-            {i + 1}
-          </Grid>
-          <Grid item xs={0.75} sx={stylePKForm03}>
-            {i * 10 - i + 2}
-          </Grid>
-          <Grid item xs={1.5} sx={stylePKForm03}>
-            {RandomNumber(5, 12) * 100}
-          </Grid>
-          <Grid item xs={1.5} sx={stylePKForm03}>
-            {RandomNumber(0, 16) * 1000}
-          </Grid>
-          <Grid item xs={1.5} sx={stylePKForm03}>
-            {(RandomNumber(0, 16) + RandomNumber(100, 1000) / 1000).toFixed(3)}
-          </Grid>
-          <Grid item xs={1.5} sx={stylePKForm03}>
-            {RandomNumber(0, 1000) / 1000}
-          </Grid>
-          <Grid item xs={2} sx={stylePKForm03}>
-            {arg6}
-          </Grid>
-          <Grid item xs={1.5} sx={stylePKForm03}>
-            {arg7}%
-          </Grid>
-          <Grid item xs sx={stylePKForm03}>
-            {RandomNumber(20, 89)}
-          </Grid>
+          {TablStr(0.25, i + 1, stylePKForm03)}
+          {TablStr(0.75, i * 10 - i + 2, stylePKForm03)}
+          {TablStr(1.5, RandomNumber(5, 12) * 100, stylePKForm03)}
+          {TablStr(1.5, RandomNumber(0, 16) * 100, stylePKForm03)}
+          {TablStr(
+            1.5,
+            (RandomNumber(0, 16) + RandomNumber(100, 1000) / 1000).toFixed(3),
+            stylePKForm03
+          )}
+          {TablStr(1.5, RandomNumber(0, 1000) / 1000, stylePKForm03)}
+          {TablStr(2, arg6, stylePKForm03)}
+          {TablStr(1.5, arg7, stylePKForm03)}
+          {TablStr(0, RandomNumber(20, 89), stylePKForm03)}
         </Grid>
       );
     }
@@ -115,33 +96,15 @@ const MapFormPK03 = (props: { view: boolean; handleClose: Function }) => {
   const HeaderTabl = () => {
     return (
       <Grid container sx={stylePKForm02}>
-        <Grid item xs={0.25} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
-          №
-        </Grid>
-        <Grid item xs={0.75} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
-          № напр
-        </Grid>
-        <Grid item xs={1.5} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
-          Инт.(авт/ч)
-        </Grid>
-        <Grid item xs={1.5} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
-          Поток нас.(авт/ч)
-        </Grid>
-        <Grid item xs={1.5} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
-          Остановка (авт * ч/ч)
-        </Grid>
-        <Grid item xs={1.5} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
-          Задержка (авт * ч/ч)
-        </Grid>
-        <Grid item xs={2} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
-          Задержка в т.ч случ авт-ч/ч
-        </Grid>
-        <Grid item xs={1.5} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
-          Остановок
-        </Grid>
-        <Grid item xs sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
-          Загрузка(%)
-        </Grid>
+        {TablStr(0.25, "№", stylePKForm04)}
+        {TablStr(0.75, "№пер", stylePKForm04)}
+        {TablStr(1.5, "Инт.(авт/ч)", stylePKForm04)}
+        {TablStr(1.5, "Поток нас.(авт/ч)", stylePKForm04)}
+        {TablStr(1.5, "Остановка (авт * ч/ч)", stylePKForm04)}
+        {TablStr(1.5, "Задержка (авт * ч/ч)", stylePKForm04)}
+        {TablStr(2, "Задержка в т.ч случ авт-ч/ч", stylePKForm04)}
+        {TablStr(1.5, "Остановок", stylePKForm04)}
+        {TablStr(0, "Загрузка(%)", stylePKForm04)}
       </Grid>
     );
   };

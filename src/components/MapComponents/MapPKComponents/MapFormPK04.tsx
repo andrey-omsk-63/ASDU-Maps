@@ -1,17 +1,17 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
-//import { massplanCreate, statsaveCreate } from './../../../redux/actions';
 
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 
-//import { AREA } from "../../MainMapGl";
+import { TablStr } from "../../MapServiceFunctions";
 
 import { styleModalEndBind, stylePKForm00 } from "../../MainMapStyle";
 import { styleFormPK01, stylePKForm01 } from "../../MainMapStyle";
 import { stylePKForm02, styleSpisPK05 } from "../../MainMapStyle";
+import { stylePKForm04 } from "../../MainMapStyle";
 
 const MapFormPK04 = (props: { view: boolean; handleClose: Function }) => {
   //== Piece of Redux =======================================
@@ -19,10 +19,6 @@ const MapFormPK04 = (props: { view: boolean; handleClose: Function }) => {
     const { mapReducer } = state;
     return mapReducer.map;
   });
-  // let massroute = useSelector((state: any) => {
-  //   const { massrouteReducer } = state;
-  //   return massrouteReducer.massroute;
-  // });
   let massplan = useSelector((state: any) => {
     const { massplanReducer } = state;
     return massplanReducer.massplan;
@@ -32,7 +28,6 @@ const MapFormPK04 = (props: { view: boolean; handleClose: Function }) => {
     const { statsaveReducer } = state;
     return statsaveReducer.datestat;
   });
-  //console.log('massplan:', massplan, massSpis);
   //=== инициализация ======================================
   let plan = massplan.plans[datestat.idxMenu];
   let nameArea = "";
@@ -66,37 +61,19 @@ const MapFormPK04 = (props: { view: boolean; handleClose: Function }) => {
       let arg7 = !aa ? 0 : aa === 1 ? -bb : bb;
       const stylePKForm03 = {
         padding: "10px 0px 10px 0px",
-        borderBottom: '1px solid #d4d4d4',
+        borderBottom: "1px solid #d4d4d4",
       };
       resStr.push(
         <Grid key={i} container sx={{ marginBottom: 0 }}>
-          <Grid item xs={0.25} sx={stylePKForm03}>
-            {i + 1}
-          </Grid>
-          <Grid item xs={0.75} sx={stylePKForm03}>
-            {i * 10 - i + 2}
-          </Grid>
-          <Grid item xs={1.4} sx={stylePKForm03}>
-            {RandomNumber(5, 12) * 100}
-          </Grid>
-          <Grid item xs={1.4} sx={stylePKForm03}>
-            {RandomNumber(18, 55) * 100}
-          </Grid>
-          <Grid item xs={1.4} sx={stylePKForm03}>
-            1, 2, 4
-          </Grid>
-          <Grid item xs={1.4} sx={stylePKForm03}>
-            {RandomNumber(6, 11)}
-          </Grid>
-          <Grid item xs={1.4} sx={stylePKForm03}>
-            0
-          </Grid>
-          <Grid item xs={1.4} sx={stylePKForm03}>
-            {arg7}
-          </Grid>
-          <Grid item xs sx={stylePKForm03}>
-            №21, 500 авт/ч, 18с.
-          </Grid>
+          {TablStr(0.25, i + 1, stylePKForm03)}
+          {TablStr(0.75, i * 10 - i + 2, stylePKForm03)}
+          {TablStr(1.4, RandomNumber(5, 12) * 100, stylePKForm03)}
+          {TablStr(1.4, RandomNumber(18, 55) * 100, stylePKForm03)}
+          {TablStr(1.4, "1, 2, 4", stylePKForm03)}
+          {TablStr(1.4, RandomNumber(6, 11), stylePKForm03)}
+          {TablStr(1.4, 0, stylePKForm03)}
+          {TablStr(1.4, arg7, stylePKForm03)}
+          {TablStr(0, "№21, 500 авт/ч, 18с.", stylePKForm03)}
         </Grid>
       );
     }
@@ -106,33 +83,15 @@ const MapFormPK04 = (props: { view: boolean; handleClose: Function }) => {
   const HeaderTabl = () => {
     return (
       <Grid container sx={stylePKForm02}>
-        <Grid item xs={0.25} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
-          №
-        </Grid>
-        <Grid item xs={0.75} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
-          № напр
-        </Grid>
-        <Grid item xs={1.4} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
-          Инт.(авт/ч)
-        </Grid>
-        <Grid item xs={1.4} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
-          Нас.(авт/ч)
-        </Grid>
-        <Grid item xs={1.4} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
-          № зел.фазы
-        </Grid>
-        <Grid item xs={1.4} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
-          Начало зел.фазы
-        </Grid>
-        <Grid item xs={1.4} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
-          Конец зел.фазы
-        </Grid>
-        <Grid item xs={1.4} sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
-          Пост. поток
-        </Grid>
-        <Grid item xs sx={{ padding: "5px 0px 5px 0px", border: 0 }}>
-          Состав направлений
-        </Grid>
+        {TablStr(0.25, "№", stylePKForm04)}
+        {TablStr(0.75, "№ напр", stylePKForm04)}
+        {TablStr(1.4, "Инт.(авт/ч)", stylePKForm04)}
+        {TablStr(1.4, "Нас.(авт/ч)", stylePKForm04)}
+        {TablStr(1.4, "№ зел.фазы", stylePKForm04)}
+        {TablStr(1.4, "Начало зел.фазы", stylePKForm04)}
+        {TablStr(1.4, "Конец зел.фазы", stylePKForm04)}
+        {TablStr(1.4, "Пост. поток", stylePKForm04)}
+        {TablStr(0, "Состав направлений", stylePKForm04)}
       </Grid>
     );
   };

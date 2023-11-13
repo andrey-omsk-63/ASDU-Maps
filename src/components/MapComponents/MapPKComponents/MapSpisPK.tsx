@@ -53,7 +53,7 @@ const MapSpisPK = (props: {
     datestat.idxMenu = idx; //  не выдавать меню форм
     dispatch(statsaveCreate(datestat));
     let massPkId: any = [];
-    // создание списка перекрёстков в правом окне
+    // создание списка перекрёстков выбранного плана
     for (let i = 0; i < massplan.plans[idx].coordPlan.length; i++)
     massPkId.push(massplan.plans[idx].coordPlan[i].id);
     massPkId.length && props.SetMass(massPkId, massplan.plans[idx].areaPK);
