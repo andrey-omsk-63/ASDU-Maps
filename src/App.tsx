@@ -80,6 +80,7 @@ export interface Stater {
   lockUp: boolean; // блокировка меню районов и меню режимов
   needMenuForm: boolean; // выводить меню форм ПК
   idxMenu: number; // активная строка списка ПК
+  nomMenu: number; // номер активного плана ПК
 }
 
 export let dateStat: Stater = {
@@ -90,6 +91,7 @@ export let dateStat: Stater = {
   lockUp: false,
   needMenuForm: false,
   idxMenu: 0,
+  nomMenu: -1, // номер активного плана ПК
 };
 
 export let massRoute: Router[] = [];

@@ -50,12 +50,12 @@ const MapSpisPK = (props: {
 
   const ChangeIDX = (idx: number) => {
     IDX = idx;
-    datestat.idxMenu = idx; //  не выдавать меню форм
+    datestat.idxMenu = idx; //  активная строка списка ПК
     dispatch(statsaveCreate(datestat));
     let massPkId: any = [];
     // создание списка перекрёстков выбранного плана
     for (let i = 0; i < massplan.plans[idx].coordPlan.length; i++)
-    massPkId.push(massplan.plans[idx].coordPlan[i].id);
+      massPkId.push(massplan.plans[idx].coordPlan[i].id);
     massPkId.length && props.SetMass(massPkId, massplan.plans[idx].areaPK);
   };
   //=== инициализация ======================================
@@ -65,6 +65,19 @@ const MapSpisPK = (props: {
   // } else {
   if (!massplan.plans.length) ChangeIDX(-1);
   if (massplan.plans.length !== massSpis.length) ChangeIDX(0);
+  if (datestat.nomMenu > 0) {
+    //console.log('Нужно перестроение', datestat.nomMenu);
+    let idx = 0;
+    for (let i = 0; i < massplan.plans.length; i++) {
+      if (massplan.plans[i].nomPK === datestat.nomMenu) {
+        idx = i;
+      }
+    }
+    console.log('Нужно перестроение', datestat.nomMenu, idx);
+    ChangeIDX(idx);
+    datestat.nomMenu = -1; //  активная строка списка ПК
+    dispatch(statsaveCreate(datestat));
+  }
   flagDel = 0;
   let massSp = [];
   for (let i = 0; i < massplan.plans.length; i++) {
