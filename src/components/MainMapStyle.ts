@@ -695,11 +695,9 @@ export const styleFormPK05 = {
 
 export const styleFormPK06 = {
   fontSize: 38,
-  //marginTop: -1,
   textAlign: "center",
   maxHeight: "36px",
   minHeight: "36px",
-  //width: 30,
   color: "#5B1080",
   border: 0,
 };
@@ -851,5 +849,27 @@ export const stylePKForm02 = {
   borderTopRightRadius: 2,
   boxShadow: 6,
   padding: "3px 0px 3px 0px",
+};
+
+export const stylePKForm03 = (brb: number) => {
+  const stylePKForm3 = {
+    padding: "10px 0px 10px 0px",
+    borderBottom: brb,
+  };
+  return stylePKForm3;
+};
+
+export const stylePKForm033 = (brb: number) => {
+  const stylePKForm33 = {
+    textAlign: "left",
+    padding: "10px 0px 10px 0px",
+    borderBottom: brb,
+  };
+  return stylePKForm33;
+};
+
+export const stylePKForm04 = {
+  padding: "5px 0px 5px 0px",
+  border: 0,
 };
 //=====================================================================

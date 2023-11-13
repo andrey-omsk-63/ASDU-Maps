@@ -29,6 +29,7 @@ let massSpis: Array<any> = [];
 const MapSpisPK = (props: {
   setOpen: any;
   setMode: Function; // запуск редактирования ПК
+  SetMass: Function; // массив "подсвечиваемых" перекрёстков
 }) => {
   //== Piece of Redux =======================================
   let massplan = useSelector((state: any) => {
@@ -51,6 +52,11 @@ const MapSpisPK = (props: {
     IDX = idx;
     datestat.idxMenu = idx; //  не выдавать меню форм
     dispatch(statsaveCreate(datestat));
+    let massPkId: any = [];
+    // создание списка перекрёстков в правом окне
+    for (let i = 0; i < massplan.plans[idx].coordPlan.length; i++)
+    massPkId.push(massplan.plans[idx].coordPlan[i].id);
+    massPkId.length && props.SetMass(massPkId, massplan.plans[idx].areaPK);
   };
   //=== инициализация ======================================
   //if (massplan.plans.length !== massSpis.length || datestat.needMakeSpisPK) {

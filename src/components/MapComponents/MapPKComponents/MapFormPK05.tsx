@@ -9,10 +9,13 @@ import Modal from "@mui/material/Modal";
 
 //import { AREA } from "../../MainMapGl";
 
+import { TablStr } from "../../MapServiceFunctions";
+
 import { styleModalEndBind, stylePKForm00 } from "../../MainMapStyle";
 import { styleFormPK01, stylePKForm01 } from "../../MainMapStyle";
-//import { StylSpisPK02, styleSpisPK03, StylSpisPK022 } from '../../MainMapStyle';
+import { stylePKForm03, stylePKForm033 } from "../../MainMapStyle";
 import { stylePKForm02, styleSpisPK05 } from "../../MainMapStyle";
+import { stylePKForm04 } from "../../MainMapStyle";
 
 const MapFormPK05 = (props: { view: boolean; handleClose: Function }) => {
   //== Piece of Redux =======================================
@@ -52,27 +55,6 @@ const MapFormPK05 = (props: { view: boolean; handleClose: Function }) => {
   const CloseEnd = (event: any, reason: string) => {
     if (reason === "escapeKeyDown") handleClose();
   };
-  //========================================================
-  const stylePKForm04 = {
-    padding: "5px 0px 5px 0px",
-    border: 0,
-  };
-
-  const TablStr = (xss: number, arg: any, style: any) => {
-    return (
-      <>
-        {xss ? (
-          <Grid item xs={xss} sx={style}>
-            {arg}
-          </Grid>
-        ) : (
-          <Grid item xs sx={style}>
-            {arg}
-          </Grid>
-        )}
-      </>
-    );
-  };
 
   const StrokaFormPK01 = () => {
     let resStr = [];
@@ -87,31 +69,21 @@ const MapFormPK05 = (props: { view: boolean; handleClose: Function }) => {
           break;
         }
       }
-      let brb: any = i === plan.coordPlan.length - 1 ? 0 : '1px solid #d4d4d4';
-      const stylePKForm03 = {
-        padding: "10px 0px 10px 0px",
-        borderBottom: brb,
-      };
-
-      const stylePKForm033 = {
-        textAlign: "left",
-        padding: "10px 0px 10px 0px",
-        borderBottom: brb,
-      };
+      let brb: any = i === plan.coordPlan.length - 1 ? 0 : "1px solid #d4d4d4";
       resStr.push(
         <Grid key={i} container sx={{ marginBottom: 0 }}>
-          {TablStr(0.25, i + 1, stylePKForm03)}
-          {TablStr(0.5, plan.coordPlan[i].id, stylePKForm03)}
-          {TablStr(3.25, nameVert, stylePKForm033)}
-          {TablStr(0.89, 107, stylePKForm03)}
-          {TablStr(0.89, 3, stylePKForm03)}
-          {TablStr(0.89, 15, stylePKForm03)}
-          {TablStr(0.89, 1, stylePKForm03)}
-          {TablStr(0.89, 40, stylePKForm03)}
-          {TablStr(0.89, 3, stylePKForm03)}
-          {TablStr(0.89, 61, stylePKForm03)}
-          {TablStr(0.89, 4, stylePKForm03)}
-          {TablStr(0, 71, stylePKForm03)}
+          {TablStr(0.25, i + 1, stylePKForm03(brb))}
+          {TablStr(0.5, plan.coordPlan[i].id, stylePKForm03(brb))}
+          {TablStr(3.25, nameVert, stylePKForm033(brb))}
+          {TablStr(0.89, 107, stylePKForm03(brb))}
+          {TablStr(0.89, 3, stylePKForm03(brb))}
+          {TablStr(0.89, 15, stylePKForm03(brb))}
+          {TablStr(0.89, 1, stylePKForm03(brb))}
+          {TablStr(0.89, 40, stylePKForm03(brb))}
+          {TablStr(0.89, 3, stylePKForm03(brb))}
+          {TablStr(0.89, 61, stylePKForm03(brb))}
+          {TablStr(0.89, 4, stylePKForm03(brb))}
+          {TablStr(0, 71, stylePKForm03(brb))}
         </Grid>
       );
     }
@@ -147,7 +119,7 @@ const MapFormPK05 = (props: { view: boolean; handleClose: Function }) => {
           <b>Программа координации ПК №{plan.nomPK}</b>
         </Box>
         <Grid container>
-          <Grid item xs={8} sx={{ border: 0 }}>
+          <Grid item xs={7.8} sx={{ border: 0 }}>
             <Box sx={styleSpisPK05}>
               <Box sx={{}}>
                 <b>Название ПК:</b>&nbsp;&nbsp;
@@ -157,7 +129,12 @@ const MapFormPK05 = (props: { view: boolean; handleClose: Function }) => {
               </Box>
             </Box>
           </Grid>
-          <Grid item xs sx={{ textAlign: "right", border: 0 }}>
+          <Grid item xs={2.1} sx={{ border: 0 }}>
+            <Box sx={{ fontSize: 14.5, marginTop: 0.5, textAlign: "center" }}>
+              Время эфф.зелёного = 1
+            </Box>
+          </Grid>
+          <Grid item xs sx={{ border: 0 }}>
             <Box sx={{ position: "absolute", right: "15px", border: 0 }}>
               <Box sx={styleSpisPK05}>
                 <Box sx={{}}>

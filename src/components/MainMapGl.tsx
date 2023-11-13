@@ -714,16 +714,16 @@ const MainMap = (props: {
     ZeroRoute(false);
   };
 
-  const SetMassPkId = (massPkId: any) => {
+  const SetMassPkId = (massPkId: any, AreA: number) => {
     MASSPK = massPkId;
+    AREA = AreA.toString()
     setRevers(!revers); // ререндер
   };
 
   const SetModePKForm = (idx: number) => {
     idxPKForm = idx;
-    let area = massplan.plans[idx].areaPK.toString();
-    AREA = area;
-    setCurrency(area);
+    AREA = massplan.plans[idx].areaPK.toString();
+    setCurrency(AREA);
     FillMassRoute();
     ymaps && addRoute(ymaps); // перерисовка связей
     setOpenPKSpis(false); // закрытие списка планов
@@ -873,7 +873,11 @@ const MainMap = (props: {
               />
             )}
             {openPKSpis && (
-              <MapSpisPK setOpen={ZeroRoute} setMode={SetModePKForm} />
+              <MapSpisPK
+                setOpen={ZeroRoute}
+                setMode={SetModePKForm}
+                SetMass={SetMassPkId}
+              />
             )}
             {openWaysFormMenu && !openVertForm && (
               <MapWaysFormMenu

@@ -1988,6 +1988,21 @@ export const SaveFormPK = (SaveForm: any) => {
     </Grid>
   );
 };
-//=== DispPKForm ======================================================
+//=== PKFormXX ========================================================
+export const TablStr = (xss: number, arg: any, style: any) => {
+  return (
+    <>
+      {xss ? (
+        <Grid item xs={xss} sx={style}>
+          {arg}
+        </Grid>
+      ) : (
+        <Grid item xs sx={style}>
+          {arg}
+        </Grid>
+      )}
+    </>
+  );
+};
 
 //=====================================================================

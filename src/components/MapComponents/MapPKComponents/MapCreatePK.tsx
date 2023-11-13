@@ -200,7 +200,7 @@ const MapCreatePK = (props: {
       oldIdx = props.idx;
       HAVE = 0;
       needSort = false;
-      massPkId.length && props.SetMass(massPkId);
+      massPkId.length && props.SetMass(massPkId, AreA);
     }
   }
   //========================================================
@@ -289,7 +289,7 @@ const MapCreatePK = (props: {
       console.log("currentBoard.ID:", currentBoard.ID);
       if (currentBoard.ID) {
         massPkId.splice(currentIndex, 1); // удаление из правого окна
-        props.SetMass(massPkId);
+        props.SetMass(massPkId, AreA);
         console.log("massPkId:", massPkId);
       }
       HAVE++;
@@ -313,14 +313,14 @@ const MapCreatePK = (props: {
       //console.log("currentItem:",currentIndex, currentItem, board);
       if (board.ID) {
         massPkId.push(currentItem.id); // добавление в правое окно
-        props.SetMass(massPkId);
-      } 
+        props.SetMass(massPkId, AreA);
+      }
       HAVE++;
-      
+
       if (currentIndex >= 0 && board.ID !== currentBoard.ID) {
         currentBoard.items.splice(currentIndex, 1);
         massPkId.splice(currentIndex, 1);
-        props.SetMass(massPkId);
+        props.SetMass(massPkId, AreA);
         HAVE++;
       }
       setBoards(
@@ -388,7 +388,7 @@ const MapCreatePK = (props: {
       boards[1].items.push(rec); // добавление в правое окно
       massPkId.push(idd); // добавление  подсветки в правое окно
     }
-    props.SetMass(massPkId);
+    props.SetMass(massPkId, AreA);
     HAVE++;
     setTrigger(!trigger); // ререндер
   };
@@ -403,7 +403,7 @@ const MapCreatePK = (props: {
     }
     //console.log("12###:", boards[1].items);
     massPkId = []; // удаление подсветки из правого окна
-    props.SetMass(massPkId);
+    props.SetMass(massPkId, AreA);
     HAVE++;
     setTrigger(!trigger); // ререндер
   };
