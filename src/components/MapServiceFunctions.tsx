@@ -1989,6 +1989,54 @@ export const SaveFormPK = (SaveForm: any) => {
     </Grid>
   );
 };
+
+export const ExitArrow = (board: any, id: number, massroute: any) => {
+  //console.log("item.id:", id, board);
+  let inputId = -1;
+  let area = board.items[0].area;
+  for (let i = 0; i < board.items.length; i++) {
+    if (i !== board.items.length - 1 && board.items[i].id === id)
+      inputId = board.items[i + 1].id;
+  }
+  //console.log("inputId:",id, inputId);
+  let have = false;
+  if (inputId >= 0) {
+    for (let i = 0; i < massroute.ways.length; i++) {
+      let rec = massroute.ways[i];
+      if (rec.sourceArea === area && rec.sourceID === id)
+        if (rec.targetID === inputId) have = true;
+    }
+  }
+  return (
+    <Box sx={{ color: !have ? "#F8FCF3" : "#9265ff" }}>
+      <b>⬇</b>
+    </Box>
+  );
+};
+
+export const InputArrow = (board: any, id: number, massroute: any) => {
+  //console.log("item.id:", id, board);
+  let exitId = -1;
+  let area = board.items[0].area;
+  for (let i = 0; i < board.items.length; i++) {
+    if (i && board.items[i].id === id) exitId = board.items[i - 1].id;
+  }
+  //console.log("inputId:", exitId);
+  let have = false;
+  if (exitId >= 0) {
+    for (let i = 0; i < massroute.ways.length; i++) {
+      let rec = massroute.ways[i];
+      if (rec.targetArea === area && rec.targetID === id)
+        if (rec.sourceID === exitId) have = true;
+    }
+  }
+  return (
+    <Box sx={{ color: !have ? "#F8FCF3" : "#7dc36b" }}>
+      <b>⬆</b>
+    </Box>
+  );
+};
+
 //=== PKFormXX ========================================================
 export const TablStr = (xss: number, arg: any, style: any) => {
   return (
