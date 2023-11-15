@@ -621,11 +621,19 @@ export const getMultiRouteOptions = () => {
   };
 };
 
-export const getMassPolyRouteOptions = () => {
+export const getMassPolyRouteOptions1 = () => {
   return {
-    balloonCloseButton: false,
-    strokeColor: '#1A9165',
-    strokeWidth: 1,
+    balloonCloseButton: true,
+    strokeColor: '#1A9165', // зелёный
+    strokeWidth: 2,
+  };
+};
+
+export const getMassPolyRouteOptions2 = () => {
+  return {
+    balloonCloseButton: true,
+    strokeColor: '#9F61F1', // сиреневый
+    strokeWidth: 2,
   };
 };
 
@@ -633,7 +641,7 @@ export const getMassMultiRouteOptions = () => {
   return {
     balloonCloseButton: false,
     routeStrokeStyle: 'dot',
-    strokeColor: '#1A9165',
+    strokeColor: '#1A9165',  // зелёный
     routeActiveStrokeWidth: 2,
     routeStrokeWidth: 0,
     wayPointVisible: false,
@@ -644,13 +652,49 @@ export const getMassMultiRouteInOptions = () => {
   return {
     routeActiveStrokeWidth: 2,
     routeStrokeStyle: 'dot',
-    routeActiveStrokeColor: '#E91427',
+    routeActiveStrokeColor: '#E91427', // красный
     routeStrokeWidth: 0,
     //=======
     wayPointVisible: false,
   };
 };
 
+export const MakePolyRoute = (ymaps: any, mapp: any, massRoute: any) => {
+  let massPolyRoute1: any = []; // cеть формальных связей
+  let massPolyRoute2: any = []; // cеть формальных связей
+  let massCoord1 = [];
+  let massCoord2 = [];
+  for (let i = 0; i < massRoute.length; i++) {
+    let aa = [
+      DecodingCoord(massRoute[i].starts),
+      DecodingCoord(massRoute[i].stops),
+    ];
+    let shift = aa[0][0] > aa[1][0] ? 0.0001 : -0.0001;
+    let bb = [
+      [aa[0][0] + shift, aa[0][1]],
+      [aa[1][0] + shift, aa[1][1]],
+    ];
+    if (shift > 0) massCoord1.push(bb);
+    if (shift < 0) massCoord2.push(bb);
+  }
+  for (let i = 0; i < massCoord1.length; i++) {
+    massPolyRoute1[i] = new ymaps.Polyline(
+      [massCoord1[i][0], massCoord1[i][1]],
+      { hintContent: "Формальная связь" },
+      getMassPolyRouteOptions1()
+    );
+    mapp.current.geoObjects.add(massPolyRoute1[i]);
+  }
+  for (let i = 0; i < massCoord2.length; i++) {
+    massPolyRoute2[i] = new ymaps.Polyline(
+      [massCoord2[i][0], massCoord2[i][1]],
+      { hintContent: "Формальная связь" },
+      getMassPolyRouteOptions2()
+    );
+    mapp.current.geoObjects.add(massPolyRoute2[i]);
+  }
+  return;
+};
 //=== Разное =======================================
 export const RecevKeySvg = (recMassroute: any) => {
   let keySvg =
@@ -1991,7 +2035,7 @@ export const SaveFormPK = (SaveForm: any) => {
 };
 
 export const ExitArrow = (board: any, id: number, massroute: any) => {
-  //console.log("item.id:", id, board);
+  //console.log("ExitArrow:", id, board);
   let inputId = -1;
   let area = board.items[0].area;
   for (let i = 0; i < board.items.length; i++) {

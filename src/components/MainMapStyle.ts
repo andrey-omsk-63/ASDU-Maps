@@ -779,7 +779,7 @@ export const styleSpisPK04 = {
   left: "50%",
   top: "50%",
   transform: "translate(-50%, -50%)",
-  width: 500,
+  width: 700,
   // maxHeight: "80%",
   // minHeight: "80%",
   bgcolor: "background.paper",

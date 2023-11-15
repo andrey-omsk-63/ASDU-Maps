@@ -292,7 +292,7 @@ const MapCreatePK = (props: {
   const dropHandler = (e: any, board: any, item: any) => {
     e.preventDefault();
     const currentIndex = currentBoard.items.indexOf(currentItem);
-    console.log("currentBoard.ID:", currentBoard.ID);
+    //console.log("currentBoard.ID:", currentBoard.ID);
     if (currentIndex >= 0 && board.ID !== currentBoard.ID) {
       currentBoard.items.splice(currentIndex, 1);
       console.log("currentBoard.ID:", currentBoard.ID);
@@ -319,7 +319,7 @@ const MapCreatePK = (props: {
     if (board.ID !== currentBoard.ID) {
       board.items.push(currentItem);
       const currentIndex = currentBoard.items.indexOf(currentItem);
-      console.log("currentItem:",currentIndex, currentItem, board);
+      //console.log("currentItem:",currentIndex, currentItem, board);
       if (board.ID) {
         massPkId.push(currentItem.id); // добавление в правое окно
         props.SetMass(massPkId, AreA);

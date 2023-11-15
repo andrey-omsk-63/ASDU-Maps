@@ -26,7 +26,7 @@ import { YandexServices, ShowFormalRoute } from "./MapServiceFunctions";
 import { DecodingCoord, CodingCoord, InputMenu } from "./MapServiceFunctions";
 import { getMultiRouteOptions, DoublRoute } from "./MapServiceFunctions";
 import { getReferencePoints, CenterCoordBegin } from "./MapServiceFunctions";
-import { getMassPolyRouteOptions, NearestPoint } from "./MapServiceFunctions";
+import { getMassPolyRouteOptions1, NearestPoint } from "./MapServiceFunctions";
 import { getMassMultiRouteOptions, MakeToCross } from "./MapServiceFunctions";
 import { getMassMultiRouteInOptions, MakeRevers } from "./MapServiceFunctions";
 import { getPointData, GetPointOptions } from "./MapServiceFunctions";
@@ -36,8 +36,9 @@ import { RecevKeySvg, StrokaMenuGlob, MasskPoint } from "./MapServiceFunctions";
 import { DelVertexOrPoint, MainMenu } from "./MapServiceFunctions";
 import { DelPointVertexContent, MassCoord } from "./MapServiceFunctions";
 import { FillMassRouteContent, InputMenuForm } from "./MapServiceFunctions";
-import { PreparCurrenciesMode } from "./MapServiceFunctions";
+import { PreparCurrenciesMode, MakePolyRoute } from "./MapServiceFunctions";
 import { PreparCurrenciesForm } from "./MapServiceFunctions";
+import { getMassPolyRouteOptions2 } from "./MapServiceFunctions";
 
 import { SendSocketCreateWay, SendSocketGetSvg } from "./MapSocketFunctions";
 import { SendSocketCreateWayFromPoint } from "./MapSocketFunctions";
@@ -181,6 +182,42 @@ const MainMap = (props: {
     [datestat, dispatch]
   );
 
+  const addRoute = React.useCallback((ymaps: any) => {
+    mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
+    MakePolyRoute(ymaps, mapp, massRoute); // формальные связи
+    let massMultiRoute: any = []; // исходящие связи
+    for (let i = 0; i < coordStart.length; i++) {
+      massMultiRoute[i] = new ymaps.multiRouter.MultiRoute(
+        getReferencePoints(coordStart[i], coordStop[i]),
+        getMassMultiRouteOptions()
+      );
+      mapp.current.geoObjects.add(massMultiRoute[i]);
+    }
+    let massMultiRouteIn: any = []; // входящие связи
+    for (let i = 0; i < coordStartIn.length; i++) {
+      massMultiRouteIn[i] = new ymaps.multiRouter.MultiRoute(
+        getReferencePoints(coordStartIn[i], coordStopIn[i]),
+        getMassMultiRouteInOptions()
+      );
+      mapp.current.geoObjects.add(massMultiRouteIn[i]);
+    }
+    const multiRoute = new ymaps.multiRouter.MultiRoute(
+      getReferencePoints(pointAa, pointBb),
+      getMultiRouteOptions()
+    );
+    activeRoute = null;
+    mapp.current.geoObjects.add(multiRoute); // основная связь
+    multiRoute.model.events.add("requestsuccess", function () {
+      activeRoute = multiRoute.getActiveRoute();
+      if (activeRoute) {
+        let dist = activeRoute.properties.get("distance").value;
+        reqRoute.dlRoute = Math.round(dist);
+        let duration = activeRoute.properties.get("duration").value;
+        reqRoute.tmRoute = Math.round(duration);
+      }
+    });
+  }, []);
+  //========================================================
   const ZeroRoute = React.useCallback(
     (mode: boolean) => {
       pointAa = pointBb = 0;
@@ -199,7 +236,7 @@ const MainMap = (props: {
       HandlLockUp(false); // разблокировка меню районов и меню режимов
       ymaps && addRoute(ymaps); // перерисовка связей
     },
-    [ymaps, HandlLockUp]
+    [ymaps, HandlLockUp, addRoute]
   );
 
   const SoobOpenSetEr = (soob: string) => {
@@ -386,51 +423,7 @@ const MainMap = (props: {
         ZeroRoute(false);
     }
   };
-  //========================================================
-  const addRoute = (ymaps: any) => {
-    mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
-    let massPolyRoute: any = []; // cеть связей
-    for (let i = 0; i < massRoute.length; i++) {
-      massPolyRoute[i] = new ymaps.Polyline(
-        [DecodingCoord(massRoute[i].starts), DecodingCoord(massRoute[i].stops)],
-        { hintContent: "Формальная связь" },
-        getMassPolyRouteOptions()
-      );
-      mapp.current.geoObjects.add(massPolyRoute[i]);
-    }
-    let massMultiRoute: any = []; // исходящие связи
-    for (let i = 0; i < coordStart.length; i++) {
-      massMultiRoute[i] = new ymaps.multiRouter.MultiRoute(
-        getReferencePoints(coordStart[i], coordStop[i]),
-        getMassMultiRouteOptions()
-      );
-      mapp.current.geoObjects.add(massMultiRoute[i]);
-    }
-    let massMultiRouteIn: any = []; // входящие связи
-    for (let i = 0; i < coordStartIn.length; i++) {
-      massMultiRouteIn[i] = new ymaps.multiRouter.MultiRoute(
-        getReferencePoints(coordStartIn[i], coordStopIn[i]),
-        getMassMultiRouteInOptions()
-      );
-      mapp.current.geoObjects.add(massMultiRouteIn[i]);
-    }
-    const multiRoute = new ymaps.multiRouter.MultiRoute(
-      getReferencePoints(pointAa, pointBb),
-      getMultiRouteOptions()
-    );
-    activeRoute = null;
-    mapp.current.geoObjects.add(multiRoute); // основная связь
-    multiRoute.model.events.add("requestsuccess", function () {
-      activeRoute = multiRoute.getActiveRoute();
-      if (activeRoute) {
-        let dist = activeRoute.properties.get("distance").value;
-        reqRoute.dlRoute = Math.round(dist);
-        let duration = activeRoute.properties.get("duration").value;
-        reqRoute.tmRoute = Math.round(duration);
-      }
-    });
-  };
-
+  
   const OnPlacemarkClickPoint = (index: number, coor: any) => {
     let COORD = coor ? coor : MassCoord(massdk[index]);
     if (pointAa === 0) {
