@@ -27,8 +27,8 @@ import { DecodingCoord, CodingCoord, InputMenu } from "./MapServiceFunctions";
 import { getMultiRouteOptions, DoublRoute } from "./MapServiceFunctions";
 import { getReferencePoints, CenterCoordBegin } from "./MapServiceFunctions";
 import { NearestPoint } from "./MapServiceFunctions";
-import { getMassMultiRouteOptions, MakeToCross } from "./MapServiceFunctions";
-import { getMassMultiRouteInOptions, MakeRevers } from "./MapServiceFunctions";
+import { MakeMultiRouteIn, MakeToCross } from "./MapServiceFunctions";
+import { MakeMultiRoute, MakeRevers } from "./MapServiceFunctions";
 import { getPointData, GetPointOptions } from "./MapServiceFunctions";
 import { СontentModalPressBalloon, MakeFromCross } from "./MapServiceFunctions";
 import { ChangeCrossFunc, PreparCurrencies } from "./MapServiceFunctions";
@@ -38,7 +38,6 @@ import { DelPointVertexContent, MassCoord } from "./MapServiceFunctions";
 import { FillMassRouteContent, InputMenuForm } from "./MapServiceFunctions";
 import { PreparCurrenciesMode, MakePolyRoute } from "./MapServiceFunctions";
 import { PreparCurrenciesForm } from "./MapServiceFunctions";
-//import { getMassPolyRouteOptions2 } from "./MapServiceFunctions";
 
 import { SendSocketCreateWay, SendSocketGetSvg } from "./MapSocketFunctions";
 import { SendSocketCreateWayFromPoint } from "./MapSocketFunctions";
@@ -149,23 +148,23 @@ const MainMap = (props: {
   const [openPKSpis, setOpenPKSpis] = React.useState(false);
   const [dispPKForm, setDispPKForm] = React.useState(false);
   const [openWaysFormMenu, setOpenWaysFormMenu] = React.useState(false);
-  const [openSetEr, setOpenSetEr] = React.useState(false);
+  const [openEr, setOpenEr] = React.useState(false);
   const [openBind, setOpenBind] = React.useState(false);
   const [flagDemo, setFlagDemo] = React.useState(false);
   const [flagPro, setFlagPro] = React.useState(false);
   const [flagPusk, setFlagPusk] = React.useState(false);
   const [flagRoute, setFlagRoute] = React.useState(false);
   const [revers, setRevers] = React.useState(false); // для ререндера
-  const [openSet, setOpenSet] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
   const [openCreate, setOpenCreate] = React.useState(false);
-  const [openSetDelete, setOpenSetDelete] = React.useState(false);
-  const [openSetAdress, setOpenSetAdress] = React.useState(false);
+  const [openDelete, setOpenDelete] = React.useState(false);
+  const [openAdress, setOpenAdress] = React.useState(false);
   const [openRevers, setOpenRevers] = React.useState(false);
   const [makeRevers, setMakeRevers] = React.useState(false);
   const [needRevers, setNeedRevers] = React.useState(0);
   const [ymaps, setYmaps] = React.useState<YMapsApi | null>(null);
   const mapp = React.useRef<any>(null);
-  const MyYandexKey = "65162f5f-2d15-41d1-a881-6c1acf34cfa1";
+  const MyYandexKey = "65162f5f-2d15-41d1-a881-6c1acf34cfa1"; // ключ
 
   const DelCollectionRoutes = () => {
     coordStart = [];
@@ -185,22 +184,8 @@ const MainMap = (props: {
   const addRoute = React.useCallback((ymaps: any) => {
     mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
     MakePolyRoute(ymaps, mapp, massRoute); // формальные связи
-    let massMultiRoute: any = []; // исходящие связи
-    for (let i = 0; i < coordStart.length; i++) {
-      massMultiRoute[i] = new ymaps.multiRouter.MultiRoute(
-        getReferencePoints(coordStart[i], coordStop[i]),
-        getMassMultiRouteOptions()
-      );
-      mapp.current.geoObjects.add(massMultiRoute[i]);
-    }
-    let massMultiRouteIn: any = []; // входящие связи
-    for (let i = 0; i < coordStartIn.length; i++) {
-      massMultiRouteIn[i] = new ymaps.multiRouter.MultiRoute(
-        getReferencePoints(coordStartIn[i], coordStopIn[i]),
-        getMassMultiRouteInOptions()
-      );
-      mapp.current.geoObjects.add(massMultiRouteIn[i]);
-    }
+    MakeMultiRoute(ymaps, mapp, coordStart, coordStop); // исходящие связи
+    MakeMultiRouteIn(ymaps, mapp, coordStartIn, coordStopIn); // входящие связи
     const multiRoute = new ymaps.multiRouter.MultiRoute(
       getReferencePoints(pointAa, pointBb),
       getMultiRouteOptions()
@@ -245,7 +230,7 @@ const MainMap = (props: {
       fromIdx = pointAaIndex;
       inIdx = pointBbIndex;
     }
-    setOpenSetEr(true);
+    setOpenEr(true);
   };
 
   const FillMassRoute = () => {
@@ -475,14 +460,14 @@ const MainMap = (props: {
           }
         } else {
           indexPoint = index;
-          setOpenSet(true); // переход в меню работы с точками
+          setOpen(true); // переход в меню работы с точками
         }
       }
     }
   };
 
   const ModalPressBalloon = () => {
-    const [openSetErBall, setOpenSetErBall] = React.useState(false);
+    const [openErBall, setOpenErBall] = React.useState(false);
     let pointRoute: any = 0;
     let areaPoint = -1;
     if (indexPoint >= 0) areaPoint = massdk[indexPoint].area;
@@ -494,7 +479,7 @@ const MainMap = (props: {
         case 1: // Начальная точка
           if (pointBbIndex === indexPoint) {
             soobError = "Начальная и конечная точки совпадают";
-            setOpenSetErBall(true);
+            setOpenErBall(true);
           } else {
             pointAaIndex = indexPoint;
             pointAa = pointRoute;
@@ -505,7 +490,7 @@ const MainMap = (props: {
         case 2: // Конечная точка
           if (pointAaIndex === indexPoint) {
             soobError = "Начальная и конечная точки совпадают";
-            setOpenSetErBall(true);
+            setOpenErBall(true);
           } else {
             if (
               massroute.vertexes[pointAaIndex].area === 0 &&
@@ -525,28 +510,28 @@ const MainMap = (props: {
           }
           break;
         case 4: // Редактирование адреса
-          setOpenSetAdress(true);
+          setOpenAdress(true);
       }
-      setOpenSet(false);
+      setOpen(false);
     };
 
     return (
       <>
-        <Modal open={openSet} onClose={() => setOpenSet(false)}>
-          {СontentModalPressBalloon(setOpenSet, handleClose, areaPoint)}
+        <Modal open={open} onClose={() => setOpen(false)}>
+          {СontentModalPressBalloon(setOpen, handleClose, areaPoint)}
         </Modal>
-        {openSetAdress && (
+        {openAdress && (
           <MapChangeAdress
-            iPoint={indexPoint}
-            setOpen={setOpenSetAdress}
-            zeroRoute={ZeroRoute}
-            funcClose={setOpenSet}
+            iP={indexPoint}
+            Open={setOpenAdress}
+            zero={ZeroRoute}
+            Cl={setOpen}
           />
         )}
-        {openSetErBall && (
+        {openErBall && (
           <MapPointDataError
             sErr={soobError}
-            setOpen={setOpenSetErBall}
+            setOpen={setOpenErBall}
             fromCross={fromCross}
             toCross={toCross}
             update={UpdateAddRoute}
@@ -592,7 +577,7 @@ const MainMap = (props: {
     newPointCoord = e.get("coords");
     idxDel = NearestPoint(massdk, newPointCoord);
     if (MODE === "0") {
-      idxDel >= 0 && setOpenSetDelete(true);
+      idxDel >= 0 && setOpenDelete(true);
       idxDel < 0 && setOpenCreate(true);
     }
     if (MODE === "1" && idxDel >= 0 && nomRoute < 0 && !openVertForm) {
@@ -665,7 +650,7 @@ const MainMap = (props: {
       dispatch(coordinatesCreate(coordinates));
       ymaps && addRoute(ymaps); // перерисовка связей
     }
-    setOpenSetDelete(false);
+    setOpenDelete(false);
   };
 
   const MakeNewPoint = (coords: any, avail: boolean) => {
@@ -787,7 +772,7 @@ const MainMap = (props: {
       masSvg[0] = props.svg[RecevKeySvg(massroute.vertexes[pointAaIndex])];
       masSvg[1] = props.svg[RecevKeySvg(massroute.vertexes[pointBbIndex])];
     }
-    if (props.svg && openSetEr) {
+    if (props.svg && openEr) {
       // передача изображений в привязку через "дубликатные связи"
       masSvg[0] = props.svg[RecevKeySvg(massroute.vertexes[fromIdx])];
       masSvg[1] = props.svg[RecevKeySvg(massroute.vertexes[inIdx])];
@@ -798,7 +783,6 @@ const MainMap = (props: {
     }
   }
   if (openBind && pointAaIndex < 0 && pointBbIndex < 0) setOpenBind(false); // отработка Esc из RouteBind
-
   //=== обработка Esc ======================================
   const escFunction = React.useCallback(
     (event) => {
@@ -835,7 +819,11 @@ const MainMap = (props: {
       {Object.keys(massroute).length && (
         <YMaps query={{ apikey: MyYandexKey, lang: "ru_RU" }}>
           <Map
-            modules={["multiRouter.MultiRoute", "Polyline"]}
+            modules={[
+              "multiRouter.MultiRoute",
+              "Polyline",
+              "templateLayoutFactory",
+            ]}
             state={mapState}
             instanceRef={(ref) => InstanceRefDo(ref)}
             onLoad={(ref) => {
@@ -888,10 +876,10 @@ const MainMap = (props: {
                 setSvg={props.setSvg}
               />
             )}
-            {openSetEr && (
+            {openEr && (
               <MapPointDataError
                 sErr={soobError}
-                setOpen={setOpenSetEr}
+                setOpen={setOpenEr}
                 fromCross={fromCross}
                 toCross={toCross}
                 update={UpdateAddRoute}
@@ -931,9 +919,9 @@ const MainMap = (props: {
                 area={AREA}
               />
             )}
-            {openSetDelete &&
+            {openDelete &&
               DelVertexOrPoint(
-                openSetDelete,
+                openDelete,
                 massdk,
                 massroute,
                 idxDel,

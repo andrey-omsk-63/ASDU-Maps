@@ -36,12 +36,10 @@ let toCross: any = {
 let massBind = [-1, -1];
 
 const MapChangeAdress = (props: {
-  //debug: boolean;
-  //ws: any;
-  iPoint: number;
-  setOpen: any;
-  zeroRoute: any;
-  funcClose: any;
+  iP: number;
+  Open: any;
+  zero: any;
+  Cl: any;
 }) => {
   //== Piece of Redux ======================================
   let massdk = useSelector((state: any) => {
@@ -66,7 +64,7 @@ const MapChangeAdress = (props: {
   const WS = datestat.ws;
 
   const [valuen, setValuen] = React.useState(
-    massdk[props.iPoint].nameCoordinates
+    massdk[props.iP].nameCoordinates
   );
 
   const handleKey = (event: any) => {
@@ -78,12 +76,12 @@ const MapChangeAdress = (props: {
   };
 
   const handleCloseSet = () => {
-    props.setOpen(false);
+    props.Open(false);
     setOpenSetAdress(false);
   };
 
   const handleCloseSetAdr = () => {
-    if (massdk[props.iPoint].nameCoordinates !== valuen) {
+    if (massdk[props.iP].nameCoordinates !== valuen) {
       const handleSendOpen = () => {
         if (WS.url !== "wss://localhost:3000/W") {
           if (WS.readyState === WebSocket.OPEN) {
@@ -105,13 +103,13 @@ const MapChangeAdress = (props: {
         }
       };
 
-      massdk[props.iPoint].nameCoordinates = valuen; // были изменения
-      massroute.vertexes[props.iPoint].name = valuen;
-      let recMassdk = massdk[props.iPoint];
-      let recMassroute = massroute.vertexes[props.iPoint];
-      let recCoordinates = coordinates[props.iPoint];
-      let coor = massroute.vertexes[props.iPoint].dgis;
-      let idPoint = massroute.vertexes[props.iPoint].id;
+      massdk[props.iP].nameCoordinates = valuen; // были изменения
+      massroute.vertexes[props.iP].name = valuen;
+      let recMassdk = massdk[props.iP];
+      let recMassroute = massroute.vertexes[props.iP];
+      let recCoordinates = coordinates[props.iP];
+      let coor = massroute.vertexes[props.iP].dgis;
+      let idPoint = massroute.vertexes[props.iP].id;
 
       let massWays: any = [];
       for (let i = 0; i < massroute.ways.length; i++) {
@@ -134,9 +132,9 @@ const MapChangeAdress = (props: {
       //SendSocketCreatePoint(deb, WS, coor, valuen);
       handleSendOpen(); // создание новой точки со старым ID
 
-      massdk.splice(props.iPoint, 1); // удаление самой точки
-      massroute.vertexes.splice(props.iPoint, 1);
-      coordinates.splice(props.iPoint, 1);
+      massdk.splice(props.iP, 1); // удаление самой точки
+      massroute.vertexes.splice(props.iP, 1);
+      coordinates.splice(props.iP, 1);
 
       massdk.push(recMassdk); // пересоздание точки
       massroute.vertexes.push(recMassroute);
@@ -177,8 +175,8 @@ const MapChangeAdress = (props: {
           );
         }
       }
-      props.zeroRoute(false); // очищение списка связей
-      props.funcClose(false); // закрытие меню работы с точками
+      props.zero(false); // очищение списка связей
+      props.Cl(false); // закрытие меню работы с точками
     }
     handleCloseSet();
   };
