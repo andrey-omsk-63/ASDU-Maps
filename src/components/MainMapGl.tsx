@@ -26,7 +26,7 @@ import { YandexServices, ShowFormalRoute } from "./MapServiceFunctions";
 import { DecodingCoord, CodingCoord, InputMenu } from "./MapServiceFunctions";
 import { getMultiRouteOptions, DoublRoute } from "./MapServiceFunctions";
 import { getReferencePoints, CenterCoordBegin } from "./MapServiceFunctions";
-import { getMassPolyRouteOptions1, NearestPoint } from "./MapServiceFunctions";
+import { NearestPoint } from "./MapServiceFunctions";
 import { getMassMultiRouteOptions, MakeToCross } from "./MapServiceFunctions";
 import { getMassMultiRouteInOptions, MakeRevers } from "./MapServiceFunctions";
 import { getPointData, GetPointOptions } from "./MapServiceFunctions";
@@ -38,7 +38,7 @@ import { DelPointVertexContent, MassCoord } from "./MapServiceFunctions";
 import { FillMassRouteContent, InputMenuForm } from "./MapServiceFunctions";
 import { PreparCurrenciesMode, MakePolyRoute } from "./MapServiceFunctions";
 import { PreparCurrenciesForm } from "./MapServiceFunctions";
-import { getMassPolyRouteOptions2 } from "./MapServiceFunctions";
+//import { getMassPolyRouteOptions2 } from "./MapServiceFunctions";
 
 import { SendSocketCreateWay, SendSocketGetSvg } from "./MapSocketFunctions";
 import { SendSocketCreateWayFromPoint } from "./MapSocketFunctions";
@@ -423,7 +423,7 @@ const MainMap = (props: {
         ZeroRoute(false);
     }
   };
-  
+
   const OnPlacemarkClickPoint = (index: number, coor: any) => {
     let COORD = coor ? coor : MassCoord(massdk[index]);
     if (pointAa === 0) {
