@@ -24,11 +24,7 @@ import MapDispPKForm from "./MapComponents/MapPKComponents/MapDispPKForm";
 import { RecordMassRoute, MakeNewPointContent } from "./MapServiceFunctions";
 import { YandexServices, ShowFormalRoute } from "./MapServiceFunctions";
 import { DecodingCoord, CodingCoord, InputMenu } from "./MapServiceFunctions";
-import { getMultiRouteOptions, DoublRoute } from "./MapServiceFunctions";
-import { getReferencePoints, CenterCoordBegin } from "./MapServiceFunctions";
-import { NearestPoint } from "./MapServiceFunctions";
-import { MakeMultiRouteIn, MakeToCross } from "./MapServiceFunctions";
-import { MakeMultiRoute, MakeRevers } from "./MapServiceFunctions";
+import { DoublRoute, MakeToCross, MakeRevers } from "./MapServiceFunctions";
 import { getPointData, GetPointOptions } from "./MapServiceFunctions";
 import { СontentModalPressBalloon, MakeFromCross } from "./MapServiceFunctions";
 import { ChangeCrossFunc, PreparCurrencies } from "./MapServiceFunctions";
@@ -36,8 +32,12 @@ import { RecevKeySvg, StrokaMenuGlob, MasskPoint } from "./MapServiceFunctions";
 import { DelVertexOrPoint, MainMenu } from "./MapServiceFunctions";
 import { DelPointVertexContent, MassCoord } from "./MapServiceFunctions";
 import { FillMassRouteContent, InputMenuForm } from "./MapServiceFunctions";
-import { PreparCurrenciesMode, MakePolyRoute } from "./MapServiceFunctions";
-import { PreparCurrenciesForm } from "./MapServiceFunctions";
+import { PreparCurrenciesMode, CenterCoordBegin } from "./MapServiceFunctions";
+import { PreparCurrenciesForm, NearestPoint } from "./MapServiceFunctions";
+
+import { getMultiRouteOptions, getReferencePoints } from "./MapRouteFunctions";
+import { MakeMultiRouteIn, MakePolyRoute } from "./MapRouteFunctions";
+import { MakeMultiRoute } from "./MapRouteFunctions";
 
 import { SendSocketCreateWay, SendSocketGetSvg } from "./MapSocketFunctions";
 import { SendSocketCreateWayFromPoint } from "./MapSocketFunctions";
@@ -57,6 +57,7 @@ export let FORM = "0";
 export let homeRegion: any = 0;
 export let debug: boolean = false;
 export let MASSPK: any = [];
+export let MAP: any = null;
 let flagOpen: boolean, flagBind: boolean;
 let flagRevers: boolean, needLinkBind: boolean, FlagDemo: boolean;
 flagOpen = flagBind = flagRevers = needLinkBind = FlagDemo = false;
@@ -124,6 +125,7 @@ const MainMap = (props: {
     const { mapReducer } = state;
     return mapReducer.map;
   });
+  MAP = map;
   let datestat = useSelector((state: any) => {
     const { statsaveReducer } = state;
     return statsaveReducer.datestat;
@@ -181,27 +183,53 @@ const MainMap = (props: {
     [datestat, dispatch]
   );
 
-  const addRoute = React.useCallback((ymaps: any) => {
-    mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
-    MakePolyRoute(ymaps, mapp, massRoute); // формальные связи
-    MakeMultiRoute(ymaps, mapp, coordStart, coordStop); // исходящие связи
-    MakeMultiRouteIn(ymaps, mapp, coordStartIn, coordStopIn); // входящие связи
-    const multiRoute = new ymaps.multiRouter.MultiRoute(
-      getReferencePoints(pointAa, pointBb),
-      getMultiRouteOptions()
-    );
-    activeRoute = null;
-    mapp.current.geoObjects.add(multiRoute); // основная связь
-    multiRoute.model.events.add("requestsuccess", function () {
-      activeRoute = multiRoute.getActiveRoute();
-      if (activeRoute) {
-        let dist = activeRoute.properties.get("distance").value;
-        reqRoute.dlRoute = Math.round(dist);
-        let duration = activeRoute.properties.get("duration").value;
-        reqRoute.tmRoute = Math.round(duration);
+  const RunReBing = React.useCallback(
+    (route: any) => {
+      console.log("RunReBing:", route);
+      reqRoute.dlRoute = route.lenght;
+      reqRoute.tmRoute = route.time;
+      let arIn = route.sourceArea;
+      let idIn = route.sourceID;
+      let arOn = route.targetArea;
+      let idOn = route.targetID;
+      SendSocketGetSvg(WS, homeRegion, arIn, idIn, arOn, idOn);
+      for (let i = 0; i < massroute.vertexes.length; i++) {
+        let rec = massroute.vertexes[i];
+        if (rec.area === arIn && rec.id === idIn) pointAaIndex = i;
+        if (rec.area === arOn && rec.id === idOn) pointBbIndex = i;
       }
-    });
-  }, []);
+      flagBind = true;
+      setOpenBind(true);
+    },
+    [WS, massroute.vertexes]
+  );
+
+  const addRoute = React.useCallback(
+    (ymaps: any) => {
+      mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
+      massRoute.length &&
+        MakePolyRoute(ymaps, mapp, massRoute, massroute, RunReBing); // формальные связи
+      coordStart.length && MakeMultiRoute(ymaps, mapp, coordStart, coordStop); // исходящие связи
+      coordStartIn.length &&
+        MakeMultiRouteIn(ymaps, mapp, coordStartIn, coordStopIn); // входящие связи
+      const multiRoute = new ymaps.multiRouter.MultiRoute(
+        getReferencePoints(pointAa, pointBb),
+        getMultiRouteOptions()
+      );
+      activeRoute = null;
+      mapp.current.geoObjects.add(multiRoute); // основная связь
+      multiRoute.model.events.add("requestsuccess", function () {
+        activeRoute = multiRoute.getActiveRoute();
+        if (activeRoute) {
+          let dist = activeRoute.properties.get("distance").value;
+          reqRoute.dlRoute = Math.round(dist);
+          let duration = activeRoute.properties.get("duration").value;
+          reqRoute.tmRoute = Math.round(duration);
+        }
+      });
+    },
+    [massroute, RunReBing]
+  );
   //========================================================
   const ZeroRoute = React.useCallback(
     (mode: boolean) => {
