@@ -241,4 +241,3 @@ export const MakeMultiRoute = (ymaps: any, mapp: any, coordStart: any, coordStop
     mapp.current.geoObjects.add(massMultiRoute[i]);
   }
 };
-//=== Разное =======================================
