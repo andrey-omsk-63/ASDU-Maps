@@ -268,13 +268,13 @@ const MapWaysFormaMain = (props: {
         {HAVE > 0 ? (
           <>
             <Grid item xs={6} sx={{ marginTop: 1, textAlign: 'center' }}>
-              <Button sx={styleFormMenu} onClick={() => SaveForm(true)}>
-                Сохранить изменения
+              <Button sx={styleFormMenu} onClick={() => handleCloseBad()}>
+                Выйти без сохранения
               </Button>
             </Grid>
             <Grid item xs={6} sx={{ marginTop: 1, textAlign: 'center' }}>
-              <Button sx={styleFormMenu} onClick={() => handleCloseBad()}>
-                Выйти без сохранения
+              <Button sx={styleFormMenu} onClick={() => SaveForm(true)}>
+                Сохранить изменения
               </Button>
             </Grid>
           </>
