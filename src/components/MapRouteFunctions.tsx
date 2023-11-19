@@ -39,7 +39,7 @@ export const getMassPolyRouteOptions1 = (ymaps: any, route: any, RunReBing: Func
     balloonLayout: balloonLayout,
     balloonPanelMaxMapArea: 0,
     strokeColor: '#1A9165', // зелёный
-    strokeWidth: 3,
+    strokeWidth: 2,
   };
 };
 
@@ -66,7 +66,7 @@ export const getMassPolyRouteOptions2 = (ymaps: any, route: any, RunReBing: Func
     balloonLayout: balloonLayout,
     balloonPanelMaxMapArea: 0,
     strokeColor: '#9F61F1', // сиреневый
-    strokeWidth: 3,
+    strokeWidth: 2,
   };
 };
 
@@ -103,9 +103,10 @@ const NameVertex = (area: number, id: number, massroute: any) => {
 const MakeCONT = (massRoute: any, massroute: any) => {
   let cont1 = massRoute.sourceArea ? 'перекрёстка ' : 'объекта ';
   let cont2 = massRoute.targetArea ? 'перекрёстком ' : 'объектом ';
-  let cont = 'Связь ' + cont1 + '<b>';
+  let cont = 'Связь ' + cont1 + '[' + massRoute.sourceArea + ',' + massRoute.sourceID + ']<br/><b>';
   cont += NameVertex(massRoute.sourceArea, massRoute.sourceID, massroute);
-  cont += '</b><br /> c ' + cont2 + '<b>';
+  cont +=
+    '</b><br /> c ' + cont2 + '[' + massRoute.targetArea + ',' + massRoute.targetID + ']<br/><b>';
   cont += NameVertex(massRoute.targetArea, massRoute.targetID, massroute) + '</b>';
   CONT =
     "<div class='my-balloon'>" +
@@ -125,7 +126,8 @@ const MakeHint = (i: number, massRoute: any) => {
       hint += 'перекрёстком и объекатом';
     } else hint += 'объекатом и перекрёстком';
   }
-  hint += ' id' + massRoute[i].sourceID + ' и id' + massRoute[i].targetID;
+  hint += '<br/>[' + massRoute[i].sourceArea + ',' + massRoute[i].sourceID + '] и [';
+  hint += massRoute[i].targetArea + ',' + massRoute[i].targetID + ']';
   return hint;
 };
 
