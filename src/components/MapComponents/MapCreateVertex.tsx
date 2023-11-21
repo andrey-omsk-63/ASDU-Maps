@@ -25,7 +25,6 @@ let soobErr = "";
 let adrV = "";
 
 let oldCoord: any = 0;
-//let flagLevel01 = true;
 let propsCoord = [0, 0];
 
 const MapCreateVertex = (props: {

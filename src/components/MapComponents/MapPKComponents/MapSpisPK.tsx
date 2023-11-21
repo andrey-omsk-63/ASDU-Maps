@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { massplanCreate, statsaveCreate } from './../../../redux/actions';
+import { massplanCreate, statsaveCreate } from '../../../redux/actions';
 
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
-import MapPointDataError from './../MapPointDataError';
+import MapPointDataError from '../MapPointDataError';
 import MapViewPK from './MapViewPK';
 
 //import { BadExit } from "../../MapServiceFunctions";
@@ -18,9 +18,8 @@ import { styleFormPK01, MakeStylSpisPK01 } from '../../MainMapStyle';
 import { StylSpisPK02, styleSpisPK03, StylSpisPK022 } from '../../MainMapStyle';
 //import { styleSpisPK04 } from "../../MainMapStyle";
 
-//let HAVE = 0;
+
 let flagDel = 0;
-//let makeDel = false;
 let soobErr = '';
 let IDX = 0;
 
