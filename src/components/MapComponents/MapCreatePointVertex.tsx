@@ -11,12 +11,14 @@ import MapCreateVertex from "./MapCreateVertex";
 import { styleModalEnd, styleModalMenu } from "./../MainMapStyle";
 import { styleTypography } from "./../MainMapStyle";
 
+import { AREA } from "./../MainMapGl";
+
 const MapCreatePointVertex = (props: {
   setOpen: any;
   region: number;
   coord: any;
   createPoint: any;
-  area: string;
+  //area: string;
 }) => {
   const styleSet = {
     outline: "none",
@@ -35,7 +37,7 @@ const MapCreatePointVertex = (props: {
   const [openSet, setOpenSet] = React.useState(true);
   const [openSetPoint, setOpenSetPoint] = React.useState(false);
   const [openSetVert, setOpenSetVert] = React.useState(false);
-  const AREA = props.area;
+  //const AREA = props.area;
 
   const handleCloseSetEnd = () => {
     props.setOpen(false);

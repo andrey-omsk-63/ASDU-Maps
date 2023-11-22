@@ -47,7 +47,7 @@ const MapDispPKForm = (props: { setOpen: any }) => {
           fromCross={0}
           toCross={0}
           update={0}
-          svg={{}}
+          //svg={{}}
           setSvg={{}}
         />
       )}

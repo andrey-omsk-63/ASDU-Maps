@@ -13,7 +13,8 @@ import { BadExit, UniqueName, InputFromList } from "../../MapServiceFunctions";
 import { PreparCurrenciesPlan, InputNamePK } from "../../MapServiceFunctions";
 import { SaveFormPK, InputArrow, ExitArrow } from "../../MapServiceFunctions";
 
-import { AREA, SUMPK } from "../../MainMapGl";
+import { AREA } from "../../MainMapGl";
+import { SUMPK } from "../../MapConst";
 
 import { PlanCoord } from "../../../interfacePlans.d"; // интерфейс
 
@@ -491,7 +492,7 @@ const MapCreatePK = (props: {
           fromCross={0}
           toCross={0}
           update={0}
-          svg={{}}
+          //svg={{}}
           setSvg={{}}
         />
       )}

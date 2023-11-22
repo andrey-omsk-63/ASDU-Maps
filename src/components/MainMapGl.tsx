@@ -30,35 +30,34 @@ import { getPointData, GetPointOptions } from "./MapServiceFunctions";
 import { СontentModalPressBalloon, MakeFromCross } from "./MapServiceFunctions";
 import { ChangeCrossFunc, PreparCurrencies } from "./MapServiceFunctions";
 import { RecevKeySvg, StrokaMenuGlob, MasskPoint } from "./MapServiceFunctions";
-import { DelVertexOrPoint, MainMenu } from "./MapServiceFunctions";
+import { DelVerOrPoint, MainMenu, NearestPoint } from "./MapServiceFunctions";
 import { DelPointVertexContent, MassCoord } from "./MapServiceFunctions";
 import { FillMassRouteContent, InputMenuForm } from "./MapServiceFunctions";
 import { PreparCurrenciesMode, CenterCoordBegin } from "./MapServiceFunctions";
-import { PreparCurrenciesForm, NearestPoint } from "./MapServiceFunctions";
+import { PreparCurrenciesForm } from "./MapServiceFunctions";
 
-import { MakeMainRoute } from "./MapRouteFunctions";
 import { MakeMultiRouteIn, MakePolyRoute } from "./MapRouteFunctions";
-import { MakeMultiRoute } from "./MapRouteFunctions";
+import { MakeMultiRoute, MakeMainRoute } from "./MapRouteFunctions";
 
 import { SendSocketCreateWay, SendSocketGetSvg } from "./MapSocketFunctions";
 import { SendSocketCreateWayFromPoint } from "./MapSocketFunctions";
 import { SendSocketCreateWayToPoint } from "./MapSocketFunctions";
 
-let coordStart: any = []; // рабочий массив коллекции входящих связей
-let coordStop: any = []; // рабочий массив коллекции входящих связей
-let coordStartIn: any = []; // рабочий массив коллекции исходящих связей
-let coordStopIn: any = []; // рабочий массив коллекции исходящих связей
-let massRoute: any = []; // рабочий массив сети связей
-let masSvg: any = ["", ""];
+import { YMapsModul, MyYandexKey } from "./MapConst";
 
-export const SUMPK = 121;
-export let AREA = "0";
+export let AREA = "0"; // район  0 - все районы
 export let MODE = "0"; // режим работы - меню режимов
 export let FORM = "0"; // какую форму нужно выдать черех диспетчер
 export let homeRegion: any = 0;
 export let debug: boolean = false;
 export let MASSPK: any = []; // массив 'подсвечиваемых' перекрёстков
 export let BALLOON: boolean = true; // разрешение/запрет на выдачу балуна
+export let masSvg: any = ["", ""]; // массив изображений перекрёстков для RouteBind
+let coordStart: any = []; // рабочий массив коллекции входящих связей
+let coordStop: any = []; // рабочий массив коллекции входящих связей
+let coordStartIn: any = []; // рабочий массив коллекции исходящих связей
+let coordStopIn: any = []; // рабочий массив коллекции исходящих связей
+let massRoute: any = []; // рабочий массив сети связей
 let flagOpen: boolean, flagBind: boolean;
 let flagRevers: boolean, needLinkBind: boolean, FlagDemo: boolean;
 flagOpen = flagBind = flagRevers = needLinkBind = FlagDemo = false;
@@ -159,14 +158,13 @@ const MainMap = (props: {
   const [revers, setRevers] = React.useState(false); // для ререндера
   const [open, setOpen] = React.useState(false);
   const [openCreate, setOpenCreate] = React.useState(false);
-  const [openDelete, setOpenDelete] = React.useState(false);
+  const [openDel, setOpenDel] = React.useState(false);
   const [openAdress, setOpenAdress] = React.useState(false);
   const [openRevers, setOpenRevers] = React.useState(false);
   const [makeRevers, setMakeRevers] = React.useState(false);
   const [needRevers, setNeedRevers] = React.useState(0);
   const [ymaps, setYmaps] = React.useState<YMapsApi | null>(null);
   const mapp = React.useRef<any>(null);
-  const MyYandexKey = "65162f5f-2d15-41d1-a881-6c1acf34cfa1"; // ключ
 
   const DelCollectionRoutes = () => {
     coordStart = [];
@@ -423,7 +421,6 @@ const MainMap = (props: {
         setDispPKForm(true);
         break;
       case 212: // выбор режима работы
-        console.log("MODE:", MODE);
         if (MODE === "2") setOpenPKWind(true);
         if (MODE !== "2") setOpenPKWind(false);
         ZeroRoute(false);
@@ -557,7 +554,6 @@ const MainMap = (props: {
             fromCross={fromCross}
             toCross={toCross}
             update={UpdateAddRoute}
-            svg={masSvg}
             setSvg={props.setSvg}
           />
         )}
@@ -599,7 +595,7 @@ const MainMap = (props: {
     newPointCoord = e.get("coords");
     idxDel = NearestPoint(massdk, newPointCoord);
     if (MODE === "0") {
-      idxDel >= 0 && setOpenDelete(true);
+      idxDel >= 0 && setOpenDel(true);
       idxDel < 0 && setOpenCreate(true);
     }
     if (MODE === "1" && idxDel >= 0 && nomRoute < 0 && !openVertForm) {
@@ -673,7 +669,7 @@ const MainMap = (props: {
       dispatch(coordinatesCreate(coordinates));
       ymaps && addRoute(ymaps); // перерисовка связей
     }
-    setOpenDelete(false);
+    setOpenDel(false);
   };
 
   const MakeNewPoint = (coords: any, avail: boolean) => {
@@ -817,13 +813,11 @@ const MainMap = (props: {
     },
     [ZeroRoute, flagRoute, flagPusk, openVertForm, openWaysForm]
   );
-
   React.useEffect(() => {
     document.addEventListener("keydown", escFunction);
     return () => document.removeEventListener("keydown", escFunction);
   }, [escFunction]);
   //========================================================
-  console.log('openPKWind:',openPKWind,openPKSpis)
   return (
     <Grid container sx={{ height: "99.9vh" }}>
       {!datestat.lockUp && (
@@ -844,11 +838,7 @@ const MainMap = (props: {
       {Object.keys(massroute).length && (
         <YMaps query={{ apikey: MyYandexKey, lang: "ru_RU" }}>
           <Map
-            modules={[
-              "multiRouter.MultiRoute",
-              "Polyline",
-              "templateLayoutFactory",
-            ]}
+            modules={YMapsModul}
             state={mapState}
             instanceRef={(ref) => InstanceRefDo(ref)}
             onLoad={(ref) => {
@@ -860,6 +850,7 @@ const MainMap = (props: {
             {YandexServices()}
             <PlacemarkDo />
             <ModalPressBalloon />
+            {openPKWind && <MapWindPK />}
             {dispPKForm && <MapDispPKForm setOpen={SetDispPKForm} />}
             {openPro && <MapRouteProtokol setOpen={setOpenPro} />}
             {openVertForm && pointAaIndex >= 0 && triggerForm && (
@@ -878,13 +869,7 @@ const MainMap = (props: {
                 openErr={openEF}
               />
             )}
-            {openPKWind && (
-              <MapWindPK
-                setOpen={ZeroRoute}
-                setMode={SetModePKForm}
-                SetMass={SetMassPkId}
-              />
-            )}
+
             {openPKForm && (
               <MapCreatePK
                 setOpen={ZeroRoute}
@@ -904,7 +889,6 @@ const MainMap = (props: {
               <MapWaysFormMenu
                 setOpen={SetOpenWaysFormMenu}
                 idx={idxRoute}
-                svg={masSvg}
                 setSvg={props.setSvg}
               />
             )}
@@ -915,7 +899,6 @@ const MainMap = (props: {
                 fromCross={fromCross}
                 toCross={toCross}
                 update={UpdateAddRoute}
-                svg={masSvg}
                 setSvg={props.setSvg}
               />
             )}
@@ -948,17 +931,10 @@ const MainMap = (props: {
                 region={homeRegion}
                 coord={newPointCoord}
                 createPoint={MakeNewPoint}
-                area={AREA}
               />
             )}
-            {openDelete &&
-              DelVertexOrPoint(
-                openDelete,
-                massdk,
-                massroute,
-                idxDel,
-                handleCloseDel
-              )}
+            {openDel &&
+              DelVerOrPoint(openDel, massdk, massroute, idxDel, handleCloseDel)}
             {openRevers && (
               <MapReversRoute
                 setOpen={setOpenRevers}

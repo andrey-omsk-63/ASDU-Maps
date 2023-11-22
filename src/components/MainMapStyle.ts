@@ -46,9 +46,9 @@ export const styleSetInf = {
   width: 430,
   bgcolor: "background.paper",
   border: "1px solid #FFFFFF",
-  //borderColor: 'primary.main',
   borderRadius: 1,
   boxShadow: 24,
+  textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
   p: 1.5,
 };
 //=== MapGl =====================================================
@@ -242,8 +242,8 @@ export const styleBoxFormNapr = {
 export const styleSetImg = {
   bgcolor: "background.paper",
   border: "0px solid #FFFFFF",
-  //borderColor: "primary.main",
   borderRadius: 1,
+  textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
   boxShadow: 24,
 };
 
@@ -382,9 +382,9 @@ export const styleSetBindForm = {
   width: 460,
   bgcolor: "background.paper",
   border: "1px solid #FFFFFF",
-  //borderColor: 'primary.main',
   borderRadius: 1,
   boxShadow: 24,
+  textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
   p: 1.5,
 };
 
@@ -396,12 +396,9 @@ export const MakeStyleBind00 = (heightImg: number) => {
     top: "50%",
     transform: "translate(-50%, -50%)",
     border: "1px solid #F0F0F0",
-    //borderColor: '#F0F0F0',
-    //borderColor: '#F0F0F0',
     borderRadius: 1,
     width: "98%",
     height: heightImg + window.innerHeight * 0.669,
-    //bgcolor: '#F0F0F0',
     bgcolor: "#F1F5FB",
     p: 0.5,
   };
@@ -420,6 +417,7 @@ export const styleFormInf = {
   //borderColor: 'primary.main',
   borderRadius: 1,
   boxShadow: 24,
+  textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
   p: 1.5,
 };
 
@@ -601,14 +599,15 @@ export const MakeStyleFormPK00 = (wdth: number) => {
   const styleFormPK00 = {
     outline: "none",
     position: "relative",
-    marginTop: "-96.5vh",
+    marginTop: "-94.0vh",
+    // position:  "absolute",
+    // marginTop: "-96.5vh",
     marginLeft: "auto",
     marginRight: "9px",
     width: wdth,
     height: window.innerHeight * 0.92,
     bgcolor: "background.paper",
     border: "1px solid #FFFFFF",
-    //borderColor: 'primary.main',
     borderRadius: 1,
     boxShadow: 24,
     p: 1.5,
@@ -871,5 +870,45 @@ export const stylePKForm033 = (brb: number) => {
 export const stylePKForm04 = {
   padding: "5px 0px 5px 0px",
   border: 0,
+};
+//=== WindPK ==========================================================
+export const styleWindPK00 = {
+  outline: "none",
+  position: "relative",
+  marginTop: "-96.9vh",
+  marginLeft: "auto",
+  marginRight: "9px",
+  width: 212,
+  height: window.innerHeight * 0.92,
+  bgcolor: "background.paper",
+  border: "1px solid #FFFFFF",
+  borderRadius: 1,
+  boxShadow: 24,
+  p: 1,
+};
+
+export const styleWindPK01 = {
+  fontSize: 15,
+  textAlign: "center",
+  color: "#5B1080",
+  textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+};
+
+export const styleWindPK02 = {
+  fontSize: 12.9,
+  textAlign: "left",
+  bgcolor: "#F1F5FB",
+  border: "1px solid #d4d4d4",
+  borderRadius: 1,
+  color: "black",
+  boxShadow: 6,
+  p: 0.5,
+  margin: "5px 0 5px 0",
+};
+
+export const styleWindPK03 = {
+  marginBottom: 0.5,
+  height: window.innerHeight * 0.1,
+  padding: "5px 0px 5px",
 };
 //=====================================================================

@@ -17,6 +17,7 @@ import { HeaderTablBindContent, BindTablFrom } from "./../MapServiceFunctions";
 import { BadExit } from "./../MapServiceFunctions";
 
 import { MODE } from "./../MainMapGl";
+//import { masSvg } from "./../MainMapGl";
 
 import { styleSetImg, styleModalEndBind } from "./../MainMapStyle";
 import { styleBind042, MakeStyleBind00, styleBind043 } from "./../MainMapStyle";

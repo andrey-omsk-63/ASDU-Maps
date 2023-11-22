@@ -13,6 +13,8 @@ import { SendSocketGetSvg } from "./../MapSocketFunctions";
 
 import { styleModalEnd, styleFW01, styleFW02 } from "./../MainMapStyle";
 
+import { masSvg } from "./../MainMapGl";
+
 let openSetErr = false;
 let soobErr = "";
 let OpenMenu = false;
@@ -29,7 +31,7 @@ let reqRoute: any = {
   tmRoute: 0,
 };
 
-let masSvg: any = ["", ""];
+let MasSvg: any = ["", ""];
 let propsSvg: any;
 let waitPict = false;
 
@@ -37,11 +39,11 @@ const MapWaysFormMenu = (props: {
   //ws: any;
   setOpen: any;
   idx: number;
-  svg: any;
+  //svg: any;
   setSvg: any;
 }) => {
   //console.log("MapWaysFormMenu:", oldIdx);
- 
+
   //== Piece of Redux =======================================
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;
@@ -90,7 +92,7 @@ const MapWaysFormMenu = (props: {
     inIdx = props.idx;
     openSetErr = false;
     waitPict = false;
-    masSvg = ["", ""];
+    MasSvg = ["", ""];
     OpenMenu = false;
     massTargetRoute = [];
     massTargetNum = [];
@@ -168,14 +170,13 @@ const MapWaysFormMenu = (props: {
   };
 
   const MakeRecordMassRoute = (mode: boolean, mass: any) => {
-    //console.log("###MakeRecordMassRoute:", mode, mass);
     massTargetRoute.length === 1 && handleCloseSetEnd();
   };
 
-  if (props.svg[0] !== "" && waitPict) {
-    propsSvg = props.svg[0];
-    masSvg[0] = propsSvg[RecevKeySvg(massroute.vertexes[fromIdx])];
-    masSvg[1] = propsSvg[RecevKeySvg(massroute.vertexes[inIdx])];
+  if (masSvg[0] !== "" && waitPict) {
+    propsSvg = masSvg[0];
+    MasSvg[0] = propsSvg[RecevKeySvg(massroute.vertexes[fromIdx])];
+    MasSvg[1] = propsSvg[RecevKeySvg(massroute.vertexes[inIdx])];
     waitPict = false;
     setTrigger(!trigger);
   }
@@ -189,18 +190,16 @@ const MapWaysFormMenu = (props: {
         <MapPointDataError
           sErr={soobErr}
           setOpen={handleCloseSetEnd}
-          //ws={{}}
           fromCross={0}
           toCross={0}
           update={0}
-          svg={{}}
           setSvg={{}}
         />
       )}
       {openSetBind && fromIdx >= 0 && inIdx >= 0 && (
         <MapRouteBind
           setOpen={setOpenSetBind}
-          svg={masSvg}
+          svg={MasSvg}
           setSvg={props.setSvg}
           idxA={fromIdx}
           idxB={inIdx}

@@ -10,9 +10,6 @@ import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 
 import "./MainMapStyle.css";
-//import {$} from "@types/jquery"
-
-//import MapPointDataError from './MapComponents/MapPointDataError';
 
 import { Directions } from "./../App"; // интерфейс massForm
 
@@ -822,7 +819,7 @@ export const ChangeCrossFunc = (fromCross: any, toCross: any) => {
   return mass;
 };
 
-export const DelVertexOrPoint = (
+export const DelVerOrPoint = (
   openSetDelete: boolean,
   massdk: any,
   massroute: any,
@@ -1123,7 +1120,7 @@ export const HeaderBindMiddle = (
     ? "Изменение привязки направлений"
     : "Привязка направлений";
   return (
-    <Grid item xs={7.5}>
+    <Grid item xs={7.5} sx={{ textShadow: "2px 2px 3px rgba(0,0,0,0.3)" }}>
       <Box sx={styleBind02}>
         <b>{bindTitle}</b>
       </Box>

@@ -168,7 +168,7 @@ const MapWaysForma = (props: {
         {massdk.length > props.idx && (
           <>
             <Box sx={styleFormNameRoute}>
-              Входящая связь {soob1}
+              Входящая связь1 {soob1}
               <b>{massdk[props.idx].nameCoordinates}</b>
               {soob2}
               <b>{massTargetName[props.nomInMass]}</b>

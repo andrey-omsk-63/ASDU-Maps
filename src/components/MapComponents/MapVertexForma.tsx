@@ -14,7 +14,7 @@ import { HeaderTablFaz, ShiftOptimal } from "./../MapServiceFunctions";
 import { DelStrokaMainTabl, DelStrokaFaz } from "./../MapServiceFunctions";
 import { SaveFormVert, PreparCurrenciesPlan } from "./../MapServiceFunctions";
 
-import { SUMPK } from "./../MainMapGl";
+import { SUMPK, MaxFaz } from "./../MapConst";
 
 import { styleModalEnd, styleFormInf, styleFormName } from "./../MainMapStyle";
 import { styleFT03, styleFT033 } from "./../MainMapStyle";
@@ -24,7 +24,6 @@ import { styleFormTabl01, styleFormTabl02 } from "./../MainMapStyle";
 let oldIdx = -1;
 let massForm: any = null;
 let HAVE = 0;
-//let EscClinch = false;
 
 let currenciesPlan: any = [];
 let currenciesFaza: any = [];
@@ -66,8 +65,6 @@ const MapVertexForma = (props: {
   //===========================================================
   const idxMap = ComplianceMapMassdk(props.idx, massdk, map);
   const MAP = map.dateMap.tflight[idxMap];
-  const sumPlan = SUMPK;
-  const maxFaz = 8;
 
   const [badExit, setBadExit] = React.useState(false);
   const [openSetErr, setOpenSetErr] = React.useState(props.openErr);
@@ -110,8 +107,8 @@ const MapVertexForma = (props: {
     oldIdx = props.idx;
     datestat.oldIdxForm = oldIdx;
     dispatch(statsaveCreate(datestat));
-    currenciesPlan = PreparCurrenciesPlan(sumPlan, []);
-    currenciesFaza = PreparCurrenciesFaza(maxFaz);
+    currenciesPlan = PreparCurrenciesPlan(SUMPK, []);
+    currenciesFaza = PreparCurrenciesFaza(MaxFaz);
     if (props.forma === null) {
       HAVE = 0;
       nomDelFaz = -1;
@@ -365,7 +362,6 @@ const MapVertexForma = (props: {
           fromCross={0}
           toCross={0}
           update={0}
-          svg={{}}
           setSvg={{}}
         />
       )}

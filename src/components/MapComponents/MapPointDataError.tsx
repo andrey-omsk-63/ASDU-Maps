@@ -25,6 +25,8 @@ import { styleModalEndErr, styleSetInfErr } from "../MapPointDataErrorStyle";
 import { styleModalEditBind } from "../MapPointDataErrorStyle";
 import { styleFooterError } from "../MapPointDataErrorStyle";
 
+import { masSvg } from "./../MainMapGl";
+
 let lengthRoute = 0;
 let index = -1;
 let fromIdx = -1;
@@ -57,7 +59,7 @@ const MapPointDataError = (props: {
   fromCross: any;
   toCross: any;
   update: any;
-  svg: any;
+  //svg: any;
   setSvg: any;
 }) => {
   //console.log("MapPointDataError_svg:", props.svg);
@@ -328,7 +330,7 @@ const MapPointDataError = (props: {
       {openSetBind && fromIdx >= 0 && inIdx >= 0 && (
         <MapRouteBind
           setOpen={setOpenSetBind}
-          svg={props.svg}
+          svg={masSvg}
           setSvg={props.setSvg}
           idxA={fromIdx}
           idxB={inIdx}
