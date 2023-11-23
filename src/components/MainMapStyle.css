@@ -80,22 +80,24 @@
   font-size: 14px;
   margin-top: 6px;
   border: 1px solid #bcc8af;
-  border-radius: 3px;
+  border-radius: 5px;
   width: 332px;
-  height: 24px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  line-height: 24px;
+  text-align: center;
   background-color: #E6F5D6;
   color: #000;
   box-shadow: 2px 2px 6px rgba(0, 0, 0, .3);
 }
 
-.goto {
+.goto1 {
   width: 250px;
-  /* display: flex;
-  justify-content: center;
-  align-items: center; */
+  text-decoration: none;
+  color: #000;
+}
+
+
+.goto2 {
+  width: 250px;
   text-decoration: none;
   color: #000;
 }

@@ -18,19 +18,19 @@ let oldOpponent = '';
 let currenciesOpp: any = [];
 
 let massForm: Directions = {
-  name: '0121/0212',
-  satur: 0,
-  intensTr: 0,
-  dispers: 0,
-  peregon: 0,
-  wtStop: 0,
-  wtDelay: 0,
-  offsetBeginGreen: 0,
-  offsetEndGreen: 0,
-  intensFl: 1200,
-  phases: [],
+  name: '0121/0212', // номер направления
+  satur: 0, // Насыщение(т.е./ч.)
+  intensTr: 0, // Интенсивность(т.е./ч.)
+  dispers: 0, // Дисперсия пачки(%)
+  peregon: 0, // Длинна перегона(м)
+  wtStop: 0, // Вес остановки
+  wtDelay: 0, // Вес задержки
+  offsetBeginGreen: 0, // Смещ.начала зелёного(сек)
+  offsetEndGreen: 0, // Смещ.конца зелёного(сек)
+  intensFl: 1200, // Интенсивность пост.потока(т.е./ч.)
+  phases: [], // зелёные фазы для данного направления
   edited: false,
-  opponent: '',
+  opponent: '',  // Левый поворот конкурирует с направлением...
 };
 
 const MapWaysFormaMain = (props: {

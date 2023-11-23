@@ -707,7 +707,6 @@ export const MakeStylSpisPK01 = () => {
     width: "97.8%",
     height: window.innerHeight * ratio,
     bgcolor: "#F1F5FB",
-    //border: "1px solid #1976D2", // "primary.main"
     border: "1px solid #d4d4d4",
     borderRadius: 1,
     marginTop: 1,
@@ -878,7 +877,7 @@ export const styleWindPK00 = {
   marginTop: "-96.9vh",
   marginLeft: "auto",
   marginRight: "9px",
-  width: 212,
+  width: 222,
   height: window.innerHeight * 0.92,
   bgcolor: "background.paper",
   border: "1px solid #FFFFFF",
@@ -908,7 +907,7 @@ export const styleWindPK02 = {
 
 export const styleWindPK03 = {
   marginBottom: 0.5,
-  height: window.innerHeight * 0.1,
+  //height: window.innerHeight * 0.1,
   padding: "5px 0px 5px",
 };
 //=====================================================================

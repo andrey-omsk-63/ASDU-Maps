@@ -13,7 +13,7 @@ import "./MainMapStyle.css";
 
 import { DecodingCoord } from "./MapServiceFunctions";
 
-import { BALLOON } from "./MainMapGl";
+import { BALLOON, MODE } from "./MainMapGl";
 
 let CONT = "";
 
@@ -21,6 +21,7 @@ let CONT = "";
 export const getMassPolyRouteOptions1 = (
   ymaps: any,
   route: any,
+  InfoRoute: Function,
   RunReBing: Function
 ) => {
   let balloonLayout = ymaps.templateLayoutFactory.createClass(CONT, {
@@ -30,14 +31,25 @@ export const getMassPolyRouteOptions1 = (
       this._$element
         .find(".exit")
         .on("click", $.proxy(this.onCloseClick, this));
-      this._$element.find(".goto").on("click", $.proxy(this.onGoToClick, this));
+      this._$element
+        .find(".goto1")
+        .on("click", $.proxy(this.onGoTo1Click, this));
+      this._$element
+        .find(".goto2")
+        .on("click", $.proxy(this.onGoTo2Click, this));
     },
     onCloseClick: function (e: any) {
       e.preventDefault();
+      InfoRoute(null);
       this.events.fire("userclose");
     },
-    onGoToClick: function (e: any) {
+    onGoTo1Click: function (e: any) {
       e.preventDefault();
+      InfoRoute(route);
+    },
+    onGoTo2Click: function (e: any) {
+      e.preventDefault();
+      InfoRoute(null);
       RunReBing(route);
       this.events.fire("userclose");
     },
@@ -47,29 +59,18 @@ export const getMassPolyRouteOptions1 = (
     balloonLayout: BALLOON ? balloonLayout : "",
     balloonPanelMaxMapArea: 0,
     strokeColor: "#1A9165", // зелёный
-    strokeWidth: 2,
+    strokeWidth: 3,
   };
 };
 
-//let chInput = 0;
+
 
 export const getMassPolyRouteOptions2 = (
   ymaps: any,
   route: any,
+  InfoRoute: Function,
   RunReBing: Function
 ) => {
-  // const ReadyBall = () => {
-  //   chInput++;
-  //   console.log("0###:", chInput);
-  //   if (chInput > 1) {
-  //     setTimeout(() => {
-  //       chInput = 0;
-  //     }, 100);
-  //   }
-  // };
-  // ReadyBall();
-  // console.log("###:", chInput);
-
   let balloonLayout = ymaps.templateLayoutFactory.createClass(CONT, {
     build: function () {
       this.constructor.superclass.build.call(this);
@@ -77,18 +78,25 @@ export const getMassPolyRouteOptions2 = (
       this._$element
         .find(".exit")
         .on("click", $.proxy(this.onCloseClick, this));
-      this._$element.find(".goto").on("click", $.proxy(this.onGoToClick, this));
+      this._$element
+        .find(".goto1")
+        .on("click", $.proxy(this.onGoTo1Click, this));
+      this._$element
+        .find(".goto2")
+        .on("click", $.proxy(this.onGoTo2Click, this));
     },
     onCloseClick: function (e: any) {
       e.preventDefault();
-      // chInput = 0;
-      // console.log("1###:", chInput);
+      InfoRoute(null);
       this.events.fire("userclose");
     },
-    onGoToClick: function (e: any) {
+    onGoTo1Click: function (e: any) {
       e.preventDefault();
-      // chInput = 0;
-      // console.log("2###:", chInput);
+      InfoRoute(route);
+    },
+    onGoTo2Click: function (e: any) {
+      e.preventDefault();
+      InfoRoute(null);
       RunReBing(route);
       this.events.fire("userclose");
     },
@@ -98,7 +106,7 @@ export const getMassPolyRouteOptions2 = (
     balloonLayout: BALLOON ? balloonLayout : "",
     balloonPanelMaxMapArea: 0,
     strokeColor: "#9F61F1", // сиреневый
-    strokeWidth: 2,
+    strokeWidth: 3,
   };
 };
 
@@ -157,10 +165,16 @@ const MakeCONT = (massRoute: any, massroute: any) => {
   CONT =
     "<div class='my-balloon'>" +
     '<a class="exit" href="#"><b>&#10006;</b></a>' +
-    cont +
+    cont;
+  if (MODE === "2") {
+    CONT +=
+      "<div class='go-over'>" +
+      '<a class="goto1" href="#"><b>Информация о направлениях</b></a></div>';
+  }
+  CONT +=
     "<div class='go-over'>" +
-    '<a class="goto" href="#"><b>Изменение привязки направлений</b></a>' +
-    "</div></div>";
+    '<a class="goto2" href="#"><b>Изменение привязки направлений</b></a></div>' +
+    "</div>";
 };
 
 const MakeHint = (i: number, massRoute: any) => {
@@ -183,6 +197,7 @@ export const MakePolyRoute = (
   mapp: any,
   massRoute: any,
   massroute: any,
+  InfoRoute: Function, // информация о связи
   RunReBing: Function // перезапуск превязки
 ) => {
   let massPolyRoute1: any = []; // cеть формальных связей
@@ -215,7 +230,7 @@ export const MakePolyRoute = (
     massPolyRoute1[i] = new ymaps.Polyline(
       [massCoord1[i][0], massCoord1[i][1]],
       { hintContent: MakeHint(i, massRoute1) },
-      getMassPolyRouteOptions1(ymaps, massRoute1[i], RunReBing)
+      getMassPolyRouteOptions1(ymaps, massRoute1[i],InfoRoute, RunReBing)
     );
     mapp.current.geoObjects.add(massPolyRoute1[i]);
     //massPolyRoute1[i].options.set('boundsAutoApply', true);
@@ -226,7 +241,7 @@ export const MakePolyRoute = (
     massPolyRoute2[i] = new ymaps.Polyline(
       [massCoord2[i][0], massCoord2[i][1]],
       { hintContent: MakeHint(i, massRoute2) },
-      getMassPolyRouteOptions2(ymaps, massRoute2[i], RunReBing)
+      getMassPolyRouteOptions2(ymaps, massRoute2[i],InfoRoute, RunReBing)
     );
     mapp.current.geoObjects.add(massPolyRoute2[i]);
   }

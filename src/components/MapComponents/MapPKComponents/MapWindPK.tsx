@@ -8,7 +8,26 @@ import Slider from "@mui/material/Slider";
 import { styleWindPK00, styleWindPK01 } from "../../MainMapStyle";
 import { styleWindPK02, styleWindPK03 } from "../../MainMapStyle";
 
-const MapWindPK = () => {
+import { Directions } from "../../../App"; // интерфейс massForm
+
+let massForm: Directions = {
+  name: "0121/0212", // номер направления
+  satur: 3600, // Насыщение(т.е./ч.)
+  intensTr: 900, // Интенсивность(т.е./ч.)
+  dispers: 50, // Дисперсия пачки(%)
+  peregon: 248, // Длинна перегона(м)
+  wtStop: 1, // Вес остановки
+  wtDelay: 0, // Вес задержки
+  offsetBeginGreen: 0, // Смещ.начала зелёного(сек)
+  offsetEndGreen: 0, // Смещ.конца зелёного(сек)
+  intensFl: 1200, // Интенсивность пост.потока(т.е./ч.)
+  phases: [], // зелёные фазы для данного направления
+  edited: false,
+  opponent: "", // Левый поворот конкурирует с направлением...
+};
+
+const MapWindPK = (props: { route: any }) => {
+  console.log("MapWindPK:", props.route);
   //== Piece of Redux =======================================
   // let massplan = useSelector((state: any) => {
   //   const { massplanReducer } = state;
@@ -22,9 +41,7 @@ const MapWindPK = () => {
   //console.log('massplan:', massplan, massSpis);
   //const dispatch = useDispatch();
   //===========================================================
-  //const [openSetErr, setOpenSetErr] = React.useState(false);
-  //const [trigger, setTrigger] = React.useState(false);
-  //const [view, setView] = React.useState(false);
+  const [value, setValue] = React.useState(67);
 
   //=== инициализация ======================================
 
@@ -53,19 +70,20 @@ const MapWindPK = () => {
   const StrokaTabl = (rec1: string, rec2: any) => {
     return (
       <Grid container sx={{ marginBottom: 0.5 }}>
-        <Grid item xs={9} sx={{ border: 0 }}>
+        <Grid item xs={8} sx={{ border: 0 }}>
           {rec1}
         </Grid>
         <Grid item xs sx={{ border: 0 }}>
-          {rec2}
+          <b>{rec2}</b>
         </Grid>
       </Grid>
     );
   };
 
-  function valuetext(value: number) {
-    return `${value}°C`;
-  }
+  const handleSliderChange = (event: Event, newValue: number | number[]) => {
+    console.log("#:", newValue);
+    setValue(newValue as number);
+  };
 
   return (
     <Box sx={styleWindPK00}>
@@ -76,45 +94,57 @@ const MapWindPK = () => {
           <Box sx={{ marginBottom: 0.5 }}>Функция после 422.611</Box>
           <Box sx={{ marginBottom: 0.5 }}>Время расчёта 0.016 сек.</Box>
         </Box>
-
-        <b>Свойства направления</b>
-        <Box sx={styleWindPK02}>
-          <Box sx={{ marginBottom: 0.5, height: window.innerHeight * 0.2 }}>
-            Здесь будет график
-          </Box>
-        </Box>
-
-        <Box sx={styleWindPK02}>
-          <Box sx={{ marginBottom: 0.5, padding: "5px 0px 5px" }}>
-            {StrokaTabl("Номер", 43)}
-            {StrokaTabl("Насыщение", 3600)}
-            {StrokaTabl("Интенсивность", 900)}
-            {StrokaTabl("Дисперсия пачки", 50)}
-            {StrokaTabl("Длина перегона", 248)}
-            {StrokaTabl("Вес остановки", 1)}
-            {StrokaTabl("Вес задержки", 1)}
-            {StrokaTabl("Смещ-е нач.зелёного", 7)}
-            {StrokaTabl("Смещ-е кон.зелёного", 0)}
-            {StrokaTabl("Интенс-ть пост.потока", 500)}
-            {StrokaTabl("Т остановки", 0)}
-            {StrokaTabl("Т задержки", 0.433)}
-            {StrokaTabl("Тсл.+перегр.", 0.473)}
-          </Box>
-        </Box>
-
-        <Box sx={styleWindPK02}>
-          <Box sx={styleWindPK03}>
-            <b>Насыщенность зелёного = 67%</b>
-            <Box sx={{ width: 200 }}>
-              <Slider
-                aria-label="Temperature"
-                defaultValue={30}
-                getAriaValueText={valuetext}
-                color="secondary"
-              />
+        {props.route && (
+          <>
+            <b>Свойства направления</b>
+            <Box sx={styleWindPK02}>
+              <Box sx={{ marginBottom: 0.5, height: window.innerHeight * 0.2 }}>
+                Здесь будет график
+              </Box>
             </Box>
-          </Box>
-        </Box>
+
+            <Box sx={styleWindPK02}>
+              <Box sx={{ marginBottom: 0.5 }}>
+                {StrokaTabl("Номер", massForm.name)}
+                {StrokaTabl("Насыщение", massForm.satur)}
+                {StrokaTabl("Интенсивность", massForm.intensTr)}
+                {StrokaTabl("Дисперсия пачки", massForm.dispers)}
+                {StrokaTabl("Длина перегона", massForm.peregon)}
+                {StrokaTabl("Вес остановки", massForm.wtStop)}
+                {StrokaTabl("Вес задержки", 1)}
+                {StrokaTabl("Смещ-е нач.зелёного", 7)}
+                {StrokaTabl("Смещ-е кон.зелёного", 0)}
+                {StrokaTabl("Интенс-ть пост.потока", 500)}
+                {StrokaTabl("Т остановки", 0)}
+                {StrokaTabl("Т задержки", 0.433)}
+                {StrokaTabl("Тсл.+перегр.", 0.473)}
+              </Box>
+            </Box>
+
+            <Box sx={styleWindPK02}>
+              <Box sx={styleWindPK03}>
+                Насыщенность зелёного = <b>{value}</b>%
+                <Box sx={{ marginTop: "5px", width: 200 }}>
+                  <Slider
+                    value={value}
+                    onChange={handleSliderChange}
+                    color="secondary"
+                    disabled={true}
+                  />
+                </Box>
+                <Grid
+                  container
+                  sx={{ marginTop: "5px", height: window.innerHeight * 0.024 }}
+                >
+                  <Grid item xs={3} sx={{ bgcolor: "#C2ECAE" }}></Grid>
+                  <Grid item xs={3} sx={{ bgcolor: "#9DDB59" }}></Grid>
+                  <Grid item xs={3} sx={{ bgcolor: "#69A824" }}></Grid>
+                  <Grid item xs={3} sx={{ bgcolor: "#477218" }}></Grid>
+                </Grid>
+              </Box>
+            </Box>
+          </>
+        )}
       </Box>
     </Box>
   );

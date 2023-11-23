@@ -163,6 +163,7 @@ const MainMap = (props: {
   const [openRevers, setOpenRevers] = React.useState(false);
   const [makeRevers, setMakeRevers] = React.useState(false);
   const [needRevers, setNeedRevers] = React.useState(0);
+  const [routePKW, setRoutePKW] = React.useState<any>(null);
   const [ymaps, setYmaps] = React.useState<YMapsApi | null>(null);
   const mapp = React.useRef<any>(null);
 
@@ -202,11 +203,15 @@ const MainMap = (props: {
     [WS, massroute.vertexes]
   );
 
+  const InfoRoute = React.useCallback((route: any) => {
+    setRoutePKW(route);
+  }, []);
+
   const addRoute = React.useCallback(
     (ymaps: any) => {
       mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
       massRoute.length &&
-        MakePolyRoute(ymaps, mapp, massRoute, massroute, RunReBing); // формальные связи
+        MakePolyRoute(ymaps, mapp, massRoute, massroute, InfoRoute, RunReBing); // формальные связи
       coordStart.length && MakeMultiRoute(ymaps, mapp, coordStart, coordStop); // исходящие связи
       coordStartIn.length &&
         MakeMultiRouteIn(ymaps, mapp, coordStartIn, coordStopIn); // входящие связи
@@ -216,7 +221,7 @@ const MainMap = (props: {
         reqRoute = aa[1];
       }
     },
-    [massroute, RunReBing]
+    [massroute, InfoRoute, RunReBing]
   );
   //========================================================
   const ZeroRoute = React.useCallback(
@@ -231,6 +236,7 @@ const MainMap = (props: {
       setOpenWaysForm(false);
       setOpenWaysFormMenu(false);
       setOpenPKForm(false);
+      setRoutePKW(null);
       BALLOON = true; // разрешение на выдачу балуна
       setOpenPKSpis(false);
       MASSPK = [];
@@ -850,7 +856,7 @@ const MainMap = (props: {
             {YandexServices()}
             <PlacemarkDo />
             <ModalPressBalloon />
-            {openPKWind && <MapWindPK />}
+            {openPKWind && <MapWindPK route={routePKW} />}
             {dispPKForm && <MapDispPKForm setOpen={SetDispPKForm} />}
             {openPro && <MapRouteProtokol setOpen={setOpenPro} />}
             {openVertForm && pointAaIndex >= 0 && triggerForm && (
