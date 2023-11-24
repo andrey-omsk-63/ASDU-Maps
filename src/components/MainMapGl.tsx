@@ -856,7 +856,7 @@ const MainMap = (props: {
             {YandexServices()}
             <PlacemarkDo />
             <ModalPressBalloon />
-            {openPKWind && <MapWindPK route={routePKW} />}
+            {openPKWind && <MapWindPK close={setRoutePKW} route={routePKW} />}
             {dispPKForm && <MapDispPKForm setOpen={SetDispPKForm} />}
             {openPro && <MapRouteProtokol setOpen={setOpenPro} />}
             {openVertForm && pointAaIndex >= 0 && triggerForm && (

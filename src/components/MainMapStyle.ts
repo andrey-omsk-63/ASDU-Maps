@@ -871,24 +871,49 @@ export const stylePKForm04 = {
   border: 0,
 };
 //=== WindPK ==========================================================
-export const styleWindPK00 = {
-  outline: "none",
-  position: "relative",
-  marginTop: "-96.9vh",
-  marginLeft: "auto",
-  marginRight: "9px",
-  width: 222,
-  height: window.innerHeight * 0.92,
-  bgcolor: "background.paper",
-  border: "1px solid #FFFFFF",
-  borderRadius: 1,
-  boxShadow: 24,
-  p: 1,
+export const styleWindPK00 = (sum: number) => {
+  let dovesok = sum === 1 ? 0 : 15 * sum;
+  const styleWindPK = {
+    outline: "none",
+    position: "relative",
+    marginTop: "-96.9vh",
+    marginLeft: "auto",
+    marginRight: "5px",
+    width: 222 * sum + dovesok,
+    height: window.innerHeight * 0.92,
+    //bgcolor: "background.paper",
+    //opacity: 0.3,
+    //border: "1px solid #FFFFFF",
+    //borderRadius: 1,
+    //boxShadow: 24,
+    p: 1,
+  };
+  return styleWindPK;
+};
+
+export const styleWindPK90 = (ht: number) => {
+  const styleWindPK900 = {
+    // outline: "none",
+    // position: "relative",
+    // marginTop: "-96.9vh",
+    // marginLeft: "auto",
+    // marginRight: "9px",
+    width: 222,
+    height: ht,
+    bgcolor: "background.paper",
+    //opacity: 0.3,
+    border: "1px solid #FFFFFF",
+    borderRadius: 1,
+    boxShadow: 24,
+    padding: "1px 5px 5px 5px",
+  };
+  return styleWindPK900;
 };
 
 export const styleWindPK01 = {
   fontSize: 15,
   textAlign: "center",
+  bgcolor: "background.paper",
   color: "#5B1080",
   textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
 };
@@ -900,14 +925,36 @@ export const styleWindPK02 = {
   border: "1px solid #d4d4d4",
   borderRadius: 1,
   color: "black",
-  boxShadow: 6,
+  boxShadow: 3,
   p: 0.5,
   margin: "5px 0 5px 0",
 };
 
 export const styleWindPK03 = {
-  marginBottom: 0.5,
+  //marginBottom: 0.5,
   //height: window.innerHeight * 0.1,
-  padding: "5px 0px 5px",
+  //padding: "0px 0px 5px",
+};
+
+export const styleWindPK04 = {
+  border: "1px solid #d4d4d4",
+  marginTop: 1,
+  bgcolor: "#F1F5FB",
+  height: window.innerHeight * 0.8,
+  borderRadius: 1,
+  overflowX: "auto",
+  boxShadow: 6,
+  p: 1,
+};
+
+export const styleWindPKEnd = {
+  position: "absolute",
+  top: "0.8%",
+  left: "auto",
+  right: "0.7%",
+  height: "21px",
+  maxWidth: "2%",
+  minWidth: "2%",
+  color: "black",
 };
 //=====================================================================

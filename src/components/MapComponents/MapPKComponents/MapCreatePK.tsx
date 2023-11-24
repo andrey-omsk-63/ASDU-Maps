@@ -63,7 +63,7 @@ let massBoard = [
 ];
 
 const MapCreatePK = (props: {
-  setOpen: any;
+  setOpen: Function; // функция возврата в родительский компонент
   SetMass: Function; // массив "подсвечиваемых" перекрёстков
   idx: number; // индекса редактируемого ПК
   setPuskMenu: Function; // перезапуск меню ПК после корректировки
@@ -285,12 +285,14 @@ const MapCreatePK = (props: {
   };
 
   const dragStartHandler = (e: any, board: any, item: any) => {
+    //console.log('3Нажатие!!!')
     setCurrentBoard(board);
     setCurrentItem(item);
     e.target.style.backgroundColor = "#bae186"; // тёмно салатовый
   };
 
   const dropHandler = (e: any, board: any, item: any) => {
+    //console.log('2Нажатие!!!')
     e.preventDefault();
     const currentIndex = currentBoard.items.indexOf(currentItem);
     //console.log("currentBoard.ID:", currentBoard.ID);
@@ -317,6 +319,7 @@ const MapCreatePK = (props: {
   };
 
   const dropCardHandler = (e: any, board: any) => {
+    //console.log('1Нажатие!!!')
     if (board.ID !== currentBoard.ID) {
       board.items.push(currentItem);
       const currentIndex = currentBoard.items.indexOf(currentItem);

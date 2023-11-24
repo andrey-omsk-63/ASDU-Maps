@@ -2082,4 +2082,17 @@ export const TablStr = (xss: number, arg: any, style: any) => {
     </>
   );
 };
+//=== WindPK ==========================================================
+export const StrokaTablWindPK = (rec1: string, rec2: any) => {
+  return (
+    <Grid container sx={{ marginBottom: 0.5 }}>
+      <Grid item xs={8} sx={{ border: 0 }}>
+        {rec1}
+      </Grid>
+      <Grid item xs sx={{ border: 0 }}>
+        <b>{rec2}</b>
+      </Grid>
+    </Grid>
+  );
+};
 //=====================================================================

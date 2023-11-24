@@ -17,7 +17,7 @@ import { HeaderTablBindContent, BindTablFrom } from "./../MapServiceFunctions";
 import { BadExit } from "./../MapServiceFunctions";
 
 import { MODE } from "./../MainMapGl";
-//import { masSvg } from "./../MainMapGl";
+import { KolFrom, KolIn } from "./../MapConst";
 
 import { styleSetImg, styleModalEndBind } from "./../MainMapStyle";
 import { styleBind042, MakeStyleBind00, styleBind043 } from "./../MainMapStyle";
@@ -29,8 +29,8 @@ let SvgA = true;
 let SvgB = true;
 let masSvg = ["", ""];
 
-let kolFrom = 4;
-let kolIn = 5;
+let kolFrom = KolFrom;
+let kolIn = KolIn;
 let oldIdxA = -1;
 let oldIdxB = -1;
 let IDX: number = -1;

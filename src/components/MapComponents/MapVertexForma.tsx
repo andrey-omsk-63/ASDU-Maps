@@ -41,7 +41,7 @@ const maskFaz: any = {
 };
 
 const MapVertexForma = (props: {
-  setOpen: any;
+  setOpen: any; // 
   idx: number;
   forma: any;
   openErr: boolean;
