@@ -1,17 +1,17 @@
-import * as React from "react";
-import { useSelector } from "react-redux";
+import * as React from 'react';
+import { useSelector } from 'react-redux';
 
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
 
-import { TablStr } from "../../MapServiceFunctions";
+import { TablStr, RandomNumber } from '../../MapServiceFunctions';
 
-import { styleModalEndBind, stylePKForm00 } from "../../MainMapStyle";
-import { styleFormPK01, stylePKForm01 } from "../../MainMapStyle";
-import { stylePKForm02, styleSpisPK05 } from "../../MainMapStyle";
-import { stylePKForm04 } from "../../MainMapStyle";
+import { styleModalEndBind, stylePKForm00 } from '../../MainMapStyle';
+import { styleFormPK01, stylePKForm01 } from '../../MainMapStyle';
+import { stylePKForm02, styleSpisPK05 } from '../../MainMapStyle';
+import { stylePKForm04 } from '../../MainMapStyle';
 
 const MapFormPK03 = (props: { view: boolean; handleClose: Function }) => {
   //== Piece of Redux =======================================
@@ -30,7 +30,7 @@ const MapFormPK03 = (props: { view: boolean; handleClose: Function }) => {
   });
   //=== инициализация ======================================
   let plan = massplan.plans[datestat.idxMenu];
-  let nameArea = "";
+  let nameArea = '';
   for (let i = 0; i < map.dateMap.tflight.length; i++) {
     let num = Number(map.dateMap.tflight[i].area.num);
     if (num === plan.areaPK) {
@@ -44,32 +44,29 @@ const MapFormPK03 = (props: { view: boolean; handleClose: Function }) => {
   };
 
   const CloseEnd = (event: any, reason: string) => {
-    if (reason === "escapeKeyDown") handleClose();
+    if (reason === 'escapeKeyDown') handleClose();
   };
   //========================================================
 
-  const RandomNumber = (min: number, max: number) => {
-    let rand = Math.random() * (max - min) + min;
-    return Math.floor(rand);
-  };
+  // const RandomNumber = (min: number, max: number) => {
+  //   let rand = Math.random() * (max - min) + min;
+  //   return Math.floor(rand);
+  // };
 
   const StrokaFormPK03 = () => {
     let resStr = [];
     for (let i = 0; i < 48; i++) {
       let arg6 =
         i === 1 || i === 3
-          ? "Затор"
+          ? 'Затор'
           : (RandomNumber(0, 1000) / 1000 + RandomNumber(0, 10)).toFixed(3);
       let arg7 = !i
-        ? "(30) 4"
-        : "(" +
-          (RandomNumber(1, 7) * 100 + RandomNumber(0, 99)) +
-          ") " +
-          RandomNumber(20, 99);
-      let coler = i === 1 || i === 3 ? "#ffdbec" : !i ? "#D5E9F9" : "#F1F5FB";
+        ? '(30) 4'
+        : '(' + (RandomNumber(1, 7) * 100 + RandomNumber(0, 99)) + ') ' + RandomNumber(20, 99);
+      let coler = i === 1 || i === 3 ? '#ffdbec' : !i ? '#D5E9F9' : '#F1F5FB';
       const stylePKForm03 = {
-        padding: "10px 0px 10px 0px",
-        borderBottom: "1px solid #d4d4d4",
+        padding: '10px 0px 10px 0px',
+        borderBottom: '1px solid #d4d4d4',
         bgcolor: coler,
       };
       resStr.push(
@@ -81,13 +78,13 @@ const MapFormPK03 = (props: { view: boolean; handleClose: Function }) => {
           {TablStr(
             1.5,
             (RandomNumber(0, 16) + RandomNumber(100, 1000) / 1000).toFixed(3),
-            stylePKForm03
+            stylePKForm03,
           )}
           {TablStr(1.5, RandomNumber(0, 1000) / 1000, stylePKForm03)}
           {TablStr(2, arg6, stylePKForm03)}
           {TablStr(1.5, arg7, stylePKForm03)}
           {TablStr(0, RandomNumber(20, 89), stylePKForm03)}
-        </Grid>
+        </Grid>,
       );
     }
     return resStr;
@@ -96,15 +93,15 @@ const MapFormPK03 = (props: { view: boolean; handleClose: Function }) => {
   const HeaderTabl = () => {
     return (
       <Grid container sx={stylePKForm02}>
-        {TablStr(0.25, "№", stylePKForm04)}
-        {TablStr(0.75, "№пер", stylePKForm04)}
-        {TablStr(1.5, "Инт.(авт/ч)", stylePKForm04)}
-        {TablStr(1.5, "Поток нас.(авт/ч)", stylePKForm04)}
-        {TablStr(1.5, "Остановка (авт * ч/ч)", stylePKForm04)}
-        {TablStr(1.5, "Задержка (авт * ч/ч)", stylePKForm04)}
-        {TablStr(2, "Задержка в т.ч случ авт-ч/ч", stylePKForm04)}
-        {TablStr(1.5, "Остановок", stylePKForm04)}
-        {TablStr(0, "Загрузка(%)", stylePKForm04)}
+        {TablStr(0.25, '№', stylePKForm04)}
+        {TablStr(0.75, '№пер', stylePKForm04)}
+        {TablStr(1.5, 'Инт.(авт/ч)', stylePKForm04)}
+        {TablStr(1.5, 'Поток нас.(авт/ч)', stylePKForm04)}
+        {TablStr(1.5, 'Остановка (авт * ч/ч)', stylePKForm04)}
+        {TablStr(1.5, 'Задержка (авт * ч/ч)', stylePKForm04)}
+        {TablStr(2, 'Задержка в т.ч случ авт-ч/ч', stylePKForm04)}
+        {TablStr(1.5, 'Остановок', stylePKForm04)}
+        {TablStr(0, 'Загрузка(%)', stylePKForm04)}
       </Grid>
     );
   };
@@ -130,8 +127,8 @@ const MapFormPK03 = (props: { view: boolean; handleClose: Function }) => {
               </Box>
             </Box>
           </Grid>
-          <Grid item xs sx={{ textAlign: "right", border: 0 }}>
-            <Box sx={{ position: "absolute", right: "15px", border: 0 }}>
+          <Grid item xs sx={{ textAlign: 'right', border: 0 }}>
+            <Box sx={{ position: 'absolute', right: '15px', border: 0 }}>
               <Box sx={styleSpisPK05}>
                 <Box sx={{}}>
                   <b>Pайон: {plan.areaPK}</b> &nbsp;
