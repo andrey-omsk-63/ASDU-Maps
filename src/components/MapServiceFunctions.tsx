@@ -1139,7 +1139,7 @@ export function AppIconAsdu(heightImg: number) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width={heightImg - 10}
+      width={heightImg + 6}
       height={heightImg - 10}
       version="1"
       viewBox="0 0 91 54">
@@ -1162,25 +1162,96 @@ export const HeaderBind = (
   haveSvgA: boolean,
   haveSvgB: boolean,
 ) => {
+  const [openSvg, setOpenSvg] = React.useState(false);
+  const heightWind = window.innerHeight * 0.9;
+  let IDX = -1;
+
+  const ClickBlok = (idx: number) => {
+    console.log('MODE:', idx, masSvg);
+    IDX = idx;
+    setOpenSvg(true);
+  };
+
+  const ViewSvg = (idx: number) => {
+    const handleClose = () => {
+      setOpenSvg(false);
+    };
+
+    const CloseEnd = (event: any, reason: string) => {
+      if (reason === 'escapeKeyDown') handleClose();
+    };
+
+    const stylePKForm01 = {
+      outline: 'none',
+      position: 'absolute',
+      left: '50%',
+      top: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: heightWind,
+      bgcolor: 'background.paper',
+      border: '1px solid #FFFFFF',
+      borderRadius: 1,
+      boxShadow: 24,
+      textAlign: 'center',
+      padding: '5px 15px 15px 15px',
+    };
+
+    const styleWindPK04 = {
+      border: '1px solid #d4d4d4',
+      marginTop: 1,
+      bgcolor: '#F1F5FB',
+      height: heightWind - 6,
+      borderRadius: 1,
+      overflowX: 'auto',
+      boxShadow: 6,
+      p: 1,
+    };
+
+    const styleModalEnd = {
+      position: 'absolute',
+      top: '-0.1%',
+      left: 'auto',
+      right: '0%',
+      height: '21px',
+      maxWidth: '2%',
+      minWidth: '2%',
+      color: 'black',
+    };
+
+    return (
+      <Modal open={openSvg} onClose={CloseEnd} hideBackdrop={false}>
+        <Box sx={stylePKForm01}>
+          <Button sx={styleModalEnd} onClick={() => handleClose()}>
+            <b>&#10006;</b>
+          </Button>
+          <Box sx={styleWindPK04}>{masSvg[0] === '' && <>{AppIconAsdu(heightWind * 0.9)}</>}</Box>
+        </Box>
+      </Modal>
+    );
+  };
+
   return (
-    <Grid container sx={{ marginTop: '1vh', height: heightImg }}>
-      <Grid item xs={0.25}></Grid>
-      {!haveSvgA && <Grid item xs={2}></Grid>}
-      {haveSvgA && (
-        <Grid item xs={2} sx={styleSetImg}>
-          {masSvg[0] === '' && <>{AppIconAsdu(heightImg)}</>}
-          {masSvg[0] !== '' && <>{ExampleComponent(0, masSvg)}</>}
-        </Grid>
-      )}
-      {HeaderBindMiddle(Route, nameA, nameB)}
-      {haveSvgB && (
-        <Grid item xs={2} sx={styleSetImg}>
-          {masSvg[1] === '' && <>{AppIconAsdu(heightImg)}</>}
-          {masSvg[1] !== '' && <>{ExampleComponent(1, masSvg)}</>}
-        </Grid>
-      )}
-      <Grid item xs={0.25}></Grid>
-    </Grid>
+    <>
+      <Grid container sx={{ marginTop: '1vh', height: heightImg }}>
+        <Grid item xs={0.25}></Grid>
+        {!haveSvgA && <Grid item xs={2}></Grid>}
+        {haveSvgA && (
+          <Grid item xs={2} onClick={() => ClickBlok(0)} sx={styleSetImg}>
+            {masSvg[0] === '' && <>{AppIconAsdu(heightImg)}</>}
+            {masSvg[0] !== '' && <>{ExampleComponent(0, masSvg)}</>}
+          </Grid>
+        )}
+        {HeaderBindMiddle(Route, nameA, nameB)}
+        {haveSvgB && (
+          <Grid item xs={2} onClick={() => ClickBlok(1)} sx={styleSetImg}>
+            {masSvg[1] === '' && <>{AppIconAsdu(heightImg)}</>}
+            {masSvg[1] !== '' && <>{ExampleComponent(1, masSvg)}</>}
+          </Grid>
+        )}
+        <Grid item xs={0.25}></Grid>
+      </Grid>
+      {openSvg && <>{ViewSvg(IDX)}</>}
+    </>
   );
 };
 
@@ -1388,12 +1459,10 @@ export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
   };
 
   const handleClose = (mode: boolean) => {
-    //console.log('******')
     handleCloseEnd(mode);
   };
 
   const CloseEnd = (event: any, reason: string) => {
-    //console.log('***')
     if (reason === 'escapeKeyDown') handleClose(false);
   };
 
