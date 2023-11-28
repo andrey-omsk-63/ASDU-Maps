@@ -16,7 +16,7 @@ import MapCreatePointVertex from "./MapComponents/MapCreatePointVertex";
 import MapRouteProtokol from "./MapComponents/MapRouteProtokol";
 import MapReversRoute from "./MapComponents/MapReversRoute";
 import MapVertexForma from "./MapComponents/MapVertexForma";
-import MapWaysFormMenu from "./MapComponents/MapWaysFormMenu";
+//import MapWaysFormMenu from "./MapComponents/MapWaysFormMenu";
 import MapCreatePK from "./MapComponents/MapPKComponents/MapCreatePK";
 import MapSpisPK from "./MapComponents/MapPKComponents/MapSpisPK";
 import MapWindPK from "./MapComponents/MapPKComponents/MapWindPK";
@@ -32,9 +32,11 @@ import { ChangeCrossFunc, PreparCurrencies } from "./MapServiceFunctions";
 import { RecevKeySvg, StrokaMenuGlob, MasskPoint } from "./MapServiceFunctions";
 import { DelVerOrPoint, MainMenu, NearestPoint } from "./MapServiceFunctions";
 import { DelPointVertexContent, MassCoord } from "./MapServiceFunctions";
-import { FillMassRouteContent, InputMenuForm } from "./MapServiceFunctions";
+import { FillMassRouteContent, InputMenuPK } from "./MapServiceFunctions";
+import { InputMenuForm } from "./MapServiceFunctions";
 import { PreparCurrenciesMode, CenterCoordBegin } from "./MapServiceFunctions";
-import { PreparCurrenciesForm } from "./MapServiceFunctions";
+import { PreparCurrenciesForm, InputMenuMODE } from "./MapServiceFunctions";
+import { PreparCurrenciesPK } from "./MapServiceFunctions";
 
 import { MakeMultiRouteIn, MakePolyRoute } from "./MapRouteFunctions";
 import { MakeMultiRoute, MakeMainRoute } from "./MapRouteFunctions";
@@ -46,8 +48,9 @@ import { SendSocketCreateWayToPoint } from "./MapSocketFunctions";
 import { YMapsModul, MyYandexKey } from "./MapConst";
 
 export let AREA = "0"; // район  0 - все районы
-export let MODE = "0"; // режим работы - меню режимов
-export let FORM = "0"; // какую форму нужно выдать черех диспетчер
+export let MODE = "0"; // режим работы - меню режимов  0 - заголовок
+export let PK = "0"; // режим работы - меню ПК и моделей  0 - заголовок
+export let FORM = "0"; // какую форму нужно выдать через диспетчер
 export let homeRegion: any = 0;
 export let debug: boolean = false;
 export let MASSPK: any = []; // массив 'подсвечиваемых' перекрёстков
@@ -87,10 +90,13 @@ let funcContex: any, VertexForma: any, funcClick: any, activeRoute: any;
 funcContex = VertexForma = funcClick = activeRoute = null;
 let currencies: any = [];
 let currenciesMode: any = [];
+let currenciesPK: any = [];
 let currenciesForm: any = [];
-let idxDel: number, nomRoute: number, idxRoute: number, pointAaIndex: number;
+//let idxRoute = -1;
+//let nomRoute = -1;
+let idxDel: number, pointAaIndex: number;
 let indexPoint: number, pointBbIndex: number;
-idxDel = nomRoute = idxRoute = indexPoint = pointAaIndex = pointBbIndex = -1;
+idxDel = indexPoint = pointAaIndex = pointBbIndex = -1;
 let oldPropsSvg: any = null;
 let openEF = false;
 let fromIdx: number, inIdx: number, idxPKForm: number, modeBind: number;
@@ -139,6 +145,7 @@ const MainMap = (props: {
   const [triggerForm, setTriggerForm] = React.useState(false);
   const [currency, setCurrency] = React.useState("0");
   const [currencyMode, setCurrencyMode] = React.useState("0");
+  const [currencyPK, setCurrencyPK] = React.useState("0");
   const [currencyForm, setCurrencyForm] = React.useState("0");
   const [openInf, setOpenInf] = React.useState(false);
   const [openPro, setOpenPro] = React.useState(false);
@@ -148,7 +155,7 @@ const MainMap = (props: {
   const [openPKSpis, setOpenPKSpis] = React.useState(false);
   const [openPKWind, setOpenPKWind] = React.useState(false);
   const [dispPKForm, setDispPKForm] = React.useState(false);
-  const [openWaysFormMenu, setOpenWaysFormMenu] = React.useState(false);
+  //const [openWaysFormMenu, setOpenWaysFormMenu] = React.useState(false);
   const [openEr, setOpenEr] = React.useState(false);
   const [openBind, setOpenBind] = React.useState(false);
   const [flagDemo, setFlagDemo] = React.useState(false);
@@ -227,14 +234,15 @@ const MainMap = (props: {
   const ZeroRoute = React.useCallback(
     (mode: boolean) => {
       pointAa = pointBb = 0;
-      pointAaIndex = pointBbIndex = nomRoute = -1;
+      pointAaIndex = pointBbIndex = -1;
+      //nomRoute = -1;
       DelCollectionRoutes();
       flagBind = false;
       setFlagRoute(false);
       setFlagPusk(mode);
       setOpenVertForm(false);
       setOpenWaysForm(false);
-      setOpenWaysFormMenu(false);
+      //setOpenWaysFormMenu(false);
       setOpenPKForm(false);
       setRoutePKW(null);
       BALLOON = true; // разрешение на выдачу балуна
@@ -242,10 +250,16 @@ const MainMap = (props: {
       MASSPK = [];
       idxPKForm = -1;
       HandlLockUp(false); // разблокировка меню районов и меню режимов
+      //setCurrencyPK('0'); // переключение меню 'ПК и модели' на заголовок
       ymaps && addRoute(ymaps); // перерисовка связей
     },
     [ymaps, HandlLockUp, addRoute]
   );
+
+  const ZeroMenuPK = () => {
+    ZeroRoute(false);
+    setCurrencyPK("0"); // переключение меню 'ПК и модели' на заголовок
+  };
 
   const SoobOpenSetEr = (soob: string) => {
     soobError = soob;
@@ -598,21 +612,22 @@ const MainMap = (props: {
   };
 
   const ContentContextmenu = (e: any) => {
+    console.log("MODE:", MODE);
     newPointCoord = e.get("coords");
     idxDel = NearestPoint(massdk, newPointCoord);
-    if (MODE === "0") {
+    if (MODE === "1") {
       idxDel >= 0 && setOpenDel(true);
       idxDel < 0 && setOpenCreate(true);
     }
-    if (MODE === "1" && idxDel >= 0 && nomRoute < 0 && !openVertForm) {
-      nomRoute = 0;
-      idxRoute = idxDel;
-      setOpenWaysFormMenu(true);
-      pointAaIndex = idxDel; // начальная точка
-      pointAa = MassCoord(massdk[idxDel]);
-      MakeСollectionRoute(false);
-      setRevers(!revers); // ререндер
-    }
+    // if (MODE === "1" && idxDel >= 0 && nomRoute < 0 && !openVertForm) {
+    //   nomRoute = 0;
+    //   idxRoute = idxDel;
+    //   setOpenWaysFormMenu(true);
+    //   pointAaIndex = idxDel; // начальная точка
+    //   pointAa = MassCoord(massdk[idxDel]);
+    //   MakeСollectionRoute(false);
+    //   setRevers(!revers); // ререндер
+    // }
   };
 
   const InstanceRefDo = (ref: React.Ref<any>) => {
@@ -692,9 +707,27 @@ const MainMap = (props: {
   };
 
   const handleChangeMode = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrencyMode(event.target.value);
-    MODE = event.target.value;
+    let mode = Number(event.target.value);
+    if (mode) mode--;
+    setCurrencyMode((mode + 1).toString());
+    setCurrencyPK("0"); // переключение меню ПК и моделей на заголовок
+    MODE = mode.toString();
+    MODE === "0" && TurnOnDemoRoute(); // влючение ФС
     PressButton(212);
+  };
+
+  const handleChangePK = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let pk = Number(event.target.value);
+    if (!pk) pk++;
+    setCurrencyPK(pk.toString());
+    // setCurrencyPK('0'); // переключение меню 'ПК и модели' на заголовок
+    setCurrencyMode("0"); // переключение меню 'Перекрёстки и связи' на заголовок
+    PK = pk.toString();
+    MODE = "2";
+    TurnOnDemoRoute(); // влючение ФС
+    PressButton(212);
+    pk === 1 && PressButton(202);
+    pk === 2 && PressButton(201);
   };
 
   const handleChangeForm = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -718,10 +751,10 @@ const MainMap = (props: {
     }
   };
 
-  const SetOpenWaysFormMenu = (mode: number, idx: number, pusto: number) => {
-    setOpenWaysFormMenu(false);
-    ZeroRoute(false);
-  };
+  // const SetOpenWaysFormMenu = (mode: number, idx: number, pusto: number) => {
+  //   setOpenWaysFormMenu(false);
+  //   ZeroRoute(false);
+  // };
 
   const SetMassPkId = (massPkId: any, AreA: number) => {
     MASSPK = massPkId;
@@ -774,6 +807,7 @@ const MainMap = (props: {
     let homeReg = map.dateMap.regionInfo[homeRegion]; // подготовка ввода района
     currencies = PreparCurrencies(map.dateMap.areaInfo[homeReg]);
     currenciesMode = PreparCurrenciesMode();
+    currenciesPK = PreparCurrenciesPK();
     currenciesForm = PreparCurrenciesForm();
     flagOpen = true;
     console.log("massroute:", massroute);
@@ -803,10 +837,10 @@ const MainMap = (props: {
       masSvg[0] = props.svg[RecevKeySvg(massroute.vertexes[fromIdx])];
       masSvg[1] = props.svg[RecevKeySvg(massroute.vertexes[inIdx])];
     }
-    if (props.svg && openWaysFormMenu) {
-      // передача изображений в привязку через меню "перекрёстки"
-      masSvg[0] = props.svg;
-    }
+    // if (props.svg && openWaysFormMenu) {
+    //   // передача изображений в привязку через меню "перекрёстки"
+    //   masSvg[0] = props.svg;
+    // }
   }
   if (openBind && pointAaIndex < 0 && pointBbIndex < 0) setOpenBind(false); // отработка Esc из RouteBind
   //=== обработка Esc ======================================
@@ -829,9 +863,10 @@ const MainMap = (props: {
       {!datestat.lockUp && (
         <>
           {InputMenu(handleChangeArea, currency, currencies)}
-          {InputMenu(handleChangeMode, currencyMode, currenciesMode)}
+          {InputMenuMODE(handleChangeMode, currencyMode, currenciesMode)}
         </>
       )}
+      {InputMenuPK(handleChangePK, currencyPK, currenciesPK)}
       {MakeRevers(makeRevers, needRevers, PressButton)}
       {ShowFormalRoute(flagDemo, PressButton)}
       {MODE === "2" && datestat.needMenuForm && (
@@ -878,7 +913,7 @@ const MainMap = (props: {
 
             {openPKForm && (
               <MapCreatePK
-                setOpen={ZeroRoute}
+                setOpen={ZeroMenuPK}
                 SetMass={SetMassPkId}
                 idx={idxPKForm}
                 setPuskMenu={SetPuskMenu}
@@ -886,18 +921,18 @@ const MainMap = (props: {
             )}
             {openPKSpis && (
               <MapSpisPK
-                setOpen={ZeroRoute}
+                setOpen={ZeroMenuPK}
                 setMode={SetModePKForm}
                 SetMass={SetMassPkId}
               />
             )}
-            {openWaysFormMenu && !openVertForm && (
+            {/* {openWaysFormMenu && !openVertForm && (
               <MapWaysFormMenu
                 setOpen={SetOpenWaysFormMenu}
                 idx={idxRoute}
                 setSvg={props.setSvg}
               />
-            )}
+            )} */}
             {openEr && (
               <MapPointDataError
                 sErr={soobError}

@@ -100,7 +100,6 @@ const MapCreateVertex = (props: {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     Area = event.target.value;
     setCurrency(event.target.value);
-    console.log("setCurrency:", currency, typeof currency, AREA, Area);
     setOpenSetAdress(true);
   };
 
