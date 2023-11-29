@@ -1,5 +1,5 @@
 import * as React from "react";
-//import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -49,10 +49,10 @@ const MapWindPK = (props: {
   //   return massplanReducer.massplan;
   // });
   // console.log("###massplan:", massplan);
-  // let datestat = useSelector((state: any) => {
-  //   const { statsaveReducer } = state;
-  //   return statsaveReducer.datestat;
-  // });
+  let datestat = useSelector((state: any) => {
+    const { statsaveReducer } = state;
+    return statsaveReducer.datestat;
+  });
   //console.log('massplan:', massplan, massSpis);
   //const dispatch = useDispatch();
   //===========================================================
@@ -173,13 +173,18 @@ const MapWindPK = (props: {
   const ContentInfo = () => {
     return (
       <Box sx={styleWindPK01}>
-        <Box sx={styleWindPK90(100)}>
+        <Box sx={styleWindPK90(datestat.nomMenu > 0 ? 127 : 100)}>
           <b>Общая информация</b>
           <Box sx={styleWindPK02}>
             <Box sx={{ marginBottom: 0.5 }}>Функция до 422.611</Box>
             <Box sx={{ marginBottom: 0.5 }}>Функция после 422.611</Box>
             <Box sx={{ marginBottom: 0.5 }}>Время расчёта 0.016 сек.</Box>
           </Box>
+          {datestat.nomMenu > 0 && (
+            <Box sx={{ fontSize: 12.9, marginTop: 1 }}>
+              <b>Выбран план координации №{datestat.nomMenu} </b>
+            </Box>
+          )}
         </Box>
       </Box>
     );

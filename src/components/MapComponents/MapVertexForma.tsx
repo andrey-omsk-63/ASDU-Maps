@@ -15,9 +15,10 @@ import { DelStrokaMainTabl, DelStrokaFaz } from "./../MapServiceFunctions";
 import { SaveFormVert, PreparCurrenciesPlan } from "./../MapServiceFunctions";
 
 import { SUMPK, MaxFaz } from "./../MapConst";
+//import { PLANER } from "./../MainMapGl";
 
-import { styleModalEnd, styleFormInf, styleFormName } from "./../MainMapStyle";
-import { styleFT03, styleFT033 } from "./../MainMapStyle";
+import { styleModalEnd, styleFormName } from "./../MainMapStyle";
+import { styleFT03, styleFormVert, styleFT033 } from "./../MainMapStyle";
 import { styleFormTabl00 } from "./../MainMapStyle";
 import { styleFormTabl01, styleFormTabl02 } from "./../MainMapStyle";
 
@@ -41,7 +42,7 @@ const maskFaz: any = {
 };
 
 const MapVertexForma = (props: {
-  setOpen: any; // 
+  setOpen: any; //
   idx: number;
   forma: any;
   openErr: boolean;
@@ -306,10 +307,26 @@ const MapVertexForma = (props: {
   let bb = massdk.length > props.idx ? massdk[props.idx].area : "";
   let soob1 = bb + " " + aa;
 
+  // const styleFormVert = {
+  //   outline: "none",
+  //   position: "relative",
+  //   //marginTop: '-97vh',
+  //   marginTop: PLANER > 0 ? "-94vh" : "-97vh",
+  //   marginLeft: "auto",
+  //   marginRight: "9px",
+  //   width: 460,
+  //   bgcolor: "background.paper",
+  //   border: "1px solid #FFFFFF",
+  //   borderRadius: 1,
+  //   boxShadow: 24,
+  //   textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+  //   p: 1.5,
+  // };
+
   return (
     <>
       {badExit && <>{BadExit(badExit, handleCloseBadExit)}</>}
-      <Box sx={styleFormInf}>
+      <Box sx={styleFormVert}>
         <Button sx={styleModalEnd} onClick={() => handleCloseBad()}>
           <b>&#10006;</b>
         </Button>

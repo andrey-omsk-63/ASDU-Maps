@@ -1,28 +1,28 @@
-import * as React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { massplanCreate, statsaveCreate } from '../../../redux/actions';
+import * as React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { massplanCreate, statsaveCreate } from "../../../redux/actions";
 
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 
-import MapPointDataError from '../MapPointDataError';
-import MapViewPK from './MapViewPK';
+import MapPointDataError from "../MapPointDataError";
+import MapViewPK from "./MapViewPK";
 
 //import { BadExit } from "../../MapServiceFunctions";
 
 //import { AREA } from "../../MainMapGl";
 
-import { styleModalEnd, MakeStyleFormPK00 } from '../../MainMapStyle';
-import { styleFormPK01, MakeStylSpisPK01 } from '../../MainMapStyle';
-import { StylSpisPK02, styleSpisPK03, StylSpisPK022 } from '../../MainMapStyle';
+import { styleModalEnd, MakeStyleFormPK00 } from "../../MainMapStyle";
+import { styleFormPK01, MakeStylSpisPK01 } from "../../MainMapStyle";
+import { StylSpisPK02, styleSpisPK03, StylSpisPK022 } from "../../MainMapStyle";
 //import { styleSpisPK04 } from "../../MainMapStyle";
 
-
 let flagDel = 0;
-let soobErr = '';
+let soobErr = "";
 let IDX = 0;
 
+let massPkId: Array<any> = [];
 let massSpis: Array<any> = [];
 
 const MapSpisPK = (props: {
@@ -51,32 +51,16 @@ const MapSpisPK = (props: {
     IDX = idx;
     datestat.idxMenu = idx; //  активная строка списка ПК
     dispatch(statsaveCreate(datestat));
-    let massPkId: any = [];
+    massPkId = [];
     // создание списка перекрёстков выбранного плана
     for (let i = 0; i < massplan.plans[idx].coordPlan.length; i++)
       massPkId.push(massplan.plans[idx].coordPlan[i].id);
     massPkId.length && props.SetMass(massPkId, massplan.plans[idx].areaPK);
   };
   //=== инициализация ======================================
-  //if (massplan.plans.length !== massSpis.length || datestat.needMakeSpisPK) {
-  // if (makeDel) {
-  //   makeDel = false;
-  // } else {
   if (!massplan.plans.length) ChangeIDX(-1);
   if (massplan.plans.length !== massSpis.length) ChangeIDX(0);
-  if (datestat.nomMenu > 0) {
-    //console.log('Нужно перестроение', datestat.nomMenu);
-    let idx = 0;
-    for (let i = 0; i < massplan.plans.length; i++) {
-      if (massplan.plans[i].nomPK === datestat.nomMenu) {
-        idx = i;
-      }
-    }
-    console.log('Нужно перестроение', datestat.nomMenu, idx);
-    ChangeIDX(idx);
-    datestat.nomMenu = -1; //  активная строка списка ПК
-    dispatch(statsaveCreate(datestat));
-  }
+
   flagDel = 0;
   let massSp = [];
   for (let i = 0; i < massplan.plans.length; i++) {
@@ -90,7 +74,6 @@ const MapSpisPK = (props: {
       if (massSpis[j].nom === massplan.plans[i].nomPK) {
         massSpis[j].name = massplan.plans[i].namePK;
         if (massSpis[j].del) flagDel++;
-        //if (massSpis[j].del) massSpis[j].del = false; // снятие отметки на удаление
         massSp.push({ ...massSpis[j] });
         have = true;
       }
@@ -103,26 +86,15 @@ const MapSpisPK = (props: {
   datestat.needMenuForm = true; // выдавать меню форм
   datestat.lockUp = true; // блокировка/разблокировка меню районов и меню режимов
   dispatch(statsaveCreate(datestat));
-  //}
   //========================================================
-  // const CloseEnd = React.useCallback(() => {
-  //   props.setOpen(false); // полный выход
-  // }, [props]);
 
   const CloseEnd = React.useCallback(() => {
     datestat.needMenuForm = false; //  не выдавать меню форм
+    datestat.nomMenu = massplan.plans[IDX].nomPK; // номер активного плана ПК
     dispatch(statsaveCreate(datestat));
-    props.setOpen(false); // полный выход
-  }, [datestat, dispatch, props]);
+    props.setOpen(datestat.nomMenu, massPkId); // полный выход
+  }, [datestat, dispatch, props, massplan.plans]);
 
-  // const handleCloseBad = React.useCallback(() => {
-  //   CloseEnd(); // выход без сохранения
-  // }, [CloseEnd]);
-
-  // const handleCloseBadExit = (mode: boolean) => {
-  //   //setBadExit(false);
-  //   mode && CloseEnd(); // выход без сохранения
-  // };
   //=== Функции - обработчики ==============================
   const MarkSpis = (idx: number) => {
     massSpis[idx].del = !massSpis[idx].del;
@@ -149,12 +121,16 @@ const MapSpisPK = (props: {
   };
 
   const MarkPlan = (idx: number) => {
+    console.log("###:", idx);
     if (massSpis[idx].del) {
-      soobErr = 'План координации № ' + massSpis[idx].nom + ' помечен на удаление';
+      soobErr =
+        "План координации № " + massSpis[idx].nom + " помечен на удаление";
       setOpenSetErr(true);
     } else {
-      ChangeIDX(idx);
-      setTrigger(!trigger); // ререндер
+      if (IDX !== idx) {
+        ChangeIDX(idx);
+        setTrigger(!trigger); // ререндер
+      } else CloseEnd(); // повторное нажатие
     }
   };
 
@@ -175,14 +151,14 @@ const MapSpisPK = (props: {
     for (let i = 0; i < massSpis.length; i++) {
       let del = massSpis[i].del;
       let fl = false;
-      let titleDel = del ? 'Восстановить' : 'Удалить';
+      let titleDel = del ? "Восстановить" : "Удалить";
       let illum = i === IDX ? true : false;
       resStr.push(
         <Grid key={i} container>
           <Grid item xs={7} sx={{ border: 0 }}>
             <Button sx={StylSpisPK022(del, illum)} onClick={() => MarkPlan(i)}>
               {massSpis[i].nom < 10 && <Box>&nbsp;&nbsp;</Box>}
-              <Box sx={{ color: '#5B1080' }}>{massSpis[i].nom}.</Box>
+              <Box sx={{ color: "#5B1080" }}>{massSpis[i].nom}.</Box>
               <Box>&nbsp;</Box>
               <Box>
                 <b>{massSpis[i].name.slice(0, 45)}</b>
@@ -208,7 +184,7 @@ const MapSpisPK = (props: {
               {titleDel}
             </Button>
           </Grid>
-        </Grid>,
+        </Grid>
       );
     }
     return resStr;
@@ -222,12 +198,12 @@ const MapSpisPK = (props: {
         event.preventDefault();
       }
     },
-    [datestat, CloseEnd],
+    [datestat, CloseEnd]
   );
 
   React.useEffect(() => {
-    document.addEventListener('keydown', escFunction);
-    return () => document.removeEventListener('keydown', escFunction);
+    document.addEventListener("keydown", escFunction);
+    return () => document.removeEventListener("keydown", escFunction);
   }, [escFunction]);
   //========================================================
   return (
@@ -241,7 +217,7 @@ const MapSpisPK = (props: {
         </Box>
         <Box sx={MakeStylSpisPK01()}>{StrokaSpisPlan()}</Box>
         {flagDel > 0 && (
-          <Box sx={{ marginTop: 1, textAlign: 'center' }}>
+          <Box sx={{ marginTop: 1, textAlign: "center" }}>
             <Button sx={styleSpisPK03} onClick={() => DelSpis()}>
               Удалить отмеченные
             </Button>
@@ -256,7 +232,6 @@ const MapSpisPK = (props: {
           fromCross={0}
           toCross={0}
           update={0}
-          //svg={{}}
           setSvg={{}}
         />
       )}

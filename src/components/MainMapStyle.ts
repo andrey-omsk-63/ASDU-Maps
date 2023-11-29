@@ -1,3 +1,5 @@
+import { PLANER } from "./MainMapGl";
+
 export const searchControl = {
   float: 'left',
   provider: 'yandex#search',
@@ -405,19 +407,18 @@ export const MakeStyleBind00 = (heightImg: number) => {
   return styleBind00;
 };
 //=== VertexForma =====================================================
-export const styleFormInf = {
-  outline: 'none',
-  position: 'relative',
-  marginTop: '-97vh',
-  marginLeft: 'auto',
-  marginRight: '9px',
+export const styleFormVert = {
+  outline: "none",
+  position: "relative",
+  marginTop: PLANER > 0 ? "-94vh" : "-97vh",
+  marginLeft: "auto",
+  marginRight: "9px",
   width: 460,
-  bgcolor: 'background.paper',
-  border: '1px solid #FFFFFF',
-  //borderColor: 'primary.main',
+  bgcolor: "background.paper",
+  border: "1px solid #FFFFFF",
   borderRadius: 1,
   boxShadow: 24,
-  textShadow: '2px 2px 3px rgba(0,0,0,0.3)',
+  textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
   p: 1.5,
 };
 
@@ -492,6 +493,21 @@ export const styleFT033 = {
   textAlign: 'center',
 };
 //=== WaysForma =======================================================
+export const styleFormInf = {
+  outline: 'none',
+  position: 'relative',
+  marginTop: '-97vh',
+  marginLeft: 'auto',
+  marginRight: '9px',
+  width: 460,
+  bgcolor: 'background.paper',
+  border: '1px solid #FFFFFF',
+  borderRadius: 1,
+  boxShadow: 24,
+  textShadow: '2px 2px 3px rgba(0,0,0,0.3)',
+  p: 1.5,
+};
+
 export const styleFW01 = {
   outline: 'none',
   position: 'relative',
@@ -599,9 +615,8 @@ export const MakeStyleFormPK00 = (wdth: number) => {
   const styleFormPK00 = {
     outline: 'none',
     position: 'relative',
-    marginTop: '-94.0vh',
-    // position:  "absolute",
-    // marginTop: "-96.5vh",
+    //marginTop: '-94.0vh',
+    marginTop: PLANER > 0 ? "-94vh" : "-97vh",
     marginLeft: 'auto',
     marginRight: '9px',
     width: wdth,

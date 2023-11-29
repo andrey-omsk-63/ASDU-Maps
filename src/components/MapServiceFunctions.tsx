@@ -36,7 +36,7 @@ import { styleFormPK03 } from "./MainMapStyle";
 import { styleModalMenuErr, styleHeadError } from "./MapPointDataErrorStyle";
 import { styleBoxFormArea, styleSetArea } from "./MapPointDataErrorStyle";
 
-import { debug, AREA, MODE, MASSPK } from "./MainMapGl";
+import { debug, AREA, MODE, MASSPK, PLANER } from "./MainMapGl";
 
 export const handleKey = (event: any) => {
   if (event.key === "Enter") event.preventDefault();
@@ -202,12 +202,6 @@ export const CodingCoord = (coord: Array<number>) => {
 
 export const DoublRoute = (massroute: any, pointA: any, pointB: any) => {
   let flDubl = false;
-  // let pointAcod = CodingCoord(pointA);
-  // let pointBcod = CodingCoord(pointB);
-  // for (let i = 0; i < massroute.length; i++) {
-  //   if (massroute[i].starts === pointAcod && massroute[i].stops === pointBcod)
-  //     flDubl = true;
-  // }
   for (let i = 0; i < massroute.length; i++) {
     let corStart = DecodingCoord(massroute[i].starts);
     let corStop = DecodingCoord(massroute[i].stops);
@@ -276,8 +270,8 @@ export const PreparCurrenciesMode = () => {
   const currencies: any = [];
   let dat = [
     "Перекрёстки и связи:",
-    "Создание связей",
     "Работа с перекрёстками",
+    "Создание связей",
     //"Модели (ПК)",
   ];
   let massKey: any = [];
@@ -304,7 +298,7 @@ export const PreparCurrenciesPK = () => {
     "ПК и модели:",
     "Создание нового ПК",
     "Список ПК",
-    'Список моделей',
+    "Список моделей",
   ];
   let massKey: any = [];
   let massDat: any = [];
@@ -379,10 +373,9 @@ export const InputMenu = (func: any, currency: any, currencies: any) => {
     maxHeight: "2px",
     minHeight: "2px",
     marginLeft: 0.3,
-    bgcolor: "#BAE186",
-    border: 1,
+    bgcolor: "#BAE186", // салатовый
+    border: "1px solid #93D145", // тёмно салатовый
     borderRadius: 1,
-    borderColor: "#93D145",
     textAlign: "center",
     p: 1.25,
     boxShadow: 6,
@@ -431,10 +424,9 @@ export const InputMenuMODE = (func: any, currency: any, currencies: any) => {
     maxHeight: "2px",
     minHeight: "2px",
     marginLeft: 0.3,
-    bgcolor: "#BAE186",
-    border: 1,
+    bgcolor: "#BAE186", // салатовый
+    border: "1px solid #93D145", // тёмно салатовый
     borderRadius: 1,
-    borderColor: "#93D145",
     textAlign: "center",
     p: 1.25,
     boxShadow: 6,
@@ -495,10 +487,9 @@ export const InputMenuPK = (func: any, currency: any, currencies: any) => {
     maxHeight: "2px",
     minHeight: "2px",
     marginLeft: 0.3,
-    bgcolor: "#BAE186",
-    border: 1,
+    bgcolor: "#BAE186", // салатовый
+    border: "1px solid #93D145", // тёмно салатовый
     borderRadius: 1,
-    borderColor: "#93D145",
     textAlign: "center",
     p: 1.25,
     boxShadow: 6,
@@ -558,10 +549,9 @@ export const InputMenuForm = (func: any, currency: any, currencies: any) => {
     maxHeight: "2px",
     minHeight: "2px",
     marginLeft: 0.3,
-    bgcolor: "#BAE186",
-    border: 1,
+    bgcolor: "#BAE186", // салатовый
+    border: "1px solid #93D145", // тёмно салатовый
     borderRadius: 1,
-    borderColor: "#93D145",
     textAlign: "center",
     p: 1.25,
     boxShadow: 6,
@@ -671,13 +661,11 @@ export const getPointData = (
   pointBbIndex: number,
   massdk: any,
   map: any
-  //MODE: string
 ) => {
   let idxMap = ComplianceMapMassdk(index, massdk, map);
   let cont3 = ", null";
   if (idxMap >= 0) cont3 = ", " + map.dateMap.tflight[idxMap].idevice;
   let cont1 = massdk[index].nameCoordinates + "<br/>";
-  //let cont2 = '[' + massdk[index].region + ', ' + massdk[index].area;
   let cont2 = "[" + massdk[index].area;
   cont2 += ", " + massdk[index].ID + cont3 + "]";
   let textBalloon = "";
@@ -700,7 +688,6 @@ export const GetPointOptions = (
 ) => {
   let idxMap = -1;
   let Area = massdk[index].area.toString();
-  //console.log("@@@MASSPK", MASSPK,typeof massdk[index].ID);
   for (let i = 0; i < map.dateMap.tflight.length; i++) {
     if (
       map.dateMap.tflight[i].ID === massdk[index].ID &&
@@ -730,20 +717,17 @@ export const GetPointOptions = (
       }
     }
     //========================================================
-    const HosterIllum = () => {
-      host = "http://localhost:3000/4.svg";
+    const HosterIllum = (nom: string) => {
+      host = "http://localhost:3000/" + nom + ".svg";
       if (!debug)
-        host = window.location.origin + "/free/img/trafficLights/4.svg";
+        host =
+          window.location.origin + "/free/img/trafficLights/" + nom + ".svg";
     };
-
-    if (MODE === "1") {
-      if (index === pointBbIndex || index === pointAaIndex) HosterIllum();
-    }
-    if (MODE === "2" && Area === AREA) {
-      //console.log('!!!',index,massdk[index].ID,MASSPK )
-      if (MASSPK.indexOf(massdk[index].ID) >= 0) HosterIllum();
-    }
-
+    // if (MODE === "2" && Area === AREA)
+    if (PLANER > 0 && Area === AREA)
+      if (MASSPK.indexOf(massdk[index].ID) >= 0) HosterIllum("4");
+    if (MODE === "1")
+      if (index === pointBbIndex || index === pointAaIndex) HosterIllum("12");
     return host;
   };
 
@@ -753,10 +737,7 @@ export const GetPointOptions = (
     if (massdk[index].newCoordinates > 0)
       colorBalloon = "islands#darkOrangeCircleIcon";
   }
-  //  else {
-  //   if (massdk[index].newCoordinates > 0)
-  //     colorBalloon = "islands#darkOrangeCircleDotIcon";
-  // }
+
   if (index === pointAaIndex && MODE === "0")
     colorBalloon = "islands#redStretchyIcon";
   if (index === pointBbIndex && MODE === "0")
@@ -822,9 +803,8 @@ export const StrokaMenuGlob = (soob: string, func: Function, mode: number) => {
     width: MesssgeLength(soob, 14) + 32,
     maxHeight: "21px",
     minHeight: "21px",
-    backgroundColor: "#C4EAA2",
-    //backgroundColor: "#E9F5D8",
-    color: "#676767",
+    backgroundColor: "#C4EAA2", // салатовый
+    color: "#676767", // тёмно серый
     textTransform: "unset !important",
     p: 1.5,
     boxShadow: 6,
@@ -1005,9 +985,11 @@ export const DelVerOrPoint = (
     marginTop: 0.5,
     maxHeight: "24px",
     minHeight: "24px",
-    backgroundColor: "#E6F5D6",
+    border: "1px solid #d4d4d4", // серый
+    bgcolor: "#E6F5D6", // светло салатовый
     textTransform: "unset !important",
     color: "black",
+    boxShadow: 3,
   };
 
   const NotHaveWays = () => {
@@ -1090,8 +1072,7 @@ export const NoVertex = (openSetErr: boolean, handleCloseErr: Function) => {
     marginLeft: "24vh",
     width: 400,
     bgcolor: "background.paper",
-    border: "1px solid ##FFFFFF",
-    //borderColor: 'primary.main',
+    border: "1px solid #FFFFFF", // белый
     borderRadius: 1,
     boxShadow: 24,
     textAlign: "center",
@@ -1148,11 +1129,10 @@ export const InputAdressVertex = (
     marginLeft: "46px",
     width: "318px",
     height: "7vh",
-    border: "3px solid #000",
-    borderColor: "#FFFEF7",
+    border: "3px solid #FFFEF7", // светло серый
     borderRadius: 1,
     boxShadow: 24,
-    bgcolor: "#FFFEF7",
+    bgcolor: "#FFFEF7", // светло серый
     opacity: 0.85,
   };
 
@@ -1160,7 +1140,7 @@ export const InputAdressVertex = (
     width: "230px",
     maxHeight: "3px",
     minHeight: "3px",
-    bgcolor: "#FAFAFA",
+    bgcolor: "#FAFAFA", // светло серый
     boxShadow: 3,
     textAlign: "center",
     p: 1.5,
@@ -1247,13 +1227,12 @@ export const StrokaMenuFooterBind = (
   const styleAppBind = {
     fontSize: 14,
     marginRight: 1,
-    border: "1px solid #000",
-    bgcolor: "#E6F5D6",
+    border: "1px solid #d4d4d4", // серый
+    bgcolor: "#E6F5D6", // светло салатовый
     width: (soob.length + 9) * 7,
     maxHeight: "24px",
     minHeight: "24px",
     borderRadius: 1,
-    borderColor: "#d4d4d4",
     color: "black",
     textTransform: "unset !important",
     boxShadow: 3,
@@ -1501,10 +1480,9 @@ export const BindInput = (
     width: "28px",
     maxHeight: "1px",
     minHeight: "1px",
-    bgcolor: "#FFFBE5",
-    border: 1,
+    border: "1px solid #d4d4d4", // серый
     borderRadius: 1,
-    borderColor: "#d4d4d4",
+    bgcolor: "#FFFBE5", // топлёное молоко
     boxShadow: 6,
     textAlign: "center",
     p: 1.6,
@@ -1529,7 +1507,6 @@ export const BindInput = (
     valueInp = Math.trunc(Number(valueInp));
     if (valueInp <= MAX) {
       value = valueInp.toString();
-      //value = event.target.value.replace(/^0+/, "");
       SetMass(mode, valueInp);
       setTrigger(!trigger);
     }
@@ -1654,10 +1631,9 @@ export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
     marginTop: 0.5,
     maxHeight: "24px",
     minHeight: "24px",
-    border: "1px solid #000",
+    border: "1px solid #d4d4d4", // серый
     borderRadius: 1,
-    borderColor: "#d4d4d4", // серый
-    backgroundColor: "#E6F5D6",
+    backgroundColor: "#E6F5D6", // светло салатовый
     color: "black",
     textTransform: "unset !important",
     boxShadow: 6,
@@ -1709,10 +1685,9 @@ export const WaysInput = (
     width: "33px",
     maxHeight: "1px",
     minHeight: "1px",
-    border: 1,
+    border: "1px solid #d4d4d4", // серый
     borderRadius: 1,
-    borderColor: "#d4d4d4",
-    bgcolor: "#FFFBE5",
+    bgcolor: "#FFFBE5", // топлёное молоко
     boxShadow: 6,
     textAlign: "center",
     p: 1.5,
@@ -1750,7 +1725,7 @@ export const WaysInput = (
               maxHeight: "1px",
               minHeight: "1px",
               fontSize: 14,
-              backgroundColor: "#FFFBE5",
+              backgroundColor: "#FFFBE5", // топлёное молоко
             },
           }}
           value={value}
@@ -1774,10 +1749,9 @@ export const InputOpponent = (
     maxHeight: "6px",
     minHeight: "6px",
     marginTop: "-0px",
-    bgcolor: "#FFFBE5",
-    border: 1,
+    bgcolor: "#FFFBE5", // топлёное молоко
+    border: "1px solid #d4d4d4", // серый
     borderRadius: 1,
-    borderColor: "#d4d4d4",
     textAlign: "center",
     p: 1.25,
     boxShadow: 6,
@@ -1833,9 +1807,8 @@ export const InputFromList = (func: any, currency: any, currencies: any) => {
     maxHeight: "6px",
     minHeight: "6px",
     bgcolor: "#FFFBE5",
-    border: 1,
+    border: "1px solid #d4d4d4", // серый
     borderRadius: 1,
-    borderColor: "#d4d4d4",
     textAlign: "center",
     p: 1.2,
     boxShadow: 6,
@@ -1844,7 +1817,6 @@ export const InputFromList = (func: any, currency: any, currencies: any) => {
   const styleBoxForm = {
     "& > :not(style)": {
       marginTop: "-7px",
-      // marginLeft: '-27px',
       marginLeft: "-12px",
       width: "58px",
     },
@@ -1924,9 +1896,8 @@ export const ShiftOptimal = (mode: boolean, ChangeOptimal: Function) => {
     maxWidth: 58,
     minWidth: 58,
     backgroundColor: "#E6F5D6", // светло салатовый
-    border: "1px solid #000",
+    border: "1px solid #d4d4d4", // серый
     borderRadius: 1,
-    borderColor: "#d4d4d4", // серый
     textTransform: "unset !important",
     boxShadow: 2,
     color: "black",
@@ -1940,9 +1911,8 @@ export const ShiftOptimal = (mode: boolean, ChangeOptimal: Function) => {
     maxWidth: 58,
     minWidth: 58,
     backgroundColor: "#bae186", // тёмно салатовый
-    border: "1px solid #000",
+    border: "1px solid #bae186", // тёмно салатовый
     borderRadius: 1,
-    borderColor: "#bae186", // тёмно салатовый
     textTransform: "unset !important",
     boxShadow: 6,
     color: "black",
@@ -1970,9 +1940,8 @@ export const DelStrokaMainTabl = (
     maxWidth: 58,
     minWidth: 58,
     backgroundColor: "#E6F5D6", // светло салатовый
-    border: "1px solid #000",
+    border: "1px solid #d4d4d4", // серый
     borderRadius: 1,
-    borderColor: "#d4d4d4", // серый
     boxShadow: 2,
     color: "black",
   };
@@ -1983,8 +1952,7 @@ export const DelStrokaMainTabl = (
     minHeight: "27px",
     maxWidth: 58,
     minWidth: 58,
-    bgcolor: "#bae186", // тёмно салатовый
-    border: "1px solid #000",
+    border: "1px solid #bae186", // тёмно салатовый
     borderRadius: 1,
     borderColor: "#bae186", // тёмно салатовый
     boxShadow: 6,
@@ -2034,9 +2002,8 @@ export const DelStrokaFaz = (DeleteFaza: Function) => {
     maxHeight: "21px",
     minHeight: "21px",
     bgcolor: "#bae186", // тёмно салатовый
-    border: "1px solid #000",
+    border: "1px solid #bae186", // тёмно салатовый
     borderRadius: 1,
-    borderColor: "#bae186", // тёмно салатовый
     textTransform: "unset !important",
     boxShadow: 6,
     color: "black",
@@ -2167,13 +2134,12 @@ export const StrokaMenuErr = (handleClose: Function) => {
   const styleSave = {
     fontSize: 14,
     marginRight: 0.1,
-    border: "2px solid #000",
-    bgcolor: "#E6F5D6",
+    bgcolor: "#E6F5D6", // салатовый
+    border: "1px solid #d4d4d4", // серый
+    borderRadius: 1,
     width: "100px",
     maxHeight: "24px",
     minHeight: "24px",
-    borderColor: "#E6F5D6",
-    borderRadius: 1,
     color: "black",
     textTransform: "unset !important",
     boxShadow: 6,
@@ -2193,9 +2159,8 @@ export const InputNamePK = (handleChangeName: any, valuen: string) => {
     maxHeight: "10px",
     minHeight: "10px",
     marginTop: -0.2,
-    bgcolor: "#FFFBE5",
-    border: "1px solid #000",
-    borderColor: "#d4d4d4", // серый
+    bgcolor: "#FFFBE5", // топлёное молоко
+    border: "1px solid #d4d4d4", // серый
     borderRadius: 1,
     boxShadow: 4,
     textAlign: "center",
@@ -2249,14 +2214,12 @@ export const SaveFormPK = (SaveForm: any) => {
 };
 
 export const ExitArrow = (board: any, id: number, massroute: any) => {
-  //console.log("ExitArrow:", id, board);
   let inputId = -1;
   let area = board.items[0].area;
   for (let i = 0; i < board.items.length; i++) {
     if (i !== board.items.length - 1 && board.items[i].id === id)
       inputId = board.items[i + 1].id;
   }
-  //console.log("inputId:",id, inputId);
   let have = false;
   if (inputId >= 0) {
     for (let i = 0; i < massroute.ways.length; i++) {
@@ -2273,13 +2236,11 @@ export const ExitArrow = (board: any, id: number, massroute: any) => {
 };
 
 export const InputArrow = (board: any, id: number, massroute: any) => {
-  //console.log("item.id:", id, board);
   let exitId = -1;
   let area = board.items[0].area;
   for (let i = 0; i < board.items.length; i++) {
     if (i && board.items[i].id === id) exitId = board.items[i - 1].id;
   }
-  //console.log("inputId:", exitId);
   let have = false;
   if (exitId >= 0) {
     for (let i = 0; i < massroute.ways.length; i++) {

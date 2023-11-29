@@ -13,7 +13,7 @@ import "./MainMapStyle.css";
 
 import { DecodingCoord } from "./MapServiceFunctions";
 
-import { BALLOON, MODE } from "./MainMapGl";
+import { BALLOON, PLANER } from "./MainMapGl";
 
 let CONT = "";
 
@@ -62,8 +62,6 @@ export const getMassPolyRouteOptions1 = (
     strokeWidth: 3,
   };
 };
-
-
 
 export const getMassPolyRouteOptions2 = (
   ymaps: any,
@@ -166,7 +164,7 @@ const MakeCONT = (massRoute: any, massroute: any) => {
     "<div class='my-balloon'>" +
     '<a class="exit" href="#"><b>&#10006;</b></a>' +
     cont;
-  if (MODE === "2") {
+  if (PLANER > 0) {
     CONT +=
       "<div class='go-over'>" +
       '<a class="goto1" href="#"><b>Информация о направлениях</b></a></div>';
@@ -230,7 +228,7 @@ export const MakePolyRoute = (
     massPolyRoute1[i] = new ymaps.Polyline(
       [massCoord1[i][0], massCoord1[i][1]],
       { hintContent: MakeHint(i, massRoute1) },
-      getMassPolyRouteOptions1(ymaps, massRoute1[i],InfoRoute, RunReBing)
+      getMassPolyRouteOptions1(ymaps, massRoute1[i], InfoRoute, RunReBing)
     );
     mapp.current.geoObjects.add(massPolyRoute1[i]);
     //massPolyRoute1[i].options.set('boundsAutoApply', true);
@@ -241,7 +239,7 @@ export const MakePolyRoute = (
     massPolyRoute2[i] = new ymaps.Polyline(
       [massCoord2[i][0], massCoord2[i][1]],
       { hintContent: MakeHint(i, massRoute2) },
-      getMassPolyRouteOptions2(ymaps, massRoute2[i],InfoRoute, RunReBing)
+      getMassPolyRouteOptions2(ymaps, massRoute2[i], InfoRoute, RunReBing)
     );
     mapp.current.geoObjects.add(massPolyRoute2[i]);
   }

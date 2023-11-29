@@ -13,7 +13,7 @@ import { BadExit, UniqueName, InputFromList } from "../../MapServiceFunctions";
 import { PreparCurrenciesPlan, InputNamePK } from "../../MapServiceFunctions";
 import { SaveFormPK, InputArrow, ExitArrow } from "../../MapServiceFunctions";
 
-import { AREA } from "../../MainMapGl";
+import { AREA, MASSPK } from "../../MainMapGl";
 import { SUMPK } from "../../MapConst";
 
 import { PlanCoord } from "../../../interfacePlans.d"; // интерфейс
@@ -32,6 +32,7 @@ interface Stroka {
 let HAVE = 0;
 let startPlan: string = "0";
 let massPkId: any = [];
+let massPkIdOld: any = [];
 let isOpen = false;
 let oldArea = -1;
 let oldIdx = -2;
@@ -106,7 +107,7 @@ const MapCreatePK = (props: {
     oldArea = -1;
     isOpen = false;
     massPkId = [];
-    props.setOpen(false); // полный выход
+
     if (modeWork === "edit" || datestat.needMenuForm) {
       props.setPuskMenu(NewCoordPlan.nomPK); // перезапуск меню ПК
       if (oldPK !== NewCoordPlan.nomPK) {
@@ -114,6 +115,7 @@ const MapCreatePK = (props: {
         dispatch(statsaveCreate(datestat));
       }
     }
+    props.setOpen(datestat.nomMenu, massPkIdOld); // полный выход
   }, [props, modeWork, datestat, dispatch]);
 
   const handleCloseBad = React.useCallback(() => {
@@ -140,6 +142,7 @@ const MapCreatePK = (props: {
       let massVert: any = [];
       let massExist: any = [];
       massPkId = []; // правое окно
+      massPkIdOld = MASSPK;
       let massNumPk: Array<number> = [];
       oldPK = -1;
       //============
