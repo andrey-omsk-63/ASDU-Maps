@@ -21,6 +21,7 @@ import { styleModalEnd, styleFormName } from "./../MainMapStyle";
 import { styleFT03, styleFormVert, styleFT033 } from "./../MainMapStyle";
 import { styleFormTabl00 } from "./../MainMapStyle";
 import { styleFormTabl01, styleFormTabl02 } from "./../MainMapStyle";
+import { PLANER } from "../MainMapGl";
 
 let oldIdx = -1;
 let massForm: any = null;
@@ -129,7 +130,6 @@ const MapVertexForma = (props: {
     } else {
       massForm = props.forma;
       FAZA = massForm.kolFaz;
-      //setOpenSetErr(props.openErr);
     }
   }
   //========================================================
@@ -143,10 +143,6 @@ const MapVertexForma = (props: {
     HAVE && setBadExit(true);
     !HAVE && CloseEnd(); // выход без сохранения
   }, [CloseEnd]);
-
-  // const handleCloseEnd = (event: any, reason: string) => {
-  //   if (reason === "escapeKeyDown") handleCloseBad();
-  // };
 
   const handleCloseBadExit = (mode: boolean) => {
     setBadExit(false);
@@ -171,8 +167,6 @@ const MapVertexForma = (props: {
     massForm.phases[idx].MinDuration = valueInp;
     if (massForm.phases[idx].StartDuration > valueInp) {
       massForm.phases[idx].StartDuration = valueInp;
-      console.log("!!!:", massForm.phases);
-      //setOpenSetErr(true);
       props.setOpen(true, massForm, true); // полный ререндер
     }
     HAVE++;
@@ -183,7 +177,6 @@ const MapVertexForma = (props: {
       HAVE++;
     } else {
       massForm.phases[idx].StartDuration = massForm.phases[idx].MinDuration;
-      //setOpenSetErr(true);
       props.setOpen(true, massForm, true); // полный ререндер
     }
   };
@@ -283,12 +276,10 @@ const MapVertexForma = (props: {
   const escFunction = React.useCallback(
     (event) => {
       if (event.keyCode === 27) {
-        console.log("ESC!!!", HAVE);
         oldIdx = -1;
         HAVE = 0;
         nomDelFaz = -1;
         props.setOpen(false, null); // полный выход
-        //EscClinch = true;
         datestat.oldIdxForm = -1;
         dispatch(statsaveCreate(datestat));
         event.preventDefault();
@@ -307,26 +298,10 @@ const MapVertexForma = (props: {
   let bb = massdk.length > props.idx ? massdk[props.idx].area : "";
   let soob1 = bb + " " + aa;
 
-  // const styleFormVert = {
-  //   outline: "none",
-  //   position: "relative",
-  //   //marginTop: '-97vh',
-  //   marginTop: PLANER > 0 ? "-94vh" : "-97vh",
-  //   marginLeft: "auto",
-  //   marginRight: "9px",
-  //   width: 460,
-  //   bgcolor: "background.paper",
-  //   border: "1px solid #FFFFFF",
-  //   borderRadius: 1,
-  //   boxShadow: 24,
-  //   textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
-  //   p: 1.5,
-  // };
-
   return (
     <>
       {badExit && <>{BadExit(badExit, handleCloseBadExit)}</>}
-      <Box sx={styleFormVert}>
+      <Box sx={styleFormVert(PLANER)}>
         <Button sx={styleModalEnd} onClick={() => handleCloseBad()}>
           <b>&#10006;</b>
         </Button>

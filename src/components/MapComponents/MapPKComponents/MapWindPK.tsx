@@ -57,6 +57,7 @@ const MapWindPK = (props: {
   //const dispatch = useDispatch();
   //===========================================================
   const [value, setValue] = React.useState(67);
+  const [openImg, setOpenImg] = React.useState(false);
   const [openGraf, setOpenGraf] = React.useState(false);
 
   //=== инициализация ======================================
@@ -87,6 +88,11 @@ const MapWindPK = (props: {
     setValue(newValue as number);
   };
   //========================================================
+  const ClickImg = (idx: number) => {
+    IDX = idx;
+    setOpenImg(true);
+  };
+
   const ClickBlok = (idx: number) => {
     IDX = idx;
     setOpenGraf(true);
@@ -95,10 +101,16 @@ const MapWindPK = (props: {
   const ContentTabl = (idx: number) => {
     return (
       <Box sx={styleWindPK01}>
-        <Box sx={styleWindPK90(705)}>
-          <Box sx={{ height: 133, fontSize: 12.9 }}>
-            Здесь может быть картинка перекрёстка с направлением{" "}
-            {nameIn + (idx + 1)}
+        <Box sx={styleWindPK90(712)}>
+          <Box sx={styleWindPK02}>
+            <Box
+              onClick={() => ClickImg(idx)}
+              sx={{ height: 136, fontSize: 12.9 }}
+            >
+              Здесь может быть картинка перекрёстка{" "}
+              <b>{props.route.targetID}</b> с направлением{" "}
+              <b>{nameIn + (idx + 1)}</b>
+            </Box>
           </Box>
           <b>Свойства направления</b>
           <Box sx={styleWindPK02}>
@@ -106,7 +118,7 @@ const MapWindPK = (props: {
               onClick={() => ClickBlok(idx)}
               sx={{ marginBottom: 0.5, height: 155 }}
             >
-              Здесь будет график направления {nameIn + (idx + 1)}
+              Здесь будет график направления <b>{nameIn + (idx + 1)}</b>
             </Box>
           </Box>
           <Box sx={styleWindPK02}>
@@ -132,7 +144,7 @@ const MapWindPK = (props: {
 
           <Box sx={styleWindPK02}>
             Насыщенность зелёного = <b>{value}</b>%
-            <Box sx={{ width: 200 }}>
+            <Box sx={{ width: 200, height: 40 }}>
               <Slider
                 value={value}
                 onChange={handleSliderChange}
@@ -140,7 +152,7 @@ const MapWindPK = (props: {
                 disabled={true}
               />
             </Box>
-            <Grid container sx={{ height: window.innerHeight * 0.024 }}>
+            <Grid container sx={{ height: window.innerHeight * 0.015 }}>
               <Grid item xs={3} sx={{ bgcolor: "#C2ECAE" }}></Grid>
               <Grid item xs={3} sx={{ bgcolor: "#9DDB59" }}></Grid>
               <Grid item xs={3} sx={{ bgcolor: "#69A824" }}></Grid>
@@ -190,6 +202,30 @@ const MapWindPK = (props: {
     );
   };
 
+  const ViewImg = (idx: number) => {
+    const handleClose = () => {
+      setOpenImg(false);
+    };
+
+    const CloseEnd = (event: any, reason: string) => {
+      if (reason === "escapeKeyDown") handleClose();
+    };
+
+    return (
+      <Modal open={openImg} onClose={CloseEnd} hideBackdrop={false}>
+        <Box sx={stylePKForm01}>
+          <Button sx={styleModalEndBind} onClick={() => handleClose()}>
+            <b>&#10006;</b>
+          </Button>
+          <Box sx={styleWindPK04}>
+            Картинка перекрёстка <b>{props.route.targetID}</b> с направлением{" "}
+            <b>{nameIn + (idx + 1)}</b>
+          </Box>
+        </Box>
+      </Modal>
+    );
+  };
+
   const ViewGraf = (idx: number) => {
     const handleClose = () => {
       setOpenGraf(false);
@@ -206,7 +242,7 @@ const MapWindPK = (props: {
             <b>&#10006;</b>
           </Button>
           <Box sx={styleWindPK04}>
-            <b>График направления {nameIn + (idx + 1)}</b>
+            График направления <b>{nameIn + (idx + 1)}</b>
           </Box>
         </Box>
       </Modal>
@@ -224,6 +260,7 @@ const MapWindPK = (props: {
       ) : (
         <Box sx={styleWindPK00(1)}>{ContentInfo()}</Box>
       )}
+      {openImg && <>{ViewImg(IDX)} </>}
       {openGraf && <>{ViewGraf(IDX)} </>}
     </>
   );

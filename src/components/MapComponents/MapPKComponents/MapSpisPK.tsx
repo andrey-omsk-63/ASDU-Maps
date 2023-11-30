@@ -16,6 +16,7 @@ import MapViewPK from "./MapViewPK";
 import { styleModalEnd, MakeStyleFormPK00 } from "../../MainMapStyle";
 import { styleFormPK01, MakeStylSpisPK01 } from "../../MainMapStyle";
 import { StylSpisPK02, styleSpisPK03, StylSpisPK022 } from "../../MainMapStyle";
+import { PLANER } from "../../MainMapGl";
 //import { styleSpisPK04 } from "../../MainMapStyle";
 
 let flagDel = 0;
@@ -121,7 +122,6 @@ const MapSpisPK = (props: {
   };
 
   const MarkPlan = (idx: number) => {
-    console.log("###:", idx);
     if (massSpis[idx].del) {
       soobErr =
         "План координации № " + massSpis[idx].nom + " помечен на удаление";
@@ -208,7 +208,7 @@ const MapSpisPK = (props: {
   //========================================================
   return (
     <>
-      <Box sx={MakeStyleFormPK00(696)}>
+      <Box sx={MakeStyleFormPK00(696, PLANER)}>
         <Button sx={styleModalEnd} onClick={() => CloseEnd()}>
           <b>&#10006;</b>
         </Button>

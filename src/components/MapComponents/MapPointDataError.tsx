@@ -53,13 +53,11 @@ let nameFrom = "";
 let nameIn = "";
 
 const MapPointDataError = (props: {
-  sErr: string;
   setOpen: any;
-  //ws: any;
+  sErr: string;
   fromCross: any;
   toCross: any;
   update: any;
-  //svg: any;
   setSvg: any;
 }) => {
   //console.log("MapPointDataError_svg:", props.svg);

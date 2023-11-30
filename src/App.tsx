@@ -19,6 +19,8 @@ import {
   SoobErrorDeleteWayFromPoint,
 } from "./components/MapSocketFunctions";
 
+import { ZONE } from "./components/MapConst";
+
 import { PlanCoord } from "./interfacePlans.d";
 //import { DatePlan } from "./interfacePlans.d";
 //import { DateRoute } from "./interfaceRoute.d";
@@ -68,7 +70,7 @@ export interface Directions {
   offsetEndGreen: number; // Смещ.конца зелёного(сек)
   intensFl: number; // Интенсивность пост.потока(т.е./ч.)
   phases: Array<number>; // зелёные фазы для данного направления
-  edited: boolean; // 
+  edited: boolean; //
   opponent: string; // Левый поворот конкурирует с направлением...
 }
 
@@ -288,8 +290,13 @@ const App = () => {
   }, [dispatch, massdk, coordinates, svg, trigger]);
 
   if (WS.url === "wss://localhost:3000/W" && flagOpen) {
-    console.log("РЕЖИМ ОТЛАДКИ!!!");
+    console.log("РЕЖИМ ОТЛАДКИ!!!", dataMap.tflight);
     dateMapGl = dataMap;
+    if (ZONE) {
+      dateMapGl.tflight = dataMap.tflight.filter(
+        (user) => user.area.num === ZONE.toString()
+      );
+    }
     dispatch(mapCreate(dateMapGl));
     dateRouteGl = { ...dataRoute.data };
     dateRouteProGl = { ...dataRoute.data };

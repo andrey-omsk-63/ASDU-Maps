@@ -44,7 +44,7 @@ import { SendSocketCreateWay, SendSocketGetSvg } from "./MapSocketFunctions";
 import { SendSocketCreateWayFromPoint } from "./MapSocketFunctions";
 import { SendSocketCreateWayToPoint } from "./MapSocketFunctions";
 
-import { YMapsModul, MyYandexKey } from "./MapConst";
+import { YMapsModul, MyYandexKey, ZONE } from "./MapConst";
 
 export let AREA = "0"; // район  0 - все районы
 export let MODE = "-1"; // режим работы - меню режимов  0 - заголовок
@@ -52,10 +52,13 @@ export let PK = "0"; // режим работы - меню ПК и моделе�
 export let FORM = "0"; // какую форму нужно выдать через диспетчер
 export let homeRegion: any = 0;
 export let debug: boolean = false;
+export let SubArea: Array<number> = []; // массив подрайонов
+export let SUBAREA = "0"; // выбранный паодрайон  0 - все подрайоны
 export let MASSPK: any = []; // массив 'подсвечиваемых' перекрёстков
 export let BALLOON: boolean = true; // разрешение/запрет на выдачу балуна
 export let PLANER: number = 0; // номер выбраного ПК
 export let masSvg: any = ["", ""]; // массив изображений перекрёстков для RouteBind
+export let SumArea: number = 1; // количество подрайонов
 let coordStart: any = []; // рабочий массив коллекции входящих связей
 let coordStop: any = []; // рабочий массив коллекции входящих связей
 let coordStartIn: any = []; // рабочий массив коллекции исходящих связей
@@ -151,7 +154,6 @@ const MainMap = (props: {
   const [openWaysForm, setOpenWaysForm] = React.useState(false);
   const [openPKForm, setOpenPKForm] = React.useState(false);
   const [openPKSpis, setOpenPKSpis] = React.useState(false);
-  //const [openPKWind, setOpenPKWind] = React.useState(false);
   const [dispPKForm, setDispPKForm] = React.useState(false);
   const [openEr, setOpenEr] = React.useState(false);
   const [openBind, setOpenBind] = React.useState(false);
@@ -200,9 +202,9 @@ const MainMap = (props: {
         if (rec.area === arIn && rec.id === idIn) pointAaIndex = i;
         if (rec.area === arOn && rec.id === idOn) pointBbIndex = i;
       }
-      flagBind = true;
+      //flagBind = true;
       modeBind = 3; // режим открытия RouteBind
-      setOpenBind(true);
+      setOpenBind((flagBind = true));
     },
     [WS, massroute.vertexes]
   );
@@ -231,11 +233,10 @@ const MainMap = (props: {
   const ZeroRoute = React.useCallback(
     (mode: boolean) => {
       pointAa = pointBb = 0;
-      pointAaIndex = pointBbIndex = -1;
-      //nomRoute = -1;
+      pointAaIndex = idxPKForm = pointBbIndex = -1;
       DelCollectionRoutes();
-      flagBind = false;
-      setFlagRoute(false);
+      //flagBind = false;
+      setFlagRoute((flagBind = false));
       setFlagPusk(mode);
       setOpenVertForm(false);
       setOpenWaysForm(false);
@@ -243,8 +244,7 @@ const MainMap = (props: {
       setRoutePKW(null);
       BALLOON = true; // разрешение на выдачу балуна
       setOpenPKSpis(false);
-      //MASSPK = [];
-      idxPKForm = -1;
+      //idxPKForm = -1;
       HandlLockUp(false); // разблокировка меню районов и меню режимов
       ymaps && addRoute(ymaps); // перерисовка связей
     },
@@ -252,7 +252,6 @@ const MainMap = (props: {
   );
 
   const ZeroMenuPK = (nom: number, spis: any) => {
-    console.log('###:',spis)
     PLANER = nom;
     MASSPK = spis;
     ZeroRoute(false);
@@ -336,8 +335,8 @@ const MainMap = (props: {
     ChangeCrossFunc(fromCross, toCross); // поменялось внутри func через ссылки React
     if (DoublRoute(massroute.ways, pointAa, pointBb)) {
       SoobOpenSetEr("Дубликатная связь");
-      ZeroRoute(false);
-      noDoublRoute = false;
+      ZeroRoute((noDoublRoute = false));
+      //noDoublRoute = false;
     } else {
       MakeСollectionRoute(true);
       setRevers(!revers); // ререндер
@@ -348,15 +347,14 @@ const MainMap = (props: {
   const BeginPK = () => {
     ZeroRoute(false);
     if (AREA === "0") {
-      AREA = "1";
-      setCurrency("1");
+      setCurrency((AREA = "1"));
       FillMassRoute();
     }
   };
 
   const TurnOnDemoRoute = () => {
-    setFlagDemo(true);
-    FlagDemo = true;
+    setFlagDemo((FlagDemo = true));
+    //FlagDemo = true;
     FillMassRoute();
     ymaps && addRoute(ymaps); // перерисовка связей
   };
@@ -383,8 +381,8 @@ const MainMap = (props: {
         flagRevers = true;
         break;
       case 35: // отказ от создания реверсной связи
-        flagRevers = false;
-        setMakeRevers(false);
+        //flagRevers = false;
+        setMakeRevers((flagRevers = false));
         ZeroRoute(false);
         break;
       case 36: // реверс связи + привязка направлений + сохранение связи
@@ -395,8 +393,8 @@ const MainMap = (props: {
         if (ReversRoute()) {
           const ReadyRoute = () => {
             if (activeRoute) {
-              needLinkBind = true;
-              setOpenInf(true);
+              //needLinkBind = true;
+              setOpenInf((needLinkBind = true));
             } else {
               setTimeout(() => {
                 ReadyRoute();
@@ -422,8 +420,8 @@ const MainMap = (props: {
         break;
       case 201: // список всех ПК
         BeginPK();
-        datestat.needMenuForm = true; // выдавать меню форм
-        HandlLockUp(true); // блокировка меню районов и меню режимов
+        //datestat.needMenuForm = true; // выдавать меню форм
+        HandlLockUp((datestat.needMenuForm = true)); // выдавать меню форм / блокировка меню районов и меню режимов
         setOpenPKSpis(true);
         TurnOnDemoRoute();
         break;
@@ -439,8 +437,6 @@ const MainMap = (props: {
         setDispPKForm(true);
         break;
       case 212: // выбор режима работы
-        // if (MODE === "2") setOpenPKWind(true);
-        // if (MODE !== "2") setOpenPKWind(false);
         ZeroRoute(false);
     }
   };
@@ -610,7 +606,6 @@ const MainMap = (props: {
   };
 
   const ContentContextmenu = (e: any) => {
-    console.log("MODE:", MODE);
     newPointCoord = e.get("coords");
     idxDel = NearestPoint(massdk, newPointCoord);
     if (MODE === "1") {
@@ -690,9 +685,13 @@ const MainMap = (props: {
   };
 
   const handleChangeArea = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrency(event.target.value);
-    AREA = event.target.value;
-    PressButton(121);
+    if (Number(event.target.value) > SumArea) {
+      console.log("Здесь будет добавление района");
+    } else {
+      setCurrency(event.target.value);
+      AREA = event.target.value;
+      PressButton(121);
+    }
   };
 
   const handleChangeMode = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -704,7 +703,6 @@ const MainMap = (props: {
     setCurrencyMode(event.target.value);
     setCurrencyPK("0"); // переключение меню ПК и моделей на заголовок
     MODE = mode.toString();
-    console.log("MODE:", MODE); //=================================================
     MODE === "0" && TurnOnDemoRoute(); // влючение ФС
     PressButton(212);
   };
@@ -713,7 +711,6 @@ const MainMap = (props: {
     let pk = Number(event.target.value);
     if (!pk) pk++;
     setCurrencyPK(pk.toString());
-    // setCurrencyPK('0'); // переключение меню 'ПК и модели' на заголовок
     setCurrencyMode("0"); // переключение меню 'Перекрёстки и связи' на заголовок
     PK = pk.toString();
     MODE = "2";
@@ -734,8 +731,8 @@ const MainMap = (props: {
     HandlLockUp(true); // блокировка меню районов и меню режимов
     if (!mode) {
       VertexForma = null;
-      openEF = false;
-      ZeroRoute(false);
+      //openEF = false;
+      ZeroRoute((openEF = false));
     } else {
       VertexForma = forma;
       openEF = openErr;
@@ -756,25 +753,25 @@ const MainMap = (props: {
     setCurrency(AREA);
     FillMassRoute();
     ymaps && addRoute(ymaps); // перерисовка связей
-    setOpenPKSpis(false); // закрытие списка планов
+    //BALLOON = false; // запрет на выдачу балуна
+    setOpenPKSpis((BALLOON = false)); // запрет на выдачу балуна / закрытие списка планов
     datestat.needMenuForm = false; //  не выдавать меню форм
     dispatch(statsaveCreate(datestat));
     HandlLockUp(true); // блокировка меню районов и меню режимов
-    BALLOON = false; // запрет на выдачу балуна
     setOpenPKForm(true); // окрытие MapCreatePK
     TurnOnDemoRoute();
   };
 
   const SetPuskMenu = (mode: number) => {
-    datestat.needMenuForm = true; // выдавать меню форм
-    HandlLockUp(true); // блокировка меню районов и меню режимов
+    //datestat.needMenuForm = true; // выдавать меню форм
+    HandlLockUp((datestat.needMenuForm = true)); // выдавать меню форм / блокировка меню районов и меню режимов
     setOpenPKSpis(true); // открытие списка планов
     TurnOnDemoRoute();
   };
 
   const SetDispPKForm = (mode: boolean) => {
-    FORM = "0";
-    setCurrencyForm("0");
+    //FORM = "0";
+    setCurrencyForm((FORM = "0"));
     setDispPKForm(mode);
   };
   //=== инициализация ======================================
@@ -794,6 +791,16 @@ const MainMap = (props: {
     pointCenter = CenterCoordBegin(map);
     let homeReg = map.dateMap.regionInfo[homeRegion]; // подготовка ввода района
     currencies = PreparCurrencies(map.dateMap.areaInfo[homeReg]); // для меню подрайонов
+
+    let massVert = map.dateMap.tflight;
+    for (let i = 0; i < massVert.length; i++) {
+      if (SubArea.indexOf(massVert[i].subarea) < 0)
+      SubArea.push(massVert[i].subarea);
+    }
+    SubArea.sort((a, b) => a - b); // сортировка по возрастанию
+    console.log("massSubarea:", SubArea);
+
+    SumArea = Object.keys(map.dateMap.areaInfo[homeReg]).length;
     currenciesMode = PreparCurrenciesMode(); // для меню подрайонов режимов работы
     currenciesPK = PreparCurrenciesPK(); // для меню ПК и модели
     currenciesForm = PreparCurrenciesForm(); // для меню диспетчера форм
@@ -912,8 +919,8 @@ const MainMap = (props: {
             )}
             {openEr && (
               <MapPointDataError
-                sErr={soobError}
                 setOpen={setOpenEr}
+                sErr={soobError}
                 fromCross={fromCross}
                 toCross={toCross}
                 update={UpdateAddRoute}
@@ -922,10 +929,10 @@ const MainMap = (props: {
             )}
             {openInf && (
               <MapRouteInfo
+                setOpen={setOpenInf}
                 activeRoute={activeRoute}
                 idxA={pointAaIndex}
                 idxB={pointBbIndex}
-                setOpen={setOpenInf}
                 reqRoute={reqRoute}
                 setReqRoute={SetReqRoute}
                 needLinkBind={needLinkBind}

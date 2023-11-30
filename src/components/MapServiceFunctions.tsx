@@ -36,7 +36,7 @@ import { styleFormPK03 } from "./MainMapStyle";
 import { styleModalMenuErr, styleHeadError } from "./MapPointDataErrorStyle";
 import { styleBoxFormArea, styleSetArea } from "./MapPointDataErrorStyle";
 
-import { debug, AREA, MODE, MASSPK, PLANER } from "./MainMapGl";
+import { debug, AREA, MODE, MASSPK, PLANER, SumArea } from "./MainMapGl";
 
 export const handleKey = (event: any) => {
   if (event.key === "Enter") event.preventDefault();
@@ -364,6 +364,11 @@ export const PreparCurrencies = (dat: any) => {
     maskCurrencies.label = massDat[i];
     currencies.push({ ...maskCurrencies });
   }
+  if (debug) {
+    maskCurrencies.value = (massKey.length + 1).toString();
+    maskCurrencies.label = "Добавить район";
+    currencies.push({ ...maskCurrencies });
+  }
   return currencies;
 };
 
@@ -401,13 +406,25 @@ export const InputMenu = (func: any, currency: any, currencies: any) => {
             onChange={func}
             InputProps={{
               disableUnderline: true,
-              style: { fontWeight: 700, marginLeft: 10, fontSize: 14 },
+              style: {
+                fontWeight: 700,
+                color:
+                  currency === (SumArea + 1).toString() ? "green" : "black",
+                marginLeft: 10,
+                fontSize: 14,
+              },
             }}
             variant="standard"
             color="secondary"
           >
             {currencies.map((option: any) => (
-              <MenuItem key={option.value} value={option.value}>
+              <MenuItem
+                key={option.value}
+                value={option.value}
+                sx={{
+                  color: option.label === "Добавить район" ? "green" : "black",
+                }}
+              >
                 {option.label}
               </MenuItem>
             ))}

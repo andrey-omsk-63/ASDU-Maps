@@ -26,10 +26,10 @@ let maskRoute: any = {
 };
 
 const MapRouteInfo = (props: {
+  setOpen: any;
   activeRoute: any;
   idxA: number;
   idxB: number;
-  setOpen: any;
   reqRoute: any;
   setReqRoute: any;
   needLinkBind: boolean;
@@ -39,10 +39,6 @@ const MapRouteInfo = (props: {
     const { massdkReducer } = state;
     return massdkReducer.massdk;
   });
-  //========================================================
-
-  const [openSetInf, setOpenSetInf] = React.useState(true);
-
   //=== инициализация ======================================
   if (dlRoute1 === 0) {
     maskRoute = props.reqRoute;
@@ -57,6 +53,7 @@ const MapRouteInfo = (props: {
     sRouteBegin = sRoute1;
   }
   //========================================================
+  const [openSetInf, setOpenSetInf] = React.useState(true);
   const [valueDl, setValueDl] = React.useState(dlRoute1);
   const [valueTm, setValueTm] = React.useState(sec);
 
