@@ -1,25 +1,21 @@
-import * as React from "react";
-import { useSelector } from "react-redux";
+import * as React from 'react';
+import { useSelector } from 'react-redux';
 
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
 
-import { styleModalEnd, styleSpisPK05 } from "../../MainMapStyle";
-import { styleFormPK01, styleSpisPK04 } from "../../MainMapStyle";
-import { MakeStylSpisPK06 } from "../../MainMapStyle";
+import { styleModalEnd, styleSpisPK05 } from '../../MainMapStyle';
+import { styleFormPK01, styleSpisPK04 } from '../../MainMapStyle';
+import { MakeStylSpisPK06 } from '../../MainMapStyle';
 
-const MapViewPK = (props: {
-  view: boolean;
-  idx: number;
-  handleClose: Function;
-}) => {
+const MapViewPK = (props: { view: boolean; idx: number; handleClose: Function }) => {
   //== Piece of Redux =======================================
-  const map = useSelector((state: any) => {
-    const { mapReducer } = state;
-    return mapReducer.map;
-  });
+  // const map = useSelector((state: any) => {
+  //   const { mapReducer } = state;
+  //   return mapReducer.map;
+  // });
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
     return massrouteReducer.massroute;
@@ -28,23 +24,24 @@ const MapViewPK = (props: {
     const { massplanReducer } = state;
     return massplanReducer.massplan;
   });
+  console.log('massplan:', massplan);
   //=== инициализация ======================================
   let plan = massplan.plans[props.idx];
-  let nameArea = "";
-  for (let i = 0; i < map.dateMap.tflight.length; i++) {
-    let num = Number(map.dateMap.tflight[i].area.num);
-    if (num === plan.areaPK) {
-      nameArea = map.dateMap.tflight[i].area.nameArea;
-      break;
-    }
-  }
+  let nameArea = '';
+  // for (let i = 0; i < map.dateMap.tflight.length; i++) {
+  //   let num = Number(map.dateMap.tflight[i].area.num);
+  //   if (num === plan.areaPK) {
+  //     nameArea = map.dateMap.tflight[i].area.nameArea;
+  //     break;
+  //   }
+  // }
   //========================================================
   const handleClose = () => {
     props.handleClose(false);
   };
 
   const CloseEnd = (event: any, reason: string) => {
-    if (reason === "escapeKeyDown") handleClose();
+    if (reason === 'escapeKeyDown') handleClose();
   };
 
   const ExitArrowView = (id: number) => {
@@ -63,7 +60,7 @@ const MapViewPK = (props: {
       }
     }
     return (
-      <Box sx={{ color: !have ? "#F1F5FB" : "#9265ff" }}>
+      <Box sx={{ color: !have ? '#F1F5FB' : '#9265ff' }}>
         <b>⬇</b>
       </Box>
     );
@@ -84,7 +81,7 @@ const MapViewPK = (props: {
       }
     }
     return (
-      <Box sx={{ color: !have ? "#F1F5FB" : "#7dc36b" }}>
+      <Box sx={{ color: !have ? '#F1F5FB' : '#7dc36b' }}>
         <b>⬆</b>
       </Box>
     );
@@ -93,7 +90,7 @@ const MapViewPK = (props: {
   const StrokaPK = () => {
     let resStr = [];
     for (let i = 0; i < plan.coordPlan.length; i++) {
-      let nameVert = "";
+      let nameVert = '';
       for (let j = 0; j < massroute.vertexes.length; j++) {
         if (
           massroute.vertexes[j].area === plan.areaPK &&
@@ -105,19 +102,19 @@ const MapViewPK = (props: {
       }
       resStr.push(
         <Grid key={i} container sx={{ marginBottom: 1.5 }}>
-          <Grid item xs={0.6} sx={{ padding: "1px 0px 1px 5px", border: 0 }}>
-            <Box sx={{ display: "flex", justifyContent: "left" }}>
+          <Grid item xs={0.6} sx={{ padding: '1px 0px 1px 5px', border: 0 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'left' }}>
               {ExitArrowView(plan.coordPlan[i].id)}
               {InputArrowView(plan.coordPlan[i].id)}
             </Box>
           </Grid>
-          <Grid item xs={1} sx={{ padding: "1px 0px 1px 5px", border: 0 }}>
+          <Grid item xs={1} sx={{ padding: '1px 0px 1px 5px', border: 0 }}>
             {plan.coordPlan[i].id}
           </Grid>
           <Grid item xs sx={{ border: 0 }}>
             {nameVert}
           </Grid>
-        </Grid>
+        </Grid>,
       );
     }
     return resStr;
@@ -142,7 +139,7 @@ const MapViewPK = (props: {
         </Box>
         <Box sx={styleSpisPK05}>
           <Box sx={{}}>
-            <b>Pайон: {plan.areaPK}</b> &nbsp;
+            <b>Подрайон: {plan.subareaPK}</b> &nbsp;
           </Box>
           <Box sx={{ fontSize: 15 }}>
             <em>{nameArea}</em>

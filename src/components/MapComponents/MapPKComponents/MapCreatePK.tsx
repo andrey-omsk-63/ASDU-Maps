@@ -1,28 +1,28 @@
-import * as React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { massplanCreate, statsaveCreate } from "./../../../redux/actions";
+import * as React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { massplanCreate, statsaveCreate } from './../../../redux/actions';
 
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 //import TextField from "@mui/material/TextField";
 
-import MapPointDataError from "./../MapPointDataError";
+import MapPointDataError from './../MapPointDataError';
 
-import { BadExit, UniqueName, InputFromList } from "../../MapServiceFunctions";
-import { PreparCurrenciesPlan, InputNamePK } from "../../MapServiceFunctions";
-import { SaveFormPK, InputArrow, ExitArrow } from "../../MapServiceFunctions";
-import { SubareaFindById } from "../../MapServiceFunctions";
+import { BadExit, UniqueName, InputFromList } from '../../MapServiceFunctions';
+import { PreparCurrenciesPlan, InputNamePK } from '../../MapServiceFunctions';
+import { SaveFormPK, InputArrow, ExitArrow } from '../../MapServiceFunctions';
+import { SubareaFindById } from '../../MapServiceFunctions';
 
-import { AREA, SUBAREA, MASSPK, PLANER } from "../../MainMapGl";
-import { SUMPK } from "../../MapConst";
+import { AREA, SUBAREA, MASSPK, PLANER } from '../../MainMapGl';
+import { SUMPK } from '../../MapConst';
 
-import { PlanCoord } from "../../../interfacePlans.d"; // интерфейс
+import { PlanCoord } from '../../../interfacePlans.d'; // интерфейс
 
-import { styleModalEnd, MakeStyleFormPK00 } from "../../MainMapStyle";
-import { styleFormPK01, styleFormPK04 } from "../../MainMapStyle";
-import { MakeStyleFormPK022, styleFormPK05 } from "../../MainMapStyle";
-import { styleFormPK06 } from "../../MainMapStyle";
+import { styleModalEnd, MakeStyleFormPK00 } from '../../MainMapStyle';
+import { styleFormPK01, styleFormPK04 } from '../../MainMapStyle';
+import { MakeStyleFormPK022, styleFormPK05 } from '../../MainMapStyle';
+import { styleFormPK06 } from '../../MainMapStyle';
 
 interface Stroka {
   area: number;
@@ -31,14 +31,14 @@ interface Stroka {
 }
 
 let HAVE = 0;
-let startPlan: string = "0";
+let startPlan: string = '0';
 let massPkId: any = [];
 let massPkIdOld: any = [];
 let isOpen = false;
 let oldSubArea = -1;
 let oldIdx = -2;
-let nameArea = "";
-let soobErr = "";
+let nameArea = '';
+let soobErr = '';
 let EscClinch = false;
 let needSort = false;
 let oldPK = -1;
@@ -48,19 +48,19 @@ let NewCoordPlan: PlanCoord = {
   nomPK: 0,
   areaPK: 0,
   subareaPK: 0,
-  namePK: "",
+  namePK: '',
   coordPlan: [],
 };
 
 let massBoard = [
   {
     ID: 0,
-    title: "Откуда",
+    title: 'Откуда',
     items: [],
   },
   {
     ID: 1,
-    title: "Куда",
+    title: 'Куда',
     items: [],
   },
 ];
@@ -99,10 +99,11 @@ const MapCreatePK = (props: {
   const [currentItem, setCurrentItem] = React.useState<any>(null);
   const [trigger, setTrigger] = React.useState(false);
 
-  let subAreA = SUBAREA === "0" ? 1 : Number(SUBAREA);
-  subAreA = props.idx < 0 ? subAreA : massplan.plans[props.idx].areaPK;
+  let subAreA = SUBAREA === '0' ? 1 : Number(SUBAREA);
+  subAreA = props.idx < 0 ? subAreA : massplan.plans[props.idx].subareaPK;
+  console.log('&&&&&&', props.idx, subAreA, SUBAREA);
   const sumPlan = SUMPK;
-  const modeWork = props.idx < 0 ? "create" : "edit";
+  const modeWork = props.idx < 0 ? 'create' : 'edit';
 
   const CloseEnd = React.useCallback(() => {
     HAVE = 0;
@@ -110,7 +111,7 @@ const MapCreatePK = (props: {
     isOpen = false;
     massPkId = [];
 
-    if (modeWork === "edit" || datestat.needMenuForm) {
+    if (modeWork === 'edit' || datestat.needMenuForm) {
       props.setPuskMenu(NewCoordPlan.nomPK); // перезапуск меню ПК
       if (oldPK !== NewCoordPlan.nomPK) {
         datestat.nomMenu = NewCoordPlan.nomPK; //  активная строка списка ПК
@@ -148,18 +149,18 @@ const MapCreatePK = (props: {
       let massNumPk: Array<number> = [];
       oldPK = -1;
       //============
-      if (modeWork === "create") {
-        startPlan = "0";
+      if (modeWork === 'create') {
+        startPlan = '0';
         // создания списка свободных номеров ПК
         for (let i = 0; i < massplan.plans.length; i++) {
           for (let j = 0; j < sumPlan; j++) {
-            if (j + 1 === massplan.plans[i].nomPK)
-              massNumPk.push(massplan.plans[i].nomPK);
+            if (j + 1 === massplan.plans[i].nomPK) massNumPk.push(massplan.plans[i].nomPK);
           }
         }
         currenciesPlan = PreparCurrenciesPlan(sumPlan, massNumPk);
         NewCoordPlan.nomPK = Number(currenciesPlan[0].label);
-        NewCoordPlan.namePK = "План координации " + UniqueName();
+        NewCoordPlan.namePK = 'План координации ' + UniqueName();
+        NewCoordPlan.areaPK = Number(AREA);
       } else {
         NewCoordPlan.nomPK = massplan.plans[props.idx].nomPK;
         oldPK = NewCoordPlan.nomPK;
@@ -167,10 +168,7 @@ const MapCreatePK = (props: {
         // создания списка свободных номеров ПК
         for (let i = 0; i < massplan.plans.length; i++) {
           for (let j = 0; j < sumPlan; j++) {
-            if (
-              j + 1 === massplan.plans[i].nomPK &&
-              j + 1 !== NewCoordPlan.nomPK
-            )
+            if (j + 1 === massplan.plans[i].nomPK && j + 1 !== NewCoordPlan.nomPK)
               massNumPk.push(massplan.plans[i].nomPK);
           }
         }
@@ -199,6 +197,10 @@ const MapCreatePK = (props: {
           } else massExist.push(maskVert); // правое окно
         }
       }
+
+      console.log('massVert:', subAreA, massVert);
+      console.log('massExist:', massExist);
+
       massVert.sort(function Func(a: any, b: any) {
         return b.id < a.id ? 1 : b.id > a.id ? -1 : 0;
       });
@@ -218,7 +220,7 @@ const MapCreatePK = (props: {
     }
   }
   //========================================================
-  console.log('massBoard:',massBoard)
+  console.log('massBoard:', massBoard);
   const [boards, setBoards] = React.useState(massBoard);
   const [valuen, setValuen] = React.useState(NewCoordPlan.namePK);
   const [currencyPlan, setCurrencyPlan] = React.useState(startPlan);
@@ -226,9 +228,7 @@ const MapCreatePK = (props: {
   //=== Функции - обработчики ==============================
   const handleChangePlan = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrencyPlan(event.target.value);
-    NewCoordPlan.nomPK = Number(
-      currenciesPlan[Number(event.target.value)].label
-    );
+    NewCoordPlan.nomPK = Number(currenciesPlan[Number(event.target.value)].label);
     HAVE++;
     needSort = true;
   };
@@ -252,8 +252,8 @@ const MapCreatePK = (props: {
           };
           NewCoordPlan.coordPlan.push(mask);
         }
-        console.log('NewCoordPlan:',needSort,NewCoordPlan)
-        if (modeWork === "create") {
+        console.log('NewCoordPlan:', needSort, NewCoordPlan);
+        if (modeWork === 'create') {
           massplan.plans.push({ ...NewCoordPlan }); // режим создания ПК
           massplan.plans.sort(function FuncSort(a: any, b: any) {
             return b.nomPK < a.nomPK ? 1 : b.nomPK > a.nomPK ? -1 : 0;
@@ -274,7 +274,7 @@ const MapCreatePK = (props: {
         console.log('Finish:', massplan);
         CloseEnd();
       } else {
-        soobErr = "Количество перекрёстков в плане не может быть меньше 1-го";
+        soobErr = 'Количество перекрёстков в плане не может быть меньше 1-го';
         setOpenSetErr(true);
       }
     } else handleCloseBad();
@@ -282,19 +282,19 @@ const MapCreatePK = (props: {
   //=== Drag and Drop ======================================
   const dragOverHandler = (e: any, board: any) => {
     e.preventDefault();
-    e.target.className === "MuiBox-root css-3pfbt1" &&
+    e.target.className === 'MuiBox-root css-3pfbt1' &&
       currentBoard.ID === board.ID &&
-      (e.target.style.backgroundColor = "#bae186"); // тёмно салатовый
+      (e.target.style.backgroundColor = '#bae186'); // тёмно салатовый
   };
 
   const dragLeaveHandler = (e: any) => {
-    e.target.style.backgroundColor = "#F8FCF3"; // светло светло салатовый
+    e.target.style.backgroundColor = '#F8FCF3'; // светло светло салатовый
   };
 
   const dragStartHandler = (e: any, board: any, item: any) => {
     setCurrentBoard(board);
     setCurrentItem(item);
-    e.target.style.backgroundColor = "#bae186"; // тёмно салатовый
+    e.target.style.backgroundColor = '#bae186'; // тёмно салатовый
   };
 
   const dropHandler = (e: any, board: any, item: any) => {
@@ -303,11 +303,11 @@ const MapCreatePK = (props: {
     //console.log("currentBoard.ID:", currentBoard.ID);
     if (currentIndex >= 0 && board.ID !== currentBoard.ID) {
       currentBoard.items.splice(currentIndex, 1);
-      console.log("currentBoard.ID:", currentBoard.ID);
+      console.log('currentBoard.ID:', currentBoard.ID);
       if (currentBoard.ID) {
         massPkId.splice(currentIndex, 1); // удаление из правого окна
         props.SetMass(massPkId, subAreA);
-        console.log("massPkId:", massPkId);
+        console.log('massPkId:', massPkId);
       }
       HAVE++;
     }
@@ -318,9 +318,9 @@ const MapCreatePK = (props: {
         if (b.ID === board.ID) return board;
         if (b.ID === currentBoard.ID) return currentBoard;
         return b;
-      })
+      }),
     );
-    e.target.style.backgroundColor = "#F8FCF3"; // светло светло салатовый
+    e.target.style.backgroundColor = '#F8FCF3'; // светло светло салатовый
   };
 
   const dropCardHandler = (e: any, board: any) => {
@@ -345,13 +345,13 @@ const MapCreatePK = (props: {
           if (b.ID === board.ID) return board;
           if (b.ID === currentBoard.ID) return currentBoard;
           return b;
-        })
+        }),
       );
     }
   };
   //========================================================
   const HeaderFormPK = () => {
-    let soob = modeWork === "create" ? "Создание нового " : "Корректировка ";
+    let soob = modeWork === 'create' ? 'Создание нового ' : 'Корректировка ';
     return (
       <>
         <Box sx={styleFormPK01}>
@@ -441,15 +441,15 @@ const MapCreatePK = (props: {
   //=== обработка Esc ======================================
   const escFunction = React.useCallback((event) => {
     if (event.keyCode === 27) {
-      console.log("ESC!!!", HAVE);
+      console.log('ESC!!!', HAVE);
       EscClinch = true;
       event.preventDefault();
     }
   }, []);
 
   React.useEffect(() => {
-    document.addEventListener("keydown", escFunction);
-    return () => document.removeEventListener("keydown", escFunction);
+    document.addEventListener('keydown', escFunction);
+    return () => document.removeEventListener('keydown', escFunction);
   }, [escFunction]);
   //========================================================
   return (
@@ -465,8 +465,7 @@ const MapCreatePK = (props: {
             key={board.ID}
             sx={MakeStyleFormPK022(board.ID)}
             onDragOver={(e) => dragOverHandler(e, board)}
-            onDrop={(e) => dropCardHandler(e, board)}
-          >
+            onDrop={(e) => dropCardHandler(e, board)}>
             {board.items.map((item: any) => (
               <Box
                 key={item.id}
@@ -475,10 +474,9 @@ const MapCreatePK = (props: {
                 onDragLeave={(e) => dragLeaveHandler(e)}
                 onDragStart={(e) => dragStartHandler(e, board, item)}
                 onDrop={(e) => dropHandler(e, board, item)}
-                draggable={true}
-              >
+                draggable={true}>
                 {board.ID === 1 && (
-                  <Box sx={{ display: "flex", justifyContent: "left" }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'left' }}>
                     {ExitArrow(board, item.id, massroute)}
                     {InputArrow(board, item.id, massroute)}
                   </Box>

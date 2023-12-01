@@ -15,10 +15,10 @@ import { stylePKForm04 } from '../../MainMapStyle';
 
 const MapFormPK04 = (props: { view: boolean; handleClose: Function }) => {
   //== Piece of Redux =======================================
-  const map = useSelector((state: any) => {
-    const { mapReducer } = state;
-    return mapReducer.map;
-  });
+  // const map = useSelector((state: any) => {
+  //   const { mapReducer } = state;
+  //   return mapReducer.map;
+  // });
   let massplan = useSelector((state: any) => {
     const { massplanReducer } = state;
     return massplanReducer.massplan;
@@ -30,14 +30,14 @@ const MapFormPK04 = (props: { view: boolean; handleClose: Function }) => {
   });
   //=== инициализация ======================================
   let plan = massplan.plans[datestat.idxMenu];
-  let nameArea = '';
-  for (let i = 0; i < map.dateMap.tflight.length; i++) {
-    let num = Number(map.dateMap.tflight[i].area.num);
-    if (num === plan.areaPK) {
-      nameArea = map.dateMap.tflight[i].area.nameArea;
-      break;
-    }
-  }
+  //let nameArea = '';
+  // for (let i = 0; i < map.dateMap.tflight.length; i++) {
+  //   let num = Number(map.dateMap.tflight[i].area.num);
+  //   if (num === plan.areaPK) {
+  //     nameArea = map.dateMap.tflight[i].area.nameArea;
+  //     break;
+  //   }
+  // }
   //========================================================
   const handleClose = () => {
     props.handleClose(false);
@@ -118,14 +118,14 @@ const MapFormPK04 = (props: { view: boolean; handleClose: Function }) => {
             </Box>
           </Grid>
           <Grid item xs sx={{ textAlign: 'right', border: 0 }}>
-            <Box sx={{ position: 'absolute', right: '15px', border: 0 }}>
+            <Box sx={{ position: 'absolute', right: '6px', border: 0 }}>
               <Box sx={styleSpisPK05}>
                 <Box sx={{}}>
-                  <b>Pайон: {plan.areaPK}</b> &nbsp;
+                  <b>Подрайон: {plan.subareaPK}</b> &nbsp;
                 </Box>
-                <Box sx={{ fontSize: 15 }}>
+                {/* <Box sx={{ fontSize: 15 }}>
                   <em>{nameArea}</em>
-                </Box>
+                </Box> */}
               </Box>
             </Box>
           </Grid>
