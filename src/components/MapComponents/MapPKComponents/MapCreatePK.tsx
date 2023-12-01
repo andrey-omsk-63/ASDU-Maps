@@ -12,8 +12,9 @@ import MapPointDataError from "./../MapPointDataError";
 import { BadExit, UniqueName, InputFromList } from "../../MapServiceFunctions";
 import { PreparCurrenciesPlan, InputNamePK } from "../../MapServiceFunctions";
 import { SaveFormPK, InputArrow, ExitArrow } from "../../MapServiceFunctions";
+import { SubareaFindById } from "../../MapServiceFunctions";
 
-import { AREA, MASSPK, PLANER } from "../../MainMapGl";
+import { AREA, SUBAREA, MASSPK, PLANER } from "../../MainMapGl";
 import { SUMPK } from "../../MapConst";
 
 import { PlanCoord } from "../../../interfacePlans.d"; // интерфейс
@@ -34,7 +35,7 @@ let startPlan: string = "0";
 let massPkId: any = [];
 let massPkIdOld: any = [];
 let isOpen = false;
-let oldArea = -1;
+let oldSubArea = -1;
 let oldIdx = -2;
 let nameArea = "";
 let soobErr = "";
@@ -46,6 +47,7 @@ let currenciesPlan: any = [];
 let NewCoordPlan: PlanCoord = {
   nomPK: 0,
   areaPK: 0,
+  subareaPK: 0,
   namePK: "",
   coordPlan: [],
 };
@@ -71,10 +73,10 @@ const MapCreatePK = (props: {
 }) => {
   //console.log("Props.IDX:", AREA);
   //== Piece of Redux =======================================
-  const map = useSelector((state: any) => {
-    const { mapReducer } = state;
-    return mapReducer.map;
-  });
+  // const map = useSelector((state: any) => {
+  //   const { mapReducer } = state;
+  //   return mapReducer.map;
+  // });
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
     return massrouteReducer.massroute;
@@ -83,7 +85,7 @@ const MapCreatePK = (props: {
     const { massplanReducer } = state;
     return massplanReducer.massplan;
   });
-  //console.log('MapCreatePKmassplan:', massplan);
+  console.log('MapCreatePKmassplan:', massplan);
   let datestat = useSelector((state: any) => {
     const { statsaveReducer } = state;
     return statsaveReducer.datestat;
@@ -97,14 +99,14 @@ const MapCreatePK = (props: {
   const [currentItem, setCurrentItem] = React.useState<any>(null);
   const [trigger, setTrigger] = React.useState(false);
 
-  let AreA = AREA === "0" ? 1 : Number(AREA);
-  AreA = props.idx < 0 ? AreA : massplan.plans[props.idx].areaPK;
+  let subAreA = SUBAREA === "0" ? 1 : Number(SUBAREA);
+  subAreA = props.idx < 0 ? subAreA : massplan.plans[props.idx].areaPK;
   const sumPlan = SUMPK;
   const modeWork = props.idx < 0 ? "create" : "edit";
 
   const CloseEnd = React.useCallback(() => {
     HAVE = 0;
-    oldArea = -1;
+    oldSubArea = -1;
     isOpen = false;
     massPkId = [];
 
@@ -131,14 +133,14 @@ const MapCreatePK = (props: {
   if (EscClinch) {
     EscClinch = false;
   } else {
-    if (!isOpen || AreA !== oldArea || props.idx !== oldIdx) {
-      for (let i = 0; i < map.dateMap.tflight.length; i++) {
-        let num = Number(map.dateMap.tflight[i].area.num); // установление названия района
-        if (num === AreA) {
-          nameArea = map.dateMap.tflight[i].area.nameArea;
-          break;
-        }
-      }
+    if (!isOpen || subAreA !== oldSubArea || props.idx !== oldIdx) {
+      // for (let i = 0; i < map.dateMap.tflight.length; i++) {
+      //   let num = Number(map.dateMap.tflight[i].area.num); // установление названия района
+      //   if (num === subAreA) {
+      //     nameArea = map.dateMap.tflight[i].area.nameArea;
+      //     break;
+      //   }
+      // }
       let massVert: any = [];
       let massExist: any = [];
       massPkId = []; // правое окно
@@ -182,11 +184,11 @@ const MapCreatePK = (props: {
           massPkId.push(massplan.plans[props.idx].coordPlan[i].id);
       }
       //============
-      NewCoordPlan.areaPK = AreA;
+      NewCoordPlan.subareaPK = subAreA;
       // создание списка перекрёстков для левого окна
       for (let i = 0; i < massroute.vertexes.length; i++) {
         let ID = massroute.vertexes[i].id;
-        if (massroute.vertexes[i].area === AreA) {
+        if (massroute.vertexes[i].area && SubareaFindById(ID) === subAreA) {
           let maskVert: Stroka = {
             area: massroute.vertexes[i].area,
             id: massroute.vertexes[i].id,
@@ -208,14 +210,15 @@ const MapCreatePK = (props: {
       massBoard[0].items = massVert; // левое окно
       massBoard[1].items = massRab; // правое окно
       isOpen = true;
-      oldArea = AreA;
+      oldSubArea = subAreA;
       oldIdx = props.idx;
       HAVE = 0;
       needSort = false;
-      massPkId.length && props.SetMass(massPkId, AreA);
+      massPkId.length && props.SetMass(massPkId, subAreA);
     }
   }
   //========================================================
+  console.log('massBoard:',massBoard)
   const [boards, setBoards] = React.useState(massBoard);
   const [valuen, setValuen] = React.useState(NewCoordPlan.namePK);
   const [currencyPlan, setCurrencyPlan] = React.useState(startPlan);
@@ -249,6 +252,7 @@ const MapCreatePK = (props: {
           };
           NewCoordPlan.coordPlan.push(mask);
         }
+        console.log('NewCoordPlan:',needSort,NewCoordPlan)
         if (modeWork === "create") {
           massplan.plans.push({ ...NewCoordPlan }); // режим создания ПК
           massplan.plans.sort(function FuncSort(a: any, b: any) {
@@ -267,7 +271,7 @@ const MapCreatePK = (props: {
           needSort = false;
         }
         dispatch(massplanCreate(massplan));
-        //console.log('Finish:', massplan);
+        console.log('Finish:', massplan);
         CloseEnd();
       } else {
         soobErr = "Количество перекрёстков в плане не может быть меньше 1-го";
@@ -288,14 +292,12 @@ const MapCreatePK = (props: {
   };
 
   const dragStartHandler = (e: any, board: any, item: any) => {
-    //console.log('3Нажатие!!!')
     setCurrentBoard(board);
     setCurrentItem(item);
     e.target.style.backgroundColor = "#bae186"; // тёмно салатовый
   };
 
   const dropHandler = (e: any, board: any, item: any) => {
-    //console.log('2Нажатие!!!')
     e.preventDefault();
     const currentIndex = currentBoard.items.indexOf(currentItem);
     //console.log("currentBoard.ID:", currentBoard.ID);
@@ -304,7 +306,7 @@ const MapCreatePK = (props: {
       console.log("currentBoard.ID:", currentBoard.ID);
       if (currentBoard.ID) {
         massPkId.splice(currentIndex, 1); // удаление из правого окна
-        props.SetMass(massPkId, AreA);
+        props.SetMass(massPkId, subAreA);
         console.log("massPkId:", massPkId);
       }
       HAVE++;
@@ -322,21 +324,20 @@ const MapCreatePK = (props: {
   };
 
   const dropCardHandler = (e: any, board: any) => {
-    //console.log('1Нажатие!!!')
     if (board.ID !== currentBoard.ID) {
       board.items.push(currentItem);
       const currentIndex = currentBoard.items.indexOf(currentItem);
       //console.log("currentItem:",currentIndex, currentItem, board);
       if (board.ID) {
         massPkId.push(currentItem.id); // добавление в правое окно
-        props.SetMass(massPkId, AreA);
+        props.SetMass(massPkId, subAreA);
       }
       HAVE++;
 
       if (currentIndex >= 0 && board.ID !== currentBoard.ID) {
         currentBoard.items.splice(currentIndex, 1);
         massPkId.splice(currentIndex, 1);
-        props.SetMass(massPkId, AreA);
+        props.SetMass(massPkId, subAreA);
         HAVE++;
       }
       setBoards(
@@ -365,7 +366,7 @@ const MapCreatePK = (props: {
           </Grid>
           <Grid item xs={3.5}></Grid>
           <Grid item xs sx={{ border: 0 }}>
-            <b>Район {AreA}</b> <em>{nameArea}</em>
+            <b>Подрайон {subAreA}</b> <em>{nameArea}</em>
           </Grid>
         </Grid>
         <Grid container sx={{ fontSize: 14, marginTop: 0.5 }}>
@@ -390,7 +391,7 @@ const MapCreatePK = (props: {
       boards[1].items.push(rec); // добавление в правое окно
       massPkId.push(idd); // добавление  подсветки в правое окно
     }
-    props.SetMass(massPkId, AreA);
+    props.SetMass(massPkId, subAreA);
     HAVE++;
     setTrigger(!trigger); // ререндер
   };
@@ -403,7 +404,7 @@ const MapCreatePK = (props: {
       boards[0].items.push(rec); // добавление в левое окно
     }
     massPkId = []; // удаление подсветки из правого окна
-    props.SetMass(massPkId, AreA);
+    props.SetMass(massPkId, subAreA);
     HAVE++;
     setTrigger(!trigger); // ререндер
   };
@@ -454,7 +455,7 @@ const MapCreatePK = (props: {
   return (
     <>
       {badExit && <>{BadExit(badExit, handleCloseBadExit)}</>}
-      <Box sx={MakeStyleFormPK00(696,PLANER)}>
+      <Box sx={MakeStyleFormPK00(696, PLANER)}>
         <Button sx={styleModalEnd} onClick={() => handleCloseBad()}>
           <b>&#10006;</b>
         </Button>
@@ -498,7 +499,6 @@ const MapCreatePK = (props: {
           fromCross={0}
           toCross={0}
           update={0}
-          //svg={{}}
           setSvg={{}}
         />
       )}

@@ -15,3 +15,17 @@ export const MaxFaz = 8; // максимальное количество фаз
 export const KolFrom = 4; // количество исходящих направлений
 
 export const KolIn = 5; // количество входящих направлений
+
+export const FromCross: any = {
+  pointAaRegin: "",
+  pointAaArea: "",
+  pointAaID: 0,
+  pointAcod: "",
+};
+
+export const ToCross: any = {
+  pointBbRegin: "",
+  pointBbArea: "",
+  pointBbID: 0,
+  pointBcod: "",
+};

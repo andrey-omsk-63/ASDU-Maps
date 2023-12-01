@@ -10,6 +10,7 @@ export interface DataPlan {
 export interface PlanCoord {
   nomPK: number;
   areaPK: number;
+  subareaPK: number;
   namePK: string;
   coordPlan: PlanCoordData[];
 }

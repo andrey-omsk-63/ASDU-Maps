@@ -36,7 +36,10 @@ import { styleFormPK03 } from "./MainMapStyle";
 import { styleModalMenuErr, styleHeadError } from "./MapPointDataErrorStyle";
 import { styleBoxFormArea, styleSetArea } from "./MapPointDataErrorStyle";
 
-import { debug, AREA, MODE, MASSPK, PLANER, SumArea } from "./MainMapGl";
+import { debug, SUBAREA, MODE, MASSPK, PLANER, SubArea } from "./MainMapGl";
+//import { SUBAREA } from "./MainMapGl";
+import { ZONE } from "./MapConst";
+import { dateMapGl } from "./../App";
 
 export const handleKey = (event: any) => {
   if (event.key === "Enter") event.preventDefault();
@@ -61,6 +64,31 @@ export const UniqueName = () => {
   return nameMode;
 };
 
+export const SubareaFindById = (id: number) => {
+  let subarea = -1;
+  for (let j = 0; j < dateMapGl.tflight.length; j++) {
+    if (dateMapGl.tflight[j].ID === id) subarea = dateMapGl.tflight[j].subarea;
+  }
+  return subarea;
+};
+
+export const MasrouteAgreeMap = (massroute: any) => {
+  let mass = ZONE ? [] : massroute.vertexes;
+  if (ZONE) {
+    for (let i = 0; i < massroute.vertexes.length; i++) {
+      for (let j = 0; j < dateMapGl.tflight.length; j++) {
+        if (
+          massroute.vertexes[i].area ===
+            Number(dateMapGl.tflight[j].area.num) &&
+          massroute.vertexes[i].id === dateMapGl.tflight[j].ID
+        )
+          mass.push(massroute.vertexes[i]);
+      }
+    }
+  }
+  return mass;
+};
+
 export const MapssdkNewPoint = (
   homeRegion: number,
   coords: any,
@@ -74,6 +102,7 @@ export const MapssdkNewPoint = (
     nameCoordinates: "",
     region: 0,
     area: 0,
+    subarea: 0,
     newCoordinates: 0,
   };
 
@@ -148,18 +177,14 @@ export const RecordMassRoute = (
   return masskRoute;
 };
 
-export const FillMassRouteContent = (
-  AREA: string,
-  FlagDemo: boolean,
-  massroute: any
-) => {
+export const FillMassRouteContent = (FlagDemo: boolean, massroute: any) => {
   let massRoute: any = [];
-  if (AREA === "0" && FlagDemo) massRoute = massroute.ways;
-  if (AREA !== "0" && FlagDemo) {
+  if (SUBAREA === "0" && FlagDemo) massRoute = massroute.ways;
+  if (SUBAREA !== "0" && FlagDemo) {
     for (let i = 0; i < massroute.ways.length; i++)
       if (
-        massroute.ways[i].sourceArea.toString() === AREA ||
-        massroute.ways[i].targetArea.toString() === AREA
+        SubareaFindById(massroute.ways[i].sourceID).toString() === SUBAREA ||
+        SubareaFindById(massroute.ways[i].targetID).toString() === SUBAREA
       )
         massRoute.push(massroute.ways[i]);
   }
@@ -346,8 +371,13 @@ export const PreparCurrenciesForm = () => {
   return currencies;
 };
 
-export const PreparCurrencies = (dat: any) => {
+export const PreparCurrencies = () => {
   const currencies: any = [];
+  let dat: Array<string> = [];
+  dat.push("Все подрайоны");
+  for (let i = 0; i < SubArea.length; i++) {
+    dat.push(SubArea[i].toString() + "-й подрайон");
+  }
   let massKey: any = [];
   let massDat: any = [];
   for (let key in dat) {
@@ -358,7 +388,6 @@ export const PreparCurrencies = (dat: any) => {
     value: "0",
     label: "Все районы",
   };
-  currencies.push({ ...maskCurrencies });
   for (let i = 0; i < massKey.length; i++) {
     maskCurrencies.value = massKey[i];
     maskCurrencies.label = massDat[i];
@@ -366,7 +395,7 @@ export const PreparCurrencies = (dat: any) => {
   }
   if (debug) {
     maskCurrencies.value = (massKey.length + 1).toString();
-    maskCurrencies.label = "Добавить район";
+    maskCurrencies.label = "Добавить подрайон";
     currencies.push({ ...maskCurrencies });
   }
   return currencies;
@@ -409,7 +438,9 @@ export const InputMenu = (func: any, currency: any, currencies: any) => {
               style: {
                 fontWeight: 700,
                 color:
-                  currency === (SumArea + 1).toString() ? "green" : "black",
+                  currency === (SubArea.length + 1).toString()
+                    ? "green"
+                    : "black",
                 marginLeft: 10,
                 fontSize: 14,
               },
@@ -422,7 +453,8 @@ export const InputMenu = (func: any, currency: any, currencies: any) => {
                 key={option.value}
                 value={option.value}
                 sx={{
-                  color: option.label === "Добавить район" ? "green" : "black",
+                  color:
+                    option.label === "Добавить подрайон" ? "green" : "black",
                 }}
               >
                 {option.label}
@@ -683,7 +715,7 @@ export const getPointData = (
   let cont3 = ", null";
   if (idxMap >= 0) cont3 = ", " + map.dateMap.tflight[idxMap].idevice;
   let cont1 = massdk[index].nameCoordinates + "<br/>";
-  let cont2 = "[" + massdk[index].area;
+  let cont2 = "[" + massdk[index].subarea;
   cont2 += ", " + massdk[index].ID + cont3 + "]";
   let textBalloon = "";
   if (index === pointAaIndex && MODE === "0") textBalloon = "Начало";
@@ -704,11 +736,11 @@ export const GetPointOptions = (
   massroute: any
 ) => {
   let idxMap = -1;
-  let Area = massdk[index].area.toString();
+  let SubArea = massdk[index].subarea.toString();
   for (let i = 0; i < map.dateMap.tflight.length; i++) {
     if (
-      map.dateMap.tflight[i].ID === massdk[index].ID &&
-      Number(map.dateMap.tflight[i].area.num) === massdk[index].area
+      map.dateMap.tflight[i].ID === massdk[index].ID
+      //&& Number(map.dateMap.tflight[i].area.num) === massdk[index].area
     ) {
       idxMap = i;
       break;
@@ -718,7 +750,7 @@ export const GetPointOptions = (
   const Hoster = () => {
     let host = "";
     if (idxMap >= 0) {
-      if (Area === AREA || AREA === "0") {
+      if (SubArea === SUBAREA || SUBAREA === "0") {
         host = "http://localhost:3000/1.svg";
         if (!debug && idxMap >= 0)
           host = window.location.origin + "/free/img/trafficLights/1.svg";
@@ -727,7 +759,8 @@ export const GetPointOptions = (
     }
     //================================= потом исправить ======
     if (massdk[index].newCoordinates > 0) {
-      if (Area === AREA || AREA === "0") {
+      //if (SubArea === )
+      if (SubArea === SUBAREA || SUBAREA === "0") {
         host = "http://localhost:3000/18.svg";
         if (!debug)
           host = window.location.origin + "/free/img/trafficLights/18.svg";
@@ -740,8 +773,8 @@ export const GetPointOptions = (
         host =
           window.location.origin + "/free/img/trafficLights/" + nom + ".svg";
     };
-    // if (MODE === "2" && Area === AREA)
-    if (PLANER > 0 && Area === AREA)
+
+    if (PLANER > 0 && SubArea === SUBAREA)
       if (MASSPK.indexOf(massdk[index].ID) >= 0) HosterIllum("4");
     if (MODE === "1")
       if (index === pointBbIndex || index === pointAaIndex) HosterIllum("12");
@@ -938,6 +971,7 @@ export const MasskPoint = (massrouteVertexes: any) => {
     nameCoordinates: "",
     region: 0,
     area: 0,
+    subarea: 0,
     newCoordinates: 0,
   };
   masskPoint.ID = massrouteVertexes.id;
@@ -945,6 +979,7 @@ export const MasskPoint = (massrouteVertexes: any) => {
   masskPoint.nameCoordinates = massrouteVertexes.name;
   masskPoint.region = massrouteVertexes.region;
   masskPoint.area = massrouteVertexes.area;
+  masskPoint.subarea = SubareaFindById(massrouteVertexes.id);
   masskPoint.newCoordinates = 0;
   return masskPoint;
 };

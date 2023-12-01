@@ -32,10 +32,10 @@ import { RecevKeySvg, StrokaMenuGlob, MasskPoint } from "./MapServiceFunctions";
 import { DelVerOrPoint, MainMenu, NearestPoint } from "./MapServiceFunctions";
 import { DelPointVertexContent, MassCoord } from "./MapServiceFunctions";
 import { FillMassRouteContent, InputMenuPK } from "./MapServiceFunctions";
-import { InputMenuForm } from "./MapServiceFunctions";
+import { InputMenuForm, MasrouteAgreeMap } from "./MapServiceFunctions";
 import { PreparCurrenciesMode, CenterCoordBegin } from "./MapServiceFunctions";
 import { PreparCurrenciesForm, InputMenuMODE } from "./MapServiceFunctions";
-import { PreparCurrenciesPK } from "./MapServiceFunctions";
+import { PreparCurrenciesPK, SubareaFindById } from "./MapServiceFunctions";
 
 import { MakeMultiRouteIn, MakePolyRoute } from "./MapRouteFunctions";
 import { MakeMultiRoute, MakeMainRoute } from "./MapRouteFunctions";
@@ -44,7 +44,7 @@ import { SendSocketCreateWay, SendSocketGetSvg } from "./MapSocketFunctions";
 import { SendSocketCreateWayFromPoint } from "./MapSocketFunctions";
 import { SendSocketCreateWayToPoint } from "./MapSocketFunctions";
 
-import { YMapsModul, MyYandexKey, ZONE } from "./MapConst";
+import { YMapsModul, MyYandexKey, FromCross, ToCross } from "./MapConst";
 
 export let AREA = "0"; // район  0 - все районы
 export let MODE = "-1"; // режим работы - меню режимов  0 - заголовок
@@ -58,7 +58,7 @@ export let MASSPK: any = []; // массив 'подсвечиваемых' пе
 export let BALLOON: boolean = true; // разрешение/запрет на выдачу балуна
 export let PLANER: number = 0; // номер выбраного ПК
 export let masSvg: any = ["", ""]; // массив изображений перекрёстков для RouteBind
-export let SumArea: number = 1; // количество подрайонов
+//export let SumArea: number = 1; // количество подрайонов
 let coordStart: any = []; // рабочий массив коллекции входящих связей
 let coordStop: any = []; // рабочий массив коллекции входящих связей
 let coordStartIn: any = []; // рабочий массив коллекции исходящих связей
@@ -76,18 +76,8 @@ let reqRoute: any = {
   dlRoute: 0,
   tmRoute: 0,
 };
-let fromCross: any = {
-  pointAaRegin: "",
-  pointAaArea: "",
-  pointAaID: 0,
-  pointAcod: "",
-};
-let toCross: any = {
-  pointBbRegin: "",
-  pointBbArea: "",
-  pointBbID: 0,
-  pointBcod: "",
-};
+let fromCross: any = FromCross;
+let toCross: any = ToCross;
 let funcBound: any = null;
 let funcContex: any, VertexForma: any, funcClick: any, activeRoute: any;
 funcContex = VertexForma = funcClick = activeRoute = null;
@@ -269,7 +259,7 @@ const MainMap = (props: {
 
   const FillMassRoute = () => {
     massRoute = [];
-    massRoute = FillMassRouteContent(AREA, FlagDemo, massroute);
+    massRoute = FillMassRouteContent(FlagDemo, massroute);
   };
 
   const MakeRecordMassRoute = (mode: boolean, mass: any) => {
@@ -420,7 +410,7 @@ const MainMap = (props: {
         break;
       case 201: // список всех ПК
         BeginPK();
-        //datestat.needMenuForm = true; // выдавать меню форм
+        datestat.needMenuForm = true; // выдавать меню форм
         HandlLockUp((datestat.needMenuForm = true)); // выдавать меню форм / блокировка меню районов и меню режимов
         setOpenPKSpis(true);
         TurnOnDemoRoute();
@@ -475,7 +465,9 @@ const MainMap = (props: {
               pointBbIndex = 0; // конечная точка
               SoobOpenSetEr("Связь между двумя точками создовать нельзя");
             } else {
-              if (areaAa !== areaBb && areaAa !== 0 && areaBb !== 0) {
+              let sbAa = SubareaFindById(massroute.vertexes[pointAaIndex].id);
+              let sbBb = SubareaFindById(massroute.vertexes[pointBbIndex].id);
+              if (sbAa !== sbBb && sbAa !== 0 && sbBb !== 0) {
                 pointBbIndex = 0; // конечная точка
                 SoobOpenSetEr(soob);
               } else {
@@ -684,12 +676,14 @@ const MainMap = (props: {
     setOpenCreate(false);
   };
 
-  const handleChangeArea = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (Number(event.target.value) > SumArea) {
-      console.log("Здесь будет добавление района");
+  const handleChangeSubArea = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (Number(event.target.value) > SubArea.length) {
+      console.log("Здесь будет добавление подрайона");
     } else {
+      if (Number(event.target.value)) {
+        SUBAREA = SubArea[Number(event.target.value) - 1].toString();
+      } else SUBAREA = event.target.value;
       setCurrency(event.target.value);
-      AREA = event.target.value;
       PressButton(121);
     }
   };
@@ -779,6 +773,7 @@ const MainMap = (props: {
     if (props.region) homeRegion = props.region;
     if (!props.region && massroute.vertexes.length)
       homeRegion = massroute.vertexes[0].region;
+    massroute.vertexes = MasrouteAgreeMap(massroute);
     for (let i = 0; i < massroute.points.length; i++)
       massroute.vertexes.push(massroute.points[i]); // дописывание инф-ии о точках в массив перекрёстков
     for (let i = 0; i < massroute.vertexes.length; i++) {
@@ -789,24 +784,19 @@ const MainMap = (props: {
     dispatch(massrouteCreate(massroute));
     dispatch(coordinatesCreate(coordinates));
     pointCenter = CenterCoordBegin(map);
-    let homeReg = map.dateMap.regionInfo[homeRegion]; // подготовка ввода района
-    currencies = PreparCurrencies(map.dateMap.areaInfo[homeReg]); // для меню подрайонов
-
     let massVert = map.dateMap.tflight;
-    for (let i = 0; i < massVert.length; i++) {
+    for (let i = 0; i < massVert.length; i++)
       if (SubArea.indexOf(massVert[i].subarea) < 0)
-      SubArea.push(massVert[i].subarea);
-    }
+        SubArea.push(massVert[i].subarea);
     SubArea.sort((a, b) => a - b); // сортировка по возрастанию
-    console.log("massSubarea:", SubArea);
-
-    SumArea = Object.keys(map.dateMap.areaInfo[homeReg]).length;
+    currencies = PreparCurrencies(); // для меню подрайонов
     currenciesMode = PreparCurrenciesMode(); // для меню подрайонов режимов работы
     currenciesPK = PreparCurrenciesPK(); // для меню ПК и модели
     currenciesForm = PreparCurrenciesForm(); // для меню диспетчера форм
     flagOpen = true;
     console.log("map:", map);
     console.log("massroute:", massroute);
+    console.log("!!!massdk:", massdk);
   }
   //========================================================
   let mapState: any = {
@@ -853,7 +843,7 @@ const MainMap = (props: {
     <Grid container sx={{ height: "99.9vh" }}>
       {!datestat.lockUp && (
         <>
-          {InputMenu(handleChangeArea, currency, currencies)}
+          {InputMenu(handleChangeSubArea, currency, currencies)}
           {InputMenuMODE(handleChangeMode, currencyMode, currenciesMode)}
         </>
       )}

@@ -40,6 +40,7 @@ export interface Pointer {
   nameCoordinates: string;
   region: number;
   area: number;
+  subarea: number;
   newCoordinates: number;
 }
 export let massDk: Pointer[] = [];
@@ -130,9 +131,21 @@ const App = () => {
     window.location.search;
 
   const [openSetErr, setOpenSetErr] = React.useState(false);
-  //const [plans, setPlans] = React.useState<Array<PlanCoord>>([]);
   const [trigger, setTrigger] = React.useState(false);
   const [svg, setSvg] = React.useState<any>(null);
+
+  const FilterArea = React.useCallback(
+    (data: any) => {
+      dateMapGl = data;
+      if (ZONE) {
+        dateMapGl.tflight = dataMap.tflight.filter(
+          (user) => user.area.num === ZONE.toString()
+        );
+      }
+      dispatch(mapCreate(dateMapGl));
+    },
+    [dispatch]
+  );
 
   if (flagOpenWS) {
     WS = new WebSocket(host);
@@ -163,8 +176,7 @@ const App = () => {
       console.log("пришло:", allData.type, data);
       switch (allData.type) {
         case "mapInfo":
-          dateMapGl = data;
-          dispatch(mapCreate(dateMapGl));
+          FilterArea(data); // берём в работу заданный район
           break;
         case "graphInfo":
           let pointRab = JSON.parse(JSON.stringify(data));
@@ -287,17 +299,18 @@ const App = () => {
           console.log("data_default:", data);
       }
     };
-  }, [dispatch, massdk, coordinates, svg, trigger]);
+  }, [dispatch, massdk, coordinates, svg, trigger, FilterArea]);
 
   if (WS.url === "wss://localhost:3000/W" && flagOpen) {
     console.log("РЕЖИМ ОТЛАДКИ!!!", dataMap.tflight);
-    dateMapGl = dataMap;
-    if (ZONE) {
-      dateMapGl.tflight = dataMap.tflight.filter(
-        (user) => user.area.num === ZONE.toString()
-      );
-    }
-    dispatch(mapCreate(dateMapGl));
+    FilterArea(dataMap); // берём в работу заданный район
+    console.log("dataRoute.data:", dataRoute.data);
+    //let DateRouteGl = dataRoute.data;
+    // if (ZONE) {
+    //   DateRouteGl.vertexes = dataRoute.data.vertexes.filter(
+    //     (user) => user.area.num === ZONE.toString()
+    //   );
+    // }
     dateRouteGl = { ...dataRoute.data };
     dateRouteProGl = { ...dataRoute.data };
     dateRouteProGl.points = []; // массив протоколов
