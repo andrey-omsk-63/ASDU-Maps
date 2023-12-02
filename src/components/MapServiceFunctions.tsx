@@ -36,7 +36,7 @@ import { styleFormPK03 } from "./MainMapStyle";
 import { styleModalMenuErr, styleHeadError } from "./MapPointDataErrorStyle";
 import { styleBoxFormArea, styleSetArea } from "./MapPointDataErrorStyle";
 
-import { debug, SUBAREA, MODE, MASSPK, PLANER, SubArea } from "./MainMapGl";
+import { debug, SUBAREA, MODE, MASSPK, SubArea } from "./MainMapGl";
 //import { SUBAREA } from "./MainMapGl";
 import { ZONE } from "./MapConst";
 import { dateMapGl } from "./../App";
@@ -774,7 +774,8 @@ export const GetPointOptions = (
           window.location.origin + "/free/img/trafficLights/" + nom + ".svg";
     };
 
-    if (PLANER > 0 && SubArea === SUBAREA)
+    // if (PLANER > 0 && SubArea === SUBAREA)
+    if (SubArea === SUBAREA)
       if (MASSPK.indexOf(massdk[index].ID) >= 0) HosterIllum("4");
     if (MODE === "1")
       if (index === pointBbIndex || index === pointAaIndex) HosterIllum("12");
