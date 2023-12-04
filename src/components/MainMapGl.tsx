@@ -58,7 +58,6 @@ export let MASSPK: any = []; // массив 'подсвечиваемых' пе
 export let BALLOON: boolean = true; // разрешение/запрет на выдачу балуна
 export let PLANER: number = 0; // номер выбраного ПК
 export let masSvg: any = ["", ""]; // массив изображений перекрёстков для RouteBind
-//export let SumArea: number = 1; // количество подрайонов
 let coordStart: any = []; // рабочий массив коллекции входящих связей
 let coordStop: any = []; // рабочий массив коллекции входящих связей
 let coordStartIn: any = []; // рабочий массив коллекции исходящих связей
@@ -192,7 +191,6 @@ const MainMap = (props: {
         if (rec.area === arIn && rec.id === idIn) pointAaIndex = i;
         if (rec.area === arOn && rec.id === idOn) pointBbIndex = i;
       }
-      //flagBind = true;
       modeBind = 3; // режим открытия RouteBind
       setOpenBind((flagBind = true));
     },
@@ -225,7 +223,6 @@ const MainMap = (props: {
       pointAa = pointBb = 0;
       pointAaIndex = idxPKForm = pointBbIndex = -1;
       DelCollectionRoutes();
-      //flagBind = false;
       setFlagRoute((flagBind = false));
       setFlagPusk(mode);
       setOpenVertForm(false);
@@ -234,7 +231,6 @@ const MainMap = (props: {
       setRoutePKW(null);
       BALLOON = true; // разрешение на выдачу балуна
       setOpenPKSpis(false);
-      //idxPKForm = -1;
       HandlLockUp(false); // разблокировка меню районов и меню режимов
       ymaps && addRoute(ymaps); // перерисовка связей
     },
@@ -245,7 +241,11 @@ const MainMap = (props: {
     PLANER = nom;
     MASSPK = spis;
     ZeroRoute(false);
-    setCurrencyPK("0"); // переключение меню 'ПК и модели' на заголовок
+    if (datestat.needMakeSpisPK) {
+      setOpenPKSpis(true);
+      datestat.needMakeSpisPK = false;
+      dispatch(statsaveCreate(datestat));
+    } else setCurrencyPK("0"); // переключение меню 'ПК и модели' на заголовок
   };
 
   const SoobOpenSetEr = (soob: string) => {
@@ -326,7 +326,6 @@ const MainMap = (props: {
     if (DoublRoute(massroute.ways, pointAa, pointBb)) {
       SoobOpenSetEr("Дубликатная связь");
       ZeroRoute((noDoublRoute = false));
-      //noDoublRoute = false;
     } else {
       MakeСollectionRoute(true);
       setRevers(!revers); // ререндер
@@ -344,7 +343,6 @@ const MainMap = (props: {
 
   const TurnOnDemoRoute = () => {
     setFlagDemo((FlagDemo = true));
-    //FlagDemo = true;
     FillMassRoute();
     ymaps && addRoute(ymaps); // перерисовка связей
   };
@@ -371,7 +369,6 @@ const MainMap = (props: {
         flagRevers = true;
         break;
       case 35: // отказ от создания реверсной связи
-        //flagRevers = false;
         setMakeRevers((flagRevers = false));
         ZeroRoute(false);
         break;
@@ -383,7 +380,6 @@ const MainMap = (props: {
         if (ReversRoute()) {
           const ReadyRoute = () => {
             if (activeRoute) {
-              //needLinkBind = true;
               setOpenInf((needLinkBind = true));
             } else {
               setTimeout(() => {
@@ -409,8 +405,6 @@ const MainMap = (props: {
         flagDemo && ymaps && addRoute(ymaps); // перерисовка связей
         break;
       case 201: // список всех ПК
-        BeginPK();
-        //datestat.needMenuForm = true; // выдавать меню форм
         HandlLockUp((datestat.needMenuForm = true)); // выдавать меню форм / блокировка меню районов и меню режимов
         setOpenPKSpis(true);
         TurnOnDemoRoute();
@@ -432,6 +426,7 @@ const MainMap = (props: {
   };
 
   const OnPlacemarkClickPoint = (index: number, coor: any) => {
+    let soob = "Связь между перекрёстками в разных подрайонах создовать нельзя";
     let COORD = coor ? coor : MassCoord(massdk[index]);
     if (pointAa === 0) {
       if (!massdk[index].area && MODE === "1") return; // включён режим "Перекрёстки"
@@ -452,22 +447,24 @@ const MainMap = (props: {
         setOpenVertForm(true); // запуск новой формы
       }
     } else {
-      let soob = "Связь между перекрёстками в разных районах создовать нельзя";
       if (MODE === "0") {
         if (pointBb === 0) {
           if (pointAaIndex === index) {
             SoobOpenSetEr("Начальная и конечная точки совпадают");
           } else {
             pointBbIndex = index; // конечная точка
-            let areaAa = massroute.vertexes[pointAaIndex].area;
-            let areaBb = massroute.vertexes[pointBbIndex].area;
+            let recA = massroute.vertexes[pointAaIndex];
+            let recB = massroute.vertexes[pointBbIndex];
+            let areaAa = recA.area;
+            let areaBb = recB.area;
             if (areaAa === 0 && areaBb === 0) {
               pointBbIndex = 0; // конечная точка
               SoobOpenSetEr("Связь между двумя точками создовать нельзя");
             } else {
-              let sbAa = SubareaFindById(massroute.vertexes[pointAaIndex].id);
-              let sbBb = SubareaFindById(massroute.vertexes[pointBbIndex].id);
-              if (sbAa !== sbBb && sbAa !== 0 && sbBb !== 0) {
+              let sbAa = areaAa ? SubareaFindById(recA.id): 0;
+              let sbBb = areaBb ? SubareaFindById(recB.id) : 0;
+              console.log("!!!:", sbAa, sbBb);
+              if (sbAa !== sbBb && areaAa > 0 && areaBb > 0) {
                 pointBbIndex = 0; // конечная точка
                 SoobOpenSetEr(soob);
               } else {
@@ -677,16 +674,20 @@ const MainMap = (props: {
   };
 
   const handleChangeSubArea = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (Number(event.target.value) > SubArea.length) {
-      console.log("Здесь будет добавление подрайона");
+    if (event.target.value === "0" && MODE === "0") {
+      SUBAREA = SubArea[0].toString();
+      setCurrency("1");
     } else {
-      if (Number(event.target.value)) {
-        SUBAREA = SubArea[Number(event.target.value) - 1].toString();
-      } else SUBAREA = event.target.value;
-      console.log("!!!:", SUBAREA, event.target.value);
-      setCurrency(event.target.value);
-      PressButton(121);
+      if (Number(event.target.value) > SubArea.length) {
+        console.log("Здесь будет добавление подрайона");
+      } else {
+        if (Number(event.target.value)) {
+          SUBAREA = SubArea[Number(event.target.value) - 1].toString();
+        } else SUBAREA = event.target.value;
+        setCurrency(event.target.value);
+      }
     }
+    PressButton(121);
   };
 
   const handleChangeMode = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -698,7 +699,13 @@ const MainMap = (props: {
     setCurrencyMode(event.target.value);
     setCurrencyPK("0"); // переключение меню ПК и моделей на заголовок
     MODE = mode.toString();
-    MODE === "0" && TurnOnDemoRoute(); // влючение ФС
+    if (MODE === "0") {
+      if (SUBAREA === "0") {
+        SUBAREA = SubArea[0].toString();
+        setCurrency("1");
+      }
+      TurnOnDemoRoute(); // влючение ФС
+    }
     PressButton(212);
   };
 
@@ -726,7 +733,6 @@ const MainMap = (props: {
     HandlLockUp(true); // блокировка меню районов и меню режимов
     if (!mode) {
       VertexForma = null;
-      //openEF = false;
       ZeroRoute((openEF = false));
     } else {
       VertexForma = forma;
@@ -739,18 +745,15 @@ const MainMap = (props: {
   const SetMassPkId = (massPkId: any, subarea: number) => {
     MASSPK = massPkId;
     SUBAREA = subarea.toString();
+    TurnOnDemoRoute(); // перерисовка связей
     setCurrency((SubArea.indexOf(subarea) + 1).toString());
-    let aa = (SubArea.indexOf(subarea) + 1).toString();
-    console.log("!!!SetMassPkId:", subarea, aa, SubArea, massPkId);
     setRevers(!revers); // ререндер
   };
 
   const SetModePKForm = (idx: number) => {
     idxPKForm = idx;
     SUBAREA = massplan.plans[idx].subareaPK.toString();
-    console.log("111######", (SubArea.indexOf(Number(SUBAREA)) + 1).toString());
     setCurrency((SubArea.indexOf(Number(SUBAREA)) + 1).toString());
-    //BALLOON = false; // запрет на выдачу балуна
     setOpenPKSpis((BALLOON = false)); // запрет на выдачу балуна / закрытие списка планов
     datestat.needMenuForm = false; //  не выдавать меню форм
     dispatch(statsaveCreate(datestat));
@@ -760,14 +763,12 @@ const MainMap = (props: {
   };
 
   const SetPuskMenu = (mode: number) => {
-    //datestat.needMenuForm = true; // выдавать меню форм
     HandlLockUp((datestat.needMenuForm = false)); // не выдавать меню форм / блокировка меню районов и меню режимов
     setOpenPKSpis(true); // открытие списка планов
     TurnOnDemoRoute();
   };
 
   const SetDispPKForm = (mode: boolean) => {
-    //FORM = "0";
     setCurrencyForm((FORM = "0"));
     setDispPKForm(mode);
   };

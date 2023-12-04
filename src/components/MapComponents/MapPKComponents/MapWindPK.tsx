@@ -42,7 +42,7 @@ const MapWindPK = (props: {
   close: Function; // функция возврата в родительский компонент
   route: any;
 }) => {
-  console.log("MapWindPK:", props.route);
+  //console.log("MapWindPK:", props.route);
   //== Piece of Redux =======================================
   // let massplan = useSelector((state: any) => {
   //   const { massplanReducer } = state;

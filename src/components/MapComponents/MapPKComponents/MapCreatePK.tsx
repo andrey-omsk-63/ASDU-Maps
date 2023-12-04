@@ -85,7 +85,7 @@ const MapCreatePK = (props: {
     const { massplanReducer } = state;
     return massplanReducer.massplan;
   });
-  console.log("MapCreatePKmassplan:", massplan);
+  //console.log("MapCreatePKmassplan:", massplan);
   let datestat = useSelector((state: any) => {
     const { statsaveReducer } = state;
     return statsaveReducer.datestat;
@@ -101,34 +101,39 @@ const MapCreatePK = (props: {
 
   let subAreA = SUBAREA === "0" ? 1 : Number(SUBAREA);
   subAreA = props.idx < 0 ? subAreA : massplan.plans[props.idx].subareaPK;
-  console.log('subAreA:',subAreA)
   const sumPlan = SUMPK;
   const modeWork = props.idx < 0 ? "create" : "edit";
 
-  const CloseEnd = React.useCallback(() => {
-    HAVE = 0;
-    oldSubArea = -1;
-    isOpen = false;
-    massPkId = [];
-
-    if (modeWork === "edit" || datestat.needMenuForm) {
-      props.setPuskMenu(NewCoordPlan.nomPK); // перезапуск меню ПК
-      if (oldPK !== NewCoordPlan.nomPK) {
-        datestat.nomMenu = NewCoordPlan.nomPK; //  активная строка списка ПК
+  const CloseEnd = React.useCallback(
+    (mode: boolean) => {
+      HAVE = 0;
+      oldSubArea = -1;
+      isOpen = false;
+      if (modeWork === "edit" || datestat.needMenuForm) {
+        props.setPuskMenu(NewCoordPlan.nomPK); // перезапуск меню ПК
+        if (oldPK !== NewCoordPlan.nomPK) {
+          datestat.nomMenu = NewCoordPlan.nomPK; //  активная строка списка ПК
+          dispatch(statsaveCreate(datestat));
+        }
+      }
+      if (modeWork !== "create") {
+        datestat.needMakeSpisPK = true; // вызов списка ПК после корректровки ПК
         dispatch(statsaveCreate(datestat));
       }
-    }
-    props.setOpen(datestat.nomMenu, massPkIdOld); // полный выход
-  }, [props, modeWork, datestat, dispatch]);
+      props.setOpen(datestat.nomMenu, mode ? massPkId : massPkIdOld); // полный выход
+      massPkId = [];
+    },
+    [props, modeWork, datestat, dispatch]
+  );
 
   const handleCloseBad = React.useCallback(() => {
     HAVE && setBadExit(true);
-    !HAVE && CloseEnd(); // выход без сохранения
+    !HAVE && CloseEnd(false); // выход без сохранения
   }, [CloseEnd]);
 
   const handleCloseBadExit = (mode: boolean) => {
     setBadExit(false);
-    mode && CloseEnd(); // выход без сохранения
+    mode && CloseEnd(false); // выход без сохранения
   };
   //=== инициализация ======================================
   if (EscClinch) {
@@ -210,11 +215,11 @@ const MapCreatePK = (props: {
       oldIdx = props.idx;
       HAVE = 0;
       needSort = false;
-      massPkId.length && props.SetMass(massPkId, subAreA);
+      props.SetMass(massPkId, subAreA);
     }
   }
   //========================================================
-  console.log("massBoard:", massBoard);
+  //console.log("massBoard:", massBoard);
   const [boards, setBoards] = React.useState(massBoard);
   const [valuen, setValuen] = React.useState(NewCoordPlan.namePK);
   const [currencyPlan, setCurrencyPlan] = React.useState(startPlan);
@@ -248,7 +253,6 @@ const MapCreatePK = (props: {
           };
           NewCoordPlan.coordPlan.push(mask);
         }
-        console.log("NewCoordPlan:", needSort, NewCoordPlan);
         if (modeWork === "create") {
           massplan.plans.push({ ...NewCoordPlan }); // режим создания ПК
           massplan.plans.sort(function FuncSort(a: any, b: any) {
@@ -256,7 +260,7 @@ const MapCreatePK = (props: {
           });
         } else {
           massplan.plans[props.idx] = { ...NewCoordPlan }; // режим корректировки ПК
-          datestat.needMakeSpisPK = true;
+          datestat.needMakeSpisPK = true; // вызов списка ПК после корректровки ПК
           datestat.lockUp = true; // блокировка меню районов и меню режимов
           dispatch(statsaveCreate(datestat));
         }
@@ -268,7 +272,7 @@ const MapCreatePK = (props: {
         }
         dispatch(massplanCreate(massplan));
         console.log("Finish:", massplan);
-        CloseEnd();
+        CloseEnd(true); // выход с сохранением
       } else {
         soobErr = "Количество перекрёстков в плане не может быть меньше 1-го";
         setOpenSetErr(true);
@@ -299,10 +303,10 @@ const MapCreatePK = (props: {
     //console.log("currentBoard.ID:", currentBoard.ID);
     if (currentIndex >= 0 && board.ID !== currentBoard.ID) {
       currentBoard.items.splice(currentIndex, 1);
-      console.log("currentBoard.ID:", currentBoard.ID);
+      //console.log("currentBoard.ID:", currentBoard.ID);
       if (currentBoard.ID) {
         massPkId.splice(currentIndex, 1); // удаление из правого окна
-        console.log("dropHandler_massPkId:", massPkId, subAreA);
+        //console.log("dropHandler_massPkId:", massPkId, subAreA);
         props.SetMass(massPkId, subAreA);
       }
       HAVE++;
@@ -326,7 +330,7 @@ const MapCreatePK = (props: {
       //console.log("currentItem:",currentIndex, currentItem, board);
       if (board.ID) {
         massPkId.push(currentItem.id); // добавление в правое окно
-        console.log("1ddropCardHandler_massPkId:", massPkId, subAreA);
+        //console.log("1ddropCardHandler_massPkId:", massPkId, subAreA);
         props.SetMass(massPkId, subAreA);
       }
       HAVE++;
@@ -390,7 +394,7 @@ const MapCreatePK = (props: {
       massPkId.push(idd); // добавление  подсветки в правое окно
     }
     props.SetMass(massPkId, subAreA);
-    console.log("MoveLeftWind_massPkId:", massPkId, subAreA);
+    //console.log("MoveLeftWind_massPkId:", massPkId, subAreA);
     HAVE++;
     setTrigger(!trigger); // ререндер
   };
@@ -404,7 +408,7 @@ const MapCreatePK = (props: {
     }
     massPkId = []; // удаление подсветки из правого окна
     props.SetMass(massPkId, subAreA);
-    console.log("MoveRightWind_massPkId:", massPkId, subAreA);
+    //console.log("MoveRightWind_massPkId:", massPkId, subAreA);
     HAVE++;
     setTrigger(!trigger); // ререндер
   };
@@ -421,7 +425,7 @@ const MapCreatePK = (props: {
         </Grid>
         <Grid item xs={9.8} sx={{ border: 0 }}>
           {HAVE > 0 ? (
-            <>{SaveFormPK(SaveForm)}</>
+            <>{SaveFormPK(SaveForm, modeWork === "edit")}</>
           ) : (
             <Box sx={styleFormPK05}>
               "Перетяните" курсором нужные элементы из одного окна в другое

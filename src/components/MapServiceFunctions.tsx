@@ -2248,21 +2248,35 @@ export const InputNamePK = (handleChangeName: any, valuen: string) => {
   );
 };
 
-export const SaveFormPK = (SaveForm: any) => {
+export const SaveFormPK = (SaveForm: any, create: boolean) => {
   return (
-    <Grid container sx={{ marginTop: 0.8 }}>
-      <Grid item xs={5.59} sx={{ textAlign: "right", border: 0 }}>
+    <Box
+      sx={{
+        marginTop: 0.8,
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
+      <Box sx={{ display: "inline-block", margin: "0px 5px 0px 0px" }}>
         <Button sx={styleFormPK03} onClick={() => SaveForm(false)}>
           Выйти без сохранения
         </Button>
-      </Grid>
-      <Grid item xs={0.82} sx={{ border: 0 }}></Grid>
-      <Grid item xs sx={{ border: 0, textAlign: "left" }}>
+      </Box>
+
+      {create && (
+        <Box sx={{ display: "inline-block", margin: "0px 5px 0px 5px" }}>
+          <Button sx={styleFormPK03} onClick={() => SaveForm(false)}>
+            Сохранить как новый
+          </Button>
+        </Box>
+      )}
+
+      <Box sx={{ display: "inline-block", margin: "0px 5px 0px 5px" }}>
         <Button sx={styleFormPK03} onClick={() => SaveForm(true)}>
           Сохранить изменения
         </Button>
-      </Grid>
-    </Grid>
+      </Box>
+    </Box>
   );
 };
 

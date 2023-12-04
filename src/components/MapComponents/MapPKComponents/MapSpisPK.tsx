@@ -11,7 +11,7 @@ import MapViewPK from "./MapViewPK";
 
 //import { BadExit } from "../../MapServiceFunctions";
 
-//import { AREA } from "../../MainMapGl";
+import { MASSPK } from "../../MainMapGl";
 
 import { styleModalEnd, MakeStyleFormPK00 } from "../../MainMapStyle";
 import { styleFormPK01, MakeStylSpisPK01 } from "../../MainMapStyle";
@@ -56,9 +56,10 @@ const MapSpisPK = (props: {
     // создание списка перекрёстков выбранного плана
     for (let i = 0; i < massplan.plans[idx].coordPlan.length; i++)
       massPkId.push(massplan.plans[idx].coordPlan[i].id);
-    massPkId.length && props.SetMass(massPkId, massplan.plans[idx].areaPK);
+    massPkId.length && props.SetMass(massPkId, massplan.plans[idx].subareaPK);
   };
   //=== инициализация ======================================
+  massPkId = MASSPK;
   if (!massplan.plans.length) ChangeIDX(-1);
   if (massplan.plans.length !== massSpis.length) ChangeIDX(0);
 
@@ -93,6 +94,7 @@ const MapSpisPK = (props: {
     datestat.needMenuForm = false; //  не выдавать меню форм
     datestat.nomMenu = massplan.plans[IDX].nomPK; // номер активного плана ПК
     dispatch(statsaveCreate(datestat));
+    props.SetMass(massPkId, massplan.plans[IDX].subareaPK);
     props.setOpen(datestat.nomMenu, massPkId); // полный выход
   }, [datestat, dispatch, props, massplan.plans]);
 

@@ -632,7 +632,7 @@ export const MakeStyleFormPK00 = (wdth: number, PLANER: number) => {
   };
   return styleFormPK00;
 };
-
+//inline
 export const styleFormPK01 = {
   fontSize: 21,
   textAlign: "center",
