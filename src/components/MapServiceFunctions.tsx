@@ -2258,21 +2258,21 @@ export const SaveFormPK = (SaveForm: any, create: boolean) => {
       }}
     >
       <Box sx={{ display: "inline-block", margin: "0px 5px 0px 0px" }}>
-        <Button sx={styleFormPK03} onClick={() => SaveForm(false)}>
+        <Button sx={styleFormPK03} onClick={() => SaveForm(0)}>
           Выйти без сохранения
         </Button>
       </Box>
 
       {create && (
         <Box sx={{ display: "inline-block", margin: "0px 5px 0px 5px" }}>
-          <Button sx={styleFormPK03} onClick={() => SaveForm(false)}>
+          <Button sx={styleFormPK03} onClick={() => SaveForm(2)}>
             Сохранить как новый
           </Button>
         </Box>
       )}
 
       <Box sx={{ display: "inline-block", margin: "0px 5px 0px 5px" }}>
-        <Button sx={styleFormPK03} onClick={() => SaveForm(true)}>
+        <Button sx={styleFormPK03} onClick={() => SaveForm(1)}>
           Сохранить изменения
         </Button>
       </Box>

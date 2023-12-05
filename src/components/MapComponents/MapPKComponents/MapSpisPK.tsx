@@ -11,20 +11,19 @@ import MapViewPK from "./MapViewPK";
 
 //import { BadExit } from "../../MapServiceFunctions";
 
-import { MASSPK } from "../../MainMapGl";
+import { MASSPK, PLANER } from "../../MainMapGl";
 
 import { styleModalEnd, MakeStyleFormPK00 } from "../../MainMapStyle";
 import { styleFormPK01, MakeStylSpisPK01 } from "../../MainMapStyle";
 import { StylSpisPK02, styleSpisPK03, StylSpisPK022 } from "../../MainMapStyle";
-import { PLANER } from "../../MainMapGl";
 //import { styleSpisPK04 } from "../../MainMapStyle";
 
 let flagDel = 0;
 let soobErr = "";
 let IDX = 0;
-
 let massPkId: Array<any> = [];
 let massSpis: Array<any> = [];
+let spisPK: Array<number> = [];
 
 const MapSpisPK = (props: {
   setOpen: any;
@@ -54,14 +53,17 @@ const MapSpisPK = (props: {
     dispatch(statsaveCreate(datestat));
     massPkId = [];
     // создание списка перекрёстков выбранного плана
-    for (let i = 0; i < massplan.plans[idx].coordPlan.length; i++)
-      massPkId.push(massplan.plans[idx].coordPlan[i].id);
-    massPkId.length && props.SetMass(massPkId, massplan.plans[idx].subareaPK);
+    if (massplan.plans.length)
+      for (let i = 0; i < massplan.plans[idx].coordPlan.length; i++)
+        massPkId.push(massplan.plans[idx].coordPlan[i].id);
+    //console.log("ChangeIDX:", idx, massplan.plans[idx].subareaPK, massPkId);
+    massPkId.length &&
+      props.SetMass(massPkId, massplan.plans[idx].subareaPK, 0);
   };
   //=== инициализация ======================================
   massPkId = MASSPK;
-  if (!massplan.plans.length) ChangeIDX(-1);
-  if (massplan.plans.length !== massSpis.length) ChangeIDX(0);
+  // if (!massplan.plans.length) ChangeIDX(-1);
+  // if (massplan.plans.length !== massSpis.length) ChangeIDX(0);
 
   flagDel = 0;
   let massSp = [];
@@ -84,17 +86,25 @@ const MapSpisPK = (props: {
   }
   massSpis = [];
   massSpis = massSp;
+  spisPK = [];
+  for (let i = 0; i < massSpis.length; i++) spisPK.push(massSpis[i].nom);
+  IDX = spisPK.indexOf(PLANER);
+  if (IDX < 0) IDX = 0;
+  //console.log("!!!PLANER:", datestat.idxMenu, IDX, spisPK);
+  //console.log("PLANER:", PLANER,datestat.idxMenu, IDX, spisPK);
+  ChangeIDX(IDX);
   if (datestat.needMakeSpisPK) datestat.needMakeSpisPK = false;
   datestat.needMenuForm = true; // выдавать меню форм
   datestat.lockUp = true; // блокировка/разблокировка меню районов и меню режимов
   dispatch(statsaveCreate(datestat));
   //========================================================
-
   const CloseEnd = React.useCallback(() => {
     datestat.needMenuForm = false; //  не выдавать меню форм
-    datestat.nomMenu = massplan.plans[IDX].nomPK; // номер активного плана ПК
+    let nomMenu = massplan.plans.length ? massplan.plans[IDX].nomPK : -1;
+    datestat.nomMenu = nomMenu; // номер активного плана ПК
     dispatch(statsaveCreate(datestat));
-    props.SetMass(massPkId, massplan.plans[IDX].subareaPK);
+    let subarea = massplan.plans.length ? massplan.plans[IDX].subareaPK : -1;
+    props.SetMass(massPkId, subarea, 0);
     props.setOpen(datestat.nomMenu, massPkId); // полный выход
   }, [datestat, dispatch, props, massplan.plans]);
 
@@ -103,13 +113,8 @@ const MapSpisPK = (props: {
     massSpis[idx].del = !massSpis[idx].del;
     if (massSpis[idx].del) {
       flagDel++;
-    } else {
-      flagDel--;
-    }
-    if (idx === IDX) {
-      ChangeIDX(0);
-      if (!idx) ChangeIDX(-1);
-    }
+    } else flagDel--;
+    if (idx === IDX) ChangeIDX(0);
     setTrigger(!trigger); // ререндер
   };
 
@@ -130,6 +135,7 @@ const MapSpisPK = (props: {
       setOpenSetErr(true);
     } else {
       if (IDX !== idx) {
+        console.log("MarkPlan:", idx);
         ChangeIDX(idx);
         setTrigger(!trigger); // ререндер
       } else CloseEnd(); // повторное нажатие
@@ -144,7 +150,8 @@ const MapSpisPK = (props: {
     massplan.plans = [];
     massplan.plans = massplanPlans;
     dispatch(massplanCreate(massplan));
-    ChangeIDX(massplanPlans.length ? 0 : -1);
+    ChangeIDX(0);
+    //ChangeIDX(massplanPlans.length ? 0 : -1);
     setTrigger(!trigger); // ререндер
   };
   //========================================================

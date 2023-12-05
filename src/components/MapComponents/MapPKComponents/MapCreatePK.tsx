@@ -41,7 +41,8 @@ let nameArea = "";
 let soobErr = "";
 let EscClinch = false;
 let needSort = false;
-let oldPK = -1;
+let oldNomPK = -1;
+
 let currenciesPlan: any = [];
 
 let NewCoordPlan: PlanCoord = {
@@ -100,22 +101,19 @@ const MapCreatePK = (props: {
   const [trigger, setTrigger] = React.useState(false);
 
   let subAreA = SUBAREA === "0" ? 1 : Number(SUBAREA);
+
   subAreA = props.idx < 0 ? subAreA : massplan.plans[props.idx].subareaPK;
+  //console.log("@@@@@@:", SUBAREA, subAreA, props.idx);
   const sumPlan = SUMPK;
   const modeWork = props.idx < 0 ? "create" : "edit";
 
   const CloseEnd = React.useCallback(
-    (mode: boolean) => {
+    (mode: number) => {
       HAVE = 0;
       oldSubArea = -1;
       isOpen = false;
-      if (modeWork === "edit" || datestat.needMenuForm) {
+      if (modeWork === "edit" || datestat.needMenuForm)
         props.setPuskMenu(NewCoordPlan.nomPK); // перезапуск меню ПК
-        if (oldPK !== NewCoordPlan.nomPK) {
-          datestat.nomMenu = NewCoordPlan.nomPK; //  активная строка списка ПК
-          dispatch(statsaveCreate(datestat));
-        }
-      }
       if (modeWork !== "create") {
         datestat.needMakeSpisPK = true; // вызов списка ПК после корректровки ПК
         dispatch(statsaveCreate(datestat));
@@ -128,12 +126,12 @@ const MapCreatePK = (props: {
 
   const handleCloseBad = React.useCallback(() => {
     HAVE && setBadExit(true);
-    !HAVE && CloseEnd(false); // выход без сохранения
+    !HAVE && CloseEnd(0); // выход без сохранения
   }, [CloseEnd]);
 
   const handleCloseBadExit = (mode: boolean) => {
     setBadExit(false);
-    mode && CloseEnd(false); // выход без сохранения
+    mode && CloseEnd(0); // выход без сохранения
   };
   //=== инициализация ======================================
   if (EscClinch) {
@@ -145,7 +143,7 @@ const MapCreatePK = (props: {
       massPkId = []; // правое окно
       massPkIdOld = MASSPK;
       let massNumPk: Array<number> = [];
-      oldPK = -1;
+      oldNomPK = -1;
       //============
       if (modeWork === "create") {
         startPlan = "0";
@@ -161,8 +159,8 @@ const MapCreatePK = (props: {
         NewCoordPlan.namePK = "План координации " + UniqueName();
         NewCoordPlan.areaPK = Number(AREA);
       } else {
-        NewCoordPlan.nomPK = massplan.plans[props.idx].nomPK;
-        oldPK = NewCoordPlan.nomPK;
+        oldNomPK = massplan.plans[props.idx].nomPK;
+        NewCoordPlan.nomPK = oldNomPK;
         NewCoordPlan.namePK = massplan.plans[props.idx].namePK;
         // создания списка свободных номеров ПК
         for (let i = 0; i < massplan.plans.length; i++) {
@@ -185,6 +183,7 @@ const MapCreatePK = (props: {
       }
       //============
       NewCoordPlan.subareaPK = subAreA;
+      NewCoordPlan.areaPK = Number(AREA);
       // создание списка перекрёстков для левого окна
       for (let i = 0; i < massroute.vertexes.length; i++) {
         let ID = massroute.vertexes[i].id;
@@ -215,7 +214,7 @@ const MapCreatePK = (props: {
       oldIdx = props.idx;
       HAVE = 0;
       needSort = false;
-      props.SetMass(massPkId, subAreA);
+      props.SetMass(massPkId, subAreA, 1);
     }
   }
   //========================================================
@@ -242,7 +241,8 @@ const MapCreatePK = (props: {
     }
   };
 
-  const SaveForm = (mode: boolean) => {
+  const SaveForm = (mode: number) => {
+    //mode: 0 - Выйти без сохранения  1 - Сохранить изменения  2 - Сохранить как новый
     if (mode) {
       if (boards[1].items.length) {
         NewCoordPlan.coordPlan = [];
@@ -259,7 +259,31 @@ const MapCreatePK = (props: {
             return b.nomPK < a.nomPK ? 1 : b.nomPK > a.nomPK ? -1 : 0;
           });
         } else {
-          massplan.plans[props.idx] = { ...NewCoordPlan }; // режим корректировки ПК
+          if (mode === 1) {
+            // Сохранить изменения
+            if (oldNomPK !== NewCoordPlan.nomPK) {
+              datestat.nomMenu = NewCoordPlan.nomPK; //  активная строка списка ПК
+              dispatch(statsaveCreate(datestat));
+            }
+            massplan.plans[props.idx] = { ...NewCoordPlan }; // режим корректировки ПК
+          } else {
+            // Сохранить как новый
+            if (NewCoordPlan.nomPK === oldNomPK) {
+              let nom = -1;
+              for (let i = 0; i < currenciesPlan.length; i++) {
+                if (currenciesPlan[i].label === oldNomPK.toString()) nom = i;
+              }
+              let nomm = nom === currenciesPlan.length - 1 ? nom - 1 : nom + 1;
+              NewCoordPlan.nomPK = Number(currenciesPlan[nomm].label);
+            }
+            NewCoordPlan.namePK += "(новый)";
+            datestat.nomMenu = NewCoordPlan.nomPK; //  активная строка списка ПК
+            dispatch(statsaveCreate(datestat));
+            massplan.plans.push({ ...NewCoordPlan }); // режим добавления ПК
+            massplan.plans.sort(function FuncSort(a: any, b: any) {
+              return b.nomPK < a.nomPK ? 1 : b.nomPK > a.nomPK ? -1 : 0;
+            });
+          }
           datestat.needMakeSpisPK = true; // вызов списка ПК после корректровки ПК
           datestat.lockUp = true; // блокировка меню районов и меню режимов
           dispatch(statsaveCreate(datestat));
@@ -272,12 +296,12 @@ const MapCreatePK = (props: {
         }
         dispatch(massplanCreate(massplan));
         console.log("Finish:", massplan);
-        CloseEnd(true); // выход с сохранением
+        CloseEnd(mode); // выход с сохранением
       } else {
         soobErr = "Количество перекрёстков в плане не может быть меньше 1-го";
         setOpenSetErr(true);
       }
-    } else handleCloseBad();
+    } else handleCloseBad(); // выход без сохранения
   };
   //=== Drag and Drop ======================================
   const dragOverHandler = (e: any, board: any) => {
@@ -307,7 +331,7 @@ const MapCreatePK = (props: {
       if (currentBoard.ID) {
         massPkId.splice(currentIndex, 1); // удаление из правого окна
         //console.log("dropHandler_massPkId:", massPkId, subAreA);
-        props.SetMass(massPkId, subAreA);
+        props.SetMass(massPkId, subAreA, 1);
       }
       HAVE++;
     }
@@ -331,7 +355,7 @@ const MapCreatePK = (props: {
       if (board.ID) {
         massPkId.push(currentItem.id); // добавление в правое окно
         //console.log("1ddropCardHandler_massPkId:", massPkId, subAreA);
-        props.SetMass(massPkId, subAreA);
+        props.SetMass(massPkId, subAreA, 1);
       }
       HAVE++;
 
@@ -393,7 +417,7 @@ const MapCreatePK = (props: {
       boards[1].items.push(rec); // добавление в правое окно
       massPkId.push(idd); // добавление  подсветки в правое окно
     }
-    props.SetMass(massPkId, subAreA);
+    props.SetMass(massPkId, subAreA, 1);
     //console.log("MoveLeftWind_massPkId:", massPkId, subAreA);
     HAVE++;
     setTrigger(!trigger); // ререндер
@@ -407,7 +431,7 @@ const MapCreatePK = (props: {
       boards[0].items.push(rec); // добавление в левое окно
     }
     massPkId = []; // удаление подсветки из правого окна
-    props.SetMass(massPkId, subAreA);
+    props.SetMass(massPkId, subAreA, 1);
     //console.log("MoveRightWind_massPkId:", massPkId, subAreA);
     HAVE++;
     setTrigger(!trigger); // ререндер

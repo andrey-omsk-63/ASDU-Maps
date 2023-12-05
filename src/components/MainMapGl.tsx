@@ -335,7 +335,7 @@ const MainMap = (props: {
 
   const BeginPK = () => {
     ZeroRoute(false);
-    if (SUBAREA === "0") {
+    if (Number(SUBAREA) <= 0) {
       setCurrency((SUBAREA = "1"));
       FillMassRoute();
     }
@@ -461,7 +461,7 @@ const MainMap = (props: {
               pointBbIndex = 0; // конечная точка
               SoobOpenSetEr("Связь между двумя точками создовать нельзя");
             } else {
-              let sbAa = areaAa ? SubareaFindById(recA.id): 0;
+              let sbAa = areaAa ? SubareaFindById(recA.id) : 0;
               let sbBb = areaBb ? SubareaFindById(recB.id) : 0;
               console.log("!!!:", sbAa, sbBb);
               if (sbAa !== sbBb && areaAa > 0 && areaBb > 0) {
@@ -742,12 +742,14 @@ const MainMap = (props: {
     }
   };
 
-  const SetMassPkId = (massPkId: any, subarea: number) => {
+  const SetMassPkId = (massPkId: any, subarea: number, mode: number) => {
     MASSPK = massPkId;
     SUBAREA = subarea.toString();
     TurnOnDemoRoute(); // перерисовка связей
+    if (massplan.plans.length) PLANER = massplan.plans[datestat.idxMenu].nomPK;
+    //console.log("SetMassPkId:", datestat.idxMenu, PLANER, spisPK);
     setCurrency((SubArea.indexOf(subarea) + 1).toString());
-    setRevers(!revers); // ререндер
+    mode && setRevers(!revers); // ререндер
   };
 
   const SetModePKForm = (idx: number) => {
@@ -852,10 +854,9 @@ const MainMap = (props: {
           {InputMenuPK(handleChangePK, currencyPK, currenciesPK)}
         </>
       )}
-      {/* {InputMenuPK(handleChangePK, currencyPK, currenciesPK)} */}
       {MakeRevers(makeRevers, needRevers, PressButton)}
       {ShowFormalRoute(flagDemo, PressButton)}
-      {MODE === "2" && datestat.needMenuForm && (
+      {MODE === "2" && datestat.needMenuForm && massplan.plans.length > 0 && (
         <>{InputMenuForm(handleChangeForm, currencyForm, currenciesForm)}</>
       )}
       {MainMenu(flagPusk, flagRoute, PressButton, datestat.lockUp)}
