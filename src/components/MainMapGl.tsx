@@ -259,7 +259,7 @@ const MainMap = (props: {
 
   const FillMassRoute = () => {
     massRoute = [];
-    massRoute = FillMassRouteContent(FlagDemo, massroute);
+    massRoute = FillMassRouteContent(FlagDemo, massroute, massdk);
   };
 
   const MakeRecordMassRoute = (mode: boolean, mass: any) => {
@@ -461,9 +461,13 @@ const MainMap = (props: {
               pointBbIndex = 0; // конечная точка
               SoobOpenSetEr("Связь между двумя точками создовать нельзя");
             } else {
-              let sbAa = areaAa ? SubareaFindById(recA.id) : 0;
-              let sbBb = areaBb ? SubareaFindById(recB.id) : 0;
-              console.log("!!!:", sbAa, sbBb);
+              // let sbAa = areaAa ? SubareaFindById(recA.id) : 0;
+              // let sbBb = areaBb ? SubareaFindById(recB.id) : 0;
+              let sbAa = SubareaFindById(massdk, areaAa, recA.id);
+              let sbBb = SubareaFindById(massdk, areaBb, recB.id);
+
+              console.log("!!!:", sbAa, sbBb, areaAa,areaBb);
+
               if (sbAa !== sbBb && areaAa > 0 && areaBb > 0) {
                 pointBbIndex = 0; // конечная точка
                 SoobOpenSetEr(soob);
@@ -747,7 +751,7 @@ const MainMap = (props: {
     SUBAREA = subarea.toString();
     TurnOnDemoRoute(); // перерисовка связей
     if (massplan.plans.length) PLANER = massplan.plans[datestat.idxMenu].nomPK;
-    //console.log("SetMassPkId:", datestat.idxMenu, PLANER, spisPK);
+    //console.log("SetMassPkId:",subarea, PLANER,massPkId);
     setCurrency((SubArea.indexOf(subarea) + 1).toString());
     mode && setRevers(!revers); // ререндер
   };

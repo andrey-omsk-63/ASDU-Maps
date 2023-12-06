@@ -106,15 +106,15 @@ export const styleModalMenu = {
 };
 //=== InputAdress =====================================================
 export const styleSet = {
-  //width: '230px',
-  width: "226px",
+  width: '230px',
+  //width: "226px",
   maxHeight: "4px",
   minHeight: "4px",
   bgcolor: "#FAFAFA",
   boxShadow: 4,
   textAlign: "center",
   p: 1.5,
-  border: 0,
+  //border: 1,
 };
 
 export const styleInpKnop = {
@@ -147,8 +147,8 @@ export const styleSetAdress = {
 export const styleBoxForm = {
   "& > :not(style)": {
     marginTop: "-9px",
-    marginLeft: "-12px",
-    width: "255px",
+    marginLeft: "-15px",
+    width: "258px",
     border: 0,
   },
 };
@@ -159,11 +159,10 @@ export const styleSetAdrAreaID = {
   marginLeft: "46px",
   width: "318px",
   height: "14vh",
-  border: "3px solid #000",
-  borderColor: "#FFFEF7",
+  border: "3px solid #FFFEF7", // молоко
   borderRadius: 1,
   boxShadow: 24,
-  bgcolor: "#FFFEF7",
+  bgcolor: "#FFFEF7", // молоко
   opacity: 0.85,
 };
 

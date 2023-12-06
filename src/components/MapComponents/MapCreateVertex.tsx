@@ -181,6 +181,7 @@ const MapCreateVertex = (props: {
           propsCoord,
           adrV,
           Number(Area), // area
+          3, // subarea =================================================
           Number(valuen) // id
         )
       );

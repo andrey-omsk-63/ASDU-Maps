@@ -48,23 +48,23 @@ const MapSpisPK = (props: {
   const [view, setView] = React.useState(false);
 
   const ChangeIDX = (idx: number) => {
-    IDX = idx;
-    datestat.idxMenu = idx; //  активная строка списка ПК
-    dispatch(statsaveCreate(datestat));
-    massPkId = [];
-    // создание списка перекрёстков выбранного плана
-    if (massplan.plans.length)
-      for (let i = 0; i < massplan.plans[idx].coordPlan.length; i++)
-        massPkId.push(massplan.plans[idx].coordPlan[i].id);
-    //console.log("ChangeIDX:", idx, massplan.plans[idx].subareaPK, massPkId);
-    massPkId.length &&
-      props.SetMass(massPkId, massplan.plans[idx].subareaPK, 0);
+    if (idx !== IDX) {
+      IDX = idx;
+      datestat.idxMenu = idx; //  активная строка списка ПК
+      dispatch(statsaveCreate(datestat));
+      massPkId = [];
+      // создание списка перекрёстков выбранного плана
+      if (massplan.plans.length) {
+        for (let i = 0; i < massplan.plans[idx].coordPlan.length; i++)
+          massPkId.push(massplan.plans[idx].coordPlan[i].id);
+        //console.log("ChangeIDX:", IDX, massPkId, massplan.plans[idx].subareaPK);
+      }
+      massPkId.length &&
+        props.SetMass(massPkId, massplan.plans[idx].subareaPK, 1);
+    }
   };
   //=== инициализация ======================================
   massPkId = MASSPK;
-  // if (!massplan.plans.length) ChangeIDX(-1);
-  // if (massplan.plans.length !== massSpis.length) ChangeIDX(0);
-
   flagDel = 0;
   let massSp = [];
   for (let i = 0; i < massplan.plans.length; i++) {
@@ -91,7 +91,7 @@ const MapSpisPK = (props: {
   IDX = spisPK.indexOf(PLANER);
   if (IDX < 0) IDX = 0;
   //console.log("!!!PLANER:", datestat.idxMenu, IDX, spisPK);
-  //console.log("PLANER:", PLANER,datestat.idxMenu, IDX, spisPK);
+  //console.log("PLANER:", PLANER, datestat.idxMenu, IDX, spisPK);
   ChangeIDX(IDX);
   if (datestat.needMakeSpisPK) datestat.needMakeSpisPK = false;
   datestat.needMenuForm = true; // выдавать меню форм
@@ -101,10 +101,14 @@ const MapSpisPK = (props: {
   const CloseEnd = React.useCallback(() => {
     datestat.needMenuForm = false; //  не выдавать меню форм
     let nomMenu = massplan.plans.length ? massplan.plans[IDX].nomPK : -1;
+    let have = -1;
+    for (let i = 0; i < massSpis.length; i++) if (!massSpis[i].del) have++;
+    nomMenu = have < 0 ? -1 : nomMenu; // есть ПК не помеченные к удалению
     datestat.nomMenu = nomMenu; // номер активного плана ПК
     dispatch(statsaveCreate(datestat));
     let subarea = massplan.plans.length ? massplan.plans[IDX].subareaPK : -1;
     props.SetMass(massPkId, subarea, 0);
+    if (nomMenu < 0) massPkId = [];
     props.setOpen(datestat.nomMenu, massPkId); // полный выход
   }, [datestat, dispatch, props, massplan.plans]);
 
@@ -114,7 +118,15 @@ const MapSpisPK = (props: {
     if (massSpis[idx].del) {
       flagDel++;
     } else flagDel--;
-    if (idx === IDX) ChangeIDX(0);
+    if (!massSpis[idx].del) ChangeIDX(idx);
+    if (idx === IDX && massSpis[idx].del) {
+      for (let i = 0; i < massSpis.length; i++) {
+        if (!massSpis[i].del) {
+          ChangeIDX(i);
+          break;
+        }
+      }
+    }
     setTrigger(!trigger); // ререндер
   };
 
@@ -135,7 +147,6 @@ const MapSpisPK = (props: {
       setOpenSetErr(true);
     } else {
       if (IDX !== idx) {
-        console.log("MarkPlan:", idx);
         ChangeIDX(idx);
         setTrigger(!trigger); // ререндер
       } else CloseEnd(); // повторное нажатие
@@ -151,7 +162,6 @@ const MapSpisPK = (props: {
     massplan.plans = massplanPlans;
     dispatch(massplanCreate(massplan));
     ChangeIDX(0);
-    //ChangeIDX(massplanPlans.length ? 0 : -1);
     setTrigger(!trigger); // ререндер
   };
   //========================================================

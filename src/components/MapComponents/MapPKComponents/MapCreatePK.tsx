@@ -78,6 +78,10 @@ const MapCreatePK = (props: {
   //   const { mapReducer } = state;
   //   return mapReducer.map;
   // });
+  let massdk = useSelector((state: any) => {
+    const { massdkReducer } = state;
+    return massdkReducer.massdk;
+  });
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
     return massrouteReducer.massroute;
@@ -184,10 +188,14 @@ const MapCreatePK = (props: {
       //============
       NewCoordPlan.subareaPK = subAreA;
       NewCoordPlan.areaPK = Number(AREA);
+      //console.log("1NewCoordPlan:", NewCoordPlan);
       // создание списка перекрёстков для левого окна
       for (let i = 0; i < massroute.vertexes.length; i++) {
         let ID = massroute.vertexes[i].id;
-        if (massroute.vertexes[i].area && SubareaFindById(ID) === subAreA) {
+        if (
+          massroute.vertexes[i].area &&
+          SubareaFindById(massdk, 1, ID) === subAreA
+        ) {
           let maskVert: Stroka = {
             area: massroute.vertexes[i].area,
             id: massroute.vertexes[i].id,
@@ -261,10 +269,8 @@ const MapCreatePK = (props: {
         } else {
           if (mode === 1) {
             // Сохранить изменения
-            if (oldNomPK !== NewCoordPlan.nomPK) {
-              datestat.nomMenu = NewCoordPlan.nomPK; //  активная строка списка ПК
-              dispatch(statsaveCreate(datestat));
-            }
+            datestat.nomMenu = NewCoordPlan.nomPK; //  активная строка списка ПК
+            dispatch(statsaveCreate(datestat));
             massplan.plans[props.idx] = { ...NewCoordPlan }; // режим корректировки ПК
           } else {
             // Сохранить как новый
@@ -288,6 +294,7 @@ const MapCreatePK = (props: {
           datestat.lockUp = true; // блокировка меню районов и меню режимов
           dispatch(statsaveCreate(datestat));
         }
+        //console.log("2NewCoordPlan:", datestat.nomMenu, NewCoordPlan);
         if (needSort) {
           massplan.plans.sort(function Func(a: any, b: any) {
             return b.nomPK < a.nomPK ? 1 : b.nomPK > a.nomPK ? -1 : 0;
@@ -418,7 +425,6 @@ const MapCreatePK = (props: {
       massPkId.push(idd); // добавление  подсветки в правое окно
     }
     props.SetMass(massPkId, subAreA, 1);
-    //console.log("MoveLeftWind_massPkId:", massPkId, subAreA);
     HAVE++;
     setTrigger(!trigger); // ререндер
   };
@@ -432,7 +438,6 @@ const MapCreatePK = (props: {
     }
     massPkId = []; // удаление подсветки из правого окна
     props.SetMass(massPkId, subAreA, 1);
-    //console.log("MoveRightWind_massPkId:", massPkId, subAreA);
     HAVE++;
     setTrigger(!trigger); // ререндер
   };

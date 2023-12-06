@@ -36,7 +36,7 @@ import { styleFormPK03 } from "./MainMapStyle";
 import { styleModalMenuErr, styleHeadError } from "./MapPointDataErrorStyle";
 import { styleBoxFormArea, styleSetArea } from "./MapPointDataErrorStyle";
 
-import { debug, SUBAREA, MODE, MASSPK, SubArea } from "./MainMapGl";
+import { debug, SUBAREA, MODE, MASSPK, SubArea, AREA } from "./MainMapGl";
 //import { SUBAREA } from "./MainMapGl";
 import { ZONE } from "./MapConst";
 import { dateMapGl } from "./../App";
@@ -64,11 +64,18 @@ export const UniqueName = () => {
   return nameMode;
 };
 
-export const SubareaFindById = (id: number) => {
+export const SubareaFindById = (massdk: any, area: number, id: number) => {
   let subarea = -1;
-  for (let j = 0; j < dateMapGl.tflight.length; j++) {
-    if (dateMapGl.tflight[j].ID === id) subarea = dateMapGl.tflight[j].subarea;
+  let areA = area ? AREA : 0;
+
+  for (let j = 0; j < massdk.length; j++) {
+    if (massdk[j].ID === 38)
+      console.log("massdk[j]:", j, massdk[j].ID, id, massdk[j]);
+
+    if (massdk[j].ID === id && massdk[j].area === areA)
+      subarea = massdk[j].subarea;
   }
+  console.log("areA:", areA, id, subarea);
   return subarea;
 };
 
@@ -94,6 +101,7 @@ export const MapssdkNewPoint = (
   coords: any,
   name: string,
   area: number,
+  subarea: number,
   id: number
 ) => {
   let masskPoint: Pointer = {
@@ -111,6 +119,7 @@ export const MapssdkNewPoint = (
   masskPoint.nameCoordinates = name;
   masskPoint.region = homeRegion;
   masskPoint.area = area;
+  masskPoint.subarea = subarea;
   masskPoint.newCoordinates = 1;
   return masskPoint;
 };
@@ -177,14 +186,20 @@ export const RecordMassRoute = (
   return masskRoute;
 };
 
-export const FillMassRouteContent = (FlagDemo: boolean, massroute: any) => {
+export const FillMassRouteContent = (
+  FlagDemo: boolean,
+  massroute: any,
+  massdk: any
+) => {
   let massRoute: any = [];
   if (SUBAREA === "0" && FlagDemo) massRoute = massroute.ways;
   if (SUBAREA !== "0" && FlagDemo) {
     for (let i = 0; i < massroute.ways.length; i++)
       if (
-        SubareaFindById(massroute.ways[i].sourceID).toString() === SUBAREA ||
-        SubareaFindById(massroute.ways[i].targetID).toString() === SUBAREA
+        SubareaFindById(massdk, 1, massroute.ways[i].sourceID).toString() ===
+          SUBAREA ||
+        SubareaFindById(massdk, 1, massroute.ways[i].targetID).toString() ===
+          SUBAREA
       )
         massRoute.push(massroute.ways[i]);
   }
@@ -972,7 +987,7 @@ export const MasskPoint = (massrouteVertexes: any) => {
     nameCoordinates: "",
     region: 0,
     area: 0,
-    subarea: 0,
+    subarea: 3, // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     newCoordinates: 0,
   };
   masskPoint.ID = massrouteVertexes.id;
@@ -980,7 +995,16 @@ export const MasskPoint = (massrouteVertexes: any) => {
   masskPoint.nameCoordinates = massrouteVertexes.name;
   masskPoint.region = massrouteVertexes.region;
   masskPoint.area = massrouteVertexes.area;
-  masskPoint.subarea = SubareaFindById(massrouteVertexes.id);
+  //=============================================================
+  if (masskPoint.area) {
+    let subarea = -1;
+    for (let j = 0; j < dateMapGl.tflight.length; j++) {
+      if (dateMapGl.tflight[j].ID === masskPoint.ID)
+        subarea = dateMapGl.tflight[j].subarea;
+    }
+    masskPoint.subarea = subarea;
+  }
+  //=============================================================
   masskPoint.newCoordinates = 0;
   return masskPoint;
 };
