@@ -31,14 +31,14 @@ import { styleSetPoint, styleFT02, styleFormMenu } from "./MainMapStyle";
 import { styleInpKnop, styleBind05, styleModalEndAttent } from "./MainMapStyle";
 import { styleBind02, styleTypography, searchControl } from "./MainMapStyle";
 import { styleBind03, styleBind033, styleSetImg } from "./MainMapStyle";
-import { styleFormPK03 } from "./MainMapStyle";
+import { styleFormPK03, styleSetAdrArea, styleSetAdrID } from "./MainMapStyle";
 
 import { styleModalMenuErr, styleHeadError } from "./MapPointDataErrorStyle";
 import { styleBoxFormArea, styleSetArea } from "./MapPointDataErrorStyle";
 
 import { debug, SUBAREA, MODE, MASSPK, SubArea, AREA } from "./MainMapGl";
 //import { SUBAREA } from "./MainMapGl";
-import { ZONE } from "./MapConst";
+import { ZONE, OUTGO } from "./MapConst";
 import { dateMapGl } from "./../App";
 
 export const handleKey = (event: any) => {
@@ -64,18 +64,23 @@ export const UniqueName = () => {
   return nameMode;
 };
 
+export const KnopProps = (styleXX: any, func: any, rec: any, idx: any) => {
+  return (
+    <Button sx={styleXX} onClick={() => func(idx)}>
+      {rec}
+    </Button>
+  );
+};
+
 export const SubareaFindById = (massdk: any, area: number, id: number) => {
   let subarea = -1;
-  let areA = area ? AREA : 0;
+  let areA = area ? Number(AREA) : 0;
 
   for (let j = 0; j < massdk.length; j++) {
-    if (massdk[j].ID === 38)
-      console.log("massdk[j]:", j, massdk[j].ID, id, massdk[j]);
-
     if (massdk[j].ID === id && massdk[j].area === areA)
       subarea = massdk[j].subarea;
   }
-  console.log("areA:", areA, id, subarea);
+
   return subarea;
 };
 
@@ -747,16 +752,13 @@ export const GetPointOptions = (
   map: any,
   pointAaIndex: number,
   pointBbIndex: number,
-  massdk: any,
-  massroute: any
+  massdk: any
+  //massroute: any
 ) => {
   let idxMap = -1;
   let SubArea = massdk[index].subarea.toString();
   for (let i = 0; i < map.dateMap.tflight.length; i++) {
-    if (
-      map.dateMap.tflight[i].ID === massdk[index].ID
-      //&& Number(map.dateMap.tflight[i].area.num) === massdk[index].area
-    ) {
+    if (map.dateMap.tflight[i].ID === massdk[index].ID) {
       idxMap = i;
       break;
     }
@@ -774,7 +776,6 @@ export const GetPointOptions = (
     }
     //================================= потом исправить ======
     if (massdk[index].newCoordinates > 0) {
-      //if (SubArea === )
       if (SubArea === SUBAREA || SUBAREA === "0") {
         host = "http://localhost:3000/18.svg";
         if (!debug)
@@ -789,7 +790,6 @@ export const GetPointOptions = (
           window.location.origin + "/free/img/trafficLights/" + nom + ".svg";
     };
 
-    // if (PLANER > 0 && SubArea === SUBAREA)
     if (SubArea === SUBAREA)
       if (MASSPK.indexOf(massdk[index].ID) >= 0) HosterIllum("4");
     if (MODE === "1")
@@ -798,7 +798,7 @@ export const GetPointOptions = (
   };
 
   let colorBalloon = "islands#violetCircleDotIcon";
-  if (massroute.vertexes[index].area === 0) {
+  if (massdk[index].area === 0 && (SubArea === SUBAREA || SUBAREA === "0")) {
     colorBalloon = "islands#violetCircleIcon";
     if (massdk[index].newCoordinates > 0)
       colorBalloon = "islands#darkOrangeCircleIcon";
@@ -1197,15 +1197,28 @@ export const NoVertex = (openSetErr: boolean, handleCloseErr: Function) => {
 export const InputAdressVertex = (
   openSetInpAdres: boolean,
   handleCloseInp: Function,
-  valueAdr: string,
-  setValueAdr: Function
+  //valueAdr: string,
+  //setValueAdr: Function
 ) => {
   const styleSetAdres = {
     outline: "none",
-    marginTop: "26vh",
-    marginLeft: "46px",
     width: "318px",
     height: "7vh",
+    marginTop: "26vh",
+    marginLeft: "46px",
+    border: "1px solid #FFFEF7", // светло серый
+    borderRadius: 1,
+    boxShadow: 24,
+    bgcolor: "#FFFEF7", // светло серый
+    opacity: 0.85,
+  };
+
+  const styleSetAdress = {
+    outline: "none",
+    width: "318px",
+    height: "14vh",
+    marginTop: "9vh",
+    marginLeft: "48px",
     border: "3px solid #FFFEF7", // светло серый
     borderRadius: 1,
     boxShadow: 24,
@@ -1231,42 +1244,122 @@ export const InputAdressVertex = (
     },
   };
 
+  let subArea = -1;
+  let dat = [];
+  for (let i = 0; i < SubArea.length; i++) {
+    dat.push(SubArea[i].toString() + "-й подрайон");
+    if (!i) subArea = SubArea[i];
+  }
+  let massKey = [];
+  let massDat = [];
+  const currencies: any = [];
+  for (let key in dat) {
+    massKey.push(key);
+    massDat.push(dat[key]);
+  }
+  for (let i = 0; i < massKey.length; i++) {
+    let maskCurrencies = {
+      value: "",
+      label: "",
+    };
+    maskCurrencies.value = massKey[i];
+    maskCurrencies.label = massDat[i];
+    currencies.push(maskCurrencies);
+  }
+
+  const [currency, setCurrency] = React.useState(massKey[0]);
+  const [valueAdr, setValueAdr] = React.useState("Перекрёсток" + UniqueName())
+
   const handleChangeAdr = (event: any) => {
     let valueInp = event.target.value.replace(/^0+/, "");
     setValueAdr(valueInp);
   };
 
+  const handleChangeSArea = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let sub = Number(event.target.value);
+    subArea = SubArea[sub];
+    console.log("subArea:", subArea);
+    setCurrency(event.target.value);
+  };
+
+  const InputAdress = () => {
+    return (
+      <Box sx={styleSetAd}>
+        <Box component="form" sx={styleBoxFormAdres}>
+          <TextField
+            size="small"
+            onKeyPress={handleKey} //отключение Enter
+            type="text"
+            InputProps={{
+              disableUnderline: true,
+              style: { fontSize: 13.3, backgroundColor: "#FFFBE5" },
+            }}
+            value={valueAdr}
+            onChange={handleChangeAdr}
+            variant="standard"
+            helperText="Введите наименование (адрес)"
+            color="secondary"
+          />
+        </Box>
+      </Box>
+    );
+  };
+
+  const InputSubArea = () => {
+    return (
+      <Box sx={styleSetArea}>
+        <Box component="form" sx={styleBoxFormArea}>
+          <TextField
+            select
+            size="small"
+            onKeyPress={handleKey} //отключение Enter
+            InputProps={{ disableUnderline: true }}
+            value={currency}
+            onChange={handleChangeSArea}
+            variant="standard"
+            helperText="Введите подрайон"
+            color="secondary"
+          >
+            {currencies.map((option: any) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Box>
+      </Box>
+    );
+  };
+
   return (
-    <Modal
-      open={openSetInpAdres}
-      onClose={() => handleCloseInp(false)}
-      hideBackdrop
-    >
-      <Grid item container sx={styleSetAdres}>
+    <Modal open={openSetInpAdres} onClose={() => handleCloseInp(false)}>
+      {/* <Grid item container sx={styleSetAdres}>
         <Grid item xs={9.7}>
-          <Box sx={styleSetAd}>
-            <Box component="form" sx={styleBoxFormAdres}>
-              <TextField
-                size="small"
-                onKeyPress={handleKey} //отключение Enter
-                type="text"
-                InputProps={{
-                  disableUnderline: true,
-                  style: { fontSize: 13.3, backgroundColor: "#FFFBE5" },
-                }}
-                value={valueAdr}
-                onChange={handleChangeAdr}
-                variant="standard"
-                helperText="Введите наименование (адрес)"
-                color="secondary"
-              />
-            </Box>
-          </Box>
+          {InputAdress()}
         </Grid>
         <Grid item xs={2.3}>
           <Button sx={styleInpKnop} onClick={() => handleCloseInp(true)}>
             Ввод
           </Button>
+        </Grid>
+      </Grid> */}
+      <Grid item container sx={styleSetAdress}>
+        <Grid item>
+          <Grid item container sx={styleSetAdrArea}>
+            <Grid item xs={9.5}>
+              {InputSubArea()}
+            </Grid>
+          </Grid>
+          <Grid item container sx={styleSetAdrID}>
+            <Grid item xs={9.5} sx={{ border: 0 }}>
+              {InputAdress()}
+            </Grid>
+            <Grid item xs={2.2} sx={{ border: 0 }}>
+              <Button sx={styleInpKnop} onClick={handleCloseInp(true)}>
+                Ввод
+              </Button>
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     </Modal>
@@ -1627,7 +1720,8 @@ export const BindTablFrom = (
   const StrTablFrom = () => {
     let resStr = [];
     for (let i = 0; i < kolFazFrom; i++) {
-      let nr = nameRoute + (i + 1).toString();
+      //let nr = nameRoute + (i + 1).toString();
+      let nr = OUTGO + (i + 1).toString();
       resStr.push(
         <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
           {ArgTablBindContent(1, i + 1, 0)}

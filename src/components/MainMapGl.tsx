@@ -461,14 +461,10 @@ const MainMap = (props: {
               pointBbIndex = 0; // конечная точка
               SoobOpenSetEr("Связь между двумя точками создовать нельзя");
             } else {
-              // let sbAa = areaAa ? SubareaFindById(recA.id) : 0;
-              // let sbBb = areaBb ? SubareaFindById(recB.id) : 0;
               let sbAa = SubareaFindById(massdk, areaAa, recA.id);
               let sbBb = SubareaFindById(massdk, areaBb, recB.id);
-
-              console.log("!!!:", sbAa, sbBb, areaAa,areaBb);
-
-              if (sbAa !== sbBb && areaAa > 0 && areaBb > 0) {
+              // if (sbAa !== sbBb && areaAa > 0 && areaBb > 0) {
+              if (sbAa !== sbBb) {
                 pointBbIndex = 0; // конечная точка
                 SoobOpenSetEr(soob);
               } else {
@@ -578,7 +574,7 @@ const MainMap = (props: {
             key={props.idx}
             geometry={props.coordinate}
             properties={getPointData(props.idx, pA, pB, massdk, map)}
-            options={GetPointOptions(props.idx, map, pA, pB, massdk, massroute)}
+            options={GetPointOptions(props.idx, map, pA, pB, massdk)}
             modules={["geoObject.addon.balloon", "geoObject.addon.hint"]}
             onClick={() => OnPlacemarkClickPoint(props.idx, 0)}
           />

@@ -8,6 +8,8 @@ import Typography from "@mui/material/Typography";
 import MapCreatePoint from "./MapCreatePoint";
 import MapCreateVertex from "./MapCreateVertex";
 
+import { KnopProps } from "./../MapServiceFunctions";
+
 import { styleModalEnd, styleModalMenu } from "./../MainMapStyle";
 import { styleTypography } from "./../MainMapStyle";
 
@@ -18,7 +20,6 @@ const MapCreatePointVertex = (props: {
   region: number;
   coord: any;
   createPoint: any;
-  //area: string;
 }) => {
   const styleSet = {
     outline: "none",
@@ -37,7 +38,6 @@ const MapCreatePointVertex = (props: {
   const [openSet, setOpenSet] = React.useState(true);
   const [openSetPoint, setOpenSetPoint] = React.useState(false);
   const [openSetVert, setOpenSetVert] = React.useState(false);
-  //const AREA = props.area;
 
   const handleCloseSetEnd = () => {
     props.setOpen(false);
@@ -45,12 +45,10 @@ const MapCreatePointVertex = (props: {
   };
 
   const handleCloseSet = (event: any, reason: string) => {
-    //console.log("handleCloseEnd:", reason); // Заглушка
     if (reason !== "backdropClick") handleCloseSetEnd();
   };
 
   const handleClose = (mode: number) => {
-    //console.log("handleClose:", mode);
     if (typeof mode !== "number") {
       handleCloseSetEnd();
     } else {
@@ -75,13 +73,9 @@ const MapCreatePointVertex = (props: {
               Что создаём?
             </Typography>
             <br />
-            <Button sx={styleModalMenu} onClick={() => handleClose(1)}>
-              Точку
-            </Button>
+            {KnopProps(styleModalMenu,handleClose,'Точку',1)}
             &nbsp;
-            <Button sx={styleModalMenu} onClick={() => handleClose(2)}>
-              Перекрёсток
-            </Button>
+            {KnopProps(styleModalMenu,handleClose,'Перекрёсток',2)}
           </Box>
         </Box>
       </Modal>

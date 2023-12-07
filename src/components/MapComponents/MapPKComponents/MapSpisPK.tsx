@@ -9,7 +9,7 @@ import Button from "@mui/material/Button";
 import MapPointDataError from "../MapPointDataError";
 import MapViewPK from "./MapViewPK";
 
-//import { BadExit } from "../../MapServiceFunctions";
+import { KnopProps } from "../../MapServiceFunctions";
 
 import { MASSPK, PLANER } from "../../MainMapGl";
 
@@ -186,22 +186,16 @@ const MapSpisPK = (props: {
           </Grid>
           <Grid item xs={1.5} sx={{ border: 0 }}>
             {!del && (
-              <Button sx={StylSpisPK02(fl, fl)} onClick={() => ViewPlan(i)}>
-                Просмотр
-              </Button>
+              <>{KnopProps(StylSpisPK02(fl, fl), ViewPlan, "Просмотр", i)}</>
             )}
           </Grid>
           <Grid item xs={1.5} sx={{ border: 0 }}>
             {!del && (
-              <Button sx={StylSpisPK02(fl, fl)} onClick={() => EditPlan(i)}>
-                Изменить
-              </Button>
+              <>{KnopProps(StylSpisPK02(fl, fl), EditPlan, "Изменить", i)}</>
             )}
           </Grid>
-          <Grid item xs sx={{ border: 0 }}>
-            <Button sx={StylSpisPK02(del, fl)} onClick={() => MarkSpis(i)}>
-              {titleDel}
-            </Button>
+          <Grid item xs>
+            {KnopProps(StylSpisPK02(del, fl), MarkSpis, titleDel, i)}
           </Grid>
         </Grid>
       );

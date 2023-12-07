@@ -14,10 +14,10 @@ import MapRouteBindForm from "./MapRouteBindForm";
 import { StrokaMenuFooterBind, ReplaceInSvg } from "./../MapServiceFunctions";
 import { HeaderBind, BindInput, MaskFormWay } from "./../MapServiceFunctions";
 import { HeaderTablBindContent, BindTablFrom } from "./../MapServiceFunctions";
-import { BadExit } from "./../MapServiceFunctions";
+import { BadExit, KnopProps } from "./../MapServiceFunctions";
 
 import { MODE } from "./../MainMapGl";
-import { KolFrom, KolIn } from "./../MapConst";
+import { KolFrom, KolIn, INCOM, OUTGO } from "./../MapConst";
 
 import { styleSetImg, styleModalEndBind } from "./../MainMapStyle";
 import { styleBind042, MakeStyleBind00, styleBind043 } from "./../MainMapStyle";
@@ -165,17 +165,14 @@ const MapRouteBind = (props: {
     beginMassTotal = 0;
     let nom = 1;
     for (let j = 0; j < kolIn; j++) {
-      let nameIn = ("00" + massroute.vertexes[props.idxB].id).slice(-3);
-      nameIn += (j + 1).toString();
+      let nameIn = INCOM + (j + 1).toString();
       masFormIn.push(JSON.parse(JSON.stringify(maskForm)));
-      masFormIn[j].name = nameIn + (j + 1).toString();
+      masFormIn[j].name = nameIn;
       for (let i = 0; i < kolFrom; i++) {
-        let nameFrom = ("00" + massroute.vertexes[props.idxA].id).slice(-3);
-        nameFrom += (i + 1).toString();
+        let nameFrom = OUTGO + (i + 1).toString();
         let maskTotal: any = {
           have: false,
           nom: nom++,
-          //name: nameIn + "/" + nameFrom,
           name: nameFrom + "/" + nameIn,
           intensTrFrom: 0,
           intensTrIn: 0,
@@ -192,8 +189,7 @@ const MapRouteBind = (props: {
     }
     for (let i = 0; i < kolFrom; i++) {
       masFormFrom.push(JSON.parse(JSON.stringify(maskForm)));
-      let nameFrom = ("00" + massroute.vertexes[props.idxA].id).slice(-3);
-      masFormFrom[i].name = nameFrom + (i + 1).toString();
+      masFormFrom[i].name = OUTGO + (i + 1).toString();
     }
   }
   //=== Ожидания получения изображений перекрёстков ========
@@ -349,31 +345,28 @@ const MapRouteBind = (props: {
     );
   };
 
+  const OutputProps = (xss: number, rec: any) => {
+    return (
+      <Grid item xs={xss} sx={{ lineHeight: "3vh", textAlign: "center" }}>
+        {rec}
+      </Grid>
+    );
+  };
+
   const StrokaTablIn = () => {
     let resStr = [];
-    let nameRoute = "00" + massroute.vertexes[props.idxB].id;
-    nameRoute = nameRoute.slice(-3);
+    let knopka = "просмотр/изменение";
     for (let i = 0; i < kolIn; i++) {
-      let nr = nameRoute + (i + 1).toString();
+      let nr = INCOM + (i + 1).toString();
       let illum = beginMassTotal / kolFrom === i ? styleBind042 : styleBind041;
       resStr.push(
         <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
-          <Grid item xs={1} sx={{ lineHeight: "3vh", textAlign: "center" }}>
-            {i + 1}
-          </Grid>
-          <Grid item xs={3} sx={{ lineHeight: "3vh", textAlign: "center" }}>
-            <Button sx={illum} onClick={() => handleCloseIn(i)}>
-              {nr}
-            </Button>
-          </Grid>
+          {OutputProps(1, i + 1)}
+          {OutputProps(3, KnopProps(illum, handleCloseIn, nr, i))}
           <Grid item xs={4} sx={{ display: "grid", justifyContent: "center" }}>
             {BindInput(masFormIn[i].intensTr, i, SetIn, 1, 10000)}
           </Grid>
-          <Grid item xs sx={{ lineHeight: "3vh", textAlign: "center" }}>
-            <Button sx={styleBind05} onClick={() => hClIn(i)}>
-              просмотр/изменение
-            </Button>
-          </Grid>
+          {OutputProps(4, KnopProps(styleBind05, hClIn, knopka, i))}
         </Grid>
       );
     }
@@ -415,19 +408,12 @@ const MapRouteBind = (props: {
       if (massTotTrFrom[i] && massTotTrIn[i] > 0 && !massTotal[i].editIntensPr)
         massTotPr[i] = Math.round((massTotTrIn[i] * 100) / massTotTrFrom[i]);
     }
+    
     return (
       <>
-        <Grid item xs={0.5} sx={{ lineHeight: "3vh", textAlign: "center" }}>
-          <b>{metka}</b>
-        </Grid>
-        <Grid item xs={0.5} sx={{ lineHeight: "3vh", textAlign: "center" }}>
-          <Button sx={illum} onClick={() => handleCloseTotal(i)}>
-            {idx + 1}
-          </Button>
-        </Grid>
-        <Grid item xs={2.5} sx={{ lineHeight: "3vh", textAlign: "center" }}>
-          <b>{massTotal[i].name}</b>
-        </Grid>
+        {OutputProps(0.5, <b>{metka}</b>)}
+        {OutputProps(0.5, KnopProps(illum, handleCloseTotal, idx + 1, i))}
+        {OutputProps(2.5, <b>{massTotal[i].name}</b>)}
         <Grid item xs={3.5}>
           <Grid container item xs={12} sx={{ fontSize: 14 }}>
             <Grid item xs={5} sx={styleBind01}>
@@ -476,8 +462,7 @@ const MapRouteBind = (props: {
 
   const TablTotal = () => {
     let nom = beginMassTotal / kolFrom + 1;
-    let nameRoute = "00" + massroute.vertexes[props.idxB].id;
-    nameRoute = nameRoute.slice(-3) + nom.toString();
+    let nameRoute = massroute.vertexes[props.idxB].id + "." + nom.toString();
     return (
       <Grid item xs sx={styleSetImg}>
         <Box sx={styleBind03}>

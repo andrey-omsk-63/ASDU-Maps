@@ -106,7 +106,7 @@ export const styleModalMenu = {
 };
 //=== InputAdress =====================================================
 export const styleSet = {
-  width: '230px',
+  width: "230px",
   //width: "226px",
   maxHeight: "4px",
   minHeight: "4px",
@@ -130,12 +130,23 @@ export const styleInpKnop = {
 };
 
 export const styleSetAdress = {
+  // outline: "none",
+  // width: "318px",
+  // height: "7vh",
+  // marginTop: "9vh",
+  // marginLeft: "48px",
+  // //marginLeft: '59px',
+  // border: "3px solid #000",
+  // borderColor: "#FFFEF7",
+  // borderRadius: 1,
+  // boxShadow: 24,
+  // bgcolor: "#FFFEF7",
+  // opacity: 0.85,
   outline: "none",
   width: "318px",
-  height: "7vh",
+  height: "14vh",
   marginTop: "9vh",
   marginLeft: "48px",
-  //marginLeft: '59px',
   border: "3px solid #000",
   borderColor: "#FFFEF7",
   borderRadius: 1,

@@ -13,12 +13,9 @@ import { MapssdkNewPoint, MassrouteNewPoint } from "./../MapServiceFunctions";
 
 import { SubArea, debug } from "./../MainMapGl";
 
-import {
-  //styleSetAdress,
-  styleBoxForm,
-  styleInpKnop,
-} from "./../MainMapStyle";
-import { styleSet } from "./../MainMapStyle";
+import { styleSetAdress, styleBoxForm, styleInpKnop } from "./../MainMapStyle";
+import { styleSet, styleSetAdrArea, styleSetAdrID } from "./../MainMapStyle";
+import { styleSetArea, styleBoxFormArea } from "./../MainMapStyle";
 
 let subArea = -1;
 
@@ -72,7 +69,6 @@ const MapCreatePoint = (props: {
   };
 
   const [openSetAdress, setOpenSetAdress] = React.useState(true);
-  //const [valuen, setValuen] = React.useState(1);
   const [valueAdr, setValueAdr] = React.useState("Объект" + NameMode());
   const [currency, setCurrency] = React.useState(massKey[0]);
 
@@ -87,7 +83,6 @@ const MapCreatePoint = (props: {
 
   const handleCloseSetAdr = () => {
     let id = debug ? 0 : 0;
-    console.log("massdk:", massdk);
     massdk.push(
       MapssdkNewPoint(props.region, props.coord, valueAdr, 0, subArea, id)
     );
@@ -129,50 +124,6 @@ const MapCreatePoint = (props: {
         </Box>
       </Box>
     );
-  };
-
-  const styleSetAdress = {
-    outline: "none",
-    width: "318px",
-    height: "14vh",
-    marginTop: "9vh",
-    marginLeft: "48px",
-    border: "3px solid #000",
-    borderColor: "#FFFEF7",
-    borderRadius: 1,
-    boxShadow: 24,
-    bgcolor: "#FFFEF7",
-    opacity: 0.85,
-  };
-
-  const styleSetAdrArea = {
-    width: "319px",
-    height: "30px",
-  };
-
-  const styleSetAdrID = {
-    width: "319px",
-    height: "30px",
-    marginTop: "3vh",
-    border: 0,
-  };
-
-  const styleSetArea = {
-    width: "230px",
-    maxHeight: "3px",
-    minHeight: "3px",
-    bgcolor: "#FAFAFA",
-    boxShadow: 4,
-    textAlign: "center",
-    p: 1.5,
-  };
-
-  const styleBoxFormArea = {
-    "& > :not(style)": {
-      marginTop: "-13px",
-      marginLeft: "-12px",
-      width: "253px",
-    },
   };
 
   const handleChangeSArea = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -221,7 +172,6 @@ const MapCreatePoint = (props: {
             <Grid item xs={9.5} sx={{ border: 0 }}>
               {InputAdress()}
             </Grid>
-
             <Grid item xs={2.2} sx={{ border: 0 }}>
               <Button sx={styleInpKnop} onClick={handleCloseSetAdr}>
                 Ввод

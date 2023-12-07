@@ -12,8 +12,10 @@ import MenuItem from "@mui/material/MenuItem";
 
 import MapPointDataError from "./MapPointDataError";
 
+import { SubArea } from "./../MainMapGl";
+
 import { MapssdkNewPoint, MassrouteNewPoint } from "./../MapServiceFunctions";
-import { NoVertex, InputAdressVertex } from "./../MapServiceFunctions";
+import { NoVertex, UniqueName } from "./../MapServiceFunctions";
 
 import { styleInpKnop, styleSetAdrAreaID } from "./../MainMapStyle";
 import { styleSetAdrArea, styleSetAdrID } from "./../MainMapStyle";
@@ -73,25 +75,40 @@ const MapCreateVertex = (props: {
     currencies.push(maskCurrencies);
   }
 
-  const NameMode = () => {
-    let nameMode =
-      "(" +
-      new Date().toLocaleDateString() +
-      " " +
-      new Date().toLocaleTimeString() +
-      ")";
-    return nameMode;
-  };
-
   const [openSetAdress, setOpenSetAdress] = React.useState(true);
   const [currency, setCurrency] = React.useState(massKey[0]);
   const [valuen, setValuen] = React.useState(1);
-  const [valueAdr, setValueAdr] = React.useState("Перекрёсток" + NameMode());
   const [openSetErr, setOpenSetErr] = React.useState(false);
   const [openSetNoVertex, setOpenSetNoVertex] = React.useState(false);
   const [openSetInpAdr, setOpenSetInpAdr] = React.useState(false);
   const AREA = props.area;
   let Area = AREA === "0" ? "1" : props.area;
+
+  let subArea = -1;
+  let datt = [];
+  for (let i = 0; i < SubArea.length; i++) {
+    datt.push(SubArea[i].toString() + "-й подрайон");
+    if (!i) subArea = SubArea[i];
+  }
+  let massKeyt = [];
+  let massDatt = [];
+  const currenciest: any = [];
+  for (let key in dat) {
+    massKeyt.push(key);
+    massDatt.push(dat[key]);
+  }
+  for (let i = 0; i < massKey.length; i++) {
+    let maskCurrencies = {
+      value: "",
+      label: "",
+    };
+    maskCurrencies.value = massKeyt[i];
+    maskCurrencies.label = massDatt[i];
+    currenciest.push(maskCurrencies);
+  }
+
+  const [currencyt, setCurrencyt] = React.useState(massKeyt[0]);
+  const [valueAdr, setValueAdr] = React.useState("Перекрёсток" + UniqueName());
 
   const handleKey = (event: any) => {
     if (event.key === "Enter") event.preventDefault();
@@ -109,7 +126,7 @@ const MapCreateVertex = (props: {
     if (valueInp === "") valueInp = 0;
     valueInp = Math.trunc(Number(valueInp)).toString();
     setValuen(valueInp);
-    setValueAdr("ДК " + valueInp + " " + NameMode());
+    setValueAdr("ДК " + valueInp + " " + UniqueName());
   };
 
   const handleCloseSetAdress = () => {
@@ -130,12 +147,7 @@ const MapCreateVertex = (props: {
         massroute.vertexes[i].id === Number(valuen)
       ) {
         doublAreaID = false;
-        soobErr =
-          "Такой светофор уже существует (район: " +
-          Area +
-          " ID: " +
-          valuen +
-          ")";
+        soobErr = "Такой светофор уже существует (ID: " + valuen + ")";
         setOpenSetErr(true);
       }
     }
@@ -281,6 +293,173 @@ const MapCreateVertex = (props: {
     setOpenSetInpAdr(false);
   };
 
+  const InputAdressVertex = () =>
+    //openSetInpAdres: boolean,
+    //handleCloseInp: Function,
+    //valueAdr: string,
+    //setValueAdr: Function
+    {
+      const styleSetAdres = {
+        outline: "none",
+        width: "318px",
+        height: "7vh",
+        marginTop: "26vh",
+        marginLeft: "46px",
+        border: "1px solid #FFFEF7", // светло серый
+        borderRadius: 1,
+        boxShadow: 24,
+        bgcolor: "#FFFEF7", // светло серый
+        opacity: 0.85,
+      };
+
+      const styleSetAdress = {
+        outline: "none",
+        width: "318px",
+        height: "14vh",
+        marginTop: "9vh",
+        marginLeft: "48px",
+        border: "3px solid #FFFEF7", // светло серый
+        borderRadius: 1,
+        boxShadow: 24,
+        bgcolor: "#FFFEF7", // светло серый
+        opacity: 0.85,
+      };
+
+      const styleSetAd = {
+        width: "230px",
+        maxHeight: "3px",
+        minHeight: "3px",
+        bgcolor: "#FAFAFA", // светло серый
+        boxShadow: 3,
+        textAlign: "center",
+        p: 1.5,
+      };
+
+      const styleBoxFormAdres = {
+        "& > :not(style)": {
+          marginTop: "-9px",
+          marginLeft: "-12px",
+          width: "253px",
+        },
+      };
+
+      // let subArea = -1;
+      // let dat = [];
+      // for (let i = 0; i < SubArea.length; i++) {
+      //   dat.push(SubArea[i].toString() + "-й подрайон");
+      //   if (!i) subArea = SubArea[i];
+      // }
+      // let massKey = [];
+      // let massDat = [];
+      // const currencies: any = [];
+      // for (let key in dat) {
+      //   massKey.push(key);
+      //   massDat.push(dat[key]);
+      // }
+      // for (let i = 0; i < massKey.length; i++) {
+      //   let maskCurrencies = {
+      //     value: "",
+      //     label: "",
+      //   };
+      //   maskCurrencies.value = massKey[i];
+      //   maskCurrencies.label = massDat[i];
+      //   currencies.push(maskCurrencies);
+      // }
+
+      // const [currency, setCurrency] = React.useState(massKey[0]);
+      // const [valueAdr, setValueAdr] = React.useState("Перекрёсток" + UniqueName())
+
+      const handleChangeAdr = (event: any) => {
+        let valueInp = event.target.value.replace(/^0+/, "");
+        setValueAdr(valueInp);
+      };
+
+      const handleChangeSArea = (
+        event: React.ChangeEvent<HTMLInputElement>
+      ) => {
+        let sub = Number(event.target.value);
+        subArea = SubArea[sub];
+        console.log("subArea:", subArea);
+        setCurrencyt(event.target.value);
+      };
+
+      const InputAdress = () => {
+        return (
+          <Box sx={styleSetAd}>
+            <Box component="form" sx={styleBoxFormAdres}>
+              <TextField
+                size="small"
+                onKeyPress={handleKey} //отключение Enter
+                type="text"
+                InputProps={{
+                  disableUnderline: true,
+                  style: { fontSize: 13.3, backgroundColor: "#FFFBE5" },
+                }}
+                value={valueAdr}
+                onChange={handleChangeAdr}
+                variant="standard"
+                helperText="Введите наименование (адрес)"
+                color="secondary"
+              />
+            </Box>
+          </Box>
+        );
+      };
+
+      const InputSubArea = () => {
+        return (
+          <Box sx={styleSetArea}>
+            <Box component="form" sx={styleBoxFormArea}>
+              <TextField
+                select
+                size="small"
+                onKeyPress={handleKey} //отключение Enter
+                InputProps={{ disableUnderline: true }}
+                value={currencyt}
+                onChange={handleChangeSArea}
+                variant="standard"
+                helperText="Введите подрайон"
+                color="secondary"
+              >
+                {currencies.map((option: any) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Box>
+          </Box>
+        );
+      };
+
+      return (
+        <Modal open={openSetInpAdr} onClose={() => handleCloseInpAdr(false)}>
+          <Grid item container sx={styleSetAdress}>
+            <Grid item>
+              <Grid item container sx={styleSetAdrArea}>
+                <Grid item xs={9.5}>
+                  {InputSubArea()}
+                </Grid>
+              </Grid>
+              <Grid item container sx={styleSetAdrID}>
+                <Grid item xs={9.5} sx={{ border: 0 }}>
+                  {InputAdress()}
+                </Grid>
+                <Grid item xs={2.2} sx={{ border: 0 }}>
+                  <Button
+                    sx={styleInpKnop}
+                    onClick={() => handleCloseInpAdr(true)}
+                  >
+                    Ввод
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Modal>
+      );
+    };
+
   return (
     <>
       <Modal open={openSetAdress} onClose={handleCloseEnd}>
@@ -312,23 +491,22 @@ const MapCreateVertex = (props: {
       {openSetNoVertex && <>{NoVertex(openSetNoVertex, handleCloseNoVertex)}</>}
       {openSetInpAdr && (
         <>
-          {InputAdressVertex(
-            openSetInpAdr,
-            handleCloseInpAdr,
-            valueAdr,
-            setValueAdr
-          )}
+          {
+            InputAdressVertex()
+            //openSetInpAdr,
+            //handleCloseInpAdr
+            // valueAdr,
+            // setValueAdr
+          }
         </>
       )}
       {openSetErr && (
         <MapPointDataError
           sErr={soobErr}
           setOpen={setOpenSetErr}
-          //ws={{}}
           fromCross={0}
           toCross={0}
           update={0}
-          //svg={{}}
           setSvg={{}}
         />
       )}
