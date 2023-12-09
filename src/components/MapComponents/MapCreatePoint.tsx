@@ -1,27 +1,27 @@
-import * as React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { massdkCreate, massrouteCreate } from "./../../redux/actions";
+import * as React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { massdkCreate, massrouteCreate } from './../../redux/actions';
 
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
-import TextField from "@mui/material/TextField";
-import MenuItem from "@mui/material/MenuItem";
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
 
-import { MapssdkNewPoint, MassrouteNewPoint } from "./../MapServiceFunctions";
+import { MapssdkNewPoint, MassrouteNewPoint } from './../MapServiceFunctions';
 
-import { SubArea, debug } from "./../MainMapGl";
+import { SubArea, debug, homeRegion } from './../MainMapGl';
 
-import { styleSetAdress, styleBoxForm, styleInpKnop } from "./../MainMapStyle";
-import { styleSet, styleSetAdrArea, styleSetAdrID } from "./../MainMapStyle";
-import { styleSetArea, styleBoxFormArea } from "./../MainMapStyle";
+import { styleSetAdress, styleBoxForm, styleInpKnop } from './../MainMapStyle';
+import { styleSet, styleSetAdrArea, styleSetAdrID } from './../MainMapStyle';
+import { styleSetArea, styleBoxFormArea } from './../MainMapStyle';
 
 let subArea = -1;
 
 const MapCreatePoint = (props: {
   setOpen: any;
-  region: number;
+  //region: number;
   coord: any;
   createPoint: any;
 }) => {
@@ -38,7 +38,7 @@ const MapCreatePoint = (props: {
   //========================================================
   let dat = [];
   for (let i = 0; i < SubArea.length; i++) {
-    dat.push(SubArea[i].toString() + "-й подрайон");
+    dat.push(SubArea[i].toString() + '-й подрайон');
     if (!i) subArea = SubArea[i];
   }
   let massKey = [];
@@ -50,8 +50,8 @@ const MapCreatePoint = (props: {
   }
   for (let i = 0; i < massKey.length; i++) {
     let maskCurrencies = {
-      value: "",
-      label: "",
+      value: '',
+      label: '',
     };
     maskCurrencies.value = massKey[i];
     maskCurrencies.label = massDat[i];
@@ -60,20 +60,17 @@ const MapCreatePoint = (props: {
 
   const NameMode = () => {
     let nameMode =
-      "(" +
-      new Date().toLocaleDateString() +
-      " " +
-      new Date().toLocaleTimeString() +
-      ")";
+      '(' + new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString() + ')';
     return nameMode;
   };
 
   const [openSetAdress, setOpenSetAdress] = React.useState(true);
-  const [valueAdr, setValueAdr] = React.useState("Объект" + NameMode());
+  const [valueAdr, setValueAdr] = React.useState('Объект' + NameMode());
   const [currency, setCurrency] = React.useState(massKey[0]);
+  const REGION = homeRegion;
 
   const handleKey = (event: any) => {
-    if (event.key === "Enter") event.preventDefault();
+    if (event.key === 'Enter') event.preventDefault();
   };
 
   const handleChangeAdr = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,12 +80,8 @@ const MapCreatePoint = (props: {
 
   const handleCloseSetAdr = () => {
     let id = debug ? 0 : 0;
-    massdk.push(
-      MapssdkNewPoint(props.region, props.coord, valueAdr, 0, subArea, id)
-    );
-    massroute.vertexes.push(
-      MassrouteNewPoint(props.region, props.coord, valueAdr, 0, 0)
-    );
+    massdk.push(MapssdkNewPoint(REGION, props.coord, valueAdr, 0, subArea, id));
+    massroute.vertexes.push(MassrouteNewPoint(REGION, props.coord, valueAdr, 0, 0));
     dispatch(massdkCreate(massdk));
     dispatch(massrouteCreate(massroute));
     setOpenSetAdress(false);
@@ -101,7 +94,7 @@ const MapCreatePoint = (props: {
   };
 
   const handleCloseEnd = (event: any, reason: string) => {
-    if (reason === "escapeKeyDown") handleCloseSetAdress();
+    if (reason === 'escapeKeyDown') handleCloseSetAdress();
   };
 
   const InputAdress = () => {
@@ -113,7 +106,7 @@ const MapCreatePoint = (props: {
             onKeyPress={handleKey} //отключение Enter
             InputProps={{
               disableUnderline: true,
-              style: { fontSize: 13.3, backgroundColor: "#FFFBE5" },
+              style: { fontSize: 13.3, backgroundColor: '#FFFBE5' },
             }}
             value={valueAdr}
             onChange={handleChangeAdr}
@@ -129,7 +122,7 @@ const MapCreatePoint = (props: {
   const handleChangeSArea = (event: React.ChangeEvent<HTMLInputElement>) => {
     let sub = Number(event.target.value);
     subArea = SubArea[sub];
-    console.log("subArea:", subArea);
+    console.log('subArea:', subArea);
     setCurrency(event.target.value);
   };
 
@@ -146,8 +139,7 @@ const MapCreatePoint = (props: {
             onChange={handleChangeSArea}
             variant="standard"
             helperText="Введите подрайон"
-            color="secondary"
-          >
+            color="secondary">
             {currencies.map((option: any) => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}

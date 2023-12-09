@@ -1,27 +1,27 @@
-import * as React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { statsaveCreate } from "../../redux/actions";
+import * as React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { statsaveCreate } from '../../redux/actions';
 
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 
-import MapPointDataError from "./MapPointDataError";
+import MapPointDataError from './MapPointDataError';
 
-import { ComplianceMapMassdk, WaysInput } from "./../MapServiceFunctions";
-import { BadExit, InputFromList, StrTablVert } from "./../MapServiceFunctions";
-import { HeaderTablFaz, ShiftOptimal } from "./../MapServiceFunctions";
-import { DelStrokaMainTabl, DelStrokaFaz } from "./../MapServiceFunctions";
-import { SaveFormVert, PreparCurrenciesPlan } from "./../MapServiceFunctions";
+import { ComplianceMapMassdk, WaysInput } from './../MapServiceFunctions';
+import { BadExit, InputFromList, StrTablVert } from './../MapServiceFunctions';
+import { HeaderTablFaz, ShiftOptimal } from './../MapServiceFunctions';
+import { DelStrokaMainTabl, DelStrokaFaz } from './../MapServiceFunctions';
+import { SaveFormVert, PreparCurrenciesPlan } from './../MapServiceFunctions';
 
-import { SUMPK, MaxFaz } from "./../MapConst";
+import { SUMPK, MaxFaz } from './../MapConst';
 //import { PLANER } from "./../MainMapGl";
 
-import { styleModalEnd, styleFormName } from "./../MainMapStyle";
-import { styleFT03, styleFormVert, styleFT033 } from "./../MainMapStyle";
-import { styleFormTabl00 } from "./../MainMapStyle";
-import { styleFormTabl01, styleFormTabl02 } from "./../MainMapStyle";
-import { PLANER } from "../MainMapGl";
+import { styleModalEnd, styleFormName } from './../MainMapStyle';
+import { styleFT03, styleFormVert, styleFT033 } from './../MainMapStyle';
+import { styleFormTabl00 } from './../MainMapStyle';
+import { styleFormTabl01, styleFormTabl02 } from './../MainMapStyle';
+import { PLANER } from '../MainMapGl';
 
 let oldIdx = -1;
 let massForm: any = null;
@@ -34,7 +34,7 @@ let newFAZA = 0;
 let nomDelFaz = -1;
 
 let soobErr =
-  "Начальная длительность фаз не может быть больше минимальной длительности, будьте внимательны!";
+  'Начальная длительность фаз не может быть больше минимальной длительности, будьте внимательны!';
 
 const maskFaz: any = {
   MinDuration: 0,
@@ -48,6 +48,7 @@ const MapVertexForma = (props: {
   forma: any;
   openErr: boolean;
 }) => {
+  console.log('MapVertexForma:', props.forma);
   //== Piece of Redux =======================================
   const map = useSelector((state: any) => {
     const { mapReducer } = state;
@@ -73,14 +74,14 @@ const MapVertexForma = (props: {
   const [trigger, setTrigger] = React.useState(false);
 
   const [currencyPlan, setCurrencyPlan] = React.useState(
-    props.forma === null ? "0" : (props.forma.nomPlan - 1).toString()
+    props.forma === null ? '0' : (props.forma.nomPlan - 1).toString(),
   );
 
   const [currencyFaza, setCurrencyFaza] = React.useState(
-    props.forma === null
-      ? (MAP.phases.length - 2).toString()
-      : (props.forma.kolFaz - 2).toString()
+    props.forma === null ? (MAP.phases.length - 2).toString() : (props.forma.kolFaz - 2).toString(),
   );
+
+  console.log('currencyFaza', currencyFaza);
 
   const PreparCurrenciesFaza = (mazFaz: number) => {
     const currencies: any = [];
@@ -93,8 +94,8 @@ const MapVertexForma = (props: {
       massDat.push(dat[key]);
     }
     let maskCurrencies = {
-      value: "0",
-      label: "Все режимы",
+      value: '0',
+      label: 'Все режимы',
     };
     for (let i = 0; i < massKey.length; i++) {
       maskCurrencies.value = massKey[i];
@@ -204,8 +205,7 @@ const MapVertexForma = (props: {
     }
     if (newFAZA > FAZA) {
       // количество фаз увеличелось
-      for (let i = 0; i < newFAZA - FAZA; i++)
-        massRab.phases.push({ ...maskFaz });
+      for (let i = 0; i < newFAZA - FAZA; i++) massRab.phases.push({ ...maskFaz });
     }
     massRab.kolFaz = newFAZA;
     HAVE++;
@@ -252,7 +252,7 @@ const MapVertexForma = (props: {
       let style = st === 3 ? styleFT03 : styleFT033;
       return (
         <Grid xs={xss} item sx={style}>
-          <Box sx={{ display: "grid", justifyContent: "center" }}>{func}</Box>
+          <Box sx={{ display: 'grid', justifyContent: 'center' }}>{func}</Box>
         </Grid>
       );
     };
@@ -267,7 +267,7 @@ const MapVertexForma = (props: {
           {MainTablInp(3, WaysInput(i, minDur, SetMinDuration, 20), 3)}
           {MainTablInp(3, WaysInput(i, startDur, SetStDuration, 20), 3)}
           {MainTablInp(3, WaysInput(i, phOrder, SetPhaseOrder, 20), 33)}
-        </Grid>
+        </Grid>,
       );
     }
     return resStr;
@@ -285,18 +285,18 @@ const MapVertexForma = (props: {
         event.preventDefault();
       }
     },
-    [props, datestat, dispatch]
+    [props, datestat, dispatch],
   );
 
   React.useEffect(() => {
-    document.addEventListener("keydown", escFunction);
-    return () => document.removeEventListener("keydown", escFunction);
+    document.addEventListener('keydown', escFunction);
+    return () => document.removeEventListener('keydown', escFunction);
   }, [escFunction]);
   //========================================================
 
-  let aa = idxMap >= 0 ? MAP.area.nameArea : "";
-  let bb = massdk.length > props.idx ? massdk[props.idx].area : "";
-  let soob1 = bb + " " + aa;
+  let aa = idxMap >= 0 ? MAP.area.nameArea : '';
+  let bb = massdk.length > props.idx ? massdk[props.idx].area : '';
+  let soob1 = bb + ' ' + aa;
 
   return (
     <>
@@ -313,29 +313,24 @@ const MapVertexForma = (props: {
               </b>
             </Box>
             <Box sx={{ fontSize: 12, marginTop: 0.5 }}>Общие</Box>
-            {StrTablVert("Время цикла cек.", "80 сек.")}
-            {StrTablVert("Район", soob1)}
-            {StrTablVert("Номер перекрёстка", massdk[props.idx].ID)}
+            {StrTablVert('Время цикла cек.', '80 сек.')}
+            {StrTablVert('Район', soob1)}
+            {StrTablVert('Номер перекрёстка', massdk[props.idx].ID)}
             {StrTablVert(
-              "Номер плана координации",
-              InputFromList(handleChangePlan, currencyPlan, currenciesPlan)
+              'Номер плана координации',
+              InputFromList(handleChangePlan, currencyPlan, currenciesPlan),
             )}
             {StrTablVert(
-              "Участвует в автоматической оптимизации",
-              ShiftOptimal(massForm.optimal, ChangeOptimal)
+              'Участвует в автоматической оптимизации',
+              ShiftOptimal(massForm.optimal, ChangeOptimal),
             )}
             <Box sx={{ fontSize: 12, marginTop: 2.5 }}>Свойства фаз</Box>
             {StrTablVert(
-              "Количество фаз",
-              InputFromList(handleChangeFaza, currencyFaza, currenciesFaza)
+              'Количество фаз',
+              InputFromList(handleChangeFaza, currencyFaza, currenciesFaza),
             )}
-            {StrTablVert(
-              "Начальное смещение сек.",
-              WaysInput(0, massForm.offset, SetOffset, 100)
-            )}
-            <Box sx={{ fontSize: 12, marginTop: 2.5 }}>
-              Таблица параметров фаз
-            </Box>
+            {StrTablVert('Начальное смещение сек.', WaysInput(0, massForm.offset, SetOffset, 100))}
+            <Box sx={{ fontSize: 12, marginTop: 2.5 }}>Таблица параметров фаз</Box>
             <Box sx={styleFormTabl00}>
               {HeaderTablFaz()}
               <Box sx={styleFormTabl01}>
