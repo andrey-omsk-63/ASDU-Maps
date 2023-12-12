@@ -13,7 +13,7 @@ import { KnopProps } from './../MapServiceFunctions';
 import { styleModalEnd, styleModalMenu } from './../MainMapStyle';
 import { styleTypography } from './../MainMapStyle';
 
-import { AREA, homeRegion } from './../MainMapGl';
+import { AREA } from './../MainMapGl';
 
 const MapCreatePointVertex = (props: {
   setOpen: any;
@@ -83,7 +83,6 @@ const MapCreatePointVertex = (props: {
       {openSetPoint && (
         <MapCreatePoint
           setOpen={props.setOpen}
-          //region={props.region}
           coord={props.coord}
           createPoint={props.createPoint}
         />
@@ -91,7 +90,6 @@ const MapCreatePointVertex = (props: {
       {openSetVert && (
         <MapCreateVertex
           setOpen={props.setOpen}
-          //region={props.region}
           area={AREA}
           coord={props.coord}
           createPoint={props.createPoint}

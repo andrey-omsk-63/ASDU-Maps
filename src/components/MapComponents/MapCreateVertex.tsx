@@ -1,35 +1,40 @@
-import * as React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { massdkCreate, massrouteCreate } from './../../redux/actions';
+import * as React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { massdkCreate, massrouteCreate } from "./../../redux/actions";
 
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Modal from '@mui/material/Modal';
-import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Modal from "@mui/material/Modal";
+import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
 
-import MapPointDataError from './MapPointDataError';
+import MapPointDataError from "./MapPointDataError";
 
-import { SubArea, homeRegion } from './../MainMapGl';
+import { SubArea, SUBAREA, homeRegion } from "./../MainMapGl";
 
-import { MapssdkNewPoint, MassrouteNewPoint } from './../MapServiceFunctions';
-import { NoVertex, UniqueName } from './../MapServiceFunctions';
+import { MapssdkNewPoint, MassrouteNewPoint } from "./../MapServiceFunctions";
+import { NoVertex, UniqueName } from "./../MapServiceFunctions";
 
-import { styleInpKnop, styleSetAdrAreaID } from './../MainMapStyle';
-import { styleSetAdrArea, styleSetAdrID } from './../MainMapStyle';
-import { styleSetArea, styleSetID } from './../MainMapStyle';
-import { styleSetAdrAreaLess, styleSetSubarea_Adress } from './../MainMapStyle';
-import { styleBoxFormArea, styleBoxFormID } from './../MainMapStyle';
+import { styleInpKnop, styleSetAdrAreaID } from "./../MainMapStyle";
+import { styleSetAdrArea, styleSetAdrID } from "./../MainMapStyle";
+import { styleSetArea, styleSetID } from "./../MainMapStyle";
+import { styleSetAdrAreaLess, styleSetSubarea_Adress } from "./../MainMapStyle";
+import { styleBoxFormArea, styleBoxFormID } from "./../MainMapStyle";
 
-let soobErr = '';
-let adrV = '';
+let soobErr = "";
+let adrV = "";
 
 let oldCoord: any = 0;
 let propsCoord = [0, 0];
 let subArea = -1;
 
-const MapCreateVertex = (props: { setOpen: any; area: string; coord: any; createPoint: any }) => {
+const MapCreateVertex = (props: {
+  setOpen: any;
+  area: string;
+  coord: any;
+  createPoint: any;
+}) => {
   //== Piece of Redux ======================================
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;
@@ -61,8 +66,8 @@ const MapCreateVertex = (props: { setOpen: any; area: string; coord: any; create
   }
   for (let i = 0; i < massKey.length; i++) {
     let maskCurrencies = {
-      value: '',
-      label: '',
+      value: "",
+      label: "",
     };
     maskCurrencies.value = massKey[i];
     maskCurrencies.label = massDat[i];
@@ -77,10 +82,12 @@ const MapCreateVertex = (props: { setOpen: any; area: string; coord: any; create
   const [openSetInpAdr, setOpenSetInpAdr] = React.useState(false);
   const REGION = homeRegion;
   const AREA = props.area;
-  let Area = AREA === '0' ? '1' : props.area;
+  let Area = AREA === "0" ? "1" : props.area;
+  subArea = SUBAREA === "0" ? 1 : Number(SUBAREA);
 
   let datt = [];
-  for (let i = 0; i < SubArea.length; i++) datt.push(SubArea[i].toString() + '-й подрайон');
+  for (let i = 0; i < SubArea.length; i++)
+    datt.push(SubArea[i].toString() + "-й подрайон");
 
   let massKeyt = [];
   let massDatt = [];
@@ -91,19 +98,21 @@ const MapCreateVertex = (props: { setOpen: any; area: string; coord: any; create
   }
   for (let i = 0; i < massKeyt.length; i++) {
     let maskCurrencies = {
-      value: '',
-      label: '',
+      value: "",
+      label: "",
     };
     maskCurrencies.value = massKeyt[i];
     maskCurrencies.label = massDatt[i];
     currenciest.push(maskCurrencies);
   }
 
-  const [currencyt, setCurrencyt] = React.useState(massKeyt[0]);
-  const [valueAdr, setValueAdr] = React.useState('Перекрёсток' + UniqueName());
+  const [currencyt, setCurrencyt] = React.useState(
+    massKeyt[SubArea.indexOf(subArea)]
+  );
+  const [valueAdr, setValueAdr] = React.useState("Перекрёсток" + UniqueName());
 
   const handleKey = (event: any) => {
-    if (event.key === 'Enter') event.preventDefault();
+    if (event.key === "Enter") event.preventDefault();
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -113,12 +122,12 @@ const MapCreateVertex = (props: { setOpen: any; area: string; coord: any; create
   };
 
   const handleChangeID = (event: any) => {
-    let valueInp = event.target.value.replace(/^0+/, '');
+    let valueInp = event.target.value.replace(/^0+/, "");
     if (Number(valueInp) < 0) valueInp = 0;
-    if (valueInp === '') valueInp = 0;
+    if (valueInp === "") valueInp = 0;
     valueInp = Math.trunc(Number(valueInp)).toString();
     setValuen(valueInp);
-    setValueAdr('ДК ' + valueInp + ' ' + UniqueName());
+    setValueAdr("ДК " + valueInp + " " + UniqueName());
   };
 
   const handleCloseSetAdress = () => {
@@ -127,7 +136,7 @@ const MapCreateVertex = (props: { setOpen: any; area: string; coord: any; create
   };
 
   const handleCloseEnd = (event: any, reason: string) => {
-    if (reason === 'escapeKeyDown') handleCloseSetAdress();
+    if (reason === "escapeKeyDown") handleCloseSetAdress();
   };
 
   const CheckDoublAreaID = () => {
@@ -139,7 +148,7 @@ const MapCreateVertex = (props: { setOpen: any; area: string; coord: any; create
         massroute.vertexes[i].id === Number(valuen)
       ) {
         doublAreaID = false;
-        soobErr = 'Такой светофор уже существует (ID: ' + valuen + ')';
+        soobErr = "Такой светофор уже существует (ID: " + valuen + ")";
         setOpenSetErr(true);
       }
     }
@@ -180,8 +189,12 @@ const MapCreateVertex = (props: { setOpen: any; area: string; coord: any; create
     }
     if (propsCoord[0]) {
       let ar = Number(Area);
-      massdk.push(MapssdkNewPoint(REGION, propsCoord, adrV, ar, subArea, Number(valuen)));
-      massroute.vertexes.push(MassrouteNewPoint(REGION, propsCoord, adrV, ar, Number(valuen)));
+      massdk.push(
+        MapssdkNewPoint(REGION, propsCoord, adrV, ar, subArea, Number(valuen))
+      );
+      massroute.vertexes.push(
+        MassrouteNewPoint(REGION, propsCoord, adrV, ar, Number(valuen))
+      );
 
       dispatch(massdkCreate(massdk));
       dispatch(massrouteCreate(massroute));
@@ -215,7 +228,8 @@ const MapCreateVertex = (props: { setOpen: any; area: string; coord: any; create
             onChange={handleChange}
             variant="standard"
             helperText="Введите район"
-            color="secondary">
+            color="secondary"
+          >
             {currencies.map((option: any) => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}
@@ -237,7 +251,7 @@ const MapCreateVertex = (props: { setOpen: any; area: string; coord: any; create
             type="number"
             InputProps={{
               disableUnderline: true,
-              style: { fontSize: 13.3, backgroundColor: '#FFFBE5' },
+              style: { fontSize: 13.3, backgroundColor: "#FFFBE5" },
             }}
             value={valuen}
             onChange={handleChangeID}
@@ -270,7 +284,7 @@ const MapCreateVertex = (props: { setOpen: any; area: string; coord: any; create
 
   const InputAdressVertex = () => {
     const handleChangeAdr = (event: any) => {
-      let valueInp = event.target.value.replace(/^0+/, '');
+      let valueInp = event.target.value.replace(/^0+/, "");
       setValueAdr(valueInp);
     };
 
@@ -284,7 +298,7 @@ const MapCreateVertex = (props: { setOpen: any; area: string; coord: any; create
               type="text"
               InputProps={{
                 disableUnderline: true,
-                style: { fontSize: 13.3, backgroundColor: '#FFFBE5' },
+                style: { fontSize: 13.3, backgroundColor: "#FFFBE5" },
               }}
               value={valueAdr}
               onChange={handleChangeAdr}
@@ -316,7 +330,8 @@ const MapCreateVertex = (props: { setOpen: any; area: string; coord: any; create
               onChange={handleChangeSArea}
               variant="standard"
               helperText="Введите подрайон"
-              color="secondary">
+              color="secondary"
+            >
               {currenciest.map((option: any) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
@@ -328,8 +343,12 @@ const MapCreateVertex = (props: { setOpen: any; area: string; coord: any; create
       );
     };
 
+    const handleCloseEndOther = (event: any, reason: string) => {
+      if (reason === "escapeKeyDown") handleCloseInpAdr(false);
+    };
+
     return (
-      <Modal open={openSetInpAdr} onClose={() => handleCloseInpAdr(false)}>
+      <Modal open={openSetInpAdr} onClose={() => handleCloseEndOther}>
         <Grid item container sx={styleSetSubarea_Adress}>
           <Grid item>
             <Grid item container sx={styleSetAdrArea}>
@@ -342,7 +361,10 @@ const MapCreateVertex = (props: { setOpen: any; area: string; coord: any; create
                 {InputAdress()}
               </Grid>
               <Grid item xs={2.2} sx={{ border: 0 }}>
-                <Button sx={styleInpKnop} onClick={() => handleCloseInpAdr(true)}>
+                <Button
+                  sx={styleInpKnop}
+                  onClick={() => handleCloseInpAdr(true)}
+                >
                   Ввод
                 </Button>
               </Grid>
@@ -360,8 +382,12 @@ const MapCreateVertex = (props: { setOpen: any; area: string; coord: any; create
           <Grid item>
             <Grid item container sx={styleSetAdrArea}>
               <Grid item xs={9.5}>
-                {AREA === '0' && <InputArea />}
-                {AREA !== '0' && <Box sx={styleSetAdrAreaLess}>{massDat[Number(AREA) - 1]}</Box>}
+                {AREA === "0" && <InputArea />}
+                {AREA !== "0" && (
+                  <Box sx={styleSetAdrAreaLess}>
+                    {massDat[Number(AREA) - 1]}
+                  </Box>
+                )}
               </Grid>
             </Grid>
             <Grid item container sx={styleSetAdrID}>

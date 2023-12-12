@@ -125,9 +125,12 @@ const MapRouteBind = (props: {
   if (props.idxA < 0 && props.idxA < 0) {
     console.log("Косяк!!!");
   } else {
-    nameA = massroute.vertexes[props.idxA].name;
-    nameB = massroute.vertexes[props.idxB].name;
-    From = ("00" + massroute.vertexes[props.idxA].id).slice(-3);
+    nameA = "[id" + massroute.vertexes[props.idxA].id + "] ";
+    nameA += massroute.vertexes[props.idxA].name;
+    nameB = "[id" + massroute.vertexes[props.idxB].id + "] ";
+    nameB += massroute.vertexes[props.idxB].name;
+    // From = ("00" + massroute.vertexes[props.idxA].id).slice(-3);
+    From = massroute.vertexes[props.idxA].id;
   }
 
   const SEC = props.reqRoute.tmRoute;
@@ -284,7 +287,8 @@ const MapRouteBind = (props: {
   const hClFrom = (idx: number) => {
     massForm = JSON.parse(JSON.stringify(masFormFrom[idx]));
     //============ потом исправить
-    massForm.name = ("00" + massroute.vertexes[props.idxA].id).slice(-3);
+    // massForm.name = ("00" + massroute.vertexes[props.idxA].id).slice(-3);
+    massForm.name = massroute.vertexes[props.idxA].id.toString() + ".";
     massForm.name += (idx + 1).toString();
     for (let i = 0; i < 8; i++) massForm.phases.push(-1);
     IDX = idx;
@@ -294,7 +298,8 @@ const MapRouteBind = (props: {
   const hClIn = (idx: number) => {
     massForm = JSON.parse(JSON.stringify(masFormIn[idx]));
     //============ потом исправить
-    massForm.name = ("00" + massroute.vertexes[props.idxB].id).slice(-3);
+    //massForm.name = ("00" + massroute.vertexes[props.idxB].id).slice(-3);
+    massForm.name = massroute.vertexes[props.idxB].id.toString() + ".";
     massForm.name += (idx + 1).toString();
     for (let i = 0; i < 8; i++) massForm.phases.push(-1);
     IDX = idx;
@@ -374,9 +379,10 @@ const MapRouteBind = (props: {
   };
 
   const BindTablIn = () => {
-    let nameRoute = "00" + massroute.vertexes[props.idxB].id;
-    nameRoute = nameRoute.slice(-3);
-    if (nameRoute.slice(0, 1) === "0") nameRoute = nameRoute.slice(1, 3);
+    //let nameRoute = "00" + massroute.vertexes[props.idxB].id;
+    let nameRoute = massroute.vertexes[props.idxB].id;
+    //nameRoute = nameRoute.slice(-3);
+    //if (nameRoute.slice(0, 1) === "0") nameRoute = nameRoute.slice(1, 3);
     return (
       <Grid item xs sx={styleSetImg}>
         <Box sx={styleBind03}>
@@ -408,7 +414,7 @@ const MapRouteBind = (props: {
       if (massTotTrFrom[i] && massTotTrIn[i] > 0 && !massTotal[i].editIntensPr)
         massTotPr[i] = Math.round((massTotTrIn[i] * 100) / massTotTrFrom[i]);
     }
-    
+
     return (
       <>
         {OutputProps(0.5, <b>{metka}</b>)}

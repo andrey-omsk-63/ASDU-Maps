@@ -41,6 +41,7 @@ export interface Pointer {
   region: number;
   area: number;
   subarea: number;
+  phases: number[];
   newCoordinates: number;
 }
 export let massDk: Pointer[] = [];
