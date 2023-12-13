@@ -8,19 +8,20 @@ import Button from "@mui/material/Button";
 
 import MapPointDataError from "./MapPointDataError";
 
-import { ComplianceMapMassdk, WaysInput } from "./../MapServiceFunctions";
+import { WaysInput, DelStrokaFaz, MainTablInp } from "./../MapServiceFunctions";
 import { BadExit, InputFromList, StrTablVert } from "./../MapServiceFunctions";
 import { HeaderTablFaz, ShiftOptimal } from "./../MapServiceFunctions";
-import { DelStrokaMainTabl, DelStrokaFaz } from "./../MapServiceFunctions";
+//import { DelStrokaMainTabl } from "./../MapServiceFunctions";
 import { SaveFormVert, PreparCurrenciesPlan } from "./../MapServiceFunctions";
 
 import { SUMPK, MaxFaz } from "./../MapConst";
 //import { PLANER } from "./../MainMapGl";
 
 import { styleModalEnd, styleFormName } from "./../MainMapStyle";
-import { styleFT03, styleFormVert, styleFT033 } from "./../MainMapStyle";
-import { styleFormTabl00 } from "./../MainMapStyle";
+import { styleFormVert, styleFT033, styleFT03 } from "./../MainMapStyle";
+import { styleFormTabl00, styleFT04, styleFT05 } from "./../MainMapStyle";
 import { styleFormTabl01, styleFormTabl02 } from "./../MainMapStyle";
+
 import { PLANER } from "../MainMapGl";
 
 let oldIdx = -1;
@@ -30,6 +31,7 @@ let HAVE = 0;
 let currenciesPlan: any = [];
 let currenciesFaza: any = [];
 let FAZA = 0;
+let MASSFAZA: Array<number> = [];
 let newFAZA = 0;
 let nomDelFaz = -1;
 
@@ -37,6 +39,7 @@ let soobErr =
   "Начальная длительность фаз не может быть больше минимальной длительности, будьте внимательны!";
 
 const maskFaz: any = {
+  NumPhase: 0,
   MinDuration: 0,
   StartDuration: 0,
   PhaseOrder: 0,
@@ -48,12 +51,12 @@ const MapVertexForma = (props: {
   forma: any;
   openErr: boolean;
 }) => {
-  console.log("MapVertexForma:", props.forma, props.idx);
+  //console.log("MapVertexForma:", props.idx, oldIdx, props.forma);
   //== Piece of Redux =======================================
-  const map = useSelector((state: any) => {
-    const { mapReducer } = state;
-    return mapReducer.map;
-  });
+  // const map = useSelector((state: any) => {
+  //   const { mapReducer } = state;
+  //   return mapReducer.map;
+  // });
   //console.log("map:", map);
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;
@@ -66,12 +69,7 @@ const MapVertexForma = (props: {
   //console.log("datestat:", datestat);
   const dispatch = useDispatch();
   //===========================================================
-  //const idxMap = ComplianceMapMassdk(props.idx, massdk, map);
-  //const MAP = map.dateMap.tflight[idxMap];
   const MASSDK = massdk[props.idx];
-
-  //console.log("######:", props.idx, idxMap, MASSDK, MAP);
-
   const [badExit, setBadExit] = React.useState(false);
   const [openSetErr, setOpenSetErr] = React.useState(props.openErr);
   const [trigger, setTrigger] = React.useState(false);
@@ -85,8 +83,7 @@ const MapVertexForma = (props: {
       ? (MASSDK.phases.length - 2).toString()
       : (props.forma.kolFaz - 2).toString()
   );
-
-  console.log("currencyFaza", currencyFaza);
+  //console.log("currencyFaza", currencyFaza);
 
   const PreparCurrenciesFaza = (mazFaz: number) => {
     const currencies: any = [];
@@ -120,12 +117,11 @@ const MapVertexForma = (props: {
     if (props.forma === null) {
       HAVE = 0;
       nomDelFaz = -1;
-      //FAZA = idxMap >= 0 ? MAP.phases.length : 0;
       FAZA = MASSDK.phases.length;
+      MASSFAZA = JSON.parse(JSON.stringify(MASSDK.phases));
       let maskForm: any = {
         nomPlan: 1,
         optimal: false,
-        //kolFaz: idxMap >= 0 ? MAP.phases.length : 0,
         kolFaz: MASSDK.phases.length,
         offset: 0,
         phases: [],
@@ -133,6 +129,8 @@ const MapVertexForma = (props: {
       massForm = maskForm;
 
       for (let i = 0; i < FAZA; i++) {
+        maskFaz.NumPhase = MASSDK.phases[i];
+        maskFaz.PhaseOrder = i + 1;
         massForm.phases.push({ ...maskFaz });
       }
     } else {
@@ -171,6 +169,16 @@ const MapVertexForma = (props: {
     HAVE++;
   };
 
+  // const SetNumPhase = (valueInp: number, idx: number) => {
+  //   console.log("valueInp:", valueInp, typeof valueInp);
+  //   // massForm.phases[idx].MinDuration = valueInp;
+  //   // if (massForm.phases[idx].StartDuration > valueInp) {
+  //   //   massForm.phases[idx].StartDuration = valueInp;
+  //   //   props.setOpen(true, massForm, true); // полный ререндер
+  //   // }
+  //   HAVE++;
+  // };
+
   const SetMinDuration = (valueInp: number, idx: number) => {
     massForm.phases[idx].MinDuration = valueInp;
     if (massForm.phases[idx].StartDuration > valueInp) {
@@ -179,6 +187,7 @@ const MapVertexForma = (props: {
     }
     HAVE++;
   };
+
   const SetStDuration = (valueInp: number, idx: number) => {
     if (massForm.phases[idx].MinDuration >= valueInp) {
       massForm.phases[idx].StartDuration = valueInp;
@@ -201,6 +210,18 @@ const MapVertexForma = (props: {
     HAVE++;
   };
 
+  const FirstFree = (MASSFAZA: Array<number>) => {
+    let freeNum = -1;
+    for (let i = 0; i < MaxFaz; i++) {
+      freeNum = MASSFAZA.indexOf(i + 1);
+      if (freeNum < 0) {
+        freeNum = i + 1;
+        break;
+      }
+    }
+    return freeNum;
+  };
+
   const handleChangeFaza = (event: React.ChangeEvent<HTMLInputElement>) => {
     newFAZA = Number(event.target.value) + 2;
     if (newFAZA === FAZA) return;
@@ -212,8 +233,14 @@ const MapVertexForma = (props: {
     }
     if (newFAZA > FAZA) {
       // количество фаз увеличелось
-      for (let i = 0; i < newFAZA - FAZA; i++)
+      for (let i = 0; i < newFAZA - FAZA; i++) {
+        maskFaz.NumPhase = FirstFree(MASSFAZA);
+        MASSFAZA.push(maskFaz.NumPhase);
+        maskFaz.MinDuration = maskFaz.StartDuration = 0;
+        maskFaz.PhaseOrder = FAZA + i + 1;
         massRab.phases.push({ ...maskFaz });
+      }
+      FAZA = newFAZA;
     }
     massRab.kolFaz = newFAZA;
     HAVE++;
@@ -230,7 +257,9 @@ const MapVertexForma = (props: {
 
   const ChangeStrDel = (idx: number) => {
     //====== сделать проверку ======
-    nomDelFaz = idx;
+    if (nomDelFaz === idx) {
+      nomDelFaz = -1;
+    } else nomDelFaz = idx;
     setTrigger(!trigger); // ререндер
   };
 
@@ -252,40 +281,68 @@ const MapVertexForma = (props: {
     }
   };
   //========================================================
+  //const [currency, setCurrency] = React.useState("0");
+
   const StrokaMainTabl = () => {
     let resStr = [];
-    //let lng = idxMap >= 0 ? FAZA : 0;
-
-    const MainTablInp = (xss: number, func: any, st: number) => {
-      let style = st === 3 ? styleFT03 : styleFT033;
-      return (
-        <Grid xs={xss} item sx={style}>
-          <Box sx={{ display: "grid", justifyContent: "center" }}>{func}</Box>
-        </Grid>
-      );
-    };
+    let currency = '0'
 
     for (let i = 0; i < FAZA; i++) {
       let startDur = massForm.phases[i].StartDuration;
       let minDur = massForm.phases[i].MinDuration;
       let phOrder = massForm.phases[i].PhaseOrder;
+      let numPh = massForm.phases[i].NumPhase;
+
+      let massRab = JSON.parse(JSON.stringify(MASSFAZA));
+      for (let j = massRab.length - 1; j >= 0; j--)
+        if (massRab[j] === numPh) massRab.splice(j, 1);
+      let currencies = PreparCurrenciesPlan(MaxFaz, massRab);
+      //console.log("!!!!!!:", currencies, massRab);
+      //let nom = "0";
+
+      for (let j = 0; j < Object.keys(currencies).length; j++) {
+        //console.log("0###:",Number(currencies[j].label), numPh);
+        if (Number(currencies[j].label) === numPh) {
+          console.log("1###:", currencies[j].value);
+          //setCurrency(currencies[j].value);
+          currency = currencies[j].value
+        }
+      }
+      console.log("!!!!!!:", currency, currencies, massRab);
+
+    
+
+      const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        // setCurrencyPlan(event.target.value);
+        // massForm.nomPlan = Number(event.target.value) + 1;
+        // massForm.optimal = false;
+        // HAVE++;
+        let num = Number(event.target.value)
+        console.log("######:", num,currencies[num].label);
+      };
+
       resStr.push(
         <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
-          <Grid xs={1} item sx={styleFT03}>
-            <Box
-              sx={{ fontSize: 18, display: "grid", justifyContent: "center" }}
-            >
-              &#215;
+          <Grid xs={2.75} item sx={styleFT03}>
+            <Box sx={{ display: "grid", justifyContent: "center" }}>
+              {InputFromList(handleChange, currency, currencies)}
             </Box>
           </Grid>
-          {MainTablInp(2.75, DelStrokaMainTabl(i, nomDelFaz, ChangeStrDel), 3)}
-          {MainTablInp(2.75, WaysInput(i, minDur, SetMinDuration, 20), 3)}
-          {MainTablInp(2.75, WaysInput(i, startDur, SetStDuration, 20), 3)}
-          {MainTablInp(2.75, WaysInput(i, phOrder, SetPhaseOrder, 20), 33)}
-          {/* {MainTablInp(3, DelStrokaMainTabl(i, nomDelFaz, ChangeStrDel), 3)}
-          {MainTablInp(3, WaysInput(i, minDur, SetMinDuration, 20), 3)}
-          {MainTablInp(3, WaysInput(i, startDur, SetStDuration, 20), 3)}
-          {MainTablInp(3, WaysInput(i, phOrder, SetPhaseOrder, 20), 33)} */}
+          {/* {MainTablInp(2.75, WaysInput(i, numPh, SetNumPhase, 1, MaxFaz), 3)} */}
+          {MainTablInp(2.75, WaysInput(i, minDur, SetMinDuration, 0, 20), 3)}
+          {MainTablInp(2.75, WaysInput(i, startDur, SetStDuration, 0, 20), 3)}
+          {MainTablInp(2.75, WaysInput(i, phOrder, SetPhaseOrder, 1, FAZA), 3)}
+          <Grid xs={1} item sx={styleFT033} onClick={() => ChangeStrDel(i)}>
+            <Box sx={styleFT04}>
+              {i === nomDelFaz ? (
+                <Box sx={styleFT05}>
+                  <b>&#10006;</b>
+                </Box>
+              ) : (
+                <Box>&#215;</Box>
+              )}
+            </Box>
+          </Grid>
         </Grid>
       );
     }
@@ -312,10 +369,8 @@ const MapVertexForma = (props: {
     return () => document.removeEventListener("keydown", escFunction);
   }, [escFunction]);
   //========================================================
-
-  // let aa = idxMap >= 0 ? MAP.area.nameArea : "";
-  // let bb = massdk.length > props.idx ? massdk[props.idx].area : "";
-  // let soob1 = bb + " " + aa;
+  let subId: any = massdk[props.idx].ID + "\xa0".repeat(10);
+  subId += "Подрайон" + "\xa0".repeat(3) + MASSDK.subarea;
 
   return (
     <>
@@ -334,8 +389,7 @@ const MapVertexForma = (props: {
             </Box>
             <Box sx={{ fontSize: 12, marginTop: 0.5 }}>Общие</Box>
             {StrTablVert("Время цикла cек.", "80 сек.")}
-            {StrTablVert("Подрайон", MASSDK.subarea)}
-            {StrTablVert("Номер перекрёстка", massdk[props.idx].ID)}
+            {StrTablVert("Номер перекрёстка", subId)}
             {StrTablVert(
               "Номер плана координации",
               InputFromList(handleChangePlan, currencyPlan, currenciesPlan)
@@ -351,7 +405,7 @@ const MapVertexForma = (props: {
             )}
             {StrTablVert(
               "Начальное смещение сек.",
-              WaysInput(0, massForm.offset, SetOffset, 100)
+              WaysInput(0, massForm.offset, SetOffset, 0, 100)
             )}
             <Box sx={{ fontSize: 12, marginTop: 2.5 }}>
               Таблица параметров фаз

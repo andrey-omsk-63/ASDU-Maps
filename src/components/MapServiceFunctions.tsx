@@ -28,11 +28,8 @@ import { Vertex } from "./../interfaceRoute";
 
 import { styleModalMenu, styleModalEndMapGl } from "./MainMapStyle";
 import { styleSetPoint, styleFT02, styleFormMenu } from "./MainMapStyle";
-import {
-  styleFormPK03,
-  styleBind05,
-  styleModalEndAttent,
-} from "./MainMapStyle";
+import { styleFormPK03, styleBind05 } from "./MainMapStyle";
+import { styleModalEndAttent, styleFT03, styleFT033 } from "./MainMapStyle";
 import { styleBind02, styleTypography, searchControl } from "./MainMapStyle";
 import { styleBind03, styleBind033, styleSetImg } from "./MainMapStyle";
 //import { styleFormPK03, styleSetAdrArea, styleSetAdrID } from './MainMapStyle';
@@ -1601,15 +1598,19 @@ export const HeaderBind = (
         {!haveSvgA && <Grid item xs={2}></Grid>}
         {haveSvgA && (
           <Grid item xs={2} onClick={() => ClickBlok(0)} sx={styleSetImg}>
-            {masSvg[0] === "" && <>{AppIconAsdu(heightImg)}</>}
-            {masSvg[0] !== "" && <>{ExampleComponent(0, masSvg)}</>}
+            <Box sx={{ cursor: "pointer" }}>
+              {masSvg[0] === "" && <>{AppIconAsdu(heightImg)}</>}
+              {masSvg[0] !== "" && <>{ExampleComponent(0, masSvg)}</>}
+            </Box>
           </Grid>
         )}
         {HeaderBindMiddle(Route, nameA, nameB)}
         {haveSvgB && (
           <Grid item xs={2} onClick={() => ClickBlok(1)} sx={styleSetImg}>
-            {masSvg[1] === "" && <>{AppIconAsdu(heightImg)}</>}
-            {masSvg[1] !== "" && <>{ExampleComponent(1, masSvg)}</>}
+            <Box sx={{ cursor: "pointer" }}>
+              {masSvg[1] === "" && <>{AppIconAsdu(heightImg)}</>}
+              {masSvg[1] !== "" && <>{ExampleComponent(1, masSvg)}</>}
+            </Box>
           </Grid>
         )}
         <Grid item xs={0.25}></Grid>
@@ -1858,6 +1859,7 @@ export const WaysInput = (
   idx: number,
   VALUE: any,
   SetValue: Function,
+  MIN: number,
   MAX: number
 ) => {
   const [value, setValue] = React.useState(VALUE);
@@ -1884,8 +1886,8 @@ export const WaysInput = (
 
   const handleChange = (event: any) => {
     let valueInp = event.target.value.replace(/^0+/, "");
-    if (Number(valueInp) < 0) valueInp = 0;
-    if (valueInp === "") valueInp = 0;
+    if (Number(valueInp) < MIN) valueInp = MIN;
+    if (valueInp === "") valueInp = MIN;
     valueInp = Math.trunc(Number(valueInp));
     if (valueInp <= MAX) {
       setValue(valueInp.toString());
@@ -2052,16 +2054,16 @@ export const StrTablVert = (recLeft: string, recRight: any) => {
 export const HeaderTablFaz = () => {
   return (
     <Grid container sx={styleFT02}>
-      <Grid item xs={3}>
-        №
+      <Grid item xs={2.75}>
+        № фазы
       </Grid>
-      <Grid item xs={3}>
+      <Grid item xs={2.75}>
         Мин.длит.фаз(с)
       </Grid>
-      <Grid item xs={3}>
+      <Grid item xs={2.75}>
         Нач.длит.фаз(с)
       </Grid>
-      <Grid item xs={3}>
+      <Grid item xs={2.75}>
         Порядок фаз
       </Grid>
     </Grid>
@@ -2109,51 +2111,51 @@ export const ShiftOptimal = (mode: boolean, ChangeOptimal: Function) => {
   );
 };
 
-export const DelStrokaMainTabl = (
-  idx: number,
-  nomDelFaz: number,
-  ChangeStrDel: any
-) => {
-  const styleButtDelNo = {
-    marginRight: 1,
-    maxHeight: "27px",
-    minHeight: "27px",
-    maxWidth: 58,
-    minWidth: 58,
-    backgroundColor: "#E6F5D6", // светло салатовый
-    border: "1px solid #d4d4d4", // серый
-    borderRadius: 1,
-    boxShadow: 2,
-    color: "black",
-  };
+// export const DelStrokaMainTabl = (
+//   idx: number,
+//   nomDelFaz: number,
+//   ChangeStrDel: any
+// ) => {
+//   const styleButtDelNo = {
+//     marginRight: 1,
+//     maxHeight: "27px",
+//     minHeight: "27px",
+//     maxWidth: 58,
+//     minWidth: 58,
+//     backgroundColor: "#E6F5D6", // светло салатовый
+//     border: "1px solid #d4d4d4", // серый
+//     borderRadius: 1,
+//     boxShadow: 2,
+//     color: "black",
+//   };
 
-  const styleButtDelYes = {
-    marginRight: 1,
-    maxHeight: "27px",
-    minHeight: "27px",
-    maxWidth: 58,
-    minWidth: 58,
-    border: "1px solid #bae186", // тёмно салатовый
-    borderRadius: 1,
-    borderColor: "#bae186", // тёмно салатовый
-    boxShadow: 6,
-    color: "black",
-  };
+//   const styleButtDelYes = {
+//     marginRight: 1,
+//     maxHeight: "27px",
+//     minHeight: "27px",
+//     maxWidth: 58,
+//     minWidth: 58,
+//     border: "1px solid #bae186", // тёмно салатовый
+//     borderRadius: 1,
+//     borderColor: "#bae186", // тёмно салатовый
+//     boxShadow: 6,
+//     color: "black",
+//   };
 
-  let illum = idx === nomDelFaz ? styleButtDelYes : styleButtDelNo;
+//   let illum = idx === nomDelFaz ? styleButtDelYes : styleButtDelNo;
 
-  return (
-    <Button sx={illum} onClick={() => ChangeStrDel(idx)}>
-      {idx === nomDelFaz ? (
-        <Box sx={{ fontSize: 15.5 }}>
-          <b>{idx + 1}</b>
-        </Box>
-      ) : (
-        <Box>{idx + 1}</Box>
-      )}
-    </Button>
-  );
-};
+//   return (
+//     <Button sx={illum} onClick={() => ChangeStrDel(idx)}>
+//       {idx === nomDelFaz ? (
+//         <Box sx={{ fontSize: 15.5 }}>
+//           <b>{idx + 1}</b>
+//         </Box>
+//       ) : (
+//         <Box>{idx + 1}</Box>
+//       )}
+//     </Button>
+//   );
+// };
 
 export const SaveFormVert = (HAVE: number, SaveForm: any) => {
   return (
@@ -2231,6 +2233,15 @@ export const PreparCurrenciesPlan = (
     currencies.push({ ...maskCurrencies });
   }
   return currencies;
+};
+
+export const MainTablInp = (xss: number, func: any, st: number) => {
+  let style = st === 3 ? styleFT03 : styleFT033;
+  return (
+    <Grid xs={xss} item sx={style}>
+      <Box sx={{ display: "grid", justifyContent: "center" }}>{func}</Box>
+    </Grid>
+  );
 };
 //=== PointDataError ==================================================
 export const HeadDoublError = (flagSave: boolean, propsErr: string) => {

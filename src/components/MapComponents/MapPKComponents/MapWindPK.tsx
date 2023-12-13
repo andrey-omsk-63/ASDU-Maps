@@ -61,7 +61,7 @@ const MapWindPK = (props: {
   const [openGraf, setOpenGraf] = React.useState(false);
 
   //=== инициализация ======================================
-  if (props.route) nameIn = ("00" + props.route.targetID).slice(-3);
+  if (props.route) nameIn = props.route.targetID + ".";
 
   //========================================================
   const CloseEnd = React.useCallback(() => {
@@ -105,7 +105,7 @@ const MapWindPK = (props: {
           <Box sx={styleWindPK02}>
             <Box
               onClick={() => ClickImg(idx)}
-              sx={{ height: 136, fontSize: 12.9 }}
+              sx={{ height: 136, fontSize: 12.9, cursor: "pointer" }}
             >
               Здесь может быть картинка перекрёстка{" "}
               <b>{props.route.targetID}</b> с направлением{" "}
@@ -116,7 +116,7 @@ const MapWindPK = (props: {
           <Box sx={styleWindPK02}>
             <Box
               onClick={() => ClickBlok(idx)}
-              sx={{ marginBottom: 0.5, height: 155 }}
+              sx={{ marginBottom: 0.5, height: 155, cursor: "pointer" }}
             >
               Здесь будет график направления <b>{nameIn + (idx + 1)}</b>
             </Box>

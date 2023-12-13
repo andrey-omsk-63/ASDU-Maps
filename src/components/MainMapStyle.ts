@@ -472,7 +472,7 @@ export const styleFormMenu = {
 };
 
 export const styleFT02 = {
-  fontSize: 15,
+  fontSize: 14,
   padding: 0.7,
   textAlign: "center",
   bgcolor: "#C0E2C3",
@@ -492,7 +492,7 @@ export const styleFormTabl00 = {
 
 export const styleFormTabl01 = {
   // height: 196,
-  height: 226,
+  height: 256,
   bgcolor: "background.paper",
   borderBottomLeftRadius: 5,
   borderBottomRightRadius: 5,
@@ -500,7 +500,7 @@ export const styleFormTabl01 = {
 
 export const styleFormTabl02 = {
   //height: 162,
-  height: 192,
+  height: 222,
   bgcolor: "#F1F5FB", // серо голубой
   overflowX: "auto",
 };
@@ -518,6 +518,18 @@ export const styleFT033 = {
   //borderColor: 'primary.main',
   padding: 0.7,
   textAlign: "center",
+};
+
+export const styleFT04 = {
+  fontSize: 18,
+  display: "grid",
+  justifyContent: "center",
+  cursor: "pointer",
+};
+
+export const styleFT05 = {
+  color: "red",
+  textShadow: "4px 4px 6px rgba(0,0,0,0.3)",
 };
 //=== WaysForma =======================================================
 export const styleFormInf = {
