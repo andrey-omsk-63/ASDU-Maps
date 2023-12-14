@@ -27,9 +27,11 @@ import { PLANER } from "../MainMapGl";
 let oldIdx = -1;
 let massForm: any = null;
 let HAVE = 0;
+let CURR: any = [];
 
 let currenciesPlan: any = [];
 let currenciesFaza: any = [];
+let currencies: any = [];
 let FAZA = 0;
 let MASSFAZA: Array<number> = [];
 let newFAZA = 0;
@@ -53,11 +55,6 @@ const MapVertexForma = (props: {
 }) => {
   //console.log("MapVertexForma:", props.idx, oldIdx, props.forma);
   //== Piece of Redux =======================================
-  // const map = useSelector((state: any) => {
-  //   const { mapReducer } = state;
-  //   return mapReducer.map;
-  // });
-  //console.log("map:", map);
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;
     return massdkReducer.massdk;
@@ -142,7 +139,16 @@ const MapVertexForma = (props: {
   const CloseEnd = React.useCallback(() => {
     oldIdx = -1;
     HAVE = 0;
-    props.setOpen(false, massForm); // полный выход
+    //console.log("massForm:", massForm);
+    let massRab = JSON.parse(JSON.stringify(massForm));
+    massRab.phases.splice(0, massRab.phases.length); // massRab.phases = [];
+    for (let i = 0; i < massForm.kolFaz; i++) {
+      for (let j = 0; j < massForm.kolFaz; j++)
+        if (massForm.phases[j].PhaseOrder === i + 1)
+          massRab.phases.push(massForm.phases[j]);
+    }
+    //console.log("massRab:", massRab);
+    props.setOpen(false, massRab); // полный выход
   }, [props]);
 
   const handleCloseBad = React.useCallback(() => {
@@ -169,16 +175,6 @@ const MapVertexForma = (props: {
     HAVE++;
   };
 
-  // const SetNumPhase = (valueInp: number, idx: number) => {
-  //   console.log("valueInp:", valueInp, typeof valueInp);
-  //   // massForm.phases[idx].MinDuration = valueInp;
-  //   // if (massForm.phases[idx].StartDuration > valueInp) {
-  //   //   massForm.phases[idx].StartDuration = valueInp;
-  //   //   props.setOpen(true, massForm, true); // полный ререндер
-  //   // }
-  //   HAVE++;
-  // };
-
   const SetMinDuration = (valueInp: number, idx: number) => {
     massForm.phases[idx].MinDuration = valueInp;
     if (massForm.phases[idx].StartDuration > valueInp) {
@@ -199,8 +195,13 @@ const MapVertexForma = (props: {
   };
 
   const SetPhaseOrder = (valueInp: number, idx: number) => {
+    let oldPhOrder = massForm.phases[idx].PhaseOrder;
+    for (let i = 0; i < massForm.phases.length; i++)
+      if (massForm.phases[i].PhaseOrder === valueInp)
+        massForm.phases[i].PhaseOrder = oldPhOrder;
     massForm.phases[idx].PhaseOrder = valueInp;
     HAVE++;
+    setTrigger(!trigger); // ререндер
   };
 
   const handleChangePlan = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -222,6 +223,22 @@ const MapVertexForma = (props: {
     return freeNum;
   };
 
+  const CombOrder = (massForm: any) => {
+    let temp1: Array<number> = [];
+    let temp2: Array<number> = [];
+    for (let i = 0; i < newFAZA; i++) {
+      temp1.push(massForm.phases[i].PhaseOrder);
+      temp2.push(-1);
+    }
+    for (let i = 0; i < newFAZA; i++) {
+      const minValue = Math.min.apply(null, temp1);
+      const poz = temp1.indexOf(minValue);
+      temp1[poz] = 100 + i;
+      temp2[poz] = i + 1;
+    }
+    return temp2;
+  };
+
   const handleChangeFaza = (event: React.ChangeEvent<HTMLInputElement>) => {
     newFAZA = Number(event.target.value) + 2;
     if (newFAZA === FAZA) return;
@@ -229,7 +246,14 @@ const MapVertexForma = (props: {
     if (newFAZA < FAZA) {
       // количество фаз уменьшилось
       massRab.phases.splice(0, massRab.phases.length); // massRab.phases = [];
-      for (let i = 0; i < newFAZA; i++) massRab.phases.push(massForm.phases[i]);
+      MASSFAZA = [];
+      for (let i = 0; i < newFAZA; i++) {
+        massRab.phases.push(massForm.phases[i]);
+        MASSFAZA.push(massForm.phases[i].NumPhase);
+      }
+      let temp2: any = CombOrder(massForm);
+      for (let i = 0; i < newFAZA; i++)
+        massForm.phases[i].PhaseOrder = temp2[i];
     }
     if (newFAZA > FAZA) {
       // количество фаз увеличелось
@@ -240,8 +264,8 @@ const MapVertexForma = (props: {
         maskFaz.PhaseOrder = FAZA + i + 1;
         massRab.phases.push({ ...maskFaz });
       }
-      FAZA = newFAZA;
     }
+    FAZA = newFAZA;
     massRab.kolFaz = newFAZA;
     HAVE++;
     oldIdx = -1;
@@ -274,75 +298,70 @@ const MapVertexForma = (props: {
       for (let i = 0; i < massRab.kolFaz; i++)
         if (i !== nomDelFaz) massRab.phases.push(massForm.phases[i]);
       massRab.kolFaz--;
+      newFAZA = massRab.kolFaz;
+      let temp2: any = CombOrder(massRab);
+      for (let i = 0; i < newFAZA; i++) massRab.phases[i].PhaseOrder = temp2[i];
       nomDelFaz = -1;
       HAVE++;
       oldIdx = -1;
       props.setOpen(true, massRab, openSetErr); // полный ререндер
     }
   };
+
+  const hChPhase = (event: any, i: number) => {
+    HAVE++;
+    let num = Number(event.target.value);
+    let currencies = CURR[i];
+    MASSFAZA[i] = Number(currencies[num].label);
+    massForm.phases[i].NumPhase = MASSFAZA[i];
+    setTrigger(!trigger); // ререндер
+  };
   //========================================================
-  //const [currency, setCurrency] = React.useState("0");
+  const DelCross = (i: number) => {
+    return (
+      <Grid xs={1} item sx={styleFT033} onClick={() => ChangeStrDel(i)}>
+        <Box sx={styleFT04}>
+          {i === nomDelFaz ? (
+            <Box sx={styleFT05}>
+              <b>&#10006;</b>
+            </Box>
+          ) : (
+            <Box>&#215;</Box>
+          )}
+        </Box>
+      </Grid>
+    );
+  };
 
   const StrokaMainTabl = () => {
     let resStr = [];
-    let currency = '0'
-
+    let currency = "0";
+    CURR = [];
     for (let i = 0; i < FAZA; i++) {
       let startDur = massForm.phases[i].StartDuration;
       let minDur = massForm.phases[i].MinDuration;
       let phOrder = massForm.phases[i].PhaseOrder;
       let numPh = massForm.phases[i].NumPhase;
-
       let massRab = JSON.parse(JSON.stringify(MASSFAZA));
       for (let j = massRab.length - 1; j >= 0; j--)
         if (massRab[j] === numPh) massRab.splice(j, 1);
-      let currencies = PreparCurrenciesPlan(MaxFaz, massRab);
-      //console.log("!!!!!!:", currencies, massRab);
-      //let nom = "0";
-
-      for (let j = 0; j < Object.keys(currencies).length; j++) {
-        //console.log("0###:",Number(currencies[j].label), numPh);
-        if (Number(currencies[j].label) === numPh) {
-          console.log("1###:", currencies[j].value);
-          //setCurrency(currencies[j].value);
-          currency = currencies[j].value
-        }
-      }
-      console.log("!!!!!!:", currency, currencies, massRab);
-
-    
-
-      const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        // setCurrencyPlan(event.target.value);
-        // massForm.nomPlan = Number(event.target.value) + 1;
-        // massForm.optimal = false;
-        // HAVE++;
-        let num = Number(event.target.value)
-        console.log("######:", num,currencies[num].label);
-      };
+      currencies = PreparCurrenciesPlan(MaxFaz, massRab);
+      CURR.push(currencies);
+      for (let j = 0; j < Object.keys(currencies).length; j++)
+        if (Number(currencies[j].label) === numPh)
+          currency = currencies[j].value;
 
       resStr.push(
         <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
           <Grid xs={2.75} item sx={styleFT03}>
             <Box sx={{ display: "grid", justifyContent: "center" }}>
-              {InputFromList(handleChange, currency, currencies)}
+              {InputFromList((e: any) => hChPhase(e, i), currency, currencies)}
             </Box>
           </Grid>
-          {/* {MainTablInp(2.75, WaysInput(i, numPh, SetNumPhase, 1, MaxFaz), 3)} */}
           {MainTablInp(2.75, WaysInput(i, minDur, SetMinDuration, 0, 20), 3)}
           {MainTablInp(2.75, WaysInput(i, startDur, SetStDuration, 0, 20), 3)}
           {MainTablInp(2.75, WaysInput(i, phOrder, SetPhaseOrder, 1, FAZA), 3)}
-          <Grid xs={1} item sx={styleFT033} onClick={() => ChangeStrDel(i)}>
-            <Box sx={styleFT04}>
-              {i === nomDelFaz ? (
-                <Box sx={styleFT05}>
-                  <b>&#10006;</b>
-                </Box>
-              ) : (
-                <Box>&#215;</Box>
-              )}
-            </Box>
-          </Grid>
+          {DelCross(i)}
         </Grid>
       );
     }

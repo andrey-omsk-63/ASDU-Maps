@@ -1862,7 +1862,9 @@ export const WaysInput = (
   MIN: number,
   MAX: number
 ) => {
-  const [value, setValue] = React.useState(VALUE);
+  //const [value, setValue] = React.useState(VALUE);
+  let value = VALUE
+  //if (idx === 3) console.log("WaysInput:", idx,VALUE,value);
 
   const styleSetID = {
     width: "33px",
@@ -1890,7 +1892,8 @@ export const WaysInput = (
     if (valueInp === "") valueInp = MIN;
     valueInp = Math.trunc(Number(valueInp));
     if (valueInp <= MAX) {
-      setValue(valueInp.toString());
+      //setValue(valueInp.toString());
+      value = valueInp.toString()
       SetValue(valueInp, idx);
     }
   };
