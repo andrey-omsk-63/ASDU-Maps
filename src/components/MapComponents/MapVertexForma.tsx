@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { statsaveCreate } from "../../redux/actions";
+import { massdkCreate, statsaveCreate } from "../../redux/actions";
 
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -11,15 +11,14 @@ import MapPointDataError from "./MapPointDataError";
 import { WaysInput, DelStrokaFaz, MainTablInp } from "./../MapServiceFunctions";
 import { BadExit, InputFromList, StrTablVert } from "./../MapServiceFunctions";
 import { HeaderTablFaz, ShiftOptimal } from "./../MapServiceFunctions";
-//import { DelStrokaMainTabl } from "./../MapServiceFunctions";
+import { CombOrder, DelCross } from "./../MapServiceFunctions";
 import { SaveFormVert, PreparCurrenciesPlan } from "./../MapServiceFunctions";
 
 import { SUMPK, MaxFaz } from "./../MapConst";
-//import { PLANER } from "./../MainMapGl";
 
 import { styleModalEnd, styleFormName } from "./../MainMapStyle";
 import { styleFormVert, styleFT033, styleFT03 } from "./../MainMapStyle";
-import { styleFormTabl00, styleFT04, styleFT05 } from "./../MainMapStyle";
+import { styleFormTabl00 } from "./../MainMapStyle";
 import { styleFormTabl01, styleFormTabl02 } from "./../MainMapStyle";
 
 import { PLANER } from "../MainMapGl";
@@ -63,7 +62,6 @@ const MapVertexForma = (props: {
     const { statsaveReducer } = state;
     return statsaveReducer.datestat;
   });
-  //console.log("datestat:", datestat);
   const dispatch = useDispatch();
   //===========================================================
   const MASSDK = massdk[props.idx];
@@ -80,7 +78,6 @@ const MapVertexForma = (props: {
       ? (MASSDK.phases.length - 2).toString()
       : (props.forma.kolFaz - 2).toString()
   );
-  //console.log("currencyFaza", currencyFaza);
 
   const PreparCurrenciesFaza = (mazFaz: number) => {
     const currencies: any = [];
@@ -112,11 +109,13 @@ const MapVertexForma = (props: {
     currenciesPlan = PreparCurrenciesPlan(SUMPK, []);
     currenciesFaza = PreparCurrenciesFaza(MaxFaz);
     if (props.forma === null) {
-      HAVE = 0;
+      HAVE = 0; // первое вхождение из 'родителя'
       nomDelFaz = -1;
       FAZA = MASSDK.phases.length;
       MASSFAZA = JSON.parse(JSON.stringify(MASSDK.phases));
       let maskForm: any = {
+        ID: MASSDK.ID,
+        timeCycle: 80,
         nomPlan: 1,
         optimal: false,
         kolFaz: MASSDK.phases.length,
@@ -124,14 +123,13 @@ const MapVertexForma = (props: {
         phases: [],
       };
       massForm = maskForm;
-
       for (let i = 0; i < FAZA; i++) {
         maskFaz.NumPhase = MASSDK.phases[i];
         maskFaz.PhaseOrder = i + 1;
         massForm.phases.push({ ...maskFaz });
       }
     } else {
-      massForm = props.forma;
+      massForm = props.forma; // повторноеое вхождение из 'родителя'
       FAZA = massForm.kolFaz;
     }
   }
@@ -139,16 +137,7 @@ const MapVertexForma = (props: {
   const CloseEnd = React.useCallback(() => {
     oldIdx = -1;
     HAVE = 0;
-    //console.log("massForm:", massForm);
-    let massRab = JSON.parse(JSON.stringify(massForm));
-    massRab.phases.splice(0, massRab.phases.length); // massRab.phases = [];
-    for (let i = 0; i < massForm.kolFaz; i++) {
-      for (let j = 0; j < massForm.kolFaz; j++)
-        if (massForm.phases[j].PhaseOrder === i + 1)
-          massRab.phases.push(massForm.phases[j]);
-    }
-    //console.log("massRab:", massRab);
-    props.setOpen(false, massRab); // полный выход
+    props.setOpen(false, null); // полный выход
   }, [props]);
 
   const handleCloseBad = React.useCallback(() => {
@@ -164,6 +153,19 @@ const MapVertexForma = (props: {
   //=== Функции - обработчики ==============================
   const SaveForm = (mode: boolean) => {
     if (mode) {
+      // выход с сохранением
+      //let massRab = JSON.parse(JSON.stringify(massForm)); // отсортированный massForm
+      //massRab.phases.splice(0, massRab.phases.length); // massRab.phases = [];
+      MASSFAZA = [];
+      for (let i = 0; i < massForm.kolFaz; i++) {
+        for (let j = 0; j < massForm.kolFaz; j++)
+          if (massForm.phases[j].PhaseOrder === i + 1) {
+            //massRab.phases.push(massForm.phases[j]);
+            MASSFAZA.push(massForm.phases[j].NumPhase);
+          }
+      }
+      MASSDK.phases = MASSFAZA;
+      dispatch(massdkCreate(massdk));
       CloseEnd(); // здесь должно быть сохранение
     } else {
       handleCloseBad();
@@ -223,22 +225,6 @@ const MapVertexForma = (props: {
     return freeNum;
   };
 
-  const CombOrder = (massForm: any) => {
-    let temp1: Array<number> = [];
-    let temp2: Array<number> = [];
-    for (let i = 0; i < newFAZA; i++) {
-      temp1.push(massForm.phases[i].PhaseOrder);
-      temp2.push(-1);
-    }
-    for (let i = 0; i < newFAZA; i++) {
-      const minValue = Math.min.apply(null, temp1);
-      const poz = temp1.indexOf(minValue);
-      temp1[poz] = 100 + i;
-      temp2[poz] = i + 1;
-    }
-    return temp2;
-  };
-
   const handleChangeFaza = (event: React.ChangeEvent<HTMLInputElement>) => {
     newFAZA = Number(event.target.value) + 2;
     if (newFAZA === FAZA) return;
@@ -251,7 +237,7 @@ const MapVertexForma = (props: {
         massRab.phases.push(massForm.phases[i]);
         MASSFAZA.push(massForm.phases[i].NumPhase);
       }
-      let temp2: any = CombOrder(massForm);
+      let temp2: any = CombOrder(massForm, newFAZA);
       for (let i = 0; i < newFAZA; i++)
         massForm.phases[i].PhaseOrder = temp2[i];
     }
@@ -295,12 +281,16 @@ const MapVertexForma = (props: {
       // удаление
       let massRab = JSON.parse(JSON.stringify(massForm));
       massRab.phases.splice(0, massRab.phases.length); // massRab.phases = [];
+      MASSFAZA = []
       for (let i = 0; i < massRab.kolFaz; i++)
-        if (i !== nomDelFaz) massRab.phases.push(massForm.phases[i]);
+        if (i !== nomDelFaz) {
+          massRab.phases.push(massForm.phases[i]);
+          MASSFAZA.push(massForm.phases[i].NumPhase);
+        }
       massRab.kolFaz--;
-      newFAZA = massRab.kolFaz;
-      let temp2: any = CombOrder(massRab);
-      for (let i = 0; i < newFAZA; i++) massRab.phases[i].PhaseOrder = temp2[i];
+      let temp2: any = CombOrder(massRab, massRab.kolFaz);
+      for (let i = 0; i < massRab.kolFaz; i++)
+        massRab.phases[i].PhaseOrder = temp2[i];
       nomDelFaz = -1;
       HAVE++;
       oldIdx = -1;
@@ -317,22 +307,6 @@ const MapVertexForma = (props: {
     setTrigger(!trigger); // ререндер
   };
   //========================================================
-  const DelCross = (i: number) => {
-    return (
-      <Grid xs={1} item sx={styleFT033} onClick={() => ChangeStrDel(i)}>
-        <Box sx={styleFT04}>
-          {i === nomDelFaz ? (
-            <Box sx={styleFT05}>
-              <b>&#10006;</b>
-            </Box>
-          ) : (
-            <Box>&#215;</Box>
-          )}
-        </Box>
-      </Grid>
-    );
-  };
-
   const StrokaMainTabl = () => {
     let resStr = [];
     let currency = "0";
@@ -361,7 +335,9 @@ const MapVertexForma = (props: {
           {MainTablInp(2.75, WaysInput(i, minDur, SetMinDuration, 0, 20), 3)}
           {MainTablInp(2.75, WaysInput(i, startDur, SetStDuration, 0, 20), 3)}
           {MainTablInp(2.75, WaysInput(i, phOrder, SetPhaseOrder, 1, FAZA), 3)}
-          {DelCross(i)}
+          <Grid xs={1} item sx={styleFT033} onClick={() => ChangeStrDel(i)}>
+            {DelCross(i, nomDelFaz)}
+          </Grid>
         </Grid>
       );
     }
@@ -407,7 +383,7 @@ const MapVertexForma = (props: {
               </em>
             </Box>
             <Box sx={{ fontSize: 12, marginTop: 0.5 }}>Общие</Box>
-            {StrTablVert("Время цикла cек.", "80 сек.")}
+            {StrTablVert("Время цикла cек.", massForm.timeCycle + " сек.")}
             {StrTablVert("Номер перекрёстка", subId)}
             {StrTablVert(
               "Номер плана координации",

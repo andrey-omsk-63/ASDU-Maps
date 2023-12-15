@@ -5,6 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.6.0",
     "@emotion/styled": "^11.6.0",
+    "@material-ui/lab": "^4.0.0-alpha.61",
     "@mui/icons-material": "^5.2.0",
     "@mui/lab": "^5.0.0-alpha.54",
     "@mui/material": "^5.1.0",
@@ -16,8 +17,10 @@
     "@types/react-dom": "^17.0.11",
     "@types/react-router-dom": "^5.3.2",
     "axios": "^0.24.0",
+    "chart.js": "^3.6.2",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
+    "react-chartjs-2": "^4.0.0",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.5",
     "react-scripts": "4.0.3",

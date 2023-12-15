@@ -717,13 +717,13 @@ const MainMap = (props: { region: any; sErr: string; svg: any; setSvg: any; trig
     setOpenVertForm(false); // закрытие старой формы
     HandlLockUp(true); // блокировка меню районов и меню режимов
     if (!mode) {
-      VertexForma = null;
+      VertexForma = null; // полное закрытие
       ZeroRoute((openEF = false));
     } else {
       VertexForma = forma;
       openEF = openErr;
       setOpenVertForm(true);
-      setTriggerForm(!triggerForm); // запуск новой формы
+      setTriggerForm(!triggerForm); // перезапуск новой формы
     }
   };
 

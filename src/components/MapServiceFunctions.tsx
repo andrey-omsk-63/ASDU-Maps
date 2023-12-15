@@ -32,7 +32,7 @@ import { styleFormPK03, styleBind05 } from "./MainMapStyle";
 import { styleModalEndAttent, styleFT03, styleFT033 } from "./MainMapStyle";
 import { styleBind02, styleTypography, searchControl } from "./MainMapStyle";
 import { styleBind03, styleBind033, styleSetImg } from "./MainMapStyle";
-//import { styleFormPK03, styleSetAdrArea, styleSetAdrID } from './MainMapStyle';
+import { styleFT04, styleFT05 } from './MainMapStyle';
 
 import { styleModalMenuErr, styleHeadError } from "./MapPointDataErrorStyle";
 import { styleBoxFormArea, styleSetArea } from "./MapPointDataErrorStyle";
@@ -128,7 +128,6 @@ export const MapssdkNewPoint = (
   masskPoint.area = area;
   masskPoint.subarea = subarea;
   masskPoint.newCoordinates = 1;
-  //console.log('MapssdkNewPoint:', subarea, masskPoint);
   return masskPoint;
 };
 
@@ -925,12 +924,6 @@ export const MainMenu = (
           {StrokaMenuGlob("Редактирование", PressButton, 69)}
         </>
       )}
-      {/* {MODE === "2" && !LockUp && (
-        <>
-          {StrokaMenuGlob("Список ПК", PressButton, 201)}
-          {StrokaMenuGlob("Создание нового ПК", PressButton, 202)}
-        </>
-      )} */}
     </>
   );
 };
@@ -1201,177 +1194,6 @@ export const NoVertex = (openSetErr: boolean, handleCloseErr: Function) => {
     </Modal>
   );
 };
-
-// export const InputAdressVertex = (
-//   openSetInpAdres: boolean,
-//   handleCloseInp: Function,
-//   //valueAdr: string,
-//   //setValueAdr: Function
-// ) => {
-//   const styleSetAdres = {
-//     outline: 'none',
-//     width: '318px',
-//     height: '7vh',
-//     marginTop: '26vh',
-//     marginLeft: '46px',
-//     border: '1px solid #FFFEF7', // светло серый
-//     borderRadius: 1,
-//     boxShadow: 24,
-//     bgcolor: '#FFFEF7', // светло серый
-//     opacity: 0.85,
-//   };
-
-//   const styleSetAdress = {
-//     outline: 'none',
-//     width: '318px',
-//     height: '14vh',
-//     marginTop: '9vh',
-//     marginLeft: '48px',
-//     border: '3px solid #FFFEF7', // светло серый
-//     borderRadius: 1,
-//     boxShadow: 24,
-//     bgcolor: '#FFFEF7', // светло серый
-//     opacity: 0.85,
-//   };
-
-//   const styleSetAd = {
-//     width: '230px',
-//     maxHeight: '3px',
-//     minHeight: '3px',
-//     bgcolor: '#FAFAFA', // светло серый
-//     boxShadow: 3,
-//     textAlign: 'center',
-//     p: 1.5,
-//   };
-
-//   const styleBoxFormAdres = {
-//     '& > :not(style)': {
-//       marginTop: '-9px',
-//       marginLeft: '-12px',
-//       width: '253px',
-//     },
-//   };
-
-//   let subArea = -1;
-//   let dat = [];
-//   for (let i = 0; i < SubArea.length; i++) {
-//     dat.push(SubArea[i].toString() + '-й подрайон');
-//     if (!i) subArea = SubArea[i];
-//   }
-//   let massKey = [];
-//   let massDat = [];
-//   const currencies: any = [];
-//   for (let key in dat) {
-//     massKey.push(key);
-//     massDat.push(dat[key]);
-//   }
-//   for (let i = 0; i < massKey.length; i++) {
-//     let maskCurrencies = {
-//       value: '',
-//       label: '',
-//     };
-//     maskCurrencies.value = massKey[i];
-//     maskCurrencies.label = massDat[i];
-//     currencies.push(maskCurrencies);
-//   }
-
-//   const [currency, setCurrency] = React.useState(massKey[0]);
-//   const [valueAdr, setValueAdr] = React.useState('Перекрёсток' + UniqueName());
-
-//   const handleChangeAdr = (event: any) => {
-//     let valueInp = event.target.value.replace(/^0+/, '');
-//     setValueAdr(valueInp);
-//   };
-
-//   const handleChangeSArea = (event: React.ChangeEvent<HTMLInputElement>) => {
-//     let sub = Number(event.target.value);
-//     subArea = SubArea[sub];
-//     console.log('subArea:', subArea);
-//     setCurrency(event.target.value);
-//   };
-
-//   const InputAdress = () => {
-//     return (
-//       <Box sx={styleSetAd}>
-//         <Box component="form" sx={styleBoxFormAdres}>
-//           <TextField
-//             size="small"
-//             onKeyPress={handleKey} //отключение Enter
-//             type="text"
-//             InputProps={{
-//               disableUnderline: true,
-//               style: { fontSize: 13.3, backgroundColor: '#FFFBE5' },
-//             }}
-//             value={valueAdr}
-//             onChange={handleChangeAdr}
-//             variant="standard"
-//             helperText="Введите наименование (адрес)"
-//             color="secondary"
-//           />
-//         </Box>
-//       </Box>
-//     );
-//   };
-
-//   const InputSubArea = () => {
-//     return (
-//       <Box sx={styleSetArea}>
-//         <Box component="form" sx={styleBoxFormArea}>
-//           <TextField
-//             select
-//             size="small"
-//             onKeyPress={handleKey} //отключение Enter
-//             InputProps={{ disableUnderline: true }}
-//             value={currency}
-//             onChange={handleChangeSArea}
-//             variant="standard"
-//             helperText="Введите подрайон"
-//             color="secondary">
-//             {currencies.map((option: any) => (
-//               <MenuItem key={option.value} value={option.value}>
-//                 {option.label}
-//               </MenuItem>
-//             ))}
-//           </TextField>
-//         </Box>
-//       </Box>
-//     );
-//   };
-
-//   return (
-//     <Modal open={openSetInpAdres} onClose={() => handleCloseInp(false)}>
-//       {/* <Grid item container sx={styleSetAdres}>
-//         <Grid item xs={9.7}>
-//           {InputAdress()}
-//         </Grid>
-//         <Grid item xs={2.3}>
-//           <Button sx={styleInpKnop} onClick={() => handleCloseInp(true)}>
-//             Ввод
-//           </Button>
-//         </Grid>
-//       </Grid> */}
-//       <Grid item container sx={styleSetAdress}>
-//         <Grid item>
-//           <Grid item container sx={styleSetAdrArea}>
-//             <Grid item xs={9.5}>
-//               {InputSubArea()}
-//             </Grid>
-//           </Grid>
-//           <Grid item container sx={styleSetAdrID}>
-//             <Grid item xs={9.5} sx={{ border: 0 }}>
-//               {InputAdress()}
-//             </Grid>
-//             <Grid item xs={2.2} sx={{ border: 0 }}>
-//               <Button sx={styleInpKnop} onClick={handleCloseInp(true)}>
-//                 Ввод
-//               </Button>
-//             </Grid>
-//           </Grid>
-//         </Grid>
-//       </Grid>
-//     </Modal>
-//   );
-// };
 //=== RouteBind =======================================================
 export const ReplaceInSvg = (masSvg: any, widthHeight: string, idx: number) => {
   let ch = "";
@@ -1863,7 +1685,7 @@ export const WaysInput = (
   MAX: number
 ) => {
   //const [value, setValue] = React.useState(VALUE);
-  let value = VALUE
+  let value = VALUE;
   //if (idx === 3) console.log("WaysInput:", idx,VALUE,value);
 
   const styleSetID = {
@@ -1893,7 +1715,7 @@ export const WaysInput = (
     valueInp = Math.trunc(Number(valueInp));
     if (valueInp <= MAX) {
       //setValue(valueInp.toString());
-      value = valueInp.toString()
+      value = valueInp.toString();
       SetValue(valueInp, idx);
     }
   };
@@ -2114,52 +1936,6 @@ export const ShiftOptimal = (mode: boolean, ChangeOptimal: Function) => {
   );
 };
 
-// export const DelStrokaMainTabl = (
-//   idx: number,
-//   nomDelFaz: number,
-//   ChangeStrDel: any
-// ) => {
-//   const styleButtDelNo = {
-//     marginRight: 1,
-//     maxHeight: "27px",
-//     minHeight: "27px",
-//     maxWidth: 58,
-//     minWidth: 58,
-//     backgroundColor: "#E6F5D6", // светло салатовый
-//     border: "1px solid #d4d4d4", // серый
-//     borderRadius: 1,
-//     boxShadow: 2,
-//     color: "black",
-//   };
-
-//   const styleButtDelYes = {
-//     marginRight: 1,
-//     maxHeight: "27px",
-//     minHeight: "27px",
-//     maxWidth: 58,
-//     minWidth: 58,
-//     border: "1px solid #bae186", // тёмно салатовый
-//     borderRadius: 1,
-//     borderColor: "#bae186", // тёмно салатовый
-//     boxShadow: 6,
-//     color: "black",
-//   };
-
-//   let illum = idx === nomDelFaz ? styleButtDelYes : styleButtDelNo;
-
-//   return (
-//     <Button sx={illum} onClick={() => ChangeStrDel(idx)}>
-//       {idx === nomDelFaz ? (
-//         <Box sx={{ fontSize: 15.5 }}>
-//           <b>{idx + 1}</b>
-//         </Box>
-//       ) : (
-//         <Box>{idx + 1}</Box>
-//       )}
-//     </Button>
-//   );
-// };
-
 export const SaveFormVert = (HAVE: number, SaveForm: any) => {
   return (
     <Grid container>
@@ -2244,6 +2020,36 @@ export const MainTablInp = (xss: number, func: any, st: number) => {
     <Grid xs={xss} item sx={style}>
       <Box sx={{ display: "grid", justifyContent: "center" }}>{func}</Box>
     </Grid>
+  );
+};
+
+export const CombOrder = (massForm: any, newFAZA: number) => {
+  let temp1: Array<number> = [];
+  let temp2: Array<number> = [];
+  for (let i = 0; i < newFAZA; i++) {
+    temp1.push(massForm.phases[i].PhaseOrder);
+    temp2.push(-1);
+  }
+  for (let i = 0; i < newFAZA; i++) {
+    const minValue = Math.min.apply(null, temp1);
+    const poz = temp1.indexOf(minValue);
+    temp1[poz] = 100 + i;
+    temp2[poz] = i + 1;
+  }
+  return temp2;
+};
+
+export const DelCross = (i: number, nomDelFaz: number) => {
+  return (
+    <Box sx={styleFT04}>
+      {i === nomDelFaz ? (
+        <Box sx={styleFT05}>
+          <b>&#10006;</b>
+        </Box>
+      ) : (
+        <Box>&#215;</Box>
+      )}
+    </Box>
   );
 };
 //=== PointDataError ==================================================

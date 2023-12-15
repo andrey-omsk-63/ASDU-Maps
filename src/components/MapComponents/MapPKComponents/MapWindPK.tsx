@@ -7,6 +7,8 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Slider from "@mui/material/Slider";
 
+import MapWindViewGraf from "./MapWindViewGraf";
+
 import { StrokaTablWindPK } from "../../MapServiceFunctions";
 
 import { styleWindPK00, styleWindPK01 } from "../../MainMapStyle";
@@ -226,28 +228,28 @@ const MapWindPK = (props: {
     );
   };
 
-  const ViewGraf = (idx: number) => {
-    const handleClose = () => {
-      setOpenGraf(false);
-    };
+  // const ViewGraf = (idx: number) => {
+  //   const handleClose = () => {
+  //     setOpenGraf(false);
+  //   };
 
-    const CloseEnd = (event: any, reason: string) => {
-      if (reason === "escapeKeyDown") handleClose();
-    };
+  //   const CloseEnd = (event: any, reason: string) => {
+  //     if (reason === "escapeKeyDown") handleClose();
+  //   };
 
-    return (
-      <Modal open={openGraf} onClose={CloseEnd} hideBackdrop={false}>
-        <Box sx={stylePKForm01}>
-          <Button sx={styleModalEndBind} onClick={() => handleClose()}>
-            <b>&#10006;</b>
-          </Button>
-          <Box sx={styleWindPK04}>
-            График направления <b>{nameIn + (idx + 1)}</b>
-          </Box>
-        </Box>
-      </Modal>
-    );
-  };
+  //   return (
+  //     <Modal open={openGraf} onClose={CloseEnd} hideBackdrop={false}>
+  //       <Box sx={stylePKForm01}>
+  //         <Button sx={styleModalEndBind} onClick={() => handleClose()}>
+  //           <b>&#10006;</b>
+  //         </Button>
+  //         <Box sx={styleWindPK04}>
+  //           Изменение потока на направлении <b>{nameIn + (idx + 1)}</b>
+  //         </Box>
+  //       </Box>
+  //     </Modal>
+  //   );
+  // };
 
   return (
     <>
@@ -261,7 +263,9 @@ const MapWindPK = (props: {
         <Box sx={styleWindPK00(1)}>{ContentInfo()}</Box>
       )}
       {openImg && <>{ViewImg(IDX)} </>}
-      {openGraf && <>{ViewGraf(IDX)} </>}
+      {openGraf && (
+        <MapWindViewGraf close={setOpenGraf} idx={IDX} route={props.route} />
+      )}
     </>
   );
 };
