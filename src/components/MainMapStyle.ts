@@ -950,6 +950,17 @@ export const styleWindPK90 = (ht: number) => {
   return styleWindPK900;
 };
 
+export const styleWindPKEnd = {
+  position: "absolute",
+  top: "0.8%",
+  left: "auto",
+  right: "0.7%",
+  height: "21px",
+  maxWidth: "2%",
+  minWidth: "2%",
+  color: "black",
+};
+
 export const styleWindPK01 = {
   fontSize: 15,
   textAlign: "center",
@@ -987,14 +998,68 @@ export const styleWindPK04 = {
   p: 1,
 };
 
-export const styleWindPKEnd = {
+export const styleWindPK05 = {
+  marginBottom: 0.5,
+  height: 155,
+  cursor: "pointer",
+};
+
+export const styleWindPK06 = {
+  fontSize: 8.3,
+  transform: "rotate(270deg)",
+  position: "relative",
+  top: "63%",
+  marginLeft: -0.9,
+};
+
+export const styleWindPK07 = {
+  height: 150,
+  width: "98.0%",
+  bgcolor: "background.paper",
+  border: "1px solid #FFFFFF",
+  borderRadius: 1,
+  boxShadow: 8,
+  textAlign: "center",
+};
+
+export const styleWindPK08 = {
+  fontSize: 8.3,
+  height: 137,
+  width: "99%",
+  bgcolor: "#F1F5FB", // светло серый
+  border: "1px solid #d4d4d4", // серый
+  borderRadius: 1,
+};
+//=== WindViewGraf ====================================================
+export const styleWVG00 = {
+  outline: "none",
   position: "absolute",
-  top: "0.8%",
-  left: "auto",
-  right: "0.7%",
-  height: "21px",
-  maxWidth: "2%",
-  minWidth: "2%",
-  color: "black",
+  left: "50%",
+  top: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "96%",
+  bgcolor: "background.paper",
+  border: "1px solid #FFFFFF",
+  borderRadius: 1,
+  boxShadow: 24,
+  textAlign: "center",
+  padding: "5px 15px 5px 2px",
+};
+
+export const styleWVG01 = {
+  marginTop: 1,
+  height: "55vh",
+  bgcolor: "#F1F5FB", // светло серый
+  border: "1px solid #d4d4d4", // серый
+  borderRadius: 1,
+  boxShadow: 12,
+};
+
+export const styleWVG02 = {
+  fontSize: 12.3,
+  transform: "rotate(270deg)",
+  position: "relative",
+  top: "50%",
+  marginLeft: -0.5,
 };
 //=====================================================================

@@ -85,6 +85,8 @@ export interface Stater {
   needMenuForm: boolean; // выводить меню форм ПК
   idxMenu: number; // активная строка списка ПК
   nomMenu: number; // номер активного плана ПК
+  exampleImg1: any; // отладочное изображение перекрёстка
+  exampleImg2: any; // отладочное изображение перекрёстка
 }
 
 export let dateStat: Stater = {
@@ -96,6 +98,8 @@ export let dateStat: Stater = {
   needMenuForm: false,
   idxMenu: 0,
   nomMenu: -1, // номер активного плана ПК
+  exampleImg1: null,
+  exampleImg2: null,
 };
 
 export let massRoute: Router[] = [];
@@ -324,6 +328,10 @@ const App = () => {
       datePlan = data.data;
       dispatch(massplanCreate(datePlan));
       console.log("datePlan:", datePlan);
+    });
+    axios.get("http://localhost:3000/examplSvg1.svg").then(({ data }) => {
+      dateStat.exampleImg1 = data;
+      dispatch(statsaveCreate(dateStat));
     });
   } else {
     if (flagOpenКостыль) {

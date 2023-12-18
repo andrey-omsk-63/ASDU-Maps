@@ -5,12 +5,11 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-//import Slider from "@mui/material/Slider";
 
 //import { StrokaTablWindPK } from "../../MapServiceFunctions";
 
-import { styleModalEndBind, stylePKForm01 } from "../../MainMapStyle";
-//import { styleWindPK04 } from "../../MainMapStyle";
+import { styleWVG00, styleModalEndBind } from "../../MainMapStyle";
+import { styleWVG01, styleWVG02 } from "../../MainMapStyle";
 
 import { Chart as ChartJS, CategoryScale } from "chart.js";
 import { LinearScale, PointElement } from "chart.js";
@@ -25,8 +24,6 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-
-//import { styleModalEndBind, stylePKForm01 } from "../../MainMapStyle";
 
 //import { Directions } from "../../../App"; // интерфейс massForm
 interface DataGl {
@@ -47,6 +44,7 @@ interface Datasets {
 
 let nameIn = "";
 let timeInterval = 80;
+let labels: string[] = [];
 
 const MapWindViewGraf = (props: {
   close: Function; // функция возврата в родительский компонент
@@ -73,7 +71,7 @@ const MapWindViewGraf = (props: {
 
   //=== инициализация ======================================
   if (props.route) nameIn = props.route.targetID + ".";
-  const labels: string[] = [];
+  // const labels: string[] = [];
   let data: DataGl = {
     labels,
     datasets: [
@@ -138,7 +136,6 @@ const MapWindViewGraf = (props: {
   };
 
   const PointsGraf01 = () => {
-    //console.log('!!!!!!:',needRend,data)
     const options = {
       responsive: true,
       maintainAspectRatio: false,
@@ -151,21 +148,12 @@ const MapWindViewGraf = (props: {
         },
       },
     };
-    // return <>{needRend && <Line options={options} data={data} />}</>;
     return <Line options={options} data={data} />;
   };
 
   const PointsGraf00 = () => {
-    //const colMin = 60 / pointer[namer][0].Time;
-    for (let i = 0; i < timeInterval; i++) {
-      // let int = "";
-      // if (i % colMin === 0) {
-      //   if (i / colMin < 10) int += "0";
-      //   int += String(i / colMin);
-      //   int += ":00";
-      // }
-      labels.push(i.toString());
-    }
+    labels = [];
+    for (let i = 0; i < timeInterval; i++) labels.push(i.toString());
     // let int = 0;
     // //график прямого
     // let datas = [];
@@ -205,30 +193,29 @@ const MapWindViewGraf = (props: {
     );
   };
 
-  const styleXTC03 = {
-    marginTop: 1,
-    height: "55vh",
-    bgcolor: "#F1F5FB", // светло серый
-    border: "1px solid #d4d4d4", // серый
-    borderRadius: 1,
-    boxShadow: 12,
-  };
-
   return (
     <Modal open={openGraf} onClose={CloseEndGl} hideBackdrop={false}>
-      <Box sx={stylePKForm01}>
+      <Box sx={styleWVG00}>
         <Button sx={styleModalEndBind} onClick={() => handleClose()}>
           <b>&#10006;</b>
         </Button>
-        {/* <Box sx={styleWindPK04}> */}
-        Изменение потока на направлении <b>{nameIn + (props.idx + 1)}</b>
-        <Box sx={styleXTC03}>{PointsGraf00()}</Box>
-        {/* </Box> */}
-        <Box sx={{ fontSize: 12.1 }}>Тцикла</Box>
+        <Grid container sx={{}}>
+          <Grid item xs={0.15} sx={{ border: 0 }}>
+            <Box sx={styleWVG02}>
+              <b>Tе:Тцикла*C</b>
+            </Box>
+          </Grid>
+          <Grid item xs sx={{ border: 0 }}>
+            Изменение потока на направлении <b>{nameIn + (props.idx + 1)}</b>
+            <Box sx={styleWVG01}>{PointsGraf00()}</Box>
+            <Box sx={{ fontSize: 12.1 }}>
+              <b>Тцикла</b>
+            </Box>
+          </Grid>
+        </Grid>
       </Box>
     </Modal>
   );
 };
 
 export default MapWindViewGraf;
-//{/* {pointer !== null && <>{PointsGraf00()}</>} */}

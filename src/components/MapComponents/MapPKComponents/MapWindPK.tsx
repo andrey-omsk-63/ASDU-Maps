@@ -9,20 +9,52 @@ import Slider from "@mui/material/Slider";
 
 import MapWindViewGraf from "./MapWindViewGraf";
 
-import { StrokaTablWindPK } from "../../MapServiceFunctions";
+import { StrokaTablWindPK, ReplaceInSvg } from "../../MapServiceFunctions";
 
 import { styleWindPK00, styleWindPK01 } from "../../MainMapStyle";
-import { styleWindPK02 } from "../../MainMapStyle";
+import { styleWindPK02, styleWindPK05 } from "../../MainMapStyle";
 import { styleWindPK90, styleWindPKEnd } from "../../MainMapStyle";
 import { styleModalEndBind, stylePKForm01 } from "../../MainMapStyle";
-import { styleWindPK04 } from "../../MainMapStyle";
+import { styleWindPK04, styleWindPK06 } from "../../MainMapStyle";
+import { styleWindPK07, styleWindPK08 } from "../../MainMapStyle";
 
 import { Directions } from "../../../App"; // интерфейс massForm
 
 import { KolIn } from "./../../MapConst";
 
+import { Chart as ChartJS, CategoryScale } from "chart.js";
+import { LinearScale, PointElement } from "chart.js";
+import { LineElement, Title, Tooltip, Legend } from "chart.js";
+import { Line } from "react-chartjs-2";
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+//import { Directions } from "../../../App"; // интерфейс massForm
+interface DataGl {
+  labels: string[];
+  datasets: Datasets[];
+}
+
+interface Datasets {
+  label: string;
+  data: number[];
+  borderWidth: number;
+  borderColor: string;
+  backgroundColor: string;
+  pointRadius: number;
+}
+
 let nameIn = "";
 let IDX = -1;
+let labels: string[] = [];
+let timeInterval = 80;
 
 let massForm: Directions = {
   name: "0121", // номер направления
@@ -64,6 +96,35 @@ const MapWindPK = (props: {
 
   //=== инициализация ======================================
   if (props.route) nameIn = props.route.targetID + ".";
+  let data: DataGl = {
+    labels,
+    datasets: [
+      {
+        label: "Вх.поток",
+        data: [],
+        borderWidth: 1,
+        borderColor: "blue",
+        backgroundColor: "blue",
+        pointRadius: 1,
+      },
+      {
+        label: "Вых.поток",
+        data: [],
+        borderWidth: 1,
+        borderColor: "orange",
+        backgroundColor: "orange",
+        pointRadius: 1,
+      },
+      {
+        label: "Очередь",
+        data: [],
+        borderWidth: 1,
+        borderColor: "red",
+        backgroundColor: "red",
+        pointRadius: 1,
+      },
+    ],
+  };
 
   //========================================================
   const CloseEnd = React.useCallback(() => {
@@ -100,29 +161,127 @@ const MapWindPK = (props: {
     setOpenGraf(true);
   };
 
+  const PointsGraf01 = () => {
+    const options = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: "top" as const,
+          labels: {
+            font: {
+              weight: "bold",
+              size: 7,
+            },
+            boxWidth: 10,
+          },
+        },
+        title: {
+          display: false,
+        },
+      },
+      scales: {
+        x: {
+          ticks: {
+            font: {
+              size: 8,
+            },
+          },
+        },
+        y: {
+          ticks: {
+            font: {
+              size: 8,
+            },
+          },
+        },
+      },
+    };
+    return <Line options={options} data={data} />;
+  };
+
+  const PointsGraf00 = () => {
+    labels = [];
+    for (let i = 0; i < timeInterval; i++) labels.push(i.toString());
+    //for (let i = 0; i < timeInterval; i++) labels.push(i.toString());
+    // let int = 0;
+    // //график прямого
+    // let datas = [];
+    // // for (let i = 0; i < pointer[namer].length; i++) {
+    // //   datas.push(pointer[namer][i].Value[0]);
+    // // }
+    // if (pointer[namer].length !== 0)
+    //   int = pointer[namer][pointer[namer].length - 1].Value[0];
+    // datas.push(int);
+    // for (let i = 0; i < pointer[namer].length - 1; i++) {
+    //   int = 0;
+    //   if (pointer[namer].length !== 0) int = pointer[namer][i].Value[0];
+    //   datas.push(int);
+    // }
+    // data.datasets[0].data = datas;
+    // //график обратного
+    // datas = [];
+    // // for (let i = 0; i < pointer[namer].length; i++) {
+    // //   datas.push(pointer[namer][i].Value[1]);
+    // // }
+    // if (pointer[namer].length !== 0)
+    //   int = pointer[namer][pointer[namer].length - 1].Value[1];
+    // datas.push(int);
+    // for (let i = 0; i < pointer[namer].length - 1; i++) {
+    //   int = 0;
+    //   if (pointer[namer].length !== 0) int = pointer[namer][i].Value[1];
+    //   datas.push(int);
+    // }
+    // data.datasets[1].data = datas;
+    //console.log(":");
+
+    return <>{PointsGraf01()}</>;
+  };
+
+  const OutputGraf = (idx: number) => {
+    return (
+      <Box sx={styleWindPK05} onClick={() => ClickBlok(idx)}>
+        <Grid container>
+          <Grid item xs={0.5} sx={{ border: 0 }}>
+            <Box sx={styleWindPK06}>
+              <b>Tе:Тцикла*C</b>
+            </Box>
+          </Grid>
+
+          <Grid item xs={11.5} sx={{ fontSize: 8.3, border: 0 }}>
+            <Box sx={styleWindPK07}>
+              Изменение потока на направлении <b>{nameIn + (idx + 1)}</b>
+              <Box sx={styleWindPK08}>{PointsGraf00()}</Box>
+            </Box>
+          </Grid>
+        </Grid>
+
+        <Box sx={{ fontSize: 8.1, textAlign: "center" }}>
+          <b>Тцикла</b>
+        </Box>
+      </Box>
+    );
+  };
+
+  const styleWindPK055 = {
+    height: 136,
+    fontSize: 12.9,
+    cursor: "pointer",
+    textAlign: "center",
+  };
+
   const ContentTabl = (idx: number) => {
+    let expSvg = ReplaceInSvg(datestat.exampleImg1, "136");
     return (
       <Box sx={styleWindPK01}>
         <Box sx={styleWindPK90(712)}>
           <Box sx={styleWindPK02}>
-            <Box
-              onClick={() => ClickImg(idx)}
-              sx={{ height: 136, fontSize: 12.9, cursor: "pointer" }}
-            >
-              Здесь может быть картинка перекрёстка{" "}
-              <b>{props.route.targetID}</b> с направлением{" "}
-              <b>{nameIn + (idx + 1)}</b>
+            <Box sx={styleWindPK055} onClick={() => ClickImg(idx)}>
+              <div dangerouslySetInnerHTML={{ __html: expSvg }} />
             </Box>
           </Box>
           <b>Свойства направления</b>
-          <Box sx={styleWindPK02}>
-            <Box
-              onClick={() => ClickBlok(idx)}
-              sx={{ marginBottom: 0.5, height: 155, cursor: "pointer" }}
-            >
-              Здесь будет график направления <b>{nameIn + (idx + 1)}</b>
-            </Box>
-          </Box>
+          <Box sx={styleWindPK02}>{OutputGraf(idx)}</Box>
           <Box sx={styleWindPK02}>
             <Box sx={{ marginBottom: 0.5 }}>
               {StrokaTablWindPK("Номер", massForm.name)}
@@ -227,29 +386,6 @@ const MapWindPK = (props: {
       </Modal>
     );
   };
-
-  // const ViewGraf = (idx: number) => {
-  //   const handleClose = () => {
-  //     setOpenGraf(false);
-  //   };
-
-  //   const CloseEnd = (event: any, reason: string) => {
-  //     if (reason === "escapeKeyDown") handleClose();
-  //   };
-
-  //   return (
-  //     <Modal open={openGraf} onClose={CloseEnd} hideBackdrop={false}>
-  //       <Box sx={stylePKForm01}>
-  //         <Button sx={styleModalEndBind} onClick={() => handleClose()}>
-  //           <b>&#10006;</b>
-  //         </Button>
-  //         <Box sx={styleWindPK04}>
-  //           Изменение потока на направлении <b>{nameIn + (idx + 1)}</b>
-  //         </Box>
-  //       </Box>
-  //     </Modal>
-  //   );
-  // };
 
   return (
     <>

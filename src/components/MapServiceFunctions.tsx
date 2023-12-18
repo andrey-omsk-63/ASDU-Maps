@@ -1195,10 +1195,14 @@ export const NoVertex = (openSetErr: boolean, handleCloseErr: Function) => {
   );
 };
 //=== RouteBind =======================================================
-export const ReplaceInSvg = (masSvg: any, widthHeight: string, idx: number) => {
+export const ReplaceInSvg = (Svg: any, widthHeight: string,
+   //: number
+   ) => {
   let ch = "";
-  let svgPipa = masSvg[idx];
-  let vxod = masSvg[idx].indexOf("width=");
+  //let svgPipa = masSvg[idx];
+  //let vxod = masSvg[idx].indexOf("width=");
+  let svgPipa = Svg;
+  let vxod = Svg.indexOf("width=");
   for (let i = 0; i < 100; i++) {
     if (isNaN(Number(svgPipa[vxod + 7 + i]))) break;
     ch = ch + svgPipa[vxod + 7 + i];
@@ -1207,7 +1211,7 @@ export const ReplaceInSvg = (masSvg: any, widthHeight: string, idx: number) => {
     svgPipa = svgPipa.replace(ch, widthHeight);
   }
   let chh = "";
-  let vxodh = masSvg[idx].indexOf("height=");
+  let vxodh = Svg.indexOf("height=");
   for (let i = 0; i < 100; i++) {
     if (isNaN(Number(svgPipa[vxodh + 8 + i]))) break;
     chh = chh + svgPipa[vxodh + 8 + i];

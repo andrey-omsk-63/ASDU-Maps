@@ -200,8 +200,8 @@ const MapRouteBind = (props: {
     let dat = props.svg;
     masSvg = [];
     for (let key in dat) masSvg.push(dat[key]);
-    if (masSvg[0] !== "") masSvg[0] = ReplaceInSvg(masSvg, widthHeight, 0);
-    if (masSvg[1] !== "") masSvg[1] = ReplaceInSvg(masSvg, widthHeight, 1);
+    if (masSvg[0] !== "") masSvg[0] = ReplaceInSvg(masSvg[0], widthHeight);
+    if (masSvg[1] !== "") masSvg[1] = ReplaceInSvg(masSvg[1], widthHeight);
   }
   //=== Функции - обработчики ==============================
   const ReCalcIntensTr = () => {
