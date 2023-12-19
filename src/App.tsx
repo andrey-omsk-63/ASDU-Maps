@@ -310,12 +310,6 @@ const App = () => {
     console.log("РЕЖИМ ОТЛАДКИ!!!", dataMap.tflight);
     FilterArea(dataMap); // берём в работу заданный район
     console.log("dataRoute.data:", dataRoute.data);
-    //let DateRouteGl = dataRoute.data;
-    // if (ZONE) {
-    //   DateRouteGl.vertexes = dataRoute.data.vertexes.filter(
-    //     (user) => user.area.num === ZONE.toString()
-    //   );
-    // }
     dateRouteGl = { ...dataRoute.data };
     dateRouteProGl = { ...dataRoute.data };
     dateRouteProGl.points = []; // массив протоколов
@@ -331,6 +325,10 @@ const App = () => {
     });
     axios.get("http://localhost:3000/examplSvg1.svg").then(({ data }) => {
       dateStat.exampleImg1 = data;
+      dispatch(statsaveCreate(dateStat));
+    });
+    axios.get("http://localhost:3000/examplSvg2.svg").then(({ data }) => {
+      dateStat.exampleImg2 = data;
       dispatch(statsaveCreate(dateStat));
     });
   } else {

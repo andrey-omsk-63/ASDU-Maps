@@ -1062,4 +1062,29 @@ export const styleWVG02 = {
   top: "50%",
   marginLeft: -0.5,
 };
+//=== WindViewImg =====================================================
+export const styleWVI00 = {
+  outline: "none",
+  position: "absolute",
+  left: "50%",
+  top: "50%",
+  transform: "translate(-50%, -50%)",
+  width: window.innerHeight * 0.8 + 5,
+  bgcolor: "background.paper",
+  border: "1px solid #FFFFFF",
+  borderRadius: 1,
+  boxShadow: 24,
+  textAlign: "center",
+  padding: "5px 5px 5px 5px",
+};
+
+export const styleWVI01 = {
+  border: "1px solid #d4d4d4",
+  marginTop: 1,
+  bgcolor: "#F1F5FB",
+  height: window.innerHeight * 0.8 + 4,
+  borderRadius: 1,
+  overflowX: "auto",
+  boxShadow: 6,
+};
 //=====================================================================

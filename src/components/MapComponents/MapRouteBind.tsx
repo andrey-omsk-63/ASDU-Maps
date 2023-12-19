@@ -16,7 +16,7 @@ import { HeaderBind, BindInput, MaskFormWay } from "./../MapServiceFunctions";
 import { HeaderTablBindContent, BindTablFrom } from "./../MapServiceFunctions";
 import { BadExit, KnopProps } from "./../MapServiceFunctions";
 
-import { MODE } from "./../MainMapGl";
+import { MODE, debug } from "./../MainMapGl";
 import { KolFrom, KolIn, INCOM, OUTGO } from "./../MapConst";
 
 import { styleSetImg, styleModalEndBind } from "./../MainMapStyle";
@@ -53,7 +53,7 @@ let Route: any = {
 };
 let From = "";
 let HAVE = 0;
-
+//deb
 let maskForm: Directions = JSON.parse(JSON.stringify(MaskFormWay()));
 let massForm: Directions = JSON.parse(JSON.stringify(MaskFormWay()));
 
@@ -84,6 +84,15 @@ const MapRouteBind = (props: {
   const [openFormIn, setOpenFormIn] = React.useState(false);
   const [badExit, setBadExit] = React.useState(false);
   const [trigger, setTrigger] = React.useState(false);
+  const SEC = props.reqRoute.tmRoute;
+  let heightImg = Math.round(window.innerWidth / 7);
+  let widthHeight = heightImg.toString();
+  const styleBind00 = MakeStyleBind00(heightImg); // стиль для главного мод.окна
+
+  const ReplaceSizeImg = () => {
+    if (masSvg[0] !== "") masSvg[0] = ReplaceInSvg(masSvg[0], widthHeight);
+    if (masSvg[1] !== "") masSvg[1] = ReplaceInSvg(masSvg[1], widthHeight);
+  };
 
   const CloseEnd = () => {
     oldIdxA = -1;
@@ -133,11 +142,6 @@ const MapRouteBind = (props: {
     From = massroute.vertexes[props.idxA].id;
   }
 
-  const SEC = props.reqRoute.tmRoute;
-  let heightImg = Math.round(window.innerWidth / 7);
-  let widthHeight = heightImg.toString();
-  const styleBind00 = MakeStyleBind00(heightImg); // стиль для главного мод.окна
-
   //=== инициализация ======================================
   if (oldIdxA !== props.idxA || oldIdxB !== props.idxB) {
     massBind = [1, 2];
@@ -148,6 +152,11 @@ const MapRouteBind = (props: {
     Route.tmRoute = props.reqRoute.tmRoute;
     Route.mode = props.mode;
     masSvg = ["", ""];
+    if (debug) {
+      masSvg[0] = datestat.exampleImg1;
+      masSvg[1] = datestat.exampleImg2;
+      ReplaceSizeImg();
+    }
     SvgA = SvgB = true;
     if (!massroute.vertexes[props.idxA].area) {
       SvgA = false;
@@ -200,8 +209,9 @@ const MapRouteBind = (props: {
     let dat = props.svg;
     masSvg = [];
     for (let key in dat) masSvg.push(dat[key]);
-    if (masSvg[0] !== "") masSvg[0] = ReplaceInSvg(masSvg[0], widthHeight);
-    if (masSvg[1] !== "") masSvg[1] = ReplaceInSvg(masSvg[1], widthHeight);
+    // if (masSvg[0] !== "") masSvg[0] = ReplaceInSvg(masSvg[0], widthHeight);
+    // if (masSvg[1] !== "") masSvg[1] = ReplaceInSvg(masSvg[1], widthHeight);
+    ReplaceSizeImg();
   }
   //=== Функции - обработчики ==============================
   const ReCalcIntensTr = () => {

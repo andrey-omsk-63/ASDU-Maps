@@ -11,6 +11,7 @@ import MapWindViewGraf from "./MapWindViewGraf";
 import MapWindViewImg from "./MapWindViewImg";
 
 import { StrokaTablWindPK, ReplaceInSvg } from "../../MapServiceFunctions";
+import { RandomNumber } from "../../MapServiceFunctions";
 
 import { styleWindPK00, styleWindPK01 } from "../../MainMapStyle";
 import { styleWindPK02, styleWindPK05 } from "../../MainMapStyle";
@@ -72,6 +73,8 @@ let massForm: Directions = {
   opponent: "", // Левый поворот конкурирует с направлением...
 };
 
+let valueSl = -1;
+
 const MapWindPK = (props: {
   close: Function; // функция возврата в родительский компонент
   route: any;
@@ -90,7 +93,7 @@ const MapWindPK = (props: {
   //console.log('massplan:', massplan, massSpis);
   //const dispatch = useDispatch();
   //===========================================================
-  const [value, setValue] = React.useState(67);
+  const [value, setValue] = React.useState(69);
   const [openImg, setOpenImg] = React.useState(false);
   const [openGraf, setOpenGraf] = React.useState(false);
 
@@ -149,6 +152,7 @@ const MapWindPK = (props: {
   }, [escFunction]);
   //=== Функции - обработчики ==============================
   const handleSliderChange = (event: Event, newValue: number | number[]) => {
+    valueSl = newValue as number;
     setValue(newValue as number);
   };
   //========================================================
@@ -305,10 +309,10 @@ const MapWindPK = (props: {
           </Box>
 
           <Box sx={styleWindPK02}>
-            Насыщенность зелёного = <b>{value}</b>%
+            Насыщенность зелёного = <b>{valueSl}</b>%
             <Box sx={{ width: 200, height: 40 }}>
               <Slider
-                value={value}
+                value={valueSl}
                 onChange={handleSliderChange}
                 color="secondary"
                 disabled={true}
@@ -330,6 +334,7 @@ const MapWindPK = (props: {
     let resStr = [];
     for (let i = 0; i < sum; i++) {
       massForm.name = nameIn + (i + 1).toString();
+      valueSl = value + RandomNumber(0, 10); // костыль!!!!!!!!!!!!
       resStr.push(
         <Grid key={i} item xs={12 / sum} sx={{ border: 0 }}>
           <Box>{ContentTabl(i)}</Box>
@@ -363,30 +368,6 @@ const MapWindPK = (props: {
       </Box>
     );
   };
-
-  // const ViewImg = (idx: number) => {
-  //   const handleClose = () => {
-  //     setOpenImg(false);
-  //   };
-
-  //   const CloseEnd = (event: any, reason: string) => {
-  //     if (reason === "escapeKeyDown") handleClose();
-  //   };
-
-  //   return (
-  //     <Modal open={openImg} onClose={CloseEnd} hideBackdrop={false}>
-  //       <Box sx={stylePKForm01}>
-  //         <Button sx={styleModalEndBind} onClick={() => handleClose()}>
-  //           <b>&#10006;</b>
-  //         </Button>
-  //         <Box sx={styleWindPK04}>
-  //           Картинка перекрёстка <b>{props.route.targetID}</b> с направлением{" "}
-  //           <b>{nameIn + (idx + 1)}</b>
-  //         </Box>
-  //       </Box>
-  //     </Modal>
-  //   );
-  // };
 
   return (
     <>

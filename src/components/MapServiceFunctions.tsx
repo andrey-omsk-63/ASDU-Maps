@@ -32,7 +32,7 @@ import { styleFormPK03, styleBind05 } from "./MainMapStyle";
 import { styleModalEndAttent, styleFT03, styleFT033 } from "./MainMapStyle";
 import { styleBind02, styleTypography, searchControl } from "./MainMapStyle";
 import { styleBind03, styleBind033, styleSetImg } from "./MainMapStyle";
-import { styleFT04, styleFT05 } from './MainMapStyle';
+import { styleFT04, styleFT05, styleModalEnd } from "./MainMapStyle";
 
 import { styleModalMenuErr, styleHeadError } from "./MapPointDataErrorStyle";
 import { styleBoxFormArea, styleSetArea } from "./MapPointDataErrorStyle";
@@ -1195,9 +1195,11 @@ export const NoVertex = (openSetErr: boolean, handleCloseErr: Function) => {
   );
 };
 //=== RouteBind =======================================================
-export const ReplaceInSvg = (Svg: any, widthHeight: string,
-   //: number
-   ) => {
+export const ReplaceInSvg = (
+  Svg: any,
+  widthHeight: string
+  //: number
+) => {
   let ch = "";
   //let svgPipa = masSvg[idx];
   //let vxod = masSvg[idx].indexOf("width=");
@@ -1311,9 +1313,9 @@ export const ArgTablBindContent = (xss: number, soob: any, mode: number) => {
 
 export const ExampleComponent = (idx: number, masSvg: any) => {
   return (
-    <div>
+    <Box sx={{padding: "4px 0px 0px 0px"}}>
       <div dangerouslySetInnerHTML={{ __html: masSvg[idx] }} />
-    </div>
+    </Box>
   );
 };
 
@@ -1338,6 +1340,7 @@ export function AppIconAsdu(heightImg: number) {
   );
 }
 
+let HeaderBindIDX = -1;
 export const HeaderBind = (
   nameA: string,
   nameB: string,
@@ -1348,12 +1351,10 @@ export const HeaderBind = (
   haveSvgB: boolean
 ) => {
   const [openSvg, setOpenSvg] = React.useState(false);
-  const heightWind = window.innerHeight * 0.9;
-  let IDX = -1;
+  const heightWind = window.innerHeight * 0.8;
 
   const ClickBlok = (idx: number) => {
-    console.log("MODE:", idx, masSvg);
-    IDX = idx;
+    HeaderBindIDX = idx;
     setOpenSvg(true);
   };
 
@@ -1372,36 +1373,27 @@ export const HeaderBind = (
       left: "50%",
       top: "50%",
       transform: "translate(-50%, -50%)",
-      width: heightWind,
+      width: heightWind + 5,
       bgcolor: "background.paper",
       border: "1px solid #FFFFFF",
       borderRadius: 1,
       boxShadow: 24,
       textAlign: "center",
-      padding: "5px 15px 15px 15px",
+      padding: "10px 5px 5px 5px",
     };
 
     const styleWindPK04 = {
       border: "1px solid #d4d4d4",
       marginTop: 1,
       bgcolor: "#F1F5FB",
-      height: heightWind - 6,
+      height: heightWind + 4,
       borderRadius: 1,
       overflowX: "auto",
       boxShadow: 6,
-      p: 1,
     };
 
-    const styleModalEnd = {
-      position: "absolute",
-      top: "-0.1%",
-      left: "auto",
-      right: "0%",
-      height: "21px",
-      maxWidth: "2%",
-      minWidth: "2%",
-      color: "black",
-    };
+    let lngth = Math.round(heightWind).toString();
+    let expSvg = ReplaceInSvg(masSvg[idx], lngth);
 
     return (
       <Modal open={openSvg} onClose={CloseEnd} hideBackdrop={false}>
@@ -1410,7 +1402,7 @@ export const HeaderBind = (
             <b>&#10006;</b>
           </Button>
           <Box sx={styleWindPK04}>
-            {masSvg[0] === "" && <>{AppIconAsdu(heightWind * 0.9)}</>}
+            <div dangerouslySetInnerHTML={{ __html: expSvg }} />
           </Box>
         </Box>
       </Modal>
@@ -1419,12 +1411,12 @@ export const HeaderBind = (
 
   return (
     <>
-      <Grid container sx={{ marginTop: "1vh", height: heightImg }}>
+      <Grid container sx={{ marginTop: "1vh", height: heightImg + 5 }}>
         <Grid item xs={0.25}></Grid>
         {!haveSvgA && <Grid item xs={2}></Grid>}
         {haveSvgA && (
           <Grid item xs={2} onClick={() => ClickBlok(0)} sx={styleSetImg}>
-            <Box sx={{ cursor: "pointer" }}>
+            <Box sx={{ textAlign: "center", cursor: "pointer" }}>
               {masSvg[0] === "" && <>{AppIconAsdu(heightImg)}</>}
               {masSvg[0] !== "" && <>{ExampleComponent(0, masSvg)}</>}
             </Box>
@@ -1433,7 +1425,7 @@ export const HeaderBind = (
         {HeaderBindMiddle(Route, nameA, nameB)}
         {haveSvgB && (
           <Grid item xs={2} onClick={() => ClickBlok(1)} sx={styleSetImg}>
-            <Box sx={{ cursor: "pointer" }}>
+            <Box sx={{ textAlign: "center", cursor: "pointer" }}>
               {masSvg[1] === "" && <>{AppIconAsdu(heightImg)}</>}
               {masSvg[1] !== "" && <>{ExampleComponent(1, masSvg)}</>}
             </Box>
@@ -1441,7 +1433,7 @@ export const HeaderBind = (
         )}
         <Grid item xs={0.25}></Grid>
       </Grid>
-      {openSvg && <>{ViewSvg(IDX)}</>}
+      {openSvg && <>{ViewSvg(HeaderBindIDX)}</>}
     </>
   );
 };
