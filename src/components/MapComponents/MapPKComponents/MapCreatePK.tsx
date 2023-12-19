@@ -107,7 +107,6 @@ const MapCreatePK = (props: {
   let subAreA = SUBAREA === "0" ? 1 : Number(SUBAREA);
 
   subAreA = props.idx < 0 ? subAreA : massplan.plans[props.idx].subareaPK;
-  //console.log("@@@@@@:", SUBAREA, subAreA, props.idx);
   const sumPlan = SUMPK;
   const modeWork = props.idx < 0 ? "create" : "edit";
 
@@ -272,6 +271,7 @@ const MapCreatePK = (props: {
             datestat.nomMenu = NewCoordPlan.nomPK; //  активная строка списка ПК
             dispatch(statsaveCreate(datestat));
             massplan.plans[props.idx] = { ...NewCoordPlan }; // режим корректировки ПК
+            datestat.needMakeSpisPK = false; // запрет вызова списка ПК после корректровки ПК
           } else {
             // Сохранить как новый
             if (NewCoordPlan.nomPK === oldNomPK) {
@@ -292,9 +292,8 @@ const MapCreatePK = (props: {
           }
           datestat.needMakeSpisPK = true; // вызов списка ПК после корректровки ПК
           datestat.lockUp = true; // блокировка меню районов и меню режимов
-          dispatch(statsaveCreate(datestat));
         }
-        //console.log("2NewCoordPlan:", datestat.nomMenu, NewCoordPlan);
+        dispatch(statsaveCreate(datestat));
         if (needSort) {
           massplan.plans.sort(function Func(a: any, b: any) {
             return b.nomPK < a.nomPK ? 1 : b.nomPK > a.nomPK ? -1 : 0;

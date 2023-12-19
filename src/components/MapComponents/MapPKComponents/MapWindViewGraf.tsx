@@ -44,7 +44,6 @@ interface Datasets {
 
 let nameIn = "";
 let timeInterval = 80;
-let labels: string[] = [];
 
 const MapWindViewGraf = (props: {
   close: Function; // функция возврата в родительский компонент
@@ -71,7 +70,7 @@ const MapWindViewGraf = (props: {
 
   //=== инициализация ======================================
   if (props.route) nameIn = props.route.targetID + ".";
-  // const labels: string[] = [];
+  const labels: string[] = [];
   let data: DataGl = {
     labels,
     datasets: [
@@ -152,7 +151,7 @@ const MapWindViewGraf = (props: {
   };
 
   const PointsGraf00 = () => {
-    labels = [];
+    while (labels.length > 0) labels.pop(); // labels = [];
     for (let i = 0; i < timeInterval; i++) labels.push(i.toString());
     // let int = 0;
     // //график прямого

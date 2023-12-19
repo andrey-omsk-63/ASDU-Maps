@@ -4,18 +4,19 @@ import { useSelector } from "react-redux";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
+//import Modal from "@mui/material/Modal";
 import Slider from "@mui/material/Slider";
 
 import MapWindViewGraf from "./MapWindViewGraf";
+import MapWindViewImg from "./MapWindViewImg";
 
 import { StrokaTablWindPK, ReplaceInSvg } from "../../MapServiceFunctions";
 
 import { styleWindPK00, styleWindPK01 } from "../../MainMapStyle";
 import { styleWindPK02, styleWindPK05 } from "../../MainMapStyle";
 import { styleWindPK90, styleWindPKEnd } from "../../MainMapStyle";
-import { styleModalEndBind, stylePKForm01 } from "../../MainMapStyle";
-import { styleWindPK04, styleWindPK06 } from "../../MainMapStyle";
+//import { styleModalEndBind, stylePKForm01 } from "../../MainMapStyle";
+import { styleWindPK06 } from "../../MainMapStyle";
 import { styleWindPK07, styleWindPK08 } from "../../MainMapStyle";
 
 import { Directions } from "../../../App"; // интерфейс massForm
@@ -53,7 +54,6 @@ interface Datasets {
 
 let nameIn = "";
 let IDX = -1;
-let labels: string[] = [];
 let timeInterval = 80;
 
 let massForm: Directions = {
@@ -96,6 +96,7 @@ const MapWindPK = (props: {
 
   //=== инициализация ======================================
   if (props.route) nameIn = props.route.targetID + ".";
+  const labels: string[] = [];
   let data: DataGl = {
     labels,
     datasets: [
@@ -201,7 +202,7 @@ const MapWindPK = (props: {
   };
 
   const PointsGraf00 = () => {
-    labels = [];
+    while (labels.length > 0) labels.pop(); // labels = [];
     for (let i = 0; i < timeInterval; i++) labels.push(i.toString());
     //for (let i = 0; i < timeInterval; i++) labels.push(i.toString());
     // let int = 0;
@@ -363,29 +364,29 @@ const MapWindPK = (props: {
     );
   };
 
-  const ViewImg = (idx: number) => {
-    const handleClose = () => {
-      setOpenImg(false);
-    };
+  // const ViewImg = (idx: number) => {
+  //   const handleClose = () => {
+  //     setOpenImg(false);
+  //   };
 
-    const CloseEnd = (event: any, reason: string) => {
-      if (reason === "escapeKeyDown") handleClose();
-    };
+  //   const CloseEnd = (event: any, reason: string) => {
+  //     if (reason === "escapeKeyDown") handleClose();
+  //   };
 
-    return (
-      <Modal open={openImg} onClose={CloseEnd} hideBackdrop={false}>
-        <Box sx={stylePKForm01}>
-          <Button sx={styleModalEndBind} onClick={() => handleClose()}>
-            <b>&#10006;</b>
-          </Button>
-          <Box sx={styleWindPK04}>
-            Картинка перекрёстка <b>{props.route.targetID}</b> с направлением{" "}
-            <b>{nameIn + (idx + 1)}</b>
-          </Box>
-        </Box>
-      </Modal>
-    );
-  };
+  //   return (
+  //     <Modal open={openImg} onClose={CloseEnd} hideBackdrop={false}>
+  //       <Box sx={stylePKForm01}>
+  //         <Button sx={styleModalEndBind} onClick={() => handleClose()}>
+  //           <b>&#10006;</b>
+  //         </Button>
+  //         <Box sx={styleWindPK04}>
+  //           Картинка перекрёстка <b>{props.route.targetID}</b> с направлением{" "}
+  //           <b>{nameIn + (idx + 1)}</b>
+  //         </Box>
+  //       </Box>
+  //     </Modal>
+  //   );
+  // };
 
   return (
     <>
@@ -398,7 +399,9 @@ const MapWindPK = (props: {
       ) : (
         <Box sx={styleWindPK00(1)}>{ContentInfo()}</Box>
       )}
-      {openImg && <>{ViewImg(IDX)} </>}
+      {openImg && (
+        <MapWindViewImg close={setOpenImg} idx={IDX} route={props.route} />
+      )}
       {openGraf && (
         <MapWindViewGraf close={setOpenGraf} idx={IDX} route={props.route} />
       )}
