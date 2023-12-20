@@ -17,7 +17,7 @@ let nameIn = "";
 const MapWindViewImg = (props: {
   close: Function; // функция возврата в родительский компонент
   idx: number; //
-  route: any;
+  name: any;
 }) => {
   //console.log("MapWindPK:", props.route);
   //== Piece of Redux =======================================
@@ -36,7 +36,7 @@ const MapWindViewImg = (props: {
   const [openImg, setOpenImg] = React.useState(true);
 
   //=== инициализация ======================================
-  if (props.route) nameIn = props.route.targetID + ".";
+  if (props.name) nameIn = props.name + ".";
 
   //========================================================
   const CloseEnd = React.useCallback(() => {

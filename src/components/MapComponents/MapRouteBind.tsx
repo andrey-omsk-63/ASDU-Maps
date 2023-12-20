@@ -7,6 +7,8 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 
+import MapWindViewGraf from "./MapPKComponents/MapWindViewGraf";
+
 import { Directions } from "./../../App"; // интерфейс massForm
 
 import MapRouteBindForm from "./MapRouteBindForm";
@@ -17,12 +19,41 @@ import { HeaderTablBindContent, BindTablFrom } from "./../MapServiceFunctions";
 import { BadExit, KnopProps } from "./../MapServiceFunctions";
 
 import { MODE, debug } from "./../MainMapGl";
-import { KolFrom, KolIn, INCOM, OUTGO } from "./../MapConst";
+import { KolFrom, KolIn, INCOM, OUTGO, optionsMiniGraf } from "./../MapConst";
 
 import { styleSetImg, styleModalEndBind } from "./../MainMapStyle";
 import { styleBind042, MakeStyleBind00, styleBind043 } from "./../MainMapStyle";
 import { styleBind03, styleBind033, styleBind041 } from "./../MainMapStyle";
 import { styleBind01, styleBind04, styleBind05 } from "./../MainMapStyle";
+import { styleBind06, styleBind07, styleBind08 } from "./../MainMapStyle";
+
+import { Chart as ChartJS, CategoryScale } from "chart.js";
+import { LinearScale, PointElement } from "chart.js";
+import { LineElement, Title, Tooltip, Legend } from "chart.js";
+import { Line } from "react-chartjs-2";
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+interface DataGl {
+  labels: string[];
+  datasets: Datasets[];
+}
+
+interface Datasets {
+  label: string;
+  data: number[];
+  borderWidth: number;
+  borderColor: string;
+  backgroundColor: string;
+  pointRadius: number;
+}
 
 let massBind = [0, 0];
 let SvgA = true;
@@ -34,6 +65,7 @@ let kolIn = KolIn;
 let oldIdxA = -1;
 let oldIdxB = -1;
 let IDX: number = -1;
+let idxGraf: number = -1;
 
 let massTotal: any = [];
 let beginMassTotal = 0;
@@ -53,7 +85,8 @@ let Route: any = {
 };
 let From = "";
 let HAVE = 0;
-//deb
+let timeInterval = 80;
+
 let maskForm: Directions = JSON.parse(JSON.stringify(MaskFormWay()));
 let massForm: Directions = JSON.parse(JSON.stringify(MaskFormWay()));
 
@@ -82,12 +115,43 @@ const MapRouteBind = (props: {
   const [openSetBind, setOpenSetBind] = React.useState(true);
   const [openFormFrom, setOpenFormFrom] = React.useState(false);
   const [openFormIn, setOpenFormIn] = React.useState(false);
+  const [openGraf, setOpenGraf] = React.useState(false);
   const [badExit, setBadExit] = React.useState(false);
   const [trigger, setTrigger] = React.useState(false);
   const SEC = props.reqRoute.tmRoute;
   let heightImg = Math.round(window.innerWidth / 7);
   let widthHeight = heightImg.toString();
   const styleBind00 = MakeStyleBind00(heightImg); // стиль для главного мод.окна
+  const labels: string[] = [];
+  let data: DataGl = {
+    labels,
+    datasets: [
+      {
+        label: "Вх.поток",
+        data: [],
+        borderWidth: 1,
+        borderColor: "blue",
+        backgroundColor: "blue",
+        pointRadius: 1,
+      },
+      {
+        label: "Вых.поток",
+        data: [],
+        borderWidth: 1,
+        borderColor: "orange",
+        backgroundColor: "orange",
+        pointRadius: 1,
+      },
+      {
+        label: "Очередь",
+        data: [],
+        borderWidth: 1,
+        borderColor: "red",
+        backgroundColor: "red",
+        pointRadius: 1,
+      },
+    ],
+  };
 
   const ReplaceSizeImg = () => {
     if (masSvg[0] !== "") masSvg[0] = ReplaceInSvg(masSvg[0], widthHeight);
@@ -138,7 +202,6 @@ const MapRouteBind = (props: {
     nameA += massroute.vertexes[props.idxA].name;
     nameB = "[id" + massroute.vertexes[props.idxB].id + "] ";
     nameB += massroute.vertexes[props.idxB].name;
-    // From = ("00" + massroute.vertexes[props.idxA].id).slice(-3);
     From = massroute.vertexes[props.idxA].id;
   }
 
@@ -209,8 +272,6 @@ const MapRouteBind = (props: {
     let dat = props.svg;
     masSvg = [];
     for (let key in dat) masSvg.push(dat[key]);
-    // if (masSvg[0] !== "") masSvg[0] = ReplaceInSvg(masSvg[0], widthHeight);
-    // if (masSvg[1] !== "") masSvg[1] = ReplaceInSvg(masSvg[1], widthHeight);
     ReplaceSizeImg();
   }
   //=== Функции - обработчики ==============================
@@ -297,7 +358,6 @@ const MapRouteBind = (props: {
   const hClFrom = (idx: number) => {
     massForm = JSON.parse(JSON.stringify(masFormFrom[idx]));
     //============ потом исправить
-    // massForm.name = ("00" + massroute.vertexes[props.idxA].id).slice(-3);
     massForm.name = massroute.vertexes[props.idxA].id.toString() + ".";
     massForm.name += (idx + 1).toString();
     for (let i = 0; i < 8; i++) massForm.phases.push(-1);
@@ -308,7 +368,6 @@ const MapRouteBind = (props: {
   const hClIn = (idx: number) => {
     massForm = JSON.parse(JSON.stringify(masFormIn[idx]));
     //============ потом исправить
-    //massForm.name = ("00" + massroute.vertexes[props.idxB].id).slice(-3);
     massForm.name = massroute.vertexes[props.idxB].id.toString() + ".";
     massForm.name += (idx + 1).toString();
     for (let i = 0; i < 8; i++) massForm.phases.push(-1);
@@ -331,6 +390,11 @@ const MapRouteBind = (props: {
     ReCalcIntensTr();
     ReCalcIntensFl();
     setTrigger(!trigger);
+  };
+
+  const ClickBlok = (idx: number) => {
+    idxGraf = idx;
+    setOpenGraf(true);
   };
   //========================================================
   const FooterBind = () => {
@@ -389,10 +453,7 @@ const MapRouteBind = (props: {
   };
 
   const BindTablIn = () => {
-    //let nameRoute = "00" + massroute.vertexes[props.idxB].id;
     let nameRoute = massroute.vertexes[props.idxB].id;
-    //nameRoute = nameRoute.slice(-3);
-    //if (nameRoute.slice(0, 1) === "0") nameRoute = nameRoute.slice(1, 3);
     return (
       <Grid item xs sx={styleSetImg}>
         <Box sx={styleBind03}>
@@ -503,6 +564,66 @@ const MapRouteBind = (props: {
     );
   };
 
+  const PointsGraf00 = () => {
+    while (labels.length > 0) labels.pop(); // labels = [];
+    for (let i = 0; i < timeInterval; i++) labels.push(i.toString());
+    //for (let i = 0; i < timeInterval; i++) labels.push(i.toString());
+    // let int = 0;
+    // //график прямого
+    // let datas = [];
+    // // for (let i = 0; i < pointer[namer].length; i++) {
+    // //   datas.push(pointer[namer][i].Value[0]);
+    // // }
+    // if (pointer[namer].length !== 0)
+    //   int = pointer[namer][pointer[namer].length - 1].Value[0];
+    // datas.push(int);
+    // for (let i = 0; i < pointer[namer].length - 1; i++) {
+    //   int = 0;
+    //   if (pointer[namer].length !== 0) int = pointer[namer][i].Value[0];
+    //   datas.push(int);
+    // }
+    // data.datasets[0].data = datas;
+    // //график обратного
+    // datas = [];
+    // // for (let i = 0; i < pointer[namer].length; i++) {
+    // //   datas.push(pointer[namer][i].Value[1]);
+    // // }
+    // if (pointer[namer].length !== 0)
+    //   int = pointer[namer][pointer[namer].length - 1].Value[1];
+    // datas.push(int);
+    // for (let i = 0; i < pointer[namer].length - 1; i++) {
+    //   int = 0;
+    //   if (pointer[namer].length !== 0) int = pointer[namer][i].Value[1];
+    //   datas.push(int);
+    // }
+    // data.datasets[1].data = datas;
+
+    return <Line options={optionsMiniGraf} data={data} />;
+  };
+
+  const OutputGraf = () => {
+    let nom = beginMassTotal / kolFrom + 1;
+    let nameRoute = massroute.vertexes[props.idxB].id + "." + nom.toString();
+    return (
+      <Box sx={styleBind06} onClick={() => ClickBlok(nom)}>
+        <Grid container>
+          <Grid item xs={0.3} sx={{}}>
+            <Box sx={styleBind07}>
+              <b>Tе:Тцикла*C</b>
+            </Box>
+          </Grid>
+          <Grid item xs={11.7} sx={{ textAlign: "center" }}>
+            Изменение потока на направлении <b>{nameRoute}</b>
+            <Box sx={styleBind08}>{PointsGraf00()}</Box>
+          </Grid>
+        </Grid>
+        <Box sx={{ marginTop: -0.3, textAlign: "center" }}>
+          <b>Тцикла</b>
+        </Box>
+      </Box>
+    );
+  };
+
   let hBD = props.mode === 2 ? true : false;
 
   return (
@@ -530,11 +651,20 @@ const MapRouteBind = (props: {
               {TablTotal()}
             </Grid>
             <Grid item xs={0.05}></Grid>
-            <Grid item xs sx={styleSetImg}></Grid>
+            <Grid item xs sx={styleSetImg}>
+              {OutputGraf()}
+            </Grid>
           </Grid>
           {FooterBind()}
         </Box>
       </Modal>
+      {openGraf && (
+        <MapWindViewGraf
+          close={setOpenGraf}
+          idx={idxGraf - 1}
+          name={massroute.vertexes[props.idxB].id}
+        />
+      )}
       {openFormFrom && (
         <MapRouteBindForm
           setOpen={SetOpenFormFrom}

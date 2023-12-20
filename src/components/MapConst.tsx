@@ -34,3 +34,39 @@ export const ToCross: any = {
   pointBbID: 0,
   pointBcod: "",
 };
+
+export const optionsMiniGraf: any = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      position: "top" as const,
+      labels: {
+        font: {
+          weight: "bold",
+          size: 7,
+        },
+        boxWidth: 10,
+      },
+    },
+    title: {
+      display: false,
+    },
+  },
+  scales: {
+    x: {
+      ticks: {
+        font: {
+          size: 8,
+        },
+      },
+    },
+    y: {
+      ticks: {
+        font: {
+          size: 8,
+        },
+      },
+    },
+  },
+};

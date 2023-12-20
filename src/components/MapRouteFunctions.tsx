@@ -13,7 +13,7 @@ import "./MainMapStyle.css";
 
 import { DecodingCoord } from "./MapServiceFunctions";
 
-import { BALLOON, PLANER } from "./MainMapGl";
+import { BALLOON, PLANER, VIEWDIR } from "./MainMapGl";
 
 let CONT = "";
 
@@ -164,7 +164,10 @@ const MakeCONT = (massRoute: any, massroute: any) => {
     "<div class='my-balloon'>" +
     '<a class="exit" href="#"><b>&#10006;</b></a>' +
     cont;
-  if (PLANER > 0) {
+  //PLANER - номер выбраного ПК
+  //VIEWDIR - разрешение посмотра инф-ии о направл.в балунt
+  //console.log('###:',VIEWDIR)
+  if (PLANER > 0 && VIEWDIR) {
     CONT +=
       "<div class='go-over'>" +
       '<a class="goto1" href="#"><b>Информация о направлениях</b></a></div>';

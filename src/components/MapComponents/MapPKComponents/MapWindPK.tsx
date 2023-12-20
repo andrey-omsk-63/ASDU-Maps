@@ -16,13 +16,12 @@ import { RandomNumber } from "../../MapServiceFunctions";
 import { styleWindPK00, styleWindPK01 } from "../../MainMapStyle";
 import { styleWindPK02, styleWindPK05 } from "../../MainMapStyle";
 import { styleWindPK90, styleWindPKEnd } from "../../MainMapStyle";
-//import { styleModalEndBind, stylePKForm01 } from "../../MainMapStyle";
 import { styleWindPK06 } from "../../MainMapStyle";
 import { styleWindPK07, styleWindPK08 } from "../../MainMapStyle";
 
 import { Directions } from "../../../App"; // интерфейс massForm
 
-import { KolIn } from "./../../MapConst";
+import { KolIn, optionsMiniGraf } from "./../../MapConst";
 
 import { Chart as ChartJS, CategoryScale } from "chart.js";
 import { LinearScale, PointElement } from "chart.js";
@@ -99,6 +98,7 @@ const MapWindPK = (props: {
 
   //=== инициализация ======================================
   if (props.route) nameIn = props.route.targetID + ".";
+  let svg = RandomNumber(0, 2) ? datestat.exampleImg1 : datestat.exampleImg2;
   const labels: string[] = [];
   let data: DataGl = {
     labels,
@@ -166,45 +166,6 @@ const MapWindPK = (props: {
     setOpenGraf(true);
   };
 
-  const PointsGraf01 = () => {
-    const options = {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: "top" as const,
-          labels: {
-            font: {
-              weight: "bold",
-              size: 7,
-            },
-            boxWidth: 10,
-          },
-        },
-        title: {
-          display: false,
-        },
-      },
-      scales: {
-        x: {
-          ticks: {
-            font: {
-              size: 8,
-            },
-          },
-        },
-        y: {
-          ticks: {
-            font: {
-              size: 8,
-            },
-          },
-        },
-      },
-    };
-    return <Line options={options} data={data} />;
-  };
-
   const PointsGraf00 = () => {
     while (labels.length > 0) labels.pop(); // labels = [];
     for (let i = 0; i < timeInterval; i++) labels.push(i.toString());
@@ -238,9 +199,7 @@ const MapWindPK = (props: {
     //   datas.push(int);
     // }
     // data.datasets[1].data = datas;
-    //console.log(":");
-
-    return <>{PointsGraf01()}</>;
+    return <Line options={optionsMiniGraf} data={data} />;
   };
 
   const OutputGraf = (idx: number) => {
@@ -276,7 +235,7 @@ const MapWindPK = (props: {
   };
 
   const ContentTabl = (idx: number) => {
-    let expSvg = ReplaceInSvg(datestat.exampleImg1, "136");
+    let expSvg = ReplaceInSvg(svg, "136");
     return (
       <Box sx={styleWindPK01}>
         <Box sx={styleWindPK90(712)}>
@@ -381,10 +340,18 @@ const MapWindPK = (props: {
         <Box sx={styleWindPK00(1)}>{ContentInfo()}</Box>
       )}
       {openImg && (
-        <MapWindViewImg close={setOpenImg} idx={IDX} route={props.route} />
+        <MapWindViewImg
+          close={setOpenImg}
+          idx={IDX}
+          name={props.route.targetID}
+        />
       )}
       {openGraf && (
-        <MapWindViewGraf close={setOpenGraf} idx={IDX} route={props.route} />
+        <MapWindViewGraf
+          close={setOpenGraf}
+          idx={IDX}
+          name={props.route.targetID}
+        />
       )}
     </>
   );

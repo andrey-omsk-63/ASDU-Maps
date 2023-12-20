@@ -38,7 +38,6 @@ import { styleModalMenuErr, styleHeadError } from "./MapPointDataErrorStyle";
 import { styleBoxFormArea, styleSetArea } from "./MapPointDataErrorStyle";
 
 import { debug, SUBAREA, MODE, MASSPK, SubArea, AREA } from "./MainMapGl";
-//import { SUBAREA } from "./MainMapGl";
 import { ZONE, OUTGO } from "./MapConst";
 import { dateMapGl } from "./../App";
 
@@ -1201,8 +1200,6 @@ export const ReplaceInSvg = (
   //: number
 ) => {
   let ch = "";
-  //let svgPipa = masSvg[idx];
-  //let vxod = masSvg[idx].indexOf("width=");
   let svgPipa = Svg;
   let vxod = Svg.indexOf("width=");
   for (let i = 0; i < 100; i++) {
@@ -2266,7 +2263,6 @@ export const InputArrow = (board: any, id: number, massroute: any) => {
     </Box>
   );
 };
-
 //=== PKFormXX ========================================================
 export const TablStr = (xss: number, arg: any, style: any) => {
   return (

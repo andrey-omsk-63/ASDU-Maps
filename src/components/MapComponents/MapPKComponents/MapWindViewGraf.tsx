@@ -48,9 +48,9 @@ let timeInterval = 80;
 const MapWindViewGraf = (props: {
   close: Function; // функция возврата в родительский компонент
   idx: number; //
-  route: any;
+  name: any;
 }) => {
-  //console.log("MapWindPK:", props.route);
+  //console.log("MapWindPK:", props.name);
   //== Piece of Redux =======================================
   // let massplan = useSelector((state: any) => {
   //   const { massplanReducer } = state;
@@ -69,7 +69,7 @@ const MapWindViewGraf = (props: {
   const [openGraf, setOpenGraf] = React.useState(true);
 
   //=== инициализация ======================================
-  if (props.route) nameIn = props.route.targetID + ".";
+  if (props.name) nameIn = props.name + ".";
   const labels: string[] = [];
   let data: DataGl = {
     labels,

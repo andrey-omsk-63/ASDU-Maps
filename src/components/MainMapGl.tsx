@@ -57,6 +57,7 @@ export let SUBAREA = "0"; // выбранный подрайон  0 - все п�
 export let MASSPK: any = []; // массив 'подсвечиваемых' перекрёстков
 export let BALLOON: boolean = true; // разрешение/запрет на выдачу балуна
 export let PLANER: number = 0; // номер выбраного ПК
+export let VIEWDIR: boolean = true; // разрешение посмотра инф-ии о направл.в балуне
 export let masSvg: any = ["", ""]; // массив изображений перекрёстков для RouteBind
 let coordStart: any = []; // рабочий массив коллекции входящих связей
 let coordStop: any = []; // рабочий массив коллекции входящих связей
@@ -238,15 +239,20 @@ const MainMap = (props: {
   );
 
   const ZeroMenuPK = (nom: number, spis: any) => {
-    PLANER = nom;
-    MASSPK = spis;
+    PLANER = nom; // номер выбраного ПК
+    MASSPK = spis; // массив 'подсвечиваемых' перекрёстков
+    VIEWDIR = true; // разрешение посмотра инф-ии о направл.в балуне
     ZeroRoute(false);
     // if (datestat.needMakeSpisPK) {
     if (datestat.needMenuForm) {
       setOpenPKSpis(true);
+      VIEWDIR = false; // разрешение посмотра инф-ии о направл.в балуне
       datestat.needMakeSpisPK = false;
       dispatch(statsaveCreate(datestat));
-    } else setCurrencyPK("0"); // переключение меню 'ПК и модели' на заголовок
+    } else {
+      setCurrencyPK("0"); // переключение меню 'ПК и модели' на заголовок
+    } 
+    ymaps && addRoute(ymaps); // перерисовка связей
   };
 
   const SoobOpenSetEr = (soob: string) => {
@@ -294,6 +300,8 @@ const MainMap = (props: {
         flagRevers = false;
       } else ZeroRoute(mode);
     }
+    setCurrencyPK(PK = "0"); // переключение меню 'ПК и модели' на заголовок
+    VIEWDIR = true; // разрешение посмотра инф-ии о направл.в балуне
     setNeedRevers(0);
     flagDemo && FillMassRoute();
     ymaps && addRoute(ymaps); // перерисовка связей
@@ -408,6 +416,7 @@ const MainMap = (props: {
       case 201: // список всех ПК
         HandlLockUp((datestat.needMenuForm = true)); // выдавать меню форм / блокировка меню районов и меню режимов
         setOpenPKSpis(true);
+        VIEWDIR = false; // разрешение посмотра инф-ии о направл.в балуне
         TurnOnDemoRoute();
         break;
       case 202: // создание нового ПК
@@ -677,7 +686,7 @@ const MainMap = (props: {
   const handleChangeSubArea = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.value === "0" && MODE === "0") {
       SUBAREA = SubArea[0].toString();
-      setCurrency("1");
+      setCurrency("1"); // встать на перваый подрайон в списке
     } else {
       if (Number(event.target.value) > SubArea.length) {
         console.log("Здесь будет добавление подрайона");
@@ -748,7 +757,6 @@ const MainMap = (props: {
     SUBAREA = subarea.toString();
     TurnOnDemoRoute(); // перерисовка связей
     if (massplan.plans.length) PLANER = massplan.plans[datestat.idxMenu].nomPK;
-    //console.log("SetMassPkId:",subarea, PLANER,massPkId);
     setCurrency((SubArea.indexOf(subarea) + 1).toString());
     mode && setRevers(!revers); // ререндер
   };
@@ -758,6 +766,7 @@ const MainMap = (props: {
     SUBAREA = massplan.plans[idx].subareaPK.toString();
     setCurrency((SubArea.indexOf(Number(SUBAREA)) + 1).toString());
     setOpenPKSpis((BALLOON = false)); // запрет на выдачу балуна / закрытие списка планов
+    VIEWDIR = true; // разрешение посмотра инф-ии о направл.в балуне
     datestat.needMenuForm = false; //  не выдавать меню форм
     dispatch(statsaveCreate(datestat));
     HandlLockUp(true); // блокировка меню районов и меню режимов
@@ -767,10 +776,10 @@ const MainMap = (props: {
 
   const SetPuskMenu = (mode: number) => {
     HandlLockUp(false); // не выдавать меню форм / блокировка меню районов и меню режимов
-    datestat.needMenuForm = true
+    setOpenPKSpis((datestat.needMenuForm = true)); // открытие списка планов
     dispatch(statsaveCreate(datestat));
-    setOpenPKSpis(true); // открытие списка планов
     TurnOnDemoRoute();
+    VIEWDIR = false; // разрешение посмотра инф-ии о направл.в балуне
     setRevers(!revers); // ререндер
   };
 

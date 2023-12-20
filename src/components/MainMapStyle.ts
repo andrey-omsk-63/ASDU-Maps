@@ -399,6 +399,29 @@ export const styleBind05 = {
   boxShadow: 6,
 };
 
+export const styleBind06 = {
+  fontSize: 10.5,
+  height: "27.6vh",
+  cursor: "pointer",
+};
+
+export const styleBind07 = {
+  fontSize: 8.5,
+  transform: "rotate(270deg)",
+  position: "relative",
+  top: "63%",
+  marginLeft: -0.3,
+};
+
+export const styleBind08 = {
+  fontSize: 9.8,
+  height: "24.8vh",
+  width: "99%",
+  bgcolor: "#F1F5FB", // светло серый
+  border: "1px solid #d4d4d4", // серый
+  borderRadius: 1,
+};
+
 export const styleSetBindForm = {
   outline: "none",
   position: "absolute",
