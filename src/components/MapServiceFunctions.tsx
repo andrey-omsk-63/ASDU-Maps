@@ -28,7 +28,7 @@ import { Vertex } from "./../interfaceRoute";
 
 import { styleModalMenu, styleModalEndMapGl } from "./MainMapStyle";
 import { styleSetPoint, styleFT02, styleFormMenu } from "./MainMapStyle";
-import { styleFormPK03, styleBind05 } from "./MainMapStyle";
+import { styleFormPK03, styleBind05, styleBind0333 } from "./MainMapStyle";
 import { styleModalEndAttent, styleFT03, styleFT033 } from "./MainMapStyle";
 import { styleBind02, styleTypography, searchControl } from "./MainMapStyle";
 import { styleBind03, styleBind033, styleSetImg } from "./MainMapStyle";
@@ -318,7 +318,7 @@ export const PreparCurrenciesMode = () => {
     "Перекрёстки и связи:",
     "Работа с перекрёстками",
     "Создание связей",
-    //"Модели (ПК)",
+    "Настройки",
   ];
   let massKey: any = [];
   let massDat: any = [];
@@ -345,6 +345,7 @@ export const PreparCurrenciesPK = () => {
     "Создание нового ПК",
     "Список ПК",
     "Список моделей",
+    "Настройки",
   ];
   let massKey: any = [];
   let massDat: any = [];
@@ -778,9 +779,9 @@ export const GetPointOptions = (
     //================================= потом исправить ======
     if (massdk[index].newCoordinates > 0) {
       if (SubArea === SUBAREA || SUBAREA === "0") {
-        host = "http://localhost:3000/18.svg";
+        host = "http://localhost:3000/3.svg";
         if (!debug)
-          host = window.location.origin + "/free/img/trafficLights/18.svg";
+          host = window.location.origin + "/free/img/trafficLights/3.svg";
       }
     }
     //========================================================
@@ -794,7 +795,7 @@ export const GetPointOptions = (
     if (SubArea === SUBAREA)
       if (MASSPK.indexOf(massdk[index].ID) >= 0) HosterIllum("4");
     if (MODE === "1")
-      if (index === pointBbIndex || index === pointAaIndex) HosterIllum("12");
+      if (index === pointBbIndex || index === pointAaIndex) HosterIllum("2");
     return host;
   };
 
@@ -910,8 +911,7 @@ export const ShowFormalRoute = (flagDemo: boolean, PressButton: Function) => {
 export const MainMenu = (
   flagPusk: boolean,
   flagRoute: boolean,
-  PressButton: Function,
-  LockUp: boolean
+  PressButton: Function
 ) => {
   return (
     <>
@@ -961,7 +961,7 @@ export const СontentModalPressBalloon = (
       </Button>
       <Box sx={{ marginTop: 1, textAlign: "center" }}>
         {!areaPoint && (
-          <>{StrokaBalloon("Редактирование адреса", handleClose, 4)}</>
+          <>{StrokaBalloon("Редактированиее адреса точки", handleClose, 4)}</>
         )}
       </Box>
       <Typography variant="h6" sx={styleTypography}>
@@ -1310,7 +1310,7 @@ export const ArgTablBindContent = (xss: number, soob: any, mode: number) => {
 
 export const ExampleComponent = (idx: number, masSvg: any) => {
   return (
-    <Box sx={{padding: "4px 0px 0px 0px"}}>
+    <Box sx={{ padding: "4px 0px 0px 0px" }}>
       <div dangerouslySetInnerHTML={{ __html: masSvg[idx] }} />
     </Box>
   );
@@ -1542,11 +1542,9 @@ export const BindTablFrom = (
   SetMass: Function
 ) => {
   let nRoute = nameRoute;
-  //if (nRoute.slice(0, 1) === '0') nRoute = nRoute.slice(1, 3);
   const StrTablFrom = () => {
     let resStr = [];
     for (let i = 0; i < kolFazFrom; i++) {
-      //let nr = nameRoute + (i + 1).toString();
       let nr = OUTGO + (i + 1).toString();
       resStr.push(
         <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
@@ -1568,18 +1566,20 @@ export const BindTablFrom = (
 
   return (
     <Grid item xs={5.5} sx={styleSetImg}>
-      <Box sx={styleBind03}>
-        <em>
-          Исходящие направления <b>{nRoute}</b>
-        </em>
-      </Box>
-      <Box sx={styleBind033}>
-        <Grid container item xs={12}>
-          {HeaderTablBindContent(1, "№")}
-          {HeaderTablBindContent(3, "Наименование")}
-          {HeaderTablBindContent(4, "Интенсивность(т.е./ч)")}
-          {HeaderTablBindContent(4, "Свойства")}
-        </Grid>
+      <Box sx={styleBind0333}>
+        <Box sx={styleBind03}>
+          <em>
+            Исходящие направления <b>{nRoute}</b>
+          </em>
+        </Box>
+        <Box sx={styleBind033}>
+          <Grid container item xs={12}>
+            {HeaderTablBindContent(1, "№")}
+            {HeaderTablBindContent(3, "Наименование")}
+            {HeaderTablBindContent(4, "Интенсивность(т.е./ч)")}
+            {HeaderTablBindContent(4, "Свойства")}
+          </Grid>
+        </Box>
       </Box>
       <Grid container sx={{ height: "26vh" }}>
         {StrTablFrom()}
@@ -1677,9 +1677,7 @@ export const WaysInput = (
   MIN: number,
   MAX: number
 ) => {
-  //const [value, setValue] = React.useState(VALUE);
   let value = VALUE;
-  //if (idx === 3) console.log("WaysInput:", idx,VALUE,value);
 
   const styleSetID = {
     width: "33px",
@@ -1707,7 +1705,6 @@ export const WaysInput = (
     if (valueInp === "") valueInp = MIN;
     valueInp = Math.trunc(Number(valueInp));
     if (valueInp <= MAX) {
-      //setValue(valueInp.toString());
       value = valueInp.toString();
       SetValue(valueInp, idx);
     }

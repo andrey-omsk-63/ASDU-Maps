@@ -15,10 +15,6 @@ import { stylePKForm04 } from "../../MainMapStyle";
 
 const MapFormPK04 = (props: { view: boolean; handleClose: Function }) => {
   //== Piece of Redux =======================================
-  // const map = useSelector((state: any) => {
-  //   const { mapReducer } = state;
-  //   return mapReducer.map;
-  // });
   let massplan = useSelector((state: any) => {
     const { massplanReducer } = state;
     return massplanReducer.massplan;
@@ -30,14 +26,6 @@ const MapFormPK04 = (props: { view: boolean; handleClose: Function }) => {
   });
   //=== инициализация ======================================
   let plan = massplan.plans[datestat.idxMenu];
-  //let nameArea = '';
-  // for (let i = 0; i < map.dateMap.tflight.length; i++) {
-  //   let num = Number(map.dateMap.tflight[i].area.num);
-  //   if (num === plan.areaPK) {
-  //     nameArea = map.dateMap.tflight[i].area.nameArea;
-  //     break;
-  //   }
-  // }
   //========================================================
   const handleClose = () => {
     props.handleClose(false);
@@ -47,12 +35,6 @@ const MapFormPK04 = (props: { view: boolean; handleClose: Function }) => {
     if (reason === "escapeKeyDown") handleClose();
   };
   //========================================================
-
-  // const RandomNumber = (min: number, max: number) => {
-  //   let rand = Math.random() * (max - min) + min;
-  //   return Math.floor(rand);
-  // };
-
   const StrokaFormPK04 = () => {
     let resStr = [];
     for (let i = 0; i < 48; i++) {

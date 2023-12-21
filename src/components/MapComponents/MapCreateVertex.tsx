@@ -25,6 +25,14 @@ import { styleBoxFormArea, styleBoxFormID } from "./../MainMapStyle";
 let soobErr = "";
 let adrV = "";
 
+let massKey: string[] = [];
+let massDat: string[] = [];
+let currencies: any = [];
+let Area = "0";
+let AREA = "0";
+let massKeyt: string[] = [];
+let currenciest: any = [];
+
 let oldCoord: any = 0;
 let propsCoord = [0, 0];
 let subArea = -1;
@@ -53,27 +61,52 @@ const MapCreateVertex = (props: {
   if (oldCoord !== props.coord) {
     oldCoord = props.coord;
     propsCoord = [0, 0];
+
+    let homeReg = map.dateMap.regionInfo[homeRegion];
+    let dat = map.dateMap.areaInfo[homeReg];
+    massKey = [];
+    massDat = [];
+    currencies = [];
+    for (let key in dat) {
+      massKey.push(key);
+      massDat.push(dat[key]);
+    }
+    for (let i = 0; i < massKey.length; i++) {
+      let maskCurrencies = {
+        value: "",
+        label: "",
+      };
+      maskCurrencies.value = massKey[i];
+      maskCurrencies.label = massDat[i];
+      currencies.push(maskCurrencies);
+    }
+
+    AREA = props.area;
+    Area = AREA === "0" ? "1" : props.area;
+    subArea = SUBAREA === "0" ? 1 : Number(SUBAREA);
+
+    let datt = [];
+    for (let i = 0; i < SubArea.length; i++)
+      datt.push(SubArea[i].toString() + "-й подрайон");
+
+    massKeyt = [];
+    let massDatt = [];
+    currenciest = [];
+    for (let key in datt) {
+      massKeyt.push(key);
+      massDatt.push(datt[key]);
+    }
+    for (let i = 0; i < massKeyt.length; i++) {
+      let maskCurrencies = {
+        value: "",
+        label: "",
+      };
+      maskCurrencies.value = massKeyt[i];
+      maskCurrencies.label = massDatt[i];
+      currenciest.push(maskCurrencies);
+    }
   }
   //========================================================
-  let homeReg = map.dateMap.regionInfo[homeRegion];
-  let dat = map.dateMap.areaInfo[homeReg];
-  let massKey = [];
-  let massDat = [];
-  const currencies: any = [];
-  for (let key in dat) {
-    massKey.push(key);
-    massDat.push(dat[key]);
-  }
-  for (let i = 0; i < massKey.length; i++) {
-    let maskCurrencies = {
-      value: "",
-      label: "",
-    };
-    maskCurrencies.value = massKey[i];
-    maskCurrencies.label = massDat[i];
-    currencies.push(maskCurrencies);
-  }
-
   const [openSetAdress, setOpenSetAdress] = React.useState(true);
   const [currency, setCurrency] = React.useState(massKey[0]);
   const [valuen, setValuen] = React.useState(1);
@@ -81,31 +114,6 @@ const MapCreateVertex = (props: {
   const [openSetNoVertex, setOpenSetNoVertex] = React.useState(false);
   const [openSetInpAdr, setOpenSetInpAdr] = React.useState(false);
   const REGION = homeRegion;
-  const AREA = props.area;
-  let Area = AREA === "0" ? "1" : props.area;
-  subArea = SUBAREA === "0" ? 1 : Number(SUBAREA);
-
-  let datt = [];
-  for (let i = 0; i < SubArea.length; i++)
-    datt.push(SubArea[i].toString() + "-й подрайон");
-
-  let massKeyt = [];
-  let massDatt = [];
-  const currenciest: any = [];
-  for (let key in datt) {
-    massKeyt.push(key);
-    massDatt.push(datt[key]);
-  }
-  for (let i = 0; i < massKeyt.length; i++) {
-    let maskCurrencies = {
-      value: "",
-      label: "",
-    };
-    maskCurrencies.value = massKeyt[i];
-    maskCurrencies.label = massDatt[i];
-    currenciest.push(maskCurrencies);
-  }
-
   const [currencyt, setCurrencyt] = React.useState(
     massKeyt[SubArea.indexOf(subArea)]
   );

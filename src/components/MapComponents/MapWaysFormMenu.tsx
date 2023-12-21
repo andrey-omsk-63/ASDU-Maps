@@ -36,10 +36,8 @@ let propsSvg: any;
 let waitPict = false;
 
 const MapWaysFormMenu = (props: {
-  //ws: any;
   setOpen: any;
   idx: number;
-  //svg: any;
   setSvg: any;
 }) => {
   //console.log("MapWaysFormMenu:", oldIdx);
@@ -62,7 +60,6 @@ const MapWaysFormMenu = (props: {
   //========================================================
   const [openSetBind, setOpenSetBind] = React.useState(false);
   const [trigger, setTrigger] = React.useState(false);
-
   const WS = datestat.ws;
   const propsArea = massroute.vertexes[props.idx].area;
   const propsId = massroute.vertexes[props.idx].id;
@@ -136,7 +133,6 @@ const MapWaysFormMenu = (props: {
       if (mode === 777) {
         handleCloseSetEnd();
       } else {
-        //props.setOpen(mode, massTargetNum[mode], 1);
         fromIdx = massTargetNum[mode];
         OpenBind(mode);
       }
@@ -170,6 +166,7 @@ const MapWaysFormMenu = (props: {
   };
 
   const MakeRecordMassRoute = (mode: boolean, mass: any) => {
+    props.setSvg(null);
     massTargetRoute.length === 1 && handleCloseSetEnd();
   };
 
@@ -200,7 +197,6 @@ const MapWaysFormMenu = (props: {
         <MapRouteBind
           setOpen={setOpenSetBind}
           svg={MasSvg}
-          setSvg={props.setSvg}
           idxA={fromIdx}
           idxB={inIdx}
           reqRoute={reqRoute}

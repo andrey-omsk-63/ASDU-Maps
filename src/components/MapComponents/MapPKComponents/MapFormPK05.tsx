@@ -1,13 +1,10 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
-//import { massplanCreate, statsaveCreate } from './../../../redux/actions';
 
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-
-//import { AREA } from "../../MainMapGl";
 
 import { TablStr } from "../../MapServiceFunctions";
 
@@ -19,10 +16,6 @@ import { stylePKForm04 } from "../../MainMapStyle";
 
 const MapFormPK05 = (props: { view: boolean; handleClose: Function }) => {
   //== Piece of Redux =======================================
-  // const map = useSelector((state: any) => {
-  //   const { mapReducer } = state;
-  //   return mapReducer.map;
-  // });
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
     return massrouteReducer.massroute;
@@ -39,14 +32,6 @@ const MapFormPK05 = (props: { view: boolean; handleClose: Function }) => {
   //console.log('massplan:', massplan, massSpis);
   //=== инициализация ======================================
   let plan = massplan.plans[datestat.idxMenu];
-  // let nameArea = '';
-  // for (let i = 0; i < map.dateMap.tflight.length; i++) {
-  //   let num = Number(map.dateMap.tflight[i].area.num);
-  //   if (num === plan.areaPK) {
-  //     nameArea = map.dateMap.tflight[i].area.nameArea;
-  //     break;
-  //   }
-  // }
   //========================================================
   const handleClose = () => {
     props.handleClose(false);

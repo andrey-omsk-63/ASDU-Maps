@@ -154,15 +154,11 @@ const MapVertexForma = (props: {
   const SaveForm = (mode: boolean) => {
     if (mode) {
       // выход с сохранением
-      //let massRab = JSON.parse(JSON.stringify(massForm)); // отсортированный massForm
-      //massRab.phases.splice(0, massRab.phases.length); // massRab.phases = [];
       MASSFAZA = [];
       for (let i = 0; i < massForm.kolFaz; i++) {
         for (let j = 0; j < massForm.kolFaz; j++)
-          if (massForm.phases[j].PhaseOrder === i + 1) {
-            //massRab.phases.push(massForm.phases[j]);
+          if (massForm.phases[j].PhaseOrder === i + 1)
             MASSFAZA.push(massForm.phases[j].NumPhase);
-          }
       }
       MASSDK.phases = MASSFAZA;
       dispatch(massdkCreate(massdk));
@@ -281,7 +277,7 @@ const MapVertexForma = (props: {
       // удаление
       let massRab = JSON.parse(JSON.stringify(massForm));
       massRab.phases.splice(0, massRab.phases.length); // massRab.phases = [];
-      MASSFAZA = []
+      MASSFAZA = [];
       for (let i = 0; i < massRab.kolFaz; i++)
         if (i !== nomDelFaz) {
           massRab.phases.push(massForm.phases[i]);

@@ -1,6 +1,4 @@
 import * as React from "react";
-//import { useDispatch, useSelector } from "react-redux";
-//import { massrouteCreate, massrouteproCreate } from "./../../redux/actions";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -14,21 +12,15 @@ const MapReversRoute = (props: {
   makeRevers: any;
   needRevers: any;
 }) => {
-  //== Piece of Redux =======================================
-  // let massroute = useSelector((state: any) => {
-  //   const { massrouteReducer } = state;
-  //   return massrouteReducer.massroute;
-  // });
-  // let massroutepro = useSelector((state: any) => {
-  //   const { massrouteproReducer } = state;
-  //   return massrouteproReducer.massroutepro;
-  // });
-  // const dispatch = useDispatch();
-  //=========================================================
   const styleModalMenu = {
     fontSize: 16,
+    maxHeight: "24px",
+    minHeight: "24px",
     backgroundColor: "#E6F5D6",
+    border: "1px solid #d4d4d4", // серый
+    borderRadius: 1,
     textTransform: "unset !important",
+    boxShadow: 6,
     color: "black",
   };
 

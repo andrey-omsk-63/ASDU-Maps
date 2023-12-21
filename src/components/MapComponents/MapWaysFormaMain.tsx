@@ -79,7 +79,6 @@ const MapWaysFormaMain = (props: {
     currenciesOpp = PreparCurrenciesOpponent();
   }
   //========================================================
-
   const handleCloseFaz = (mode: number) => {
     if (massForm.phases[mode] === -1) {
       massForm.phases[mode] = 1;

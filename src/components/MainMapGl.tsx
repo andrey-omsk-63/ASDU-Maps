@@ -79,6 +79,7 @@ let reqRoute: any = {
 let fromCross: any = FromCross;
 let toCross: any = ToCross;
 let funcBound: any = null;
+let oldPropsSvg: any = null;
 let funcContex: any, VertexForma: any, funcClick: any, activeRoute: any;
 funcContex = VertexForma = funcClick = activeRoute = null;
 let currencies: any = [];
@@ -88,7 +89,6 @@ let currenciesForm: any = [];
 let idxDel: number, pointAaIndex: number;
 let indexPoint: number, pointBbIndex: number;
 idxDel = indexPoint = pointAaIndex = pointBbIndex = -1;
-let oldPropsSvg: any = null;
 let openEF = false;
 let fromIdx: number, inIdx: number, idxPKForm: number, modeBind: number;
 fromIdx = inIdx = idxPKForm = modeBind = -1;
@@ -243,7 +243,6 @@ const MainMap = (props: {
     MASSPK = spis; // массив 'подсвечиваемых' перекрёстков
     VIEWDIR = true; // разрешение посмотра инф-ии о направл.в балуне
     ZeroRoute(false);
-    // if (datestat.needMakeSpisPK) {
     if (datestat.needMenuForm) {
       setOpenPKSpis(true);
       VIEWDIR = false; // разрешение посмотра инф-ии о направл.в балуне
@@ -251,7 +250,7 @@ const MainMap = (props: {
       dispatch(statsaveCreate(datestat));
     } else {
       setCurrencyPK("0"); // переключение меню 'ПК и модели' на заголовок
-    } 
+    }
     ymaps && addRoute(ymaps); // перерисовка связей
   };
 
@@ -270,6 +269,7 @@ const MainMap = (props: {
   };
 
   const MakeRecordMassRoute = (mode: boolean, mass: any) => {
+    props.setSvg(null);
     if (!mode) {
       ZeroRoute(mode);
     } else {
@@ -300,7 +300,7 @@ const MainMap = (props: {
         flagRevers = false;
       } else ZeroRoute(mode);
     }
-    setCurrencyPK(PK = "0"); // переключение меню 'ПК и модели' на заголовок
+    setCurrencyPK((PK = "0")); // переключение меню 'ПК и модели' на заголовок
     VIEWDIR = true; // разрешение посмотра инф-ии о направл.в балуне
     setNeedRevers(0);
     flagDemo && FillMassRoute();
@@ -473,7 +473,6 @@ const MainMap = (props: {
             } else {
               let sbAa = SubareaFindById(massdk, areaAa, recA.id);
               let sbBb = SubareaFindById(massdk, areaBb, recB.id);
-              // if (sbAa !== sbBb && areaAa > 0 && areaBb > 0) {
               if (sbAa !== sbBb) {
                 pointBbIndex = 0; // конечная точка
                 SoobOpenSetEr(soob);
@@ -872,7 +871,7 @@ const MainMap = (props: {
       {MODE === "2" && datestat.needMenuForm && massplan.plans.length > 0 && (
         <>{InputMenuForm(handleChangeForm, currencyForm, currenciesForm)}</>
       )}
-      {MainMenu(flagPusk, flagRoute, PressButton, datestat.lockUp)}
+      {MainMenu(flagPusk, flagRoute, PressButton)}
       {flagPro && MODE === "0" && (
         <>{StrokaMenuGlob("Протокол", PressButton, 24)}</>
       )}
@@ -951,7 +950,7 @@ const MainMap = (props: {
               <MapRouteBind
                 setOpen={setOpenBind}
                 svg={masSvg}
-                setSvg={props.setSvg}
+                //setSvg={props.setSvg}
                 idxA={pointAaIndex}
                 idxB={pointBbIndex}
                 reqRoute={reqRoute}
@@ -962,7 +961,6 @@ const MainMap = (props: {
             {openCreate && (
               <MapCreatePointVertex
                 setOpen={setOpenCreate}
-                //region={homeRegion}
                 coord={newPointCoord}
                 createPoint={MakeNewPoint}
               />

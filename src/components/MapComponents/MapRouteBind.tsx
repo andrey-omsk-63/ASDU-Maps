@@ -26,6 +26,7 @@ import { styleBind042, MakeStyleBind00, styleBind043 } from "./../MainMapStyle";
 import { styleBind03, styleBind033, styleBind041 } from "./../MainMapStyle";
 import { styleBind01, styleBind04, styleBind05 } from "./../MainMapStyle";
 import { styleBind06, styleBind07, styleBind08 } from "./../MainMapStyle";
+import { styleBind0333 } from "./../MainMapStyle";
 
 import { Chart as ChartJS, CategoryScale } from "chart.js";
 import { LinearScale, PointElement } from "chart.js";
@@ -91,9 +92,9 @@ let maskForm: Directions = JSON.parse(JSON.stringify(MaskFormWay()));
 let massForm: Directions = JSON.parse(JSON.stringify(MaskFormWay()));
 
 const MapRouteBind = (props: {
-  setOpen: any;
+  setOpen: any; // 
   svg: any;
-  setSvg: any;
+  //setSvg: any;
   idxA: number;
   idxB: number;
   reqRoute: any;
@@ -163,7 +164,7 @@ const MapRouteBind = (props: {
     oldIdxB = -1;
     props.setOpen(false);
     setOpenSetBind(false);
-    props.setSvg(null);
+    //props.setSvg(null);
     if (MODE === "2") {
       datestat.needMenuForm = false; //  не выдавать меню форм
       dispatch(statsaveCreate(datestat));
@@ -456,18 +457,20 @@ const MapRouteBind = (props: {
     let nameRoute = massroute.vertexes[props.idxB].id;
     return (
       <Grid item xs sx={styleSetImg}>
-        <Box sx={styleBind03}>
-          <em>
-            Входящие направления <b>{nameRoute}</b>
-          </em>
-        </Box>
-        <Box sx={styleBind033}>
-          <Grid container item xs={12}>
-            {HeaderTablBindContent(1, "№")}
-            {HeaderTablBindContent(3, "Наименование")}
-            {HeaderTablBindContent(4, "Интенсивность(т.е./ч)")}
-            {HeaderTablBindContent(4, "Свойства")}
-          </Grid>
+        <Box sx={styleBind0333}>
+          <Box sx={styleBind03}>
+            <em>
+              Входящие направления <b>{nameRoute}</b>
+            </em>
+          </Box>
+          <Box sx={styleBind033}>
+            <Grid container item xs={12}>
+              {HeaderTablBindContent(1, "№")}
+              {HeaderTablBindContent(3, "Наименование")}
+              {HeaderTablBindContent(4, "Интенсивность(т.е./ч)")}
+              {HeaderTablBindContent(4, "Свойства")}
+            </Grid>
+          </Box>
         </Box>
         <Grid container sx={{ height: "26vh" }}>
           {StrokaTablIn()}
@@ -542,20 +545,22 @@ const MapRouteBind = (props: {
     let nameRoute = massroute.vertexes[props.idxB].id + "." + nom.toString();
     return (
       <Grid item xs sx={styleSetImg}>
-        <Box sx={styleBind03}>
-          <em>
-            Состав входящего направления <b>{nameRoute}</b>
-          </em>
-        </Box>
-        <Box sx={styleBind033}>
-          <Grid container item xs={12}>
-            {HeaderTablBindContent(0.5, "")}
-            {HeaderTablBindContent(0.5, "№")}
-            {HeaderTablBindContent(2.5, "Наименование")}
-            {HeaderTablBindContent(3.5, "Интенсивность(т.е./ч)")}
-            {HeaderTablBindContent(2.5, "Интенсивность(%)")}
-            {HeaderTablBindContent(2.5, "Время проезда(сек)")}
-          </Grid>
+        <Box sx={styleBind0333}>
+          <Box sx={styleBind03}>
+            <em>
+              Состав входящего направления <b>{nameRoute}</b>
+            </em>
+          </Box>
+          <Box sx={styleBind033}>
+            <Grid container item xs={12}>
+              {HeaderTablBindContent(0.5, "")}
+              {HeaderTablBindContent(0.5, "№")}
+              {HeaderTablBindContent(2.5, "Наименование")}
+              {HeaderTablBindContent(3.5, "Интенсивность(т.е./ч)")}
+              {HeaderTablBindContent(2.5, "Интенсивность(%)")}
+              {HeaderTablBindContent(2.5, "Время проезда(сек)")}
+            </Grid>
+          </Box>
         </Box>
         <Grid container sx={{ overflowX: "auto", height: "24vh" }}>
           {StrokaTablTotal()}

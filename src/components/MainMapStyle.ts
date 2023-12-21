@@ -32,6 +32,7 @@ export const styleModalEnd = {
   maxWidth: "2%",
   minWidth: "2%",
   color: "black",
+  textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
 };
 
 export const styleSetInf = {
@@ -59,10 +60,9 @@ export const styleSetPoint = {
   position: "absolute",
   marginTop: "15vh",
   marginLeft: "24vh",
-  width: 250,
+  width: 320,
   bgcolor: "background.paper",
   border: "1px solid #FFFFFF",
-  //borderColor: 'primary.main',
   borderRadius: 1,
   boxShadow: 24,
   p: 2,
@@ -78,6 +78,7 @@ export const styleModalEndMapGl = {
   maxWidth: "2%",
   minWidth: "2%",
   color: "black",
+  textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
 };
 
 export const styleModalEndAttent = {
@@ -90,6 +91,7 @@ export const styleModalEndAttent = {
   maxWidth: "2%",
   minWidth: "2%",
   color: "red",
+  textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
 };
 
 export const styleModalMenu = {
@@ -107,14 +109,12 @@ export const styleModalMenu = {
 //=== InputAdress =====================================================
 export const styleSet = {
   width: "230px",
-  //width: "226px",
   maxHeight: "4px",
   minHeight: "4px",
   bgcolor: "#FAFAFA",
   boxShadow: 4,
   textAlign: "center",
   p: 1.5,
-  //border: 1,
 };
 
 export const styleInpKnop = {
@@ -130,18 +130,6 @@ export const styleInpKnop = {
 };
 
 export const styleSetAdress = {
-  // outline: "none",
-  // width: "318px",
-  // height: "7vh",
-  // marginTop: "9vh",
-  // marginLeft: "48px",
-  // //marginLeft: '59px',
-  // border: "3px solid #000",
-  // borderColor: "#FFFEF7",
-  // borderRadius: 1,
-  // boxShadow: 24,
-  // bgcolor: "#FFFEF7",
-  // opacity: 0.85,
   outline: "none",
   width: "318px",
   height: "14vh",
@@ -294,6 +282,7 @@ export const styleModalEndBind = {
   maxWidth: "2%",
   minWidth: "2%",
   color: "black",
+  textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
 };
 
 export const styleBind01 = {
@@ -313,16 +302,25 @@ export const styleBind03 = {
   height: "2vh",
   lineHeight: "1.8vh",
   textAlign: "center",
+  bgcolor: "#C0E2C3", // салатовый
+  border: "1px solid #C0E2C3", // салатовый
   borderTopLeftRadius: 5,
   borderTopRightRadius: 5,
-  bgcolor: "#C0E2C3",
 };
 
 export const styleBind033 = {
   height: "2vh",
   lineHeight: "1.8vh",
   textAlign: "center",
-  bgcolor: "#C0E2C3",
+  bgcolor: "#C0E2C3", // салатовый
+  border: "1px solid #C0E2C3", // салатовый
+};
+
+export const styleBind0333 = {
+  bgcolor: "#C0E2C3", // салатовый
+  border: "1px solid #C0E2C3", // салатовый
+  borderTopLeftRadius: 5,
+  borderTopRightRadius: 5,
 };
 
 export const styleBind04 = {
@@ -420,6 +418,7 @@ export const styleBind08 = {
   bgcolor: "#F1F5FB", // светло серый
   border: "1px solid #d4d4d4", // серый
   borderRadius: 1,
+  boxShadow: 6,
 };
 
 export const styleSetBindForm = {
@@ -486,9 +485,8 @@ export const styleFormMenu = {
   maxHeight: "24px",
   minHeight: "24px",
   backgroundColor: "#E6F5D6", // светло салатовый
-  border: "1px solid #000",
+  border: "1px solid #d4d4d4", // серый
   borderRadius: 1,
-  borderColor: "#d4d4d4", // серый
   textTransform: "unset !important",
   boxShadow: 6,
   color: "black",
@@ -506,7 +504,6 @@ export const styleFT02 = {
 export const styleFormTabl00 = {
   border: "1px solid #d4d4d4",
   borderRadius: 1,
-  //borderColor: 'primary.main',
   marginTop: 1.5,
   marginLeft: -0.5,
   marginRight: -0.5,
@@ -514,7 +511,6 @@ export const styleFormTabl00 = {
 };
 
 export const styleFormTabl01 = {
-  // height: 196,
   height: 256,
   bgcolor: "background.paper",
   borderBottomLeftRadius: 5,
@@ -522,7 +518,6 @@ export const styleFormTabl01 = {
 };
 
 export const styleFormTabl02 = {
-  //height: 162,
   height: 222,
   bgcolor: "#F1F5FB", // серо голубой
   overflowX: "auto",
@@ -531,14 +526,12 @@ export const styleFormTabl02 = {
 export const styleFT03 = {
   borderRight: "1px solid #d4d4d4",
   borderBottom: "1px solid #d4d4d4",
-  //borderColor: 'primary.main',
   padding: 0.7,
   textAlign: "center",
 };
 
 export const styleFT033 = {
   borderBottom: "1px solid #d4d4d4",
-  //borderColor: 'primary.main',
   padding: 0.7,
   textAlign: "center",
 };
@@ -579,7 +572,6 @@ export const styleFW01 = {
   width: 555,
   bgcolor: "background.paper",
   border: "1px solid #FFFFFF",
-  //borderColor: 'primary.main',
   borderRadius: 1,
   boxShadow: 24,
   p: 3,
@@ -663,7 +655,6 @@ export const styleFormFWTabl00 = {
   bgcolor: "#F1F5FB",
   border: "1px solid #d4d4d4",
   borderRadius: 1,
-  //borderColor: "primary.main",
   marginTop: 1.5,
   marginLeft: -0.5,
   marginRight: -0.5,
@@ -851,8 +842,6 @@ export const styleSpisPK04 = {
   top: "50%",
   transform: "translate(-50%, -50%)",
   width: 700,
-  // maxHeight: "80%",
-  // minHeight: "80%",
   bgcolor: "background.paper",
   border: "1px solid #FFFFFF",
   borderRadius: 1,
@@ -870,7 +859,6 @@ export const styleSpisPK05 = {
 
 export const MakeStylSpisPK06 = () => {
   const styleSpisPK06 = {
-    //width: '97.75%',
     maxHeight: window.innerHeight * 0.8,
     minHeight: "10px",
     bgcolor: "#F1F5FB", // серо голубой
@@ -982,6 +970,7 @@ export const styleWindPKEnd = {
   maxWidth: "2%",
   minWidth: "2%",
   color: "black",
+  textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
 };
 
 export const styleWindPK01 = {

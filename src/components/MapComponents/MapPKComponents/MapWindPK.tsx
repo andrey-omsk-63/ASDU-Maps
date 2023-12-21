@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-//import Modal from "@mui/material/Modal";
 import Slider from "@mui/material/Slider";
 
 import MapWindViewGraf from "./MapWindViewGraf";
@@ -90,7 +89,6 @@ const MapWindPK = (props: {
     return statsaveReducer.datestat;
   });
   //console.log('massplan:', massplan, massSpis);
-  //const dispatch = useDispatch();
   //===========================================================
   const [value, setValue] = React.useState(69);
   const [openImg, setOpenImg] = React.useState(false);

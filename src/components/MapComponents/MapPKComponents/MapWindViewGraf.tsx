@@ -64,8 +64,6 @@ const MapWindViewGraf = (props: {
   //console.log('massplan:', massplan, massSpis);
   //const dispatch = useDispatch();
   //===========================================================
-  // const [value, setValue] = React.useState(67);
-  // const [openImg, setOpenImg] = React.useState(false);
   const [openGraf, setOpenGraf] = React.useState(true);
 
   //=== инициализация ======================================

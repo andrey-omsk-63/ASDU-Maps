@@ -57,7 +57,6 @@ const MapSpisPK = (props: {
       if (massplan.plans.length) {
         for (let i = 0; i < massplan.plans[idx].coordPlan.length; i++)
           massPkId.push(massplan.plans[idx].coordPlan[i].id);
-        //console.log("ChangeIDX:", IDX, massPkId, massplan.plans[idx].subareaPK);
       }
       massPkId.length &&
         props.SetMass(massPkId, massplan.plans[idx].subareaPK, 1);
@@ -89,10 +88,7 @@ const MapSpisPK = (props: {
   spisPK = [];
   for (let i = 0; i < massSpis.length; i++) spisPK.push(massSpis[i].nom);
   IDX = spisPK.indexOf(PLANER);
-  if (IDX < 0) IDX = 0;
-  //console.log("!!!PLANER:", datestat.idxMenu, IDX, spisPK);
-  //console.log("PLANER:", PLANER, datestat.idxMenu, IDX, spisPK);
-  ChangeIDX(IDX);
+  ChangeIDX(IDX < 0 ? 0 : IDX);
   if (datestat.needMakeSpisPK) datestat.needMakeSpisPK = false;
   datestat.needMenuForm = true; // выдавать меню форм
   datestat.lockUp = true; // блокировка/разблокировка меню районов и меню режимов

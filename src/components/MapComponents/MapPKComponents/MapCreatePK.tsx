@@ -5,7 +5,6 @@ import { massplanCreate, statsaveCreate } from "./../../../redux/actions";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-//import TextField from "@mui/material/TextField";
 
 import MapPointDataError from "./../MapPointDataError";
 
@@ -72,12 +71,7 @@ const MapCreatePK = (props: {
   idx: number; // индекса редактируемого ПК
   setPuskMenu: Function; // перезапуск меню ПК после корректировки
 }) => {
-  //console.log("Props.IDX:", AREA);
   //== Piece of Redux =======================================
-  // const map = useSelector((state: any) => {
-  //   const { mapReducer } = state;
-  //   return mapReducer.map;
-  // });
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;
     return massdkReducer.massdk;
@@ -187,7 +181,6 @@ const MapCreatePK = (props: {
       //============
       NewCoordPlan.subareaPK = subAreA;
       NewCoordPlan.areaPK = Number(AREA);
-      //console.log("1NewCoordPlan:", NewCoordPlan);
       // создание списка перекрёстков для левого окна
       for (let i = 0; i < massroute.vertexes.length; i++) {
         let ID = massroute.vertexes[i].id;
@@ -225,7 +218,6 @@ const MapCreatePK = (props: {
     }
   }
   //========================================================
-  //console.log("massBoard:", massBoard);
   const [boards, setBoards] = React.useState(massBoard);
   const [valuen, setValuen] = React.useState(NewCoordPlan.namePK);
   const [currencyPlan, setCurrencyPlan] = React.useState(startPlan);
@@ -330,13 +322,10 @@ const MapCreatePK = (props: {
   const dropHandler = (e: any, board: any, item: any) => {
     e.preventDefault();
     const currentIndex = currentBoard.items.indexOf(currentItem);
-    //console.log("currentBoard.ID:", currentBoard.ID);
     if (currentIndex >= 0 && board.ID !== currentBoard.ID) {
       currentBoard.items.splice(currentIndex, 1);
-      //console.log("currentBoard.ID:", currentBoard.ID);
       if (currentBoard.ID) {
         massPkId.splice(currentIndex, 1); // удаление из правого окна
-        //console.log("dropHandler_massPkId:", massPkId, subAreA);
         props.SetMass(massPkId, subAreA, 1);
       }
       HAVE++;
@@ -357,19 +346,14 @@ const MapCreatePK = (props: {
     if (board.ID !== currentBoard.ID) {
       board.items.push(currentItem);
       const currentIndex = currentBoard.items.indexOf(currentItem);
-      //console.log("currentItem:",currentIndex, currentItem, board);
       if (board.ID) {
         massPkId.push(currentItem.id); // добавление в правое окно
-        //console.log("1ddropCardHandler_massPkId:", massPkId, subAreA);
         props.SetMass(massPkId, subAreA, 1);
       }
       HAVE++;
 
       if (currentIndex >= 0 && board.ID !== currentBoard.ID) {
         currentBoard.items.splice(currentIndex, 1);
-        // massPkId.splice(currentIndex, 1);
-        // console.log("2ddropCardHandler_massPkId:", massPkId, subAreA);
-        // props.SetMass(massPkId, subAreA);
         HAVE++;
       }
       setBoards(

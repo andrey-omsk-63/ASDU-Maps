@@ -16,10 +16,6 @@ import { stylePKForm02, styleSpisPK05 } from "../../MainMapStyle";
 
 const MapFormPK01 = (props: { view: boolean; handleClose: Function }) => {
   //== Piece of Redux =======================================
-  // const map = useSelector((state: any) => {
-  //   const { mapReducer } = state;
-  //   return mapReducer.map;
-  // });
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
     return massrouteReducer.massroute;
@@ -33,17 +29,8 @@ const MapFormPK01 = (props: { view: boolean; handleClose: Function }) => {
     const { statsaveReducer } = state;
     return statsaveReducer.datestat;
   });
-  //console.log('massplan:', massplan, massSpis);
   //=== инициализация ======================================
   let plan = massplan.plans[datestat.idxMenu];
-  // let nameArea = "";
-  // for (let i = 0; i < map.dateMap.tflight.length; i++) {
-  //   let num = Number(map.dateMap.tflight[i].area.num);
-  //   if (num === plan.areaPK) {
-  //     nameArea = map.dateMap.tflight[i].area.nameArea;
-  //     break;
-  //   }
-  // }
   //========================================================
   const handleClose = () => {
     props.handleClose(false);

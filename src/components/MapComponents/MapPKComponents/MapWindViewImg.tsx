@@ -30,8 +30,6 @@ const MapWindViewImg = (props: {
     const { statsaveReducer } = state;
     return statsaveReducer.datestat;
   });
-  //console.log('massplan:', massplan, massSpis);
-  //const dispatch = useDispatch();
   //===========================================================
   const [openImg, setOpenImg] = React.useState(true);
 

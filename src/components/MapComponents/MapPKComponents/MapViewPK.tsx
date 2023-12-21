@@ -28,13 +28,6 @@ const MapViewPK = (props: { view: boolean; idx: number; handleClose: Function })
   //=== инициализация ======================================
   let plan = massplan.plans[props.idx];
   let nameArea = '';
-  // for (let i = 0; i < map.dateMap.tflight.length; i++) {
-  //   let num = Number(map.dateMap.tflight[i].area.num);
-  //   if (num === plan.areaPK) {
-  //     nameArea = map.dateMap.tflight[i].area.nameArea;
-  //     break;
-  //   }
-  // }
   //========================================================
   const handleClose = () => {
     props.handleClose(false);
