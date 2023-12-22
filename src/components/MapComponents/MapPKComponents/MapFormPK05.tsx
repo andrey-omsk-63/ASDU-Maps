@@ -105,7 +105,7 @@ const MapFormPK05 = (props: { view: boolean; handleClose: Function }) => {
             <Box sx={styleFormPK01}>
               <b>Программа координации ПК №{plan.nomPK}</b>
             </Box>
-            <Grid container>
+            <Grid container sx={{ textShadow: "1px 1px 2px rgba(0,0,0,0.3)" }}>
               <Grid item xs={7.8} sx={{ border: 0 }}>
                 <Box sx={styleSpisPK05}>
                   <Box sx={{}}>

@@ -7,6 +7,10 @@ export const dataPlan = {
         areaPK: 1,
         subareaPK: 3,
         namePK: "План координации (26.10.2023 13:35:01)12345678901234567890",
+        timeCycle: 80,
+        ki: 100,
+        ks: 100,
+        phaseOptim: true,
         coordPlan: [
           {
             id: 139,
@@ -27,6 +31,10 @@ export const dataPlan = {
         areaPK: 1,
         subareaPK: 3,
         namePK: "План координации (25.10.2023 12:12:12)",
+        timeCycle: 80,
+        ki: 100,
+        ks: 100,
+        phaseOptim: true,
         coordPlan: [
           {
             id: 39,
@@ -47,6 +55,10 @@ export const dataPlan = {
         areaPK: 1,
         subareaPK: 3,
         namePK: "!!!План координации (28.10.2023 12:12:12)",
+        timeCycle: 80,
+        ki: 100,
+        ks: 100,
+        phaseOptim: true,
         coordPlan: [
           {
             id: 34,

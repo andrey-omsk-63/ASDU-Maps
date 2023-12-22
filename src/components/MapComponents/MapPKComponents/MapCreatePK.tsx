@@ -21,7 +21,8 @@ import { PlanCoord } from "../../../interfacePlans.d"; // интерфейс
 import { styleModalEnd, MakeStyleFormPK00 } from "../../MainMapStyle";
 import { styleFormPK01, styleFormPK04 } from "../../MainMapStyle";
 import { MakeStyleFormPK022, styleFormPK05 } from "../../MainMapStyle";
-import { styleFormPK06 } from "../../MainMapStyle";
+import { styleFormPK06, styleSpisPK07 } from "../../MainMapStyle";
+import { styleSpisPK08, styleSpisPK09 } from "../../MainMapStyle";
 
 interface Stroka {
   area: number;
@@ -45,11 +46,15 @@ let oldNomPK = -1;
 let currenciesPlan: any = [];
 
 let NewCoordPlan: PlanCoord = {
-  nomPK: 0,
-  areaPK: 0,
-  subareaPK: 0,
-  namePK: "",
-  coordPlan: [],
+  nomPK: 0, // номер плана координации
+  areaPK: 0, // район плана координации
+  subareaPK: 0, // подрайон плана координации
+  namePK: "", // наименование плана координации
+  timeCycle: 80, // длительность цикла
+  ki: 100, // коэффициент
+  ks: 100, // коэффициент
+  phaseOptim: true, // оптимизировать длительност фаз
+  coordPlan: [], // id перекрёстков входящих в ПК
 };
 
 let massBoard = [
@@ -153,7 +158,7 @@ const MapCreatePK = (props: {
         }
         currenciesPlan = PreparCurrenciesPlan(sumPlan, massNumPk);
         NewCoordPlan.nomPK = Number(currenciesPlan[0].label);
-        NewCoordPlan.namePK = "План координации " + UniqueName();
+        NewCoordPlan.namePK = "План координации" + UniqueName();
         NewCoordPlan.areaPK = Number(AREA);
       } else {
         oldNomPK = massplan.plans[props.idx].nomPK;
@@ -373,7 +378,7 @@ const MapCreatePK = (props: {
         <Box sx={styleFormPK01}>
           <b>{soob}плана координации</b>
         </Box>
-        <Grid container sx={{ fontSize: 14, marginTop: 1 }}>
+        <Grid container sx={styleSpisPK08}>
           <Grid item xs={1.6} sx={{ border: 0 }}>
             <b>Номер ПК</b>
           </Grid>
@@ -385,7 +390,7 @@ const MapCreatePK = (props: {
             <b>Подрайон {subAreA}</b> <em>{nameArea}</em>
           </Grid>
         </Grid>
-        <Grid container sx={{ fontSize: 14, marginTop: 0.5 }}>
+        <Grid container sx={styleSpisPK09}>
           <Grid item xs={1.6} sx={{ border: 0 }}>
             <b>Название ПК</b>
           </Grid>
@@ -499,7 +504,7 @@ const MapCreatePK = (props: {
                     {InputArrow(board, item.id, massroute)}
                   </Box>
                 )}
-                <Box sx={{ marginLeft: 0.5, border: 0 }}>
+                <Box sx={styleSpisPK07}>
                   {item.id} - {item.name}
                 </Box>
               </Box>

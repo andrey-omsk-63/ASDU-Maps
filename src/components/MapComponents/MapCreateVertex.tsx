@@ -217,9 +217,7 @@ const MapCreateVertex = (props: {
     if (CheckDoublAreaID()) {
       if (CheckAvailVertex()) {
         SaveVertex();
-      } else {
-        setOpenSetNoVertex(true);
-      }
+      } else setOpenSetNoVertex(true);
     }
   };
 
@@ -275,9 +273,7 @@ const MapCreateVertex = (props: {
   const handleCloseNoVertex = (mode: boolean) => {
     if (mode) {
       setOpenSetInpAdr(true);
-    } else {
-      handleCloseSetAdress();
-    }
+    } else handleCloseSetAdress();
     setOpenSetNoVertex(false);
   };
 

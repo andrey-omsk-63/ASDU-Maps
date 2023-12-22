@@ -732,6 +732,7 @@ export const styleFormPK03 = {
   borderColor: "#d4d4d4", // серый
   textTransform: "unset !important",
   boxShadow: 6,
+  textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
   color: "black",
 };
 
@@ -743,7 +744,6 @@ export const styleFormPK04 = {
   borderRadius: 2,
   margin: "1px 0 5px 5px",
   cursor: "grab",
-  //bgcolor: '#E9F5D8', // светло салатовый
   bgcolor: "#F8FCF3", // светло светло салатовый
   display: "flex",
   paddingLeft: 0.5,
@@ -754,6 +754,7 @@ export const styleFormPK05 = {
   marginTop: 1,
   textAlign: "center",
   color: "#5B1080",
+  textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
 };
 
 export const styleFormPK06 = {
@@ -762,6 +763,7 @@ export const styleFormPK06 = {
   maxHeight: "36px",
   minHeight: "36px",
   color: "#5B1080",
+  textShadow: "4px 4px 6px rgba(0,0,0,0.3)",
   border: 0,
 };
 //=== SpisPK ==========================================================
@@ -797,6 +799,7 @@ export const StylSpisPK02 = (delMode: boolean, illum: boolean) => {
     padding: "0px 5px 0px 5px",
     justifyContent: "center",
     boxShadow: illum ? 6 : delMode ? 6 : 2,
+    textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
   };
   return styleSpisPK02;
 };
@@ -817,6 +820,7 @@ export const StylSpisPK022 = (delMode: boolean, illum: boolean) => {
     padding: "0px 5px 0px 5px",
     justifyContent: "flex-start",
     boxShadow: illum ? 6 : 2,
+    textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
   };
   return styleSpisPK02;
 };
@@ -833,6 +837,7 @@ export const styleSpisPK03 = {
   textTransform: "unset !important",
   color: "black",
   boxShadow: 6,
+  textShadow: "2px 2px 3px rgba(0,0,0,0.3)"
 };
 
 export const styleSpisPK04 = {
@@ -855,6 +860,7 @@ export const styleSpisPK05 = {
   marginTop: 0.5,
   display: "flex",
   justifyContent: "left",
+  textShadow: "1px 1px 2px rgba(0,0,0,0.3)"
 };
 
 export const MakeStylSpisPK06 = () => {
@@ -871,6 +877,65 @@ export const MakeStylSpisPK06 = () => {
     padding: "5px 5px 5px 5px",
   };
   return styleSpisPK06;
+};
+
+export const styleSpisPK07 = {
+  textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+  marginLeft: 0.5,
+};
+
+export const styleSpisPK08 = {
+  fontSize: 14,
+  marginTop: 1,
+  textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+};
+
+export const styleSpisPK09 = {
+  fontSize: 14,
+  marginTop: 0.5,
+  textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+};
+//=== SetupPK =========================================================
+export const styleSetPK01 = {
+  outline: "none",
+  position: "absolute",
+  left: "50%",
+  top: "40%",
+  transform: "translate(-50%, -50%)",
+  width: 700,
+  height: 184,
+  bgcolor: "background.paper",
+  border: "1px solid #FFFFFF",
+  borderRadius: 1,
+  boxShadow: 24,
+  textAlign: "center",
+  padding: "1px 10px 10px 10px",
+};
+
+export const styleSetPK02 = {
+  fontSize: 20,
+  textAlign: "center",
+  color: "#5B1080",
+  textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+};
+
+export const styleSetPK03 = {
+  fontSize: 15,
+  textAlign: "left",
+  bgcolor: "#F1F5FB",
+  border: "1px solid #d4d4d4",
+  borderRadius: 1,
+  color: "black",
+  boxShadow: 3,
+  margin: "3px 0 1px 0",
+  padding: "6px 5px 12px 5px",
+  textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+};
+
+export const styleSetPK04 = {
+  marginTop: 0.8,
+  display: "flex",
+  justifyContent: "center",
 };
 //=== FormPK ==========================================================
 export const stylePKForm00 = {

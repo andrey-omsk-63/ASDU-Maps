@@ -107,7 +107,6 @@ const MapSpisPK = (props: {
     if (nomMenu < 0) massPkId = [];
     props.setOpen(datestat.nomMenu, massPkId); // полный выход
   }, [datestat, dispatch, props, massplan.plans]);
-
   //=== Функции - обработчики ==============================
   const MarkSpis = (idx: number) => {
     massSpis[idx].del = !massSpis[idx].del;

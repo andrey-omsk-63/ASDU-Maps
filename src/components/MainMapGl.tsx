@@ -19,6 +19,7 @@ import MapVertexForma from "./MapComponents/MapVertexForma";
 import MapCreatePK from "./MapComponents/MapPKComponents/MapCreatePK";
 import MapSpisPK from "./MapComponents/MapPKComponents/MapSpisPK";
 import MapWindPK from "./MapComponents/MapPKComponents/MapWindPK";
+import MapSetupPK from "./MapComponents/MapPKComponents/MapSetupPK";
 import MapDispPKForm from "./MapComponents/MapPKComponents/MapDispPKForm";
 
 import { RecordMassRoute, MakeNewPointContent } from "./MapServiceFunctions";
@@ -144,6 +145,7 @@ const MainMap = (props: {
   const [openWaysForm, setOpenWaysForm] = React.useState(false);
   const [openPKForm, setOpenPKForm] = React.useState(false);
   const [openPKSpis, setOpenPKSpis] = React.useState(false);
+  const [openPKSetup, setOpenPKSetup] = React.useState(false);
   const [dispPKForm, setDispPKForm] = React.useState(false);
   const [openEr, setOpenEr] = React.useState(false);
   const [openBind, setOpenBind] = React.useState(false);
@@ -429,6 +431,9 @@ const MainMap = (props: {
         break;
       case 203: // вызов диспетчера форм ПК
         setDispPKForm(true);
+        break;
+      case 204: // настройка ПК
+        setOpenPKSetup(true);
         break;
       case 212: // выбор режима работы
         ZeroRoute(false);
@@ -729,6 +734,7 @@ const MainMap = (props: {
     PressButton(212);
     pk === 1 && PressButton(202);
     pk === 2 && PressButton(201);
+    pk === 4 && PressButton(204);
   };
 
   const handleChangeForm = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -785,6 +791,11 @@ const MainMap = (props: {
   const SetDispPKForm = (mode: boolean) => {
     setCurrencyForm((FORM = "0"));
     setDispPKForm(mode);
+  };
+
+  const SetOpenPKSetup = (mode: boolean) => {
+    setCurrencyPK(PK = "0");// переключение меню 'ПЛ и модели' на заголовок
+    setOpenPKSetup(mode);
   };
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(massroute).length) {
@@ -925,6 +936,7 @@ const MainMap = (props: {
                 SetMass={SetMassPkId}
               />
             )}
+            {openPKSetup && <MapSetupPK close={SetOpenPKSetup} />}
             {openEr && (
               <MapPointDataError
                 setOpen={setOpenEr}
@@ -950,7 +962,6 @@ const MainMap = (props: {
               <MapRouteBind
                 setOpen={setOpenBind}
                 svg={masSvg}
-                //setSvg={props.setSvg}
                 idxA={pointAaIndex}
                 idxB={pointBbIndex}
                 reqRoute={reqRoute}

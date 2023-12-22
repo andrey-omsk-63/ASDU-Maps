@@ -12,10 +12,13 @@ export interface PlanCoord {
   areaPK: number;
   subareaPK: number;
   namePK: string;
+  timeCycle: number;
+  ki: number;
+  ks: number;
+  phaseOptim: boolean;
   coordPlan: PlanCoordData[];
 }
 
 export interface PlanCoordData {
   id: number;
-  // name: string;
 }

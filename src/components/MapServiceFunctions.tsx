@@ -33,6 +33,7 @@ import { styleModalEndAttent, styleFT03, styleFT033 } from "./MainMapStyle";
 import { styleBind02, styleTypography, searchControl } from "./MainMapStyle";
 import { styleBind03, styleBind033, styleSetImg } from "./MainMapStyle";
 import { styleFT04, styleFT05, styleModalEnd } from "./MainMapStyle";
+import { styleSetPK04 } from "./MainMapStyle";
 
 import { styleModalMenuErr, styleHeadError } from "./MapPointDataErrorStyle";
 import { styleBoxFormArea, styleSetArea } from "./MapPointDataErrorStyle";
@@ -2160,7 +2161,6 @@ export const InputNamePK = (handleChangeName: any, valuen: string) => {
 
   const styleFormPK055 = {
     "& > :not(style)": {
-      fontSize: 21,
       marginTop: "-7px",
       marginLeft: "-5px",
       width: "600px",
@@ -2188,13 +2188,7 @@ export const InputNamePK = (handleChangeName: any, valuen: string) => {
 
 export const SaveFormPK = (SaveForm: any, create: boolean) => {
   return (
-    <Box
-      sx={{
-        marginTop: 0.8,
-        display: "flex",
-        justifyContent: "center",
-      }}
-    >
+    <Box sx={styleSetPK04}>
       <Box sx={{ display: "inline-block", margin: "0px 5px 0px 0px" }}>
         <Button sx={styleFormPK03} onClick={() => SaveForm(0)}>
           Выйти без сохранения
