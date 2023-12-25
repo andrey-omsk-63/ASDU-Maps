@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 
 import MapPointDataError from "./../MapPointDataError";
+import MapSetupPK from "./MapSetupPK";
 
 import { BadExit, UniqueName, InputFromList } from "../../MapServiceFunctions";
 import { PreparCurrenciesPlan, InputNamePK } from "../../MapServiceFunctions";
@@ -98,6 +99,7 @@ const MapCreatePK = (props: {
   const dispatch = useDispatch();
   //===========================================================
   const [openSetErr, setOpenSetErr] = React.useState(false);
+  const [setupPlan, setSetupPlan] = React.useState(false);
   const [badExit, setBadExit] = React.useState(false);
   const [currentBoard, setCurrentBoard] = React.useState<any>(null);
   const [currentItem, setCurrentItem] = React.useState<any>(null);
@@ -114,13 +116,14 @@ const MapCreatePK = (props: {
       HAVE = 0;
       oldSubArea = -1;
       isOpen = false;
+      props.setOpen(datestat.nomMenu, mode ? massPkId : massPkIdOld); // полный выход
       if (modeWork === "edit" || datestat.needMenuForm)
         props.setPuskMenu(NewCoordPlan.nomPK); // перезапуск меню ПК
       if (modeWork !== "create") {
         datestat.needMakeSpisPK = true; // вызов списка ПК после корректровки ПК
         dispatch(statsaveCreate(datestat));
       }
-      props.setOpen(datestat.nomMenu, mode ? massPkId : massPkIdOld); // полный выход
+      // props.setOpen(datestat.nomMenu, mode ? massPkId : massPkIdOld); // полный выход
       massPkId = [];
     },
     [props, modeWork, datestat, dispatch]
@@ -164,7 +167,10 @@ const MapCreatePK = (props: {
         oldNomPK = massplan.plans[props.idx].nomPK;
         NewCoordPlan.nomPK = oldNomPK;
         NewCoordPlan.namePK = massplan.plans[props.idx].namePK;
-        // создания списка свободных номеров ПК
+        NewCoordPlan.timeCycle = massplan.plans[props.idx].timeCycle;
+        NewCoordPlan.ki = massplan.plans[props.idx].ki;
+        NewCoordPlan.ks = massplan.plans[props.idx].ks;
+        NewCoordPlan.phaseOptim = massplan.plans[props.idx].phaseOptim
         for (let i = 0; i < massplan.plans.length; i++) {
           for (let j = 0; j < sumPlan; j++) {
             if (
@@ -306,6 +312,10 @@ const MapCreatePK = (props: {
       }
     } else handleCloseBad(); // выход без сохранения
   };
+
+  const SetPlan = (plSetup: any) => {
+    HAVE++;
+  };
   //=== Drag and Drop ======================================
   const dragOverHandler = (e: any, board: any) => {
     e.preventDefault();
@@ -371,6 +381,20 @@ const MapCreatePK = (props: {
     }
   };
   //========================================================
+  const styleFormPK07 = {
+    fontSize: 13.4,
+    marginTop: -1.0,
+    maxHeight: "27px",
+    minHeight: "27px",
+    width: 140,
+    backgroundColor: "#E9F5D8", // светло салатовый
+    color: "black",
+    border: "1px solid #d4d4d4", // серый
+    borderRadius: 1,
+    textTransform: "unset !important",
+    textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+    boxShadow: 4,
+  };
   const HeaderFormPK = () => {
     let soob = modeWork === "create" ? "Создание нового " : "Корректировка ";
     return (
@@ -385,9 +409,14 @@ const MapCreatePK = (props: {
           <Grid item xs={1} sx={{ marginTop: -0.8 }}>
             {InputFromList(handleChangePlan, currencyPlan, currenciesPlan)}
           </Grid>
-          <Grid item xs={3.5}></Grid>
-          <Grid item xs sx={{ border: 0 }}>
+          <Grid item xs={2.6}></Grid>
+          <Grid item xs={1.7} sx={{ border: 0 }}>
             <b>Подрайон {subAreA}</b> <em>{nameArea}</em>
+          </Grid>
+          <Grid item xs sx={{ textAlign: "right", padding: "0 1px 0 0" }}>
+            <Button sx={styleFormPK07} onClick={() => setSetupPlan(true)}>
+              Параметры плана
+            </Button>
           </Grid>
         </Grid>
         <Grid container sx={styleSpisPK09}>
@@ -513,6 +542,13 @@ const MapCreatePK = (props: {
         ))}
         {FooterFormPK()}
       </Box>
+      {setupPlan && (
+        <MapSetupPK
+          close={setSetupPlan}
+          plan={NewCoordPlan}
+          setplan={SetPlan}
+        />
+      )}
       {openSetErr && (
         <MapPointDataError
           sErr={soobErr}

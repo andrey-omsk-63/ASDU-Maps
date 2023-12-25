@@ -628,6 +628,7 @@ export const styleFW05 = {
   borderColor: "#d4d4d4", // серый
   borderRadius: 1,
   textTransform: "unset !important",
+  textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
   boxShadow: 1,
 };
 
@@ -642,6 +643,7 @@ export const styleFW06 = {
   borderColor: "#93D145",
   borderRadius: 1,
   textTransform: "unset !important",
+  textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
   boxShadow: 6,
 };
 
@@ -673,7 +675,7 @@ export const MakeStyleFormPK00 = (wdth: number, PLANER: number) => {
     marginLeft: "auto",
     marginRight: "9px",
     width: wdth,
-    height: window.innerHeight * 0.92,
+    height: window.innerHeight * 0.925,
     bgcolor: "background.paper",
     border: "1px solid #FFFFFF",
     borderRadius: 1,
@@ -903,7 +905,7 @@ export const styleSetPK01 = {
   top: "40%",
   transform: "translate(-50%, -50%)",
   width: 700,
-  height: 184,
+  height: 248,
   bgcolor: "background.paper",
   border: "1px solid #FFFFFF",
   borderRadius: 1,
@@ -916,6 +918,7 @@ export const styleSetPK02 = {
   fontSize: 20,
   textAlign: "center",
   color: "#5B1080",
+  margin: "15px 0 10px 0",
   textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
 };
 
@@ -928,14 +931,44 @@ export const styleSetPK03 = {
   color: "black",
   boxShadow: 3,
   margin: "3px 0 1px 0",
-  padding: "6px 5px 12px 5px",
+  padding: "12px 5px 20px 5px",
   textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
 };
 
 export const styleSetPK04 = {
-  marginTop: 0.8,
+  marginTop: 1.7,
   display: "flex",
   justifyContent: "center",
+};
+
+export const styleSetPK05 = {
+  fontSize: 14.2,
+  maxHeight: "28px",
+  minHeight: "28px",
+  width: 285,
+  backgroundColor: "#E9F5D8", // светло салатовый
+  color: "black",
+  border: "1px solid #000",
+  borderColor: "#d4d4d4", // серый
+  borderRadius: 1,
+  textTransform: "unset !important",
+  textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+  boxShadow: 1,
+};
+
+export const styleSetPK06 = {
+  fontSize: 14.5,
+  maxHeight: "28px",
+  minHeight: "28px",
+  width: 285,
+  backgroundColor: "#bae186", // тёмно салатовый
+  color: "black",
+  border: "1px solid #000",
+  borderColor: "#93D145",
+  borderRadius: 1,
+  textTransform: "unset !important",
+  textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+  boxShadow: 6,
 };
 //=== FormPK ==========================================================
 export const stylePKForm00 = {

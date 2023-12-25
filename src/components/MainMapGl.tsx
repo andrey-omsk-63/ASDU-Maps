@@ -780,12 +780,14 @@ const MainMap = (props: {
   };
 
   const SetPuskMenu = (mode: number) => {
-    HandlLockUp(false); // не выдавать меню форм / блокировка меню районов и меню режимов
+    //HandlLockUp(false); // не выдавать меню форм / блокировка меню районов и меню режимов
+    HandlLockUp(true); // не выдавать меню форм / блокировка меню районов и меню режимов
     setOpenPKSpis((datestat.needMenuForm = true)); // открытие списка планов
     dispatch(statsaveCreate(datestat));
     TurnOnDemoRoute();
     VIEWDIR = false; // разрешение посмотра инф-ии о направл.в балуне
-    setRevers(!revers); // ререндер
+    //setRevers(!revers); // ререндер
+    console.log('1datestat.lockUp:',datestat.lockUp)
   };
 
   const SetDispPKForm = (mode: boolean) => {
@@ -794,7 +796,7 @@ const MainMap = (props: {
   };
 
   const SetOpenPKSetup = (mode: boolean) => {
-    setCurrencyPK(PK = "0");// переключение меню 'ПЛ и модели' на заголовок
+    setCurrencyPK((PK = "0")); // переключение меню 'ПЛ и модели' на заголовок
     setOpenPKSetup(mode);
   };
   //=== инициализация ======================================
@@ -868,6 +870,7 @@ const MainMap = (props: {
     return () => document.removeEventListener("keydown", escFunction);
   }, [escFunction]);
   //========================================================
+  console.log('2datestat.lockUp:',datestat.lockUp)
   return (
     <Grid container sx={{ height: "99.9vh" }}>
       {!datestat.lockUp && (
@@ -936,7 +939,9 @@ const MainMap = (props: {
                 SetMass={SetMassPkId}
               />
             )}
-            {openPKSetup && <MapSetupPK close={SetOpenPKSetup} />}
+            {openPKSetup && (
+              <MapSetupPK close={SetOpenPKSetup} plan={null} setplan={null} />
+            )}
             {openEr && (
               <MapPointDataError
                 setOpen={setOpenEr}
