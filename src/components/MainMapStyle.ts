@@ -768,6 +768,21 @@ export const styleFormPK06 = {
   textShadow: "4px 4px 6px rgba(0,0,0,0.3)",
   border: 0,
 };
+
+export const styleFormPK07 = {
+  fontSize: 13.4,
+  marginTop: -1.0,
+  maxHeight: "27px",
+  minHeight: "27px",
+  width: 140,
+  backgroundColor: "#E9F5D8", // светло салатовый
+  color: "black",
+  border: "1px solid #d4d4d4", // серый
+  borderRadius: 1,
+  textTransform: "unset !important",
+  textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+  boxShadow: 4,
+};
 //=== SpisPK ==========================================================
 export const MakeStylSpisPK01 = () => {
   let ratio = window.innerHeight < 800 ? 0.826 : 0.84;
@@ -839,7 +854,7 @@ export const styleSpisPK03 = {
   textTransform: "unset !important",
   color: "black",
   boxShadow: 6,
-  textShadow: "2px 2px 3px rgba(0,0,0,0.3)"
+  textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
 };
 
 export const styleSpisPK04 = {
@@ -862,7 +877,7 @@ export const styleSpisPK05 = {
   marginTop: 0.5,
   display: "flex",
   justifyContent: "left",
-  textShadow: "1px 1px 2px rgba(0,0,0,0.3)"
+  textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
 };
 
 export const MakeStylSpisPK06 = () => {
@@ -898,20 +913,23 @@ export const styleSpisPK09 = {
   textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
 };
 //=== SetupPK =========================================================
-export const styleSetPK01 = {
-  outline: "none",
-  position: "absolute",
-  left: "50%",
-  top: "40%",
-  transform: "translate(-50%, -50%)",
-  width: 700,
-  height: 248,
-  bgcolor: "background.paper",
-  border: "1px solid #FFFFFF",
-  borderRadius: 1,
-  boxShadow: 24,
-  textAlign: "center",
-  padding: "1px 10px 10px 10px",
+export const styleSetPK01 = (wdth: number, hdth: number) => {
+  const styleSetPK01 = {
+    outline: "none",
+    position: "absolute",
+    left: "50%",
+    top: "45%",
+    transform: "translate(-50%, -50%)",
+    width: wdth,
+    height: hdth,
+    bgcolor: "background.paper",
+    border: "1px solid #FFFFFF",
+    borderRadius: 1,
+    boxShadow: 24,
+    textAlign: "center",
+    padding: "1px 10px 10px 10px",
+  };
+  return styleSetPK01;
 };
 
 export const styleSetPK02 = {
@@ -936,7 +954,7 @@ export const styleSetPK03 = {
 };
 
 export const styleSetPK04 = {
-  marginTop: 1.7,
+  marginTop: 1.2,
   display: "flex",
   justifyContent: "center",
 };

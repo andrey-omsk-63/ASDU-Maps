@@ -16,6 +16,7 @@ import MapCreatePointVertex from "./MapComponents/MapCreatePointVertex";
 import MapRouteProtokol from "./MapComponents/MapRouteProtokol";
 import MapReversRoute from "./MapComponents/MapReversRoute";
 import MapVertexForma from "./MapComponents/MapVertexForma";
+import MapVertexSetup from "./MapComponents/MapVertexSetup";
 import MapCreatePK from "./MapComponents/MapPKComponents/MapCreatePK";
 import MapSpisPK from "./MapComponents/MapPKComponents/MapSpisPK";
 import MapWindPK from "./MapComponents/MapPKComponents/MapWindPK";
@@ -142,6 +143,7 @@ const MainMap = (props: {
   const [openInf, setOpenInf] = React.useState(false);
   const [openPro, setOpenPro] = React.useState(false);
   const [openVertForm, setOpenVertForm] = React.useState(false);
+  const [openVertSetup, setOpenVertSetup] = React.useState(false);
   const [openWaysForm, setOpenWaysForm] = React.useState(false);
   const [openPKForm, setOpenPKForm] = React.useState(false);
   const [openPKSpis, setOpenPKSpis] = React.useState(false);
@@ -437,6 +439,7 @@ const MainMap = (props: {
         break;
       case 212: // выбор режима работы
         ZeroRoute(false);
+        if (MODE === "2") setOpenVertSetup(true);
     }
   };
 
@@ -731,7 +734,7 @@ const MainMap = (props: {
     PK = pk.toString();
     MODE = "2";
     TurnOnDemoRoute(); // влючение ФС
-    PressButton(212);
+    ZeroRoute(false);
     pk === 1 && PressButton(202);
     pk === 2 && PressButton(201);
     pk === 4 && PressButton(204);
@@ -780,14 +783,11 @@ const MainMap = (props: {
   };
 
   const SetPuskMenu = (mode: number) => {
-    //HandlLockUp(false); // не выдавать меню форм / блокировка меню районов и меню режимов
     HandlLockUp(true); // не выдавать меню форм / блокировка меню районов и меню режимов
     setOpenPKSpis((datestat.needMenuForm = true)); // открытие списка планов
     dispatch(statsaveCreate(datestat));
     TurnOnDemoRoute();
     VIEWDIR = false; // разрешение посмотра инф-ии о направл.в балуне
-    //setRevers(!revers); // ререндер
-    console.log('1datestat.lockUp:',datestat.lockUp)
   };
 
   const SetDispPKForm = (mode: boolean) => {
@@ -798,6 +798,12 @@ const MainMap = (props: {
   const SetOpenPKSetup = (mode: boolean) => {
     setCurrencyPK((PK = "0")); // переключение меню 'ПЛ и модели' на заголовок
     setOpenPKSetup(mode);
+  };
+
+  const SetOpenVertSetup = (mode: boolean) => {
+    setCurrencyMode("0"); // переключение меню 'Перекрёстки и связи' на заголовок
+    MODE = "-1";
+    setOpenVertSetup(false);
   };
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(massroute).length) {
@@ -870,7 +876,6 @@ const MainMap = (props: {
     return () => document.removeEventListener("keydown", escFunction);
   }, [escFunction]);
   //========================================================
-  console.log('2datestat.lockUp:',datestat.lockUp)
   return (
     <Grid container sx={{ height: "99.9vh" }}>
       {!datestat.lockUp && (
@@ -923,7 +928,7 @@ const MainMap = (props: {
                 openErr={openEF}
               />
             )}
-
+            {openVertSetup && <MapVertexSetup close={SetOpenVertSetup} />}
             {openPKForm && (
               <MapCreatePK
                 setOpen={ZeroMenuPK}

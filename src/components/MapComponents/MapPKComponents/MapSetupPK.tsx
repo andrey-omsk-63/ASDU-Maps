@@ -7,14 +7,14 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 
 import { InputFromList, WaysInput, BadExit } from "../../MapServiceFunctions";
+import { FooterContent } from "../../MapServiceFunctions";
 
 import { PLANER } from "../../MainMapGl";
 
 import { PlanCoord } from "../../../interfacePlans.d"; // интерфейс
 
-import { styleModalEnd, styleFormPK03 } from "../../MainMapStyle";
+import { styleModalEnd, styleSetPK03, } from "../../MainMapStyle";
 import { styleSetPK01, styleSetPK02 } from "../../MainMapStyle";
-import { styleSetPK03, styleSetPK04 } from "../../MainMapStyle";
 import { styleSetPK05, styleSetPK06 } from "../../MainMapStyle";
 
 let idxPK = 0;
@@ -41,7 +41,7 @@ const MapSetupPK = (props: {
   const [trigger, setTrigger] = React.useState(false);
   //=== инициализация ======================================
   if (flagInput) {
-    console.log('props.plan:',props.plan)
+    //console.log('props.plan:',props.plan)
     plan = JSON.parse(JSON.stringify(massplan.plans));
     if (props.plan) {
       // вызов из MapCreatePK
@@ -228,6 +228,23 @@ const MapSetupPK = (props: {
     );
   };
 
+  // const FooterContent = (SaveForm: Function) => {
+  //   return (
+  //     <Box sx={styleSetPK04}>
+  //       <Box sx={{ display: "inline-block", margin: "0px 5px 0px 0px" }}>
+  //         <Button sx={styleFormPK03} onClick={() => SaveForm(0)}>
+  //           Выйти без сохранения
+  //         </Button>
+  //       </Box>
+  //       <Box sx={{ display: "inline-block", margin: "0px 5px 0px 5px" }}>
+  //         <Button sx={styleFormPK03} onClick={() => SaveForm(1)}>
+  //           Сохранить изменения
+  //         </Button>
+  //       </Box>
+  //     </Box>
+  //   );
+  // };
+
   let soob1 = "Длительность цикла" + "\xa0".repeat(3);
   let soob2 = "Коэффициент Ki" + "\xa0".repeat(3);
   let soob3 = "Коэффициент Ks" + "\xa0".repeat(3);
@@ -235,7 +252,7 @@ const MapSetupPK = (props: {
   return (
     <>
       <Modal open={open} onClose={CloseEnd} hideBackdrop={false}>
-        <Box sx={styleSetPK01}>
+        <Box sx={styleSetPK01(700, 248)}>
           <Button sx={styleModalEnd} onClick={() => handleCloseBad()}>
             <b>&#10006;</b>
           </Button>
@@ -243,20 +260,7 @@ const MapSetupPK = (props: {
             <b>Изменение параметров планов координации</b>
           </Box>
           <Box sx={styleSetPK03}>{SetupContent()}</Box>
-          {HAVE > 0 && (
-            <Box sx={styleSetPK04}>
-              <Box sx={{ display: "inline-block", margin: "0px 5px 0px 0px" }}>
-                <Button sx={styleFormPK03} onClick={() => SaveForm(0)}>
-                  Выйти без сохранения
-                </Button>
-              </Box>
-              <Box sx={{ display: "inline-block", margin: "0px 5px 0px 5px" }}>
-                <Button sx={styleFormPK03} onClick={() => SaveForm(1)}>
-                  Сохранить изменения
-                </Button>
-              </Box>
-            </Box>
-          )}
+          {HAVE > 0 && <>{FooterContent(SaveForm)}</>}
         </Box>
       </Modal>
       {badExit && <>{BadExit(badExit, handleCloseBadExit)}</>}

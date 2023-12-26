@@ -8,6 +8,8 @@ import MapWaysFormaMain from "./MapWaysFormaMain";
 
 import { ComplianceMapMassdk, BadExit } from "./../MapServiceFunctions";
 
+import { MaxFaz } from "./../MapConst";
+
 import { Directions } from "./../../App"; // интерфейс massForm
 
 import { styleModalEnd, styleFormInf } from "./../MainMapStyle";
@@ -46,17 +48,14 @@ const MapWaysForma = (props: {
     const { mapReducer } = state;
     return mapReducer.map;
   });
-  //console.log("map:", map);
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;
     return massdkReducer.massdk;
   });
-  //console.log("massdk:", massdk);
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
     return massrouteReducer.massroute;
   });
-  //console.log("massroute:", massroute);
   //========================================================
   const [badExit, setBadExit] = React.useState(false);
   const idxMap = ComplianceMapMassdk(props.idx, massdk, map);
@@ -109,10 +108,10 @@ const MapWaysForma = (props: {
       opponent: "",
     };
     massForm = maskForm;
-    let lng = idxMap >= 0 ? MAP.phases.length : 0;
-    //============
-    lng = 8; // для отладки, потом убрать !!!
-    //============
+    let lng = idxMap >= 0 ? MAP.phases.length : MaxFaz;
+
+    console.log("Lng:", lng, idxMap, MAP.phases);
+
     for (let i = 0; i < lng; i++) maskForm.phases.push(-1);
   }
 
@@ -132,7 +131,6 @@ const MapWaysForma = (props: {
   };
 
   const SetHave = (have: number) => {
-    //console.log("HAVE:", have);
     HAVE = have;
   };
 

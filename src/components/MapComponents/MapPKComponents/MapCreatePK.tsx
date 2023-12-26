@@ -22,6 +22,7 @@ import { PlanCoord } from "../../../interfacePlans.d"; // интерфейс
 import { styleModalEnd, MakeStyleFormPK00 } from "../../MainMapStyle";
 import { styleFormPK01, styleFormPK04 } from "../../MainMapStyle";
 import { MakeStyleFormPK022, styleFormPK05 } from "../../MainMapStyle";
+import { styleFormPK07 } from "../../MainMapStyle";
 import { styleFormPK06, styleSpisPK07 } from "../../MainMapStyle";
 import { styleSpisPK08, styleSpisPK09 } from "../../MainMapStyle";
 
@@ -170,7 +171,7 @@ const MapCreatePK = (props: {
         NewCoordPlan.timeCycle = massplan.plans[props.idx].timeCycle;
         NewCoordPlan.ki = massplan.plans[props.idx].ki;
         NewCoordPlan.ks = massplan.plans[props.idx].ks;
-        NewCoordPlan.phaseOptim = massplan.plans[props.idx].phaseOptim
+        NewCoordPlan.phaseOptim = massplan.plans[props.idx].phaseOptim;
         for (let i = 0; i < massplan.plans.length; i++) {
           for (let j = 0; j < sumPlan; j++) {
             if (
@@ -381,20 +382,6 @@ const MapCreatePK = (props: {
     }
   };
   //========================================================
-  const styleFormPK07 = {
-    fontSize: 13.4,
-    marginTop: -1.0,
-    maxHeight: "27px",
-    minHeight: "27px",
-    width: 140,
-    backgroundColor: "#E9F5D8", // светло салатовый
-    color: "black",
-    border: "1px solid #d4d4d4", // серый
-    borderRadius: 1,
-    textTransform: "unset !important",
-    textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
-    boxShadow: 4,
-  };
   const HeaderFormPK = () => {
     let soob = modeWork === "create" ? "Создание нового " : "Корректировка ";
     return (

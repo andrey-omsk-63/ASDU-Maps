@@ -424,6 +424,28 @@ export const PreparCurrencies = () => {
   return currencies;
 };
 
+export const PreparCurrenciesFaza = (mazFaz: number) => {
+  const currencies: any = [];
+  let dat: Array<string> = [];
+  for (let i = 2; i < mazFaz + 1; i++) dat.push(i.toString());
+  let massKey: any = [];
+  let massDat: any = [];
+  for (let key in dat) {
+    massKey.push(key);
+    massDat.push(dat[key]);
+  }
+  let maskCurrencies = {
+    value: "0",
+    label: "Все режимы",
+  };
+  for (let i = 0; i < massKey.length; i++) {
+    maskCurrencies.value = massKey[i];
+    maskCurrencies.label = massDat[i];
+    currencies.push({ ...maskCurrencies });
+  }
+  return currencies;
+};
+
 export const InputMenu = (func: any, currency: any, currencies: any) => {
   const styleSet = {
     width: "150px",
@@ -1845,12 +1867,12 @@ export const InputFromList = (func: any, currency: any, currencies: any) => {
   );
 };
 
-export const StrTablVert = (recLeft: string, recRight: any) => {
+export const StrTablVert = (xss: number, recLeft: string, recRight: any) => {
   return (
     <>
       <Grid container sx={{ marginTop: 1 }}>
         <Grid item xs={0.25}></Grid>
-        <Grid item xs={6}>
+        <Grid item xs={xss}>
           <b>{recLeft}</b>
         </Grid>
         {typeof recRight === "object" ? (
@@ -1886,9 +1908,9 @@ export const HeaderTablFaz = () => {
   );
 };
 
-export const ShiftOptimal = (mode: boolean, ChangeOptimal: Function) => {
+export const ShiftOptimal = (mode: boolean, ChangeOptimal: Function, shift: number) => {
   const styleOptimalNo = {
-    marginTop: 0.5,
+    marginTop: shift,
     marginRight: 1,
     maxHeight: "27px",
     minHeight: "27px",
@@ -1903,7 +1925,7 @@ export const ShiftOptimal = (mode: boolean, ChangeOptimal: Function) => {
   };
 
   const styleOptimalYes = {
-    marginTop: 0.5,
+    marginTop: shift,
     marginRight: 1,
     maxHeight: "27px",
     minHeight: "27px",
@@ -2281,6 +2303,23 @@ export const StrokaTablWindPK = (rec1: string, rec2: any) => {
         <b>{rec2}</b>
       </Grid>
     </Grid>
+  );
+};
+//=== SetupPK =========================================================
+export const FooterContent = (SaveForm: Function) => {
+  return (
+    <Box sx={styleSetPK04}>
+      <Box sx={{ display: "inline-block", margin: "0px 5px 0px 0px" }}>
+        <Button sx={styleFormPK03} onClick={() => SaveForm(0)}>
+          Выйти без сохранения
+        </Button>
+      </Box>
+      <Box sx={{ display: "inline-block", margin: "0px 5px 0px 5px" }}>
+        <Button sx={styleFormPK03} onClick={() => SaveForm(1)}>
+          Сохранить изменения
+        </Button>
+      </Box>
+    </Box>
   );
 };
 //=====================================================================

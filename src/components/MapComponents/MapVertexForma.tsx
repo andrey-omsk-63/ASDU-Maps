@@ -13,6 +13,7 @@ import { BadExit, InputFromList, StrTablVert } from "./../MapServiceFunctions";
 import { HeaderTablFaz, ShiftOptimal } from "./../MapServiceFunctions";
 import { CombOrder, DelCross } from "./../MapServiceFunctions";
 import { SaveFormVert, PreparCurrenciesPlan } from "./../MapServiceFunctions";
+import { PreparCurrenciesFaza } from "./../MapServiceFunctions";
 
 import { SUMPK, MaxFaz } from "./../MapConst";
 
@@ -41,9 +42,9 @@ let soobErr =
 
 const maskFaz: any = {
   NumPhase: 0,
-  MinDuration: 0,
-  StartDuration: 0,
-  PhaseOrder: 0,
+  MinDuration: 0, // миним. длительность фазы
+  StartDuration: 0, // начальная длительность фазы
+  PhaseOrder: 0, // порядок фазы
 };
 
 const MapVertexForma = (props: {
@@ -78,28 +79,6 @@ const MapVertexForma = (props: {
       ? (MASSDK.phases.length - 2).toString()
       : (props.forma.kolFaz - 2).toString()
   );
-
-  const PreparCurrenciesFaza = (mazFaz: number) => {
-    const currencies: any = [];
-    let dat: Array<string> = [];
-    for (let i = 2; i < mazFaz + 1; i++) dat.push(i.toString());
-    let massKey: any = [];
-    let massDat: any = [];
-    for (let key in dat) {
-      massKey.push(key);
-      massDat.push(dat[key]);
-    }
-    let maskCurrencies = {
-      value: "0",
-      label: "Все режимы",
-    };
-    for (let i = 0; i < massKey.length; i++) {
-      maskCurrencies.value = massKey[i];
-      maskCurrencies.label = massDat[i];
-      currencies.push({ ...maskCurrencies });
-    }
-    return currencies;
-  };
   //=== инициализация ======================================
   if (datestat.oldIdxForm === -1 && props.forma === null) oldIdx = -1;
   if (oldIdx !== props.idx) {
@@ -379,22 +358,26 @@ const MapVertexForma = (props: {
               </em>
             </Box>
             <Box sx={{ fontSize: 12, marginTop: 0.5 }}>Общие</Box>
-            {StrTablVert("Время цикла cек.", massForm.timeCycle + " сек.")}
-            {StrTablVert("Номер перекрёстка", subId)}
+            {StrTablVert(6, "Время цикла cек.", massForm.timeCycle + " сек.")}
+            {StrTablVert(6, "Номер перекрёстка", subId)}
             {StrTablVert(
+              6,
               "Номер плана координации",
               InputFromList(handleChangePlan, currencyPlan, currenciesPlan)
             )}
             {StrTablVert(
+              6,
               "Участвует в автоматической оптимизации",
-              ShiftOptimal(massForm.optimal, ChangeOptimal)
+              ShiftOptimal(massForm.optimal, ChangeOptimal, 0.5)
             )}
             <Box sx={{ fontSize: 12, marginTop: 2.5 }}>Свойства фаз</Box>
             {StrTablVert(
+              6,
               "Количество фаз",
               InputFromList(handleChangeFaza, currencyFaza, currenciesFaza)
             )}
             {StrTablVert(
+              6,
               "Начальное смещение сек.",
               WaysInput(0, massForm.offset, SetOffset, 0, 100)
             )}
