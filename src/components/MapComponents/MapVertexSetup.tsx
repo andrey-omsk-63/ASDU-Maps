@@ -50,7 +50,7 @@ const MapVertexSetup = (props: {
     return massplanReducer.massplan;
   });
   const dispatch = useDispatch();
-  console.log("Setup_massplan:", massplan);
+  //console.log("Setup_massplan:", massplan);
   //========================================================
   const [open, setOpen] = React.useState(true);
   const [badExit, setBadExit] = React.useState(false);
