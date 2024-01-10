@@ -1,5 +1,6 @@
 import * as React from "react";
-//import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { massplanCreate } from "../../redux/actions";
 
 //import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -13,25 +14,25 @@ import { PreparCurrenciesFaza, InputFromList } from "./../MapServiceFunctions";
 //import { PLANER } from "./../MainMapGl";
 import { MaxFaz } from "./../MapConst";
 
-import { Setuper } from "./../../interfacePlans.d"; // интерфейс
+//import { Setuper } from "./../../interfacePlans.d"; // интерфейс
 
 import { styleModalEnd, styleSetPK03 } from "./../MainMapStyle";
 import { styleSetPK01, styleSetPK02 } from "./../MainMapStyle";
 //import { styleSetPK05, styleSetPK06 } from "./../MainMapStyle";
 
-let maskForm: Setuper = {
-  sumPhases: 3, // количество фаз
-  minDuration: 8, // миним. длительность фазы
-  optimal: false, // участие в автоматической оптимизации
-  satur: 3600, // поток насыщения(т.е./ч.)
-  intens: 600, // интенсивность(т.е./ч.)
-  peregon: 250, // Длинна перегона(м)
-  dispers: 50, // Дисперсия пачки(%)
-  offsetBeginGreen: 8, // Смещ.начала зелёного(сек)
-  offsetEndGreen: 0, // Смещ.конца зелёного(сек)
-  wtStop: 0, // Вес остановки
-  wtDelay: 0, // Вес задержки
-};
+// let maskForm: Setuper = {
+//   sumPhases: 3, // количество фаз
+//   minDuration: 8, // миним. длительность фазы
+//   optimal: false, // участие в автоматической оптимизации
+//   satur: 3636, // поток насыщения(т.е./ч.)
+//   intens: 600, // интенсивность(т.е./ч.)
+//   peregon: 250, // Длинна перегона(м)
+//   dispers: 50, // Дисперсия пачки(%)
+//   offsetBeginGreen: 8, // Смещ.начала зелёного(сек)
+//   offsetEndGreen: 0, // Смещ.конца зелёного(сек)
+//   wtStop: 0, // Вес остановки
+//   wtDelay: 0, // Вес задержки
+// };
 
 let currenciesFaza: any = [];
 let massForm: any = null;
@@ -44,11 +45,12 @@ const MapVertexSetup = (props: {
   //setplan: Function | null;
 }) => {
   //== Piece of Redux =======================================
-  // let massplan = useSelector((state: any) => {
-  //   const { massplanReducer } = state;
-  //   return massplanReducer.massplan;
-  // });
-  //console.log("massplan:", PLANER, massplan);
+  let massplan = useSelector((state: any) => {
+    const { massplanReducer } = state;
+    return massplanReducer.massplan;
+  });
+  const dispatch = useDispatch();
+  console.log("Setup_massplan:", massplan);
   //========================================================
   const [open, setOpen] = React.useState(true);
   const [badExit, setBadExit] = React.useState(false);
@@ -57,7 +59,7 @@ const MapVertexSetup = (props: {
   if (flagInput) {
     HAVE = 0;
     currenciesFaza = PreparCurrenciesFaza(MaxFaz);
-    massForm = JSON.parse(JSON.stringify(maskForm));
+    massForm = JSON.parse(JSON.stringify(massplan.setup));
     flagInput = false;
   }
   //========================================================
@@ -87,6 +89,8 @@ const MapVertexSetup = (props: {
   //=== Функции - обработчики ==============================
   const SaveForm = (mode: number) => {
     if (mode) {
+      massplan.setup = massForm;
+      dispatch(massplanCreate(massplan));
       handleClose();
     } else handleCloseBad();
   };

@@ -1,6 +1,19 @@
 {
   "type": "planInfo",
   "data": {
+    "setup": {
+      "sumPhases": 3,
+      "minDuration": 8,
+      "optimal": false,
+      "satur": 3600,
+      "intens": 600,
+      "peregon": 250,
+      "dispers": 50,
+      "offsetBeginGreen": 8,
+      "offsetEndGreen": 0,
+      "wtStop": 0,
+      "wtDelay": 0
+    },
     "plans": [
       {
         "nomPK": 1,

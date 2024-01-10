@@ -1,6 +1,19 @@
 export const dataPlan = {
   type: "planInfo",
   data: {
+    setup: {
+      sumPhases: 3, // количество фаз
+      minDuration: 8, // миним. длительность фазы
+      optimal: false, // участие в автоматической оптимизации
+      satur: 3600, // поток насыщения(т.е./ч.)
+      intens: 600, // интенсивность(т.е./ч.)
+      peregon: 250, // Длинна перегона(м)
+      dispers: 50, // Дисперсия пачки(%)
+      offsetBeginGreen: 8, // Смещ.начала зелёного(сек)
+      offsetEndGreen: 0, // Смещ.конца зелёного(сек)
+      wtStop: 0, // Вес остановки
+      wtDelay: 0, // Вес задержки
+    },
     plans: [
       {
         nomPK: 1,

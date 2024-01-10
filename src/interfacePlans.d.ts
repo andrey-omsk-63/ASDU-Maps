@@ -4,7 +4,7 @@ export interface DatePlan {
 }
 
 export interface DataPlan {
-  // setup: Setuper; // системные параметры по умолчанию
+  setup: Setuper; // системные параметры по умолчанию
   plans: PlanCoord[]; // планы координации
 }
 
