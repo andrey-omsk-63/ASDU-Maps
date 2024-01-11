@@ -1656,6 +1656,7 @@ export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
     backgroundColor: "#E6F5D6", // светло салатовый
     color: "black",
     textTransform: "unset !important",
+    textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
     boxShadow: 6,
   };
 

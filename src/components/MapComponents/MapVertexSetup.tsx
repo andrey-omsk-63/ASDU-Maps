@@ -161,7 +161,6 @@ const MapVertexSetup = (props: {
           9,
           "Количество фаз",
           InputFromList(handleChangeFaza, currencyFaza, currenciesFaza)
-          //massForm.sumPhases
         )}
         {StrTablVert(
           9,
