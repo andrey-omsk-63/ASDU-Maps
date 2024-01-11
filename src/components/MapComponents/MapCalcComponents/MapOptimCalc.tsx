@@ -9,7 +9,7 @@ import Modal from "@mui/material/Modal";
 //import { StrokaTablWindPK } from "../../MapServiceFunctions";
 
 import { styleWVG00, styleModalEndBind } from "../../MainMapStyle";
-import { styleWVG01, styleWVG02 } from "../../MainMapStyle";
+import { styleWVG01, styleWVG02, styleFormPK01 } from "../../MainMapStyle";
 
 import { Chart as ChartJS, CategoryScale } from "chart.js";
 import { LinearScale, PointElement } from "chart.js";
@@ -42,13 +42,12 @@ interface Datasets {
 
 //import { KolIn } from "./../../MapConst";
 
-let nameIn = "";
+//let nameIn = "";
 let timeInterval = 80;
 
-const MapWindViewGraf = (props: {
-  close: Function; // функция возврата в родительский компонент
-  idx: number; //
-  name: any;
+const MapOptimCalc = (props: {
+  view: boolean;
+  handleClose: Function; // функция возврата в родительский компонент
 }) => {
   //console.log("MapWindPK:", props.name);
   //== Piece of Redux =======================================
@@ -67,33 +66,25 @@ const MapWindViewGraf = (props: {
   const [openGraf, setOpenGraf] = React.useState(true);
 
   //=== инициализация ======================================
-  if (props.name) nameIn = props.name + ".";
+  //if (props.name) nameIn = props.name + ".";
   const labels: string[] = [];
   let data: DataGl = {
     labels,
     datasets: [
       {
-        label: "Вх.поток",
-        data: [],
-        borderWidth: 1,
-        borderColor: "blue",
-        backgroundColor: "blue",
-        pointRadius: 1,
-      },
-      {
-        label: "Вых.поток",
-        data: [],
-        borderWidth: 1,
-        borderColor: "orange",
-        backgroundColor: "orange",
-        pointRadius: 1,
-      },
-      {
-        label: "Очередь",
+        label: "Затор",
         data: [],
         borderWidth: 1,
         borderColor: "red",
         backgroundColor: "red",
+        pointRadius: 1,
+      },
+      {
+        label: "Свободно",
+        data: [],
+        borderWidth: 1,
+        borderColor: "green",
+        backgroundColor: "green",
         pointRadius: 1,
       },
     ],
@@ -101,7 +92,7 @@ const MapWindViewGraf = (props: {
 
   //========================================================
   const CloseEnd = React.useCallback(() => {
-    props.close(null);
+    props.handleClose(false);
   }, [props]);
 
   //=== обработка Esc ======================================
@@ -125,7 +116,7 @@ const MapWindViewGraf = (props: {
 
   const handleClose = () => {
     setOpenGraf(false);
-    props.close(false);
+    props.handleClose(false);
   };
 
   const CloseEndGl = (event: any, reason: string) => {
@@ -190,23 +181,41 @@ const MapWindViewGraf = (props: {
     );
   };
 
+  const styleCalc01 = {
+    fontSize: 12,
+    marginTop: 0.5,
+    textAlign: "left",
+    padding: "0px 5px 5px 5px",
+  };
+
   return (
     <Modal open={openGraf} onClose={CloseEndGl} hideBackdrop={false}>
       <Box sx={styleWVG00}>
         <Button sx={styleModalEndBind} onClick={() => handleClose()}>
           <b>&#10006;</b>
         </Button>
+        <Box sx={styleFormPK01}>
+          <b>Расчёт оптимального времени цикла</b>
+        </Box>
+        <Box sx={styleWVG01(20)}>
+          <Box sx={styleCalc01}>Параметры расчёта</Box>
+          <Box sx={{ padding: "0px 5px 5px 5px" }}>
+            <Grid container sx={{ border: 0, height: 20 }}>
+              <Grid item xs={6} sx={{ border: 1 }}></Grid>
+              <Grid item xs sx={{ border: 1 }}></Grid>
+            </Grid>
+          </Box>
+        </Box>
         <Grid container sx={{}}>
           <Grid item xs={0.15} sx={{ border: 0 }}>
             <Box sx={styleWVG02}>
-              <b>Tе:Тцикла*C</b>
+              <b>Tзадержки</b>
             </Box>
           </Grid>
           <Grid item xs sx={{ border: 0 }}>
-            Изменение потока на направлении <b>{nameIn + (props.idx + 1)}</b>
             <Box sx={styleWVG01(55)}>{PointsGraf00()}</Box>
             <Box sx={{ fontSize: 12.1 }}>
-              <b>Тцикла</b>
+              <b>Время цикла (сек)</b>
             </Box>
           </Grid>
         </Grid>
@@ -215,4 +224,4 @@ const MapWindViewGraf = (props: {
   );
 };
 
-export default MapWindViewGraf;
+export default MapOptimCalc;

@@ -228,23 +228,6 @@ const MapSetupPK = (props: {
     );
   };
 
-  // const FooterContent = (SaveForm: Function) => {
-  //   return (
-  //     <Box sx={styleSetPK04}>
-  //       <Box sx={{ display: "inline-block", margin: "0px 5px 0px 0px" }}>
-  //         <Button sx={styleFormPK03} onClick={() => SaveForm(0)}>
-  //           Выйти без сохранения
-  //         </Button>
-  //       </Box>
-  //       <Box sx={{ display: "inline-block", margin: "0px 5px 0px 5px" }}>
-  //         <Button sx={styleFormPK03} onClick={() => SaveForm(1)}>
-  //           Сохранить изменения
-  //         </Button>
-  //       </Box>
-  //     </Box>
-  //   );
-  // };
-
   let soob1 = "Длительность цикла" + "\xa0".repeat(3);
   let soob2 = "Коэффициент Ki" + "\xa0".repeat(3);
   let soob3 = "Коэффициент Ks" + "\xa0".repeat(3);

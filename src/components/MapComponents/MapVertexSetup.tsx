@@ -39,11 +39,7 @@ let massForm: any = null;
 let flagInput = true;
 let HAVE = 0;
 
-const MapVertexSetup = (props: {
-  close: Function;
-  //plan: PlanCoord | null;
-  //setplan: Function | null;
-}) => {
+const MapVertexSetup = (props: { close: Function }) => {
   //== Piece of Redux =======================================
   let massplan = useSelector((state: any) => {
     const { massplanReducer } = state;
@@ -176,7 +172,7 @@ const MapVertexSetup = (props: {
     );
   };
 
-  const WaysContent = () => {
+  const DirectContent = () => {
     return (
       <>
         <Box sx={{ fontSize: 12, marginTop: 0.5 }}>Параметры направлений</Box>
@@ -231,7 +227,7 @@ const MapVertexSetup = (props: {
           </Box>
           <Box sx={styleSetPK03}>
             {VertexContent()}
-            {WaysContent()}
+            {DirectContent()}
           </Box>
           {HAVE > 0 && <>{FooterContent(SaveForm)}</>}
         </Box>

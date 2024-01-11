@@ -366,6 +366,33 @@ export const PreparCurrenciesPK = () => {
   return currencies;
 };
 
+export const PreparCurrenciesCalc = () => {
+  const currencies: any = [];
+  let dat = [
+    "Расчёты:",
+    "Оптимальное время цикла",
+    "Устойчивость программы координации",
+    "!!!ещё какая-то херня №3",
+    "!!!ещё какая-то херня №4",
+  ];
+  let massKey: any = [];
+  let massDat: any = [];
+  for (let key in dat) {
+    massKey.push(key);
+    massDat.push(dat[key]);
+  }
+  let maskCurrencies = {
+    value: "0",
+    label: "Все режимы",
+  };
+  for (let i = 0; i < massKey.length; i++) {
+    maskCurrencies.value = massKey[i];
+    maskCurrencies.label = massDat[i];
+    currencies.push({ ...maskCurrencies });
+  }
+  return currencies;
+};
+
 export const PreparCurrenciesForm = () => {
   const currencies: any = [];
   let dat = [
@@ -636,6 +663,69 @@ export const InputMenuPK = (func: any, currency: any, currencies: any) => {
     </>
   );
 };
+
+export const InputMenuCalc = (func: any, currency: any, currencies: any) => {
+  const styleSet = {
+    width: "121px",
+    maxHeight: "2px",
+    minHeight: "2px",
+    marginLeft: 0.3,
+    bgcolor: "#BAE186", // салатовый
+    border: "1px solid #93D145", // тёмно салатовый
+    borderRadius: 1,
+    textAlign: "center",
+    p: 1.25,
+    boxShadow: 6,
+  };
+
+  const styleBoxForm = {
+    "& > :not(style)": {
+      marginTop: "-10px",
+      marginLeft: "-15px",
+      width: "175px",
+    },
+  };
+
+  return (
+    <>
+      <Box sx={styleSet}>
+        <Box component="form" sx={styleBoxForm}>
+          <TextField
+            select
+            size="small"
+            onKeyPress={handleKey} //отключение Enter
+            value={currency}
+            onChange={func}
+            InputProps={{
+              disableUnderline: true,
+              style: {
+                fontWeight: 700,
+                color: currency === "0" ? "blue" : "black",
+                marginLeft: 10,
+                fontSize: 14,
+              },
+            }}
+            variant="standard"
+            color="secondary"
+          >
+            {currencies.map((option: any) => (
+              <MenuItem
+                key={option.value}
+                value={option.value}
+                sx={{
+                  color: option.label === "Расчёты:" ? "blue" : "black",
+                }}
+              >
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Box>
+      </Box>
+    </>
+  );
+};
+
 
 export const InputMenuForm = (func: any, currency: any, currencies: any) => {
   const styleSet = {
@@ -942,8 +1032,8 @@ export const MainMenu = (
         <>
           {StrokaMenuGlob("Отмена", PressButton, 77)}
           {StrokaMenuGlob("Сохранение", PressButton, 33)}
-          {StrokaMenuGlob("Реверc связи", PressButton, 12)}
-          {StrokaMenuGlob("Редактирование", PressButton, 69)}
+          {StrokaMenuGlob("Реверc", PressButton, 12)}
+          {StrokaMenuGlob("Редактир-е", PressButton, 69)}
         </>
       )}
     </>

@@ -766,7 +766,6 @@ export const styleFormPK06 = {
   minHeight: "36px",
   color: "#5B1080",
   textShadow: "4px 4px 6px rgba(0,0,0,0.3)",
-  border: 0,
 };
 
 export const styleFormPK07 = {
@@ -1174,13 +1173,17 @@ export const styleWVG00 = {
   padding: "5px 15px 5px 2px",
 };
 
-export const styleWVG01 = {
-  marginTop: 1,
-  height: "55vh",
-  bgcolor: "#F1F5FB", // светло серый
-  border: "1px solid #d4d4d4", // серый
-  borderRadius: 1,
-  boxShadow: 12,
+export const styleWVG01 = (ht: number) => {
+  const styleWVG01 = {
+    marginTop: 1,
+    height: ht + "vh",
+    marginLeft: ht !== 55 ? 2 : 0,
+    bgcolor: "#F1F5FB", // светло серый
+    border: "1px solid #d4d4d4", // серый
+    borderRadius: 1,
+    boxShadow: 12,
+  };
+  return styleWVG01;
 };
 
 export const styleWVG02 = {

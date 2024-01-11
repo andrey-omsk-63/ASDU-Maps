@@ -21,6 +21,7 @@ import MapCreatePK from "./MapComponents/MapPKComponents/MapCreatePK";
 import MapSpisPK from "./MapComponents/MapPKComponents/MapSpisPK";
 import MapWindPK from "./MapComponents/MapPKComponents/MapWindPK";
 import MapSetupPK from "./MapComponents/MapPKComponents/MapSetupPK";
+import MapDispCalc from "./MapComponents/MapCalcComponents/MapDispCalc";
 import MapDispPKForm from "./MapComponents/MapPKComponents/MapDispPKForm";
 
 import { RecordMassRoute, MakeNewPointContent } from "./MapServiceFunctions";
@@ -38,6 +39,7 @@ import { InputMenuForm, MasrouteAgreeMap } from "./MapServiceFunctions";
 import { PreparCurrenciesMode, CenterCoordBegin } from "./MapServiceFunctions";
 import { PreparCurrenciesForm, InputMenuMODE } from "./MapServiceFunctions";
 import { PreparCurrenciesPK, SubareaFindById } from "./MapServiceFunctions";
+import { PreparCurrenciesCalc, InputMenuCalc } from "./MapServiceFunctions";
 
 import { MakeMultiRouteIn, MakePolyRoute } from "./MapRouteFunctions";
 import { MakeMultiRoute, MakeMainRoute } from "./MapRouteFunctions";
@@ -51,6 +53,7 @@ import { YMapsModul, MyYandexKey, FromCross, ToCross, ZONE } from "./MapConst";
 export let AREA = ZONE.toString(); // район  0 - все районы
 export let MODE = "-1"; // режим работы - меню режимов  0 - заголовок
 export let PK = "0"; // режим работы - меню ПК и моделей  0 - заголовок
+export let CALC = "0"; // режим работы - меню расчётов  0 - заголовок
 export let FORM = "0"; // какую форму нужно выдать через диспетчер
 export let homeRegion: any = 0;
 export let debug: boolean = false;
@@ -87,6 +90,7 @@ funcContex = VertexForma = funcClick = activeRoute = null;
 let currencies: any = [];
 let currenciesMode: any = [];
 let currenciesPK: any = [];
+let currenciesCalc: any = [];
 let currenciesForm: any = [];
 let idxDel: number, pointAaIndex: number;
 let indexPoint: number, pointBbIndex: number;
@@ -139,6 +143,7 @@ const MainMap = (props: {
   const [currency, setCurrency] = React.useState("0");
   const [currencyMode, setCurrencyMode] = React.useState("0");
   const [currencyPK, setCurrencyPK] = React.useState("0");
+  const [currencyCalc, setCurrencyCalc] = React.useState("0");
   const [currencyForm, setCurrencyForm] = React.useState("0");
   const [openInf, setOpenInf] = React.useState(false);
   const [openPro, setOpenPro] = React.useState(false);
@@ -148,6 +153,7 @@ const MainMap = (props: {
   const [openPKForm, setOpenPKForm] = React.useState(false);
   const [openPKSpis, setOpenPKSpis] = React.useState(false);
   const [openPKSetup, setOpenPKSetup] = React.useState(false);
+  const [dispCalc, setDispCalc] = React.useState(false);
   const [dispPKForm, setDispPKForm] = React.useState(false);
   const [openEr, setOpenEr] = React.useState(false);
   const [openBind, setOpenBind] = React.useState(false);
@@ -436,6 +442,9 @@ const MainMap = (props: {
         break;
       case 204: // настройка ПК
         setOpenPKSetup(true);
+        break;
+      case 205: // вызов диспетчера форм расчётов
+        setDispCalc(true);
         break;
       case 212: // выбор режима работы
         ZeroRoute(false);
@@ -740,6 +749,12 @@ const MainMap = (props: {
     pk === 4 && PressButton(204);
   };
 
+  const handleChangeCalc = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCurrencyCalc(event.target.value);
+    CALC = event.target.value;
+    PressButton(205);
+  };
+
   const handleChangeForm = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrencyForm(event.target.value);
     FORM = event.target.value;
@@ -795,6 +810,11 @@ const MainMap = (props: {
     setDispPKForm(mode);
   };
 
+  const SetDispCalc = (mode: boolean) => {
+    setCurrencyCalc((CALC = "0"));
+    setDispCalc(mode);
+  };
+
   const SetOpenPKSetup = (mode: boolean) => {
     setCurrencyPK((PK = "0")); // переключение меню 'ПЛ и модели' на заголовок
     setOpenPKSetup(mode);
@@ -829,6 +849,7 @@ const MainMap = (props: {
     currencies = PreparCurrencies(); // для меню подрайонов
     currenciesMode = PreparCurrenciesMode(); // для меню подрайонов режимов работы
     currenciesPK = PreparCurrenciesPK(); // для меню ПК и модели
+    currenciesCalc = PreparCurrenciesCalc(); // для меню расчётов
     currenciesForm = PreparCurrenciesForm(); // для меню диспетчера форм
     flagOpen = true;
     console.log("map:", map);
@@ -883,6 +904,9 @@ const MainMap = (props: {
           {InputMenu(handleChangeSubArea, currency, currencies)}
           {InputMenuMODE(handleChangeMode, currencyMode, currenciesMode)}
           {InputMenuPK(handleChangePK, currencyPK, currenciesPK)}
+          {PLANER > 0 && (
+            <>{InputMenuCalc(handleChangeCalc, currencyCalc, currenciesCalc)}</>
+          )}
         </>
       )}
       {MakeRevers(makeRevers, needRevers, PressButton)}
@@ -910,6 +934,7 @@ const MainMap = (props: {
             <PlacemarkDo />
             <ModalPressBalloon />
             {PLANER > 0 && <MapWindPK close={setRoutePKW} route={routePKW} />}
+            {dispCalc && <MapDispCalc setOpen={SetDispCalc} />}
             {dispPKForm && <MapDispPKForm setOpen={SetDispPKForm} />}
             {openPro && <MapRouteProtokol setOpen={setOpenPro} />}
             {openVertForm && pointAaIndex >= 0 && triggerForm && (
