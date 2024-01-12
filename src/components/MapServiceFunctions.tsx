@@ -372,8 +372,8 @@ export const PreparCurrenciesCalc = () => {
     "Расчёты:",
     "Оптимальное время цикла",
     "Устойчивость программы координации",
-    "!!!ещё какая-то херня №3",
-    "!!!ещё какая-то херня №4",
+    // "!!!ещё какая-то херня №3",
+    // "!!!ещё какая-то херня №4",
   ];
   let massKey: any = [];
   let massDat: any = [];
@@ -475,7 +475,7 @@ export const PreparCurrenciesFaza = (mazFaz: number) => {
 
 export const InputMenu = (func: any, currency: any, currencies: any) => {
   const styleSet = {
-    width: "150px",
+    width: "120px",
     maxHeight: "2px",
     minHeight: "2px",
     marginLeft: 0.3,
@@ -491,7 +491,7 @@ export const InputMenu = (func: any, currency: any, currencies: any) => {
     "& > :not(style)": {
       marginTop: "-10px",
       marginLeft: "-15px",
-      width: "175px",
+      width: "145px",
     },
   };
 
@@ -512,6 +512,8 @@ export const InputMenu = (func: any, currency: any, currencies: any) => {
                 color:
                   currency === (SubArea.length + 1).toString()
                     ? "green"
+                    : currency === "0"
+                    ? "blue"
                     : "black",
                 marginLeft: 10,
                 fontSize: 14,
@@ -538,7 +540,7 @@ export const InputMenu = (func: any, currency: any, currencies: any) => {
     </>
   );
 };
-
+//color: currency === "0" ? "blue" : "black",
 export const InputMenuMODE = (func: any, currency: any, currencies: any) => {
   const styleSet = {
     width: "160px",
@@ -604,7 +606,7 @@ export const InputMenuMODE = (func: any, currency: any, currencies: any) => {
 
 export const InputMenuPK = (func: any, currency: any, currencies: any) => {
   const styleSet = {
-    width: "150px",
+    width: "100px",
     maxHeight: "2px",
     minHeight: "2px",
     marginLeft: 0.3,
@@ -620,7 +622,7 @@ export const InputMenuPK = (func: any, currency: any, currencies: any) => {
     "& > :not(style)": {
       marginTop: "-10px",
       marginLeft: "-15px",
-      width: "175px",
+      width: "125px",
     },
   };
 
@@ -666,7 +668,7 @@ export const InputMenuPK = (func: any, currency: any, currencies: any) => {
 
 export const InputMenuCalc = (func: any, currency: any, currencies: any) => {
   const styleSet = {
-    width: "121px",
+    width: "80px",
     maxHeight: "2px",
     minHeight: "2px",
     marginLeft: 0.3,
@@ -682,7 +684,7 @@ export const InputMenuCalc = (func: any, currency: any, currencies: any) => {
     "& > :not(style)": {
       marginTop: "-10px",
       marginLeft: "-15px",
-      width: "175px",
+      width: "105px",
     },
   };
 
@@ -725,7 +727,6 @@ export const InputMenuCalc = (func: any, currency: any, currencies: any) => {
     </>
   );
 };
-
 
 export const InputMenuForm = (func: any, currency: any, currencies: any) => {
   const styleSet = {
@@ -1031,7 +1032,7 @@ export const MainMenu = (
       {flagPusk && flagRoute && (
         <>
           {StrokaMenuGlob("Отмена", PressButton, 77)}
-          {StrokaMenuGlob("Сохранение", PressButton, 33)}
+          {StrokaMenuGlob("Сохр-е", PressButton, 33)}
           {StrokaMenuGlob("Реверc", PressButton, 12)}
           {StrokaMenuGlob("Редактир-е", PressButton, 69)}
         </>
@@ -1963,7 +1964,7 @@ export const StrTablVert = (xss: number, recLeft: string, recRight: any) => {
     <>
       <Grid container sx={{ marginTop: 1 }}>
         <Grid item xs={0.25}></Grid>
-        <Grid item xs={xss}>
+        <Grid item xs={xss} sx={{ border: 0 }}>
           <b>{recLeft}</b>
         </Grid>
         {typeof recRight === "object" ? (
@@ -1971,7 +1972,7 @@ export const StrTablVert = (xss: number, recLeft: string, recRight: any) => {
             {recRight}
           </Grid>
         ) : (
-          <Grid item xs sx={{ fontSize: 15, color: "#5B1080" }}>
+          <Grid item xs sx={{ fontSize: 15, color: "#5B1080", border: 0 }}>
             <b>{recRight}</b>
           </Grid>
         )}
@@ -1999,7 +2000,11 @@ export const HeaderTablFaz = () => {
   );
 };
 
-export const ShiftOptimal = (mode: boolean, ChangeOptimal: Function, shift: number) => {
+export const ShiftOptimal = (
+  mode: boolean,
+  ChangeOptimal: Function,
+  shift: number
+) => {
   const styleOptimalNo = {
     marginTop: shift,
     marginRight: 1,

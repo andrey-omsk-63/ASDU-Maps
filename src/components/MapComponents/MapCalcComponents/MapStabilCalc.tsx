@@ -9,7 +9,7 @@ import Modal from "@mui/material/Modal";
 import { StrTablVert, WaysInput } from "../../MapServiceFunctions";
 
 import { styleWVG00, styleModalEndBind } from "../../MainMapStyle";
-import { styleSetPK05, styleSetPK06 } from "../../MainMapStyle";
+//import { styleSetPK05, styleSetPK06 } from "../../MainMapStyle";
 import { styleFormPK03, styleSetPK04 } from "../../MainMapStyle";
 import { styleWVG01, styleWVG02, styleFormPK01 } from "../../MainMapStyle";
 import { styleCalc01, styleCalc02 } from "../../MainMapStyle";
@@ -45,16 +45,13 @@ interface Datasets {
 
 //import { KolIn } from "./../../MapConst";
 
-let metkaTime = "✔";
-let metkaShift = "✔";
 let flagInput = true;
 let openGrafik = false;
 
-let timeMin = 80;
-let timeMax = 90;
-let stipChange = 1;
+let sumIterate = 2000;
+let slIintens = 20;
 
-const MapOptimCalc = (props: {
+const MapStabilCalc = (props: {
   view: boolean;
   handleClose: Function; // функция возврата в родительский компонент
 }) => {
@@ -77,13 +74,9 @@ const MapOptimCalc = (props: {
 
   //=== инициализация ======================================
   if (flagInput) {
-    metkaTime = "";
-    metkaShift = "";
     flagInput = false;
-    // нужно вычислить timeMin по всем перекрёсткам плана
-    timeMin = 80;
-    timeMax = 90;
-    stipChange = 1;
+    sumIterate = 2000;
+    slIintens = 20;
     openGrafik = false;
   }
   const labels: string[] = [];
@@ -91,19 +84,11 @@ const MapOptimCalc = (props: {
     labels,
     datasets: [
       {
-        label: "Затор",
+        label: "- Вероятность затора на Х - направлениях сети",
         data: [],
         borderWidth: 1,
         borderColor: "red",
         backgroundColor: "red",
-        pointRadius: 1,
-      },
-      {
-        label: "Свободно",
-        data: [],
-        borderWidth: 1,
-        borderColor: "green",
-        backgroundColor: "green",
         pointRadius: 1,
       },
     ],
@@ -135,21 +120,7 @@ const MapOptimCalc = (props: {
     return () => document.removeEventListener("keydown", escFunction);
   }, [escFunction]);
   //=== Функции - обработчики ==============================
-  const SetOptimTime = () => {
-    if (metkaTime === "✔") {
-      metkaTime = "";
-    } else metkaTime = "✔";
-    setTrigger(!trigger);
-  };
-
-  const SetOptimShift = () => {
-    if (metkaShift === "✔") {
-      metkaShift = "";
-    } else metkaShift = "✔";
-    setTrigger(!trigger);
-  };
-
-  const CalcTime = (mode: number) => {
+  const CalcStabil = (mode: number) => {
     if (mode) {
       openGrafik = true;
       setTrigger(!trigger);
@@ -158,18 +129,13 @@ const MapOptimCalc = (props: {
     }
   };
 
-  const SetTimeMin = (valueInp: number) => {
-    timeMin = valueInp; // Минимальное время цикла
+  const SetSumIterate = (valueInp: number) => {
+    sumIterate = valueInp; // Минимальное время цикла
     setTrigger(!trigger); // ререндер
   };
 
-  const SetTimeMax = (valueInp: number) => {
-    timeMax = valueInp; // Максимальное время цикла
-    setTrigger(!trigger); // ререндер
-  };
-
-  const SetStipChange = (valueInp: number) => {
-    stipChange = valueInp; // Шаг изменения
+  const SetSlIintens = (valueInp: number) => {
+    slIintens = valueInp; // Максимальное время цикла
     setTrigger(!trigger); // ререндер
   };
   //========================================================
@@ -191,8 +157,7 @@ const MapOptimCalc = (props: {
 
   const PointsGraf00 = () => {
     while (labels.length > 0) labels.pop(); // labels = [];
-    for (let i = timeMin; i < timeMax; i = i + stipChange)
-      labels.push(i.toString());
+    for (let i = 0; i <= 12; i++) labels.push(i.toString());
     // let int = 0;
     // //график прямого
     // let datas = [];
@@ -237,13 +202,13 @@ const MapOptimCalc = (props: {
       <Grid container sx={{}}>
         <Grid item xs={0.15} sx={{ border: 0 }}>
           <Box sx={styleWVG02}>
-            <b>Tзадержки</b>
+            <b>P(X)</b>
           </Box>
         </Grid>
         <Grid item xs sx={{ border: 0 }}>
           <Box sx={styleWVG01(55)}>{openGrafik && <>{PointsGraf00()}</>}</Box>
           <Box sx={{ fontSize: 12.1 }}>
-            <b>Время цикла (сек)</b>
+            <b>Количество заторных направлений</b>
           </Box>
         </Grid>
       </Grid>
@@ -255,19 +220,9 @@ const MapOptimCalc = (props: {
       <Grid item xs={6} sx={{ border: 0 }}>
         <Box sx={styleCalc02}>
           {StrTablVert(
-            6,
-            "Минимальное время цикла (сек)",
-            WaysInput(0, timeMin, SetTimeMin, 0, timeMax - 1)
-          )}
-          {StrTablVert(
-            6,
-            "Максимальное время цикла (сек)",
-            WaysInput(0, timeMax, SetTimeMax, timeMin + 1, 512)
-          )}
-          {StrTablVert(
-            6,
-            "Шаг изменения (сек)",
-            WaysInput(0, stipChange, SetStipChange, 1, timeMax - timeMin - 1)
+            3,
+            "Число итераций",
+            WaysInput(0, sumIterate, SetSumIterate, 0, 4000)
           )}
         </Box>
       </Grid>
@@ -275,32 +230,14 @@ const MapOptimCalc = (props: {
   };
 
   const CalcTablRightPart = () => {
-    let illumTime = metkaTime === "✔" ? styleSetPK06 : styleSetPK05;
-    let illumShift = metkaShift === "✔" ? styleSetPK06 : styleSetPK05;
-
     return (
       <Grid item xs={6} sx={{ border: 0 }}>
         <Box sx={styleCalc02}>
-          <Grid container>
-            <Grid item xs={1} sx={{ fontSize: 19, textAlign: "center" }}>
-              <b>{metkaTime}</b>
-            </Grid>
-            <Grid item xs sx={{ fontSize: 12.9, border: 0 }}>
-              <Button sx={illumTime} onClick={() => SetOptimTime()}>
-                Оптимизировать длительность фаз
-              </Button>
-            </Grid>
-          </Grid>
-          <Grid container sx={{ marginTop: 2, border: 0 }}>
-            <Grid item xs={1} sx={{ fontSize: 19, textAlign: "center" }}>
-              <b>{metkaShift}</b>
-            </Grid>
-            <Grid item xs sx={{ fontSize: 12.9, border: 0 }}>
-              <Button sx={illumShift} onClick={() => SetOptimShift()}>
-                Оптимизировать сдвиги фаз
-              </Button>
-            </Grid>
-          </Grid>
+          {StrTablVert(
+            6,
+            "Сл.составляющая интенсивности до",
+            WaysInput(0, slIintens, SetSlIintens, 0, 40)
+          )}
         </Box>
       </Grid>
     );
@@ -311,7 +248,7 @@ const MapOptimCalc = (props: {
       <Grid container sx={{}}>
         <Grid item xs={0.15}></Grid>
         <Grid item xs>
-          <Box sx={styleWVG01(15)}>
+          <Box sx={styleWVG01(9)}>
             <Box sx={styleCalc01}>Параметры расчёта</Box>
             <Grid container sx={{}}>
               {CalcTablLeftPart()}
@@ -330,18 +267,18 @@ const MapOptimCalc = (props: {
           <b>&#10006;</b>
         </Button>
         <Box sx={styleFormPK01}>
-          <b>Расчёт оптимального времени цикла</b>
+          <b>Расчёт устойчивости программы координации</b>
         </Box>
         {CalcTabl()}
         {CalcGraf()}
         <Box sx={styleSetPK04}>
           <Box sx={{ display: "inline-block", margin: "0px 15px 0px 0px" }}>
-            <Button sx={styleFormPK03} onClick={() => CalcTime(0)}>
+            <Button sx={styleFormPK03} onClick={() => CalcStabil(0)}>
               Отмена
             </Button>
           </Box>
           <Box sx={{ display: "inline-block", margin: "0px 5px 0px 15px" }}>
-            <Button sx={styleFormPK03} onClick={() => CalcTime(1)}>
+            <Button sx={styleFormPK03} onClick={() => CalcStabil(1)}>
               Рассчитать
             </Button>
           </Box>
@@ -351,4 +288,4 @@ const MapOptimCalc = (props: {
   );
 };
 
-export default MapOptimCalc;
+export default MapStabilCalc;

@@ -171,7 +171,7 @@ const MapSetupPK = (props: {
         </Grid>
         <Grid item xs sx={{ marginTop: -1.1, border: 0 }}>
           <Grid container>
-            <Grid item xs={1} sx={{ fontSize: 18, textAlign: "center" }}>
+            <Grid item xs={1} sx={{ fontSize: 19, textAlign: "center" }}>
               <b>{metka}</b>
             </Grid>
             <Grid item xs sx={{ fontSize: 12.9, border: 0 }}>

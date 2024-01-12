@@ -1170,14 +1170,14 @@ export const styleWVG00 = {
   borderRadius: 1,
   boxShadow: 24,
   textAlign: "center",
-  padding: "5px 15px 5px 2px",
+  padding: "5px 15px 10px 2px",
 };
 
 export const styleWVG01 = (ht: number) => {
   const styleWVG01 = {
     marginTop: 1,
     height: ht + "vh",
-    marginLeft: ht !== 55 ? 2 : 0,
+    // marginLeft: ht !== 55 ? 2.4 : 0,
     bgcolor: "#F1F5FB", // светло серый
     border: "1px solid #d4d4d4", // серый
     borderRadius: 1,
@@ -1217,5 +1217,17 @@ export const styleWVI01 = {
   borderRadius: 1,
   overflowX: "auto",
   boxShadow: 6,
+};
+//=== OptimCalc =======================================================
+export const styleCalc01 = {
+  fontSize: 12,
+  marginTop: 0.5,
+  textAlign: "left",
+  padding: "0px 5px 5px 5px",
+};
+
+export const styleCalc02 = {
+  textAlign: "left",
+  textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
 };
 //=====================================================================

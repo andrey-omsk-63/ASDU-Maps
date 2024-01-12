@@ -449,6 +449,12 @@ const MainMap = (props: {
       case 212: // выбор режима работы
         ZeroRoute(false);
         if (MODE === "2") setOpenVertSetup(true);
+        break;
+      case 401: // кнопка №3
+        console.log("Здесь будет действие по кнопке №3");
+        break;
+      case 402: // кнопка №4
+        console.log("Здесь будет действие по кнопке №4");
     }
   };
 
@@ -905,7 +911,11 @@ const MainMap = (props: {
           {InputMenuMODE(handleChangeMode, currencyMode, currenciesMode)}
           {InputMenuPK(handleChangePK, currencyPK, currenciesPK)}
           {PLANER > 0 && (
-            <>{InputMenuCalc(handleChangeCalc, currencyCalc, currenciesCalc)}</>
+            <>
+              {InputMenuCalc(handleChangeCalc, currencyCalc, currenciesCalc)}
+              {StrokaMenuGlob("Кнопка №3", PressButton, 401)}
+              {StrokaMenuGlob("Кнопка №4", PressButton, 402)}
+            </>
           )}
         </>
       )}

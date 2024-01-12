@@ -2,7 +2,7 @@ import * as React from "react";
 
 import MapPointDataError from "../MapPointDataError";
 import MapOptimCalc from "./MapOptimCalc";
-// import MapFormPK02 from './MapFormPK02';
+import MapStabilCalc from "./MapStabilCalc";
 // import MapFormPK03 from './MapFormPK03';
 // import MapFormPK04 from './MapFormPK04';
 // import MapFormPK05 from './MapFormPK05';
@@ -30,11 +30,8 @@ const MapDispCalc = (props: { setOpen: any }) => {
   return (
     <>
       {CALC === '1' && <MapOptimCalc view={true} handleClose={props.setOpen} />}
-      {/* {FORM === '2' && <MapFormPK02 view={true} handleClose={props.setOpen} />}
-      {FORM === '3' && <MapFormPK03 view={true} handleClose={props.setOpen} />}
-      {FORM === '4' && <MapFormPK04 view={true} handleClose={props.setOpen} />}
-      {FORM === '5' && <MapFormPK05 view={true} handleClose={props.setOpen} />} */}
-      {Number(CALC) > 1 && (
+      {CALC === '2' && <MapStabilCalc view={true} handleClose={props.setOpen} />}
+      {Number(CALC) > 2 && (
         <MapPointDataError
           sErr={soob}
           setOpen={props.setOpen}
