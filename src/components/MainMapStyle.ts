@@ -1230,4 +1230,10 @@ export const styleCalc02 = {
   textAlign: "left",
   textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
 };
+
+export const styleCalc03 = {
+  fontSize: 19,
+  textAlign: "center",
+  textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
+};
 //=====================================================================

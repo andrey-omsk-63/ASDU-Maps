@@ -13,9 +13,9 @@ import { PLANER } from "../../MainMapGl";
 
 import { PlanCoord } from "../../../interfacePlans.d"; // интерфейс
 
-import { styleModalEnd, styleSetPK03, } from "../../MainMapStyle";
+import { styleModalEnd, styleSetPK03 } from "../../MainMapStyle";
 import { styleSetPK01, styleSetPK02 } from "../../MainMapStyle";
-import { styleSetPK05, styleSetPK06 } from "../../MainMapStyle";
+import { styleSetPK05, styleSetPK06, styleCalc03 } from "../../MainMapStyle";
 
 let idxPK = 0;
 let flagInput = true;
@@ -171,7 +171,7 @@ const MapSetupPK = (props: {
         </Grid>
         <Grid item xs sx={{ marginTop: -1.1, border: 0 }}>
           <Grid container>
-            <Grid item xs={1} sx={{ fontSize: 19, textAlign: "center" }}>
+            <Grid item xs={1} sx={styleCalc03}>
               <b>{metka}</b>
             </Grid>
             <Grid item xs sx={{ fontSize: 12.9, border: 0 }}>

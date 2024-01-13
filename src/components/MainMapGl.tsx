@@ -168,6 +168,7 @@ const MainMap = (props: {
   const [openAdress, setOpenAdress] = React.useState(false);
   const [openRevers, setOpenRevers] = React.useState(false);
   const [makeRevers, setMakeRevers] = React.useState(false);
+  const [extra, setExtra] = React.useState(false); // для отладки
   const [needRevers, setNeedRevers] = React.useState(0);
   const [routePKW, setRoutePKW] = React.useState<any>(null);
   const [ymaps, setYmaps] = React.useState<YMapsApi | null>(null);
@@ -451,10 +452,12 @@ const MainMap = (props: {
         if (MODE === "2") setOpenVertSetup(true);
         break;
       case 401: // кнопка №3
-        console.log("Здесь будет действие по кнопке №3");
+        soobError = "Здесь будет действие по кнопке №3";
+        setExtra(true);
         break;
       case 402: // кнопка №4
-        console.log("Здесь будет действие по кнопке №4");
+        soobError = "Здесь будет действие по кнопке №4";
+        setExtra(true);
     }
   };
 
@@ -990,6 +993,16 @@ const MainMap = (props: {
                 toCross={toCross}
                 update={UpdateAddRoute}
                 setSvg={props.setSvg}
+              />
+            )}
+            {extra && (
+              <MapPointDataError
+                setOpen={setExtra}
+                sErr={soobError}
+                fromCross={0}
+                toCross={0}
+                update={0}
+                setSvg={{}}
               />
             )}
             {openInf && (

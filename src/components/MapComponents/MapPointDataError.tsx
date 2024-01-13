@@ -284,7 +284,6 @@ const MapPointDataError = (props: {
   const MakeRecordMassRoute = (mode: boolean, mass: any) => {
     props.setSvg(null);
     console.log("!!!MakeRecordMassRoute:", mode, mass);
-    //handleCloseSetEnd();
   };
 
   return (
@@ -330,7 +329,6 @@ const MapPointDataError = (props: {
         <MapRouteBind
           setOpen={setOpenSetBind}
           svg={masSvg}
-          //setSvg={props.setSvg}
           idxA={fromIdx}
           idxB={inIdx}
           reqRoute={reqRoute}

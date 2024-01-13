@@ -12,7 +12,7 @@ import { styleWVG00, styleModalEndBind } from "../../MainMapStyle";
 import { styleSetPK05, styleSetPK06 } from "../../MainMapStyle";
 import { styleFormPK03, styleSetPK04 } from "../../MainMapStyle";
 import { styleWVG01, styleWVG02, styleFormPK01 } from "../../MainMapStyle";
-import { styleCalc01, styleCalc02 } from "../../MainMapStyle";
+import { styleCalc01, styleCalc02, styleCalc03 } from "../../MainMapStyle";
 
 import { Chart as ChartJS, CategoryScale } from "chart.js";
 import { LinearScale, PointElement } from "chart.js";
@@ -282,7 +282,7 @@ const MapOptimCalc = (props: {
       <Grid item xs={6} sx={{ border: 0 }}>
         <Box sx={styleCalc02}>
           <Grid container>
-            <Grid item xs={1} sx={{ fontSize: 19, textAlign: "center" }}>
+            <Grid item xs={1} sx={styleCalc03}>
               <b>{metkaTime}</b>
             </Grid>
             <Grid item xs sx={{ fontSize: 12.9, border: 0 }}>
@@ -292,7 +292,7 @@ const MapOptimCalc = (props: {
             </Grid>
           </Grid>
           <Grid container sx={{ marginTop: 2, border: 0 }}>
-            <Grid item xs={1} sx={{ fontSize: 19, textAlign: "center" }}>
+            <Grid item xs={1} sx={styleCalc03}>
               <b>{metkaShift}</b>
             </Grid>
             <Grid item xs sx={{ fontSize: 12.9, border: 0 }}>
