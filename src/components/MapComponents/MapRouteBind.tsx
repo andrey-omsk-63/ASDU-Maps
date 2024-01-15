@@ -94,7 +94,6 @@ let massForm: Directions = JSON.parse(JSON.stringify(MaskFormWay()));
 const MapRouteBind = (props: {
   setOpen: any; // 
   svg: any;
-  //setSvg: any;
   idxA: number;
   idxB: number;
   reqRoute: any;

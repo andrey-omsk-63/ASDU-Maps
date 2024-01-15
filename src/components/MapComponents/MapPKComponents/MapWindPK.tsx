@@ -96,6 +96,9 @@ const MapWindPK = (props: {
 
   //=== инициализация ======================================
   if (props.route) nameIn = props.route.targetID + ".";
+
+  console.log("###:", datestat.exampleImg1, datestat.exampleImg2);
+
   let svg = RandomNumber(0, 2) ? datestat.exampleImg1 : datestat.exampleImg2;
   const labels: string[] = [];
   let data: DataGl = {
