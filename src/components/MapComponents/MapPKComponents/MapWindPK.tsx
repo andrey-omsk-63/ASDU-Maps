@@ -12,6 +12,10 @@ import MapWindViewImg from "./MapWindViewImg";
 import { StrokaTablWindPK, ReplaceInSvg } from "../../MapServiceFunctions";
 import { RandomNumber } from "../../MapServiceFunctions";
 
+import { SendSocketGetSvg } from "../../MapSocketFunctions";
+
+import { homeRegion, debug } from "../../MainMapGl";
+
 import { styleWindPK00, styleWindPK01 } from "../../MainMapStyle";
 import { styleWindPK02, styleWindPK05 } from "../../MainMapStyle";
 import { styleWindPK90, styleWindPKEnd } from "../../MainMapStyle";
@@ -72,10 +76,14 @@ let massForm: Directions = {
 };
 
 let valueSl = -1;
+let oldRoute: any = null;
+let svg: any = null;
+let masSvg = ["", ""];
 
 const MapWindPK = (props: {
   close: Function; // функция возврата в родительский компонент
   route: any;
+  svg: any;
 }) => {
   //console.log("MapWindPK:", props.route);
   //== Piece of Redux =======================================
@@ -90,16 +98,25 @@ const MapWindPK = (props: {
   });
   //console.log('massplan:', massplan, massSpis);
   //===========================================================
+  const WS = datestat.ws;
   const [value, setValue] = React.useState(69);
   const [openImg, setOpenImg] = React.useState(false);
   const [openGraf, setOpenGraf] = React.useState(false);
 
   //=== инициализация ======================================
   if (props.route) nameIn = props.route.targetID + ".";
+  if (!debug && props.route !== oldRoute && props.route) {
+    masSvg = ["", ""];
+    let arIn = props.route.sourceArea;
+    let idIn = props.route.sourceID;
+    let arOn = props.route.targetArea;
+    let idOn = props.route.targetID;
+    SendSocketGetSvg(WS, homeRegion, arIn, idIn, arOn, idOn);
+    oldRoute = props.route;
+  }
+  if (debug)
+    svg = RandomNumber(0, 2) ? datestat.exampleImg1 : datestat.exampleImg2;
 
-  console.log("###:", datestat.exampleImg1, datestat.exampleImg2);
-
-  let svg = RandomNumber(0, 2) ? datestat.exampleImg1 : datestat.exampleImg2;
   const labels: string[] = [];
   let data: DataGl = {
     labels,
@@ -130,7 +147,13 @@ const MapWindPK = (props: {
       },
     ],
   };
-
+  //=== Ожидания получения изображений перекрёстков ========
+  if (!debug && props.svg && masSvg[0] === "" && masSvg[1] === "") {
+    let dat = props.svg;
+    masSvg = [];
+    for (let key in dat) masSvg.push(dat[key]);
+    svg = masSvg[1];
+  }
   //========================================================
   const CloseEnd = React.useCallback(() => {
     props.close(null);
@@ -345,6 +368,7 @@ const MapWindPK = (props: {
           close={setOpenImg}
           idx={IDX}
           name={props.route.targetID}
+          svg={svg}
         />
       )}
       {openGraf && (

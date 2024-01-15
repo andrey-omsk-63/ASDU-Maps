@@ -889,6 +889,12 @@ const MainMap = (props: {
       masSvg[0] = props.svg[RecevKeySvg(massroute.vertexes[fromIdx])];
       masSvg[1] = props.svg[RecevKeySvg(massroute.vertexes[inIdx])];
     }
+    if (PLANER > 0 && routePKW) {
+      // передача изображений в привязку через "инф-я о направлениях"
+      let regArea = homeRegion.toString() + "-" + AREA + "-";
+      masSvg[0] = props.svg[regArea + routePKW.sourceID.toString()];
+      masSvg[1] = props.svg[regArea + routePKW.targetID.toString()];
+    }
   }
   if (openBind && pointAaIndex < 0 && pointBbIndex < 0) setOpenBind(false); // отработка Esc из RouteBind
   //=== обработка Esc ======================================
@@ -916,8 +922,8 @@ const MainMap = (props: {
           {PLANER > 0 && (
             <>
               {InputMenuCalc(handleChangeCalc, currencyCalc, currenciesCalc)}
-              {StrokaMenuGlob("Кнопка №3", PressButton, 401)}
-              {StrokaMenuGlob("Кнопка №4", PressButton, 402)}
+              {StrokaMenuGlob("Целевая функция", PressButton, 401)}
+              {StrokaMenuGlob("Оптимизация ПК", PressButton, 402)}
             </>
           )}
         </>
@@ -946,7 +952,9 @@ const MainMap = (props: {
             {YandexServices()}
             <PlacemarkDo />
             <ModalPressBalloon />
-            {PLANER > 0 && <MapWindPK close={setRoutePKW} route={routePKW} />}
+            {PLANER > 0 && (
+              <MapWindPK close={setRoutePKW} route={routePKW} svg={masSvg} />
+            )}
             {dispCalc && <MapDispCalc setOpen={SetDispCalc} />}
             {dispPKForm && <MapDispPKForm setOpen={SetDispPKForm} />}
             {openPro && <MapRouteProtokol setOpen={setOpenPro} />}

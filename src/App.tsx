@@ -296,9 +296,7 @@ const App = () => {
             soob = "Ошибка при получении изображений перекрёстков";
             setOpenSetErr(true);
             setSvg(0);
-          } else {
-            setSvg(data.svg);
-          }
+          } else setSvg(data.svg);
           break;
         default:
           console.log("data_default:", data);

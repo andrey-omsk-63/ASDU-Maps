@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useSelector } from "react-redux";
+//import { useSelector } from "react-redux";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -18,6 +18,7 @@ const MapWindViewImg = (props: {
   close: Function; // функция возврата в родительский компонент
   idx: number; //
   name: any;
+  svg: any;
 }) => {
   //console.log("MapWindPK:", props.route);
   //== Piece of Redux =======================================
@@ -26,10 +27,10 @@ const MapWindViewImg = (props: {
   //   return massplanReducer.massplan;
   // });
   // console.log("###massplan:", massplan);
-  let datestat = useSelector((state: any) => {
-    const { statsaveReducer } = state;
-    return statsaveReducer.datestat;
-  });
+  // let datestat = useSelector((state: any) => {
+  //   const { statsaveReducer } = state;
+  //   return statsaveReducer.datestat;
+  // });
   //===========================================================
   const [openImg, setOpenImg] = React.useState(true);
 
@@ -67,7 +68,7 @@ const MapWindViewImg = (props: {
   };
 
   let lngth = Math.round(window.innerHeight * 0.8).toString();
-  let expSvg = ReplaceInSvg(datestat.exampleImg1, lngth);
+  let expSvg = ReplaceInSvg(props.svg, lngth);
 
   return (
     <Modal open={openImg} onClose={CloseEndGl} hideBackdrop={false}>
