@@ -647,6 +647,12 @@ export const styleFW06 = {
   boxShadow: 6,
 };
 
+export const styleFW07 = {
+  fontSize: 14,
+  marginTop: 0.4,
+  textAlign: "center",
+};
+
 export const styleFormNameRoute = {
   marginTop: 0.5,
   marginBottom: 2,

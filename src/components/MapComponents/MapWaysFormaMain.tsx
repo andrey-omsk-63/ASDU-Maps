@@ -10,7 +10,7 @@ import { Directions } from "../../App"; // интерфейс massForm
 
 import { styleFW03, styleFormFWTabl00 } from "../MainMapStyle";
 import { styleFormMenu, styleFW04 } from "../MainMapStyle";
-import { styleFW05, styleFW06 } from "../MainMapStyle";
+import { styleFW05, styleFW06, styleFW07 } from "../MainMapStyle";
 
 let oldName = "";
 let HAVE = 0;
@@ -85,7 +85,7 @@ const MapWaysFormaMain = (props: {
     } else {
       massForm.phases[mode] = -1;
     }
-    Haver()
+    Haver();
   };
 
   const StrokaMainTabl = () => {
@@ -156,35 +156,35 @@ const MapWaysFormaMain = (props: {
     props.setHave(HAVE);
     setTrigger(!trigger); // ререндер
   };
-//=== Функции - обработчики ==============================
+  //=== Функции - обработчики ==============================
   const SetSatur = (valueInp: number) => {
     massForm.satur = valueInp;
-    Haver()
+    Haver();
   };
 
   const SetIntensTr = (valueInp: number) => {
     massForm.intensTr = valueInp;
-    Haver()
+    Haver();
   };
 
   const SetDispers = (valueInp: number) => {
     massForm.dispers = valueInp;
-    Haver()
+    Haver();
   };
 
   const SetPeregon = (valueInp: number) => {
     massForm.peregon = valueInp;
-    Haver()
+    Haver();
   };
 
   const SetWtStop = (valueInp: number) => {
     massForm.wtStop = valueInp;
-    Haver()
+    Haver();
   };
 
   const SetWtDelay = (valueInp: number) => {
     massForm.wtDelay = valueInp;
-    Haver()
+    Haver();
   };
 
   const SetOffsetBeginGreen = (valueInp: number) => {
@@ -194,16 +194,14 @@ const MapWaysFormaMain = (props: {
 
   const SetOffsetEndGreen = (valueInp: number) => {
     massForm.offsetEndGreen = valueInp;
-    Haver()
+    Haver();
   };
 
   const handleCloseOpponent = () => {
     if (massForm.opponent) {
       massForm.opponent = "";
-    } else {
-      massForm.opponent = oldOpponent;
-    }
-    Haver()
+    } else massForm.opponent = oldOpponent;
+    Haver();
   };
 
   const handleChangeOpp = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -220,11 +218,7 @@ const MapWaysFormaMain = (props: {
     return (
       <Box sx={{ marginTop: 1.5, marginLeft: -0.5, marginRight: -0.5 }}>
         <Grid container>
-          <Grid
-            item
-            xs={1.2}
-            sx={{ fontSize: 14, marginTop: 0.4, textAlign: "center" }}
-          >
+          <Grid item xs={1.2} sx={styleFW07}>
             <b>{metka}</b>
           </Grid>
           <Grid item xs={7.5} sx={{ fontSize: 12.9, border: 0 }}>
