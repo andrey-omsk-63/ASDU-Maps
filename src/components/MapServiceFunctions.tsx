@@ -372,8 +372,31 @@ export const PreparCurrenciesCalc = () => {
     "Расчёты:",
     "Оптимальное время цикла",
     "Устойчивость программы координации",
-    // "!!!ещё какая-то херня №3",
-    // "!!!ещё какая-то херня №4",
+  ];
+  let massKey: any = [];
+  let massDat: any = [];
+  for (let key in dat) {
+    massKey.push(key);
+    massDat.push(dat[key]);
+  }
+  let maskCurrencies = {
+    value: "0",
+    label: "Все режимы",
+  };
+  for (let i = 0; i < massKey.length; i++) {
+    maskCurrencies.value = massKey[i];
+    maskCurrencies.label = massDat[i];
+    currencies.push({ ...maskCurrencies });
+  }
+  return currencies;
+};
+
+export const PreparCurrenciesOptim = () => {
+  const currencies: any = [];
+  let dat = [
+    "Оптимизация ПК:",
+    "Относительно начального сдвига фаз",
+    "Относительно длительности фаз",
   ];
   let massKey: any = [];
   let massDat: any = [];
@@ -592,6 +615,10 @@ export const InputMenuMODE = (func: any, currency: any, currencies: any) => {
                 sx={{
                   color:
                     option.label === "Перекрёстки и связи:" ? "blue" : "black",
+                  cursor:
+                    option.label === "Перекрёстки и связи:"
+                      ? "none"
+                      : "pointer",
                 }}
               >
                 {option.label}
@@ -654,6 +681,7 @@ export const InputMenuPK = (func: any, currency: any, currencies: any) => {
                 value={option.value}
                 sx={{
                   color: option.label === "ПК и модели:" ? "blue" : "black",
+                  cursor: option.label === "ПК и модели:" ? "none" : "pointer",
                 }}
               >
                 {option.label}
@@ -668,7 +696,7 @@ export const InputMenuPK = (func: any, currency: any, currencies: any) => {
 
 export const InputMenuCalc = (func: any, currency: any, currencies: any) => {
   const styleSet = {
-    width: "80px",
+    width: "75px",
     maxHeight: "2px",
     minHeight: "2px",
     marginLeft: 0.3,
@@ -684,7 +712,7 @@ export const InputMenuCalc = (func: any, currency: any, currencies: any) => {
     "& > :not(style)": {
       marginTop: "-10px",
       marginLeft: "-15px",
-      width: "105px",
+      width: "100px",
     },
   };
 
@@ -716,6 +744,71 @@ export const InputMenuCalc = (func: any, currency: any, currencies: any) => {
                 value={option.value}
                 sx={{
                   color: option.label === "Расчёты:" ? "blue" : "black",
+                  cursor: option.label === "Расчёты:" ? "none" : "pointer",
+                }}
+              >
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Box>
+      </Box>
+    </>
+  );
+};
+
+export const InputMenuOptim = (func: any, currency: any, currencies: any) => {
+  const styleSet = {
+    width: "130px",
+    maxHeight: "2px",
+    minHeight: "2px",
+    marginLeft: 0.3,
+    bgcolor: "#BAE186", // салатовый
+    border: "1px solid #93D145", // тёмно салатовый
+    borderRadius: 1,
+    textAlign: "center",
+    p: 1.25,
+    boxShadow: 6,
+  };
+
+  const styleBoxForm = {
+    "& > :not(style)": {
+      marginTop: "-10px",
+      marginLeft: "-15px",
+      width: "155px",
+    },
+  };
+
+  return (
+    <>
+      <Box sx={styleSet}>
+        <Box component="form" sx={styleBoxForm}>
+          <TextField
+            select
+            size="small"
+            onKeyPress={handleKey} //отключение Enter
+            value={currency}
+            onChange={func}
+            InputProps={{
+              disableUnderline: true,
+              style: {
+                fontWeight: 700,
+                color: currency === "0" ? "blue" : "black",
+                marginLeft: 10,
+                fontSize: 14,
+              },
+            }}
+            variant="standard"
+            color="secondary"
+          >
+            {currencies.map((option: any) => (
+              <MenuItem
+                key={option.value}
+                value={option.value}
+                sx={{
+                  color: option.label === "Оптимизация ПК:" ? "blue" : "black",
+                  cursor:
+                    option.label === "Оптимизация ПК:" ? "none" : "pointer",
                 }}
               >
                 {option.label}
@@ -778,6 +871,7 @@ export const InputMenuForm = (func: any, currency: any, currencies: any) => {
                 value={option.value}
                 sx={{
                   color: option.label === "Выхоные формы:" ? "blue" : "black",
+                  cursor: option.label === "Выхоные формы:" ? "none" : "pointer",
                 }}
               >
                 {option.label}

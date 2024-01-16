@@ -17,7 +17,6 @@ import { AREA } from './../MainMapGl';
 
 const MapCreatePointVertex = (props: {
   setOpen: any;
-  //region: number;
   coord: any;
   createPoint: any;
 }) => {
@@ -28,8 +27,7 @@ const MapCreatePointVertex = (props: {
     marginLeft: '27vh',
     width: 340,
     bgcolor: 'background.paper',
-    border: '1px solid #000',
-    borderColor: 'primary.main',
+    border: "1px solid #FFFFFF",
     borderRadius: 1,
     boxShadow: 24,
     p: 1.5,
@@ -38,7 +36,6 @@ const MapCreatePointVertex = (props: {
   const [openSet, setOpenSet] = React.useState(true);
   const [openSetPoint, setOpenSetPoint] = React.useState(false);
   const [openSetVert, setOpenSetVert] = React.useState(false);
-  //const REGION = homeRegion
 
   const handleCloseSetEnd = () => {
     props.setOpen(false);

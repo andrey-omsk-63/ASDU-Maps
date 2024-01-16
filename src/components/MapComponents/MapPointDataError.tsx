@@ -11,7 +11,7 @@ import MapRouteBind from "./MapRouteBind";
 
 import { questionForDelete, HeadDoublError } from "./../MapServiceFunctions";
 import { InputerDlTm, СontentStrErr } from "./../MapServiceFunctions";
-import { StrokaMenuErr } from "./../MapServiceFunctions";
+import { StrokaMenuErr, BadExit } from "./../MapServiceFunctions";
 
 import { SendSocketDeleteWay } from "./../MapSocketFunctions";
 import { SendSocketDeleteWayFromPoint } from "./../MapSocketFunctions";
@@ -52,6 +52,9 @@ let whatIn = "";
 let nameFrom = "";
 let nameIn = "";
 
+let flagInput = true;
+let HAVE = 0;
+
 const MapPointDataError = (props: {
   setOpen: any;
   sErr: string;
@@ -79,6 +82,7 @@ const MapPointDataError = (props: {
   const [openSetEr, setOpenSetEr] = React.useState(true);
   const [tmRoute2, setTmRoute2] = React.useState(tmRoute1);
   const [openSetBind, setOpenSetBind] = React.useState(false);
+  const [badExit, setBadExit] = React.useState(false);
 
   const WS = datestat.ws;
   let colorBorder = props.sErr === "Дубликатная связь" ? "#FFFFFF" : "red";
@@ -89,6 +93,10 @@ const MapPointDataError = (props: {
     ? "Редактирование ранее созданной связи между"
     : "Вы пытаетесть создать дубликатную связь между";
   //=== инициализация ======================================
+  if (flagInput) {
+    HAVE = 0;
+    flagInput = false;
+  }
   if (index < 0) flagSave = false;
   if (index < 0 && props.sErr === "Дубликатная связь") {
     for (let i = 0; i < massroute.ways.length; i++) {
@@ -141,17 +149,28 @@ const MapPointDataError = (props: {
       }
     }
   }
-
-  const handleCloseSetEnd = () => {
+  //========================================================
+  const handleCloseEnd = () => {
     index = -1;
+    flagInput = true;
     props.setOpen(false);
     setOpenSetEr(false);
   };
 
-  const handleCloseEnd = (event: any, reason: string) => {
-    if (reason === "escapeKeyDown") handleCloseSetEnd();
+  const handleCloseBad = () => {
+    HAVE && setBadExit(true);
+    !HAVE && handleCloseEnd();
   };
 
+  const CloseEnd = (event: any, reason: string) => {
+    if (reason === "escapeKeyDown") handleCloseBad();
+  };
+
+  const handleCloseBadExit = (mode: boolean) => {
+    setBadExit(false);
+    mode && handleClose(); // выход без сохранения
+  };
+  //=== Функции - обработчики ==============================
   const DeleteWay = () => {
     massroute.ways.splice(index, 1); // удаление из базы
     dispatch(massrouteCreate(massroute));
@@ -189,7 +208,7 @@ const MapPointDataError = (props: {
         }
       }
     }
-    handleCloseSetEnd();
+    handleCloseEnd();
   };
 
   const handleClose = () => {
@@ -214,7 +233,7 @@ const MapPointDataError = (props: {
         SendSocketCreateWay(WS, frCr, toCr, massBindNew, reqRoute);
       }
     }
-    handleCloseSetEnd();
+    handleCloseEnd();
   };
 
   const [valueDl, setValueDl] = React.useState(dlRoute1);
@@ -236,6 +255,7 @@ const MapPointDataError = (props: {
       setValueDl(valueInp);
       setValueTm(Math.round(sec2));
       setTmRoute2(tmRoute1);
+      HAVE++;
     }
   };
 
@@ -256,9 +276,10 @@ const MapPointDataError = (props: {
       sRoute0 = Math.round(sRoute0 * 10) / 10;
       setValueTm(valueInp);
       setTmRoute2(tmRoute1);
+      HAVE++;
     }
   };
-
+  //========================================================
   const FooterError = () => {
     return (
       <Box sx={styleFooterError}>
@@ -288,9 +309,9 @@ const MapPointDataError = (props: {
 
   return (
     <>
-      <Modal open={openSetEr} onClose={handleCloseEnd}>
+      <Modal open={openSetEr} onClose={CloseEnd}>
         <Box sx={styleSetInf}>
-          <Button sx={styleModalEnd} onClick={handleCloseSetEnd}>
+          <Button sx={styleModalEnd} onClick={() => handleCloseBad()}>
             <b>&#10006;</b>
           </Button>
           {HeadDoublError(flagSave, props.sErr)}
@@ -325,6 +346,7 @@ const MapPointDataError = (props: {
           )}
         </Box>
       </Modal>
+      {badExit && <>{BadExit(badExit, handleCloseBadExit)}</>}
       {openSetBind && fromIdx >= 0 && inIdx >= 0 && (
         <MapRouteBind
           setOpen={setOpenSetBind}

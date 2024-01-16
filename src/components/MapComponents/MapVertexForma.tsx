@@ -38,12 +38,12 @@ let newFAZA = 0;
 let nomDelFaz = -1;
 
 let soobErr =
-  "Начальная длительность фаз не может быть больше минимальной длительности, будьте внимательны!";
+  "Начальная длительность фаз не может быть меньше минимальной длительности, будьте внимательны!";
 
 const maskFaz: any = {
   NumPhase: 0,
-  MinDuration: 0, // миним. длительность фазы
-  StartDuration: 0, // начальная длительность фазы
+  MinDuration: 1, // миним. длительность фазы
+  StartDuration: 1, // начальная длительность фазы
   PhaseOrder: 0, // порядок фазы
 };
 
@@ -89,6 +89,8 @@ const MapVertexForma = (props: {
     currenciesFaza = PreparCurrenciesFaza(MaxFaz);
     if (props.forma === null) {
       HAVE = 0; // первое вхождение из 'родителя'
+      datestat.have = HAVE;
+      dispatch(statsaveCreate(datestat));
       nomDelFaz = -1;
       FAZA = MASSDK.phases.length;
       MASSFAZA = JSON.parse(JSON.stringify(MASSDK.phases));
@@ -116,8 +118,10 @@ const MapVertexForma = (props: {
   const CloseEnd = React.useCallback(() => {
     oldIdx = -1;
     HAVE = 0;
+    datestat.have = HAVE;
+    dispatch(statsaveCreate(datestat));
     props.setOpen(false, null); // полный выход
-  }, [props]);
+  }, [props, dispatch, datestat]);
 
   const handleCloseBad = React.useCallback(() => {
     HAVE && setBadExit(true);
@@ -129,6 +133,12 @@ const MapVertexForma = (props: {
     mode && CloseEnd(); // выход без сохранения
   };
 
+  const Haver = () => {
+    HAVE++;
+    datestat.have = HAVE;
+    dispatch(statsaveCreate(datestat));
+    setTrigger(!trigger); // ререндер
+  };
   //=== Функции - обработчики ==============================
   const SaveForm = (mode: boolean) => {
     if (mode) {
@@ -149,25 +159,41 @@ const MapVertexForma = (props: {
 
   const SetOffset = (valueInp: number) => {
     massForm.offset = valueInp;
-    HAVE++;
+    Haver();
   };
 
   const SetMinDuration = (valueInp: number, idx: number) => {
-    massForm.phases[idx].MinDuration = valueInp;
-    if (massForm.phases[idx].StartDuration > valueInp) {
-      massForm.phases[idx].StartDuration = valueInp;
+    // massForm.phases[idx].MinDuration = valueInp;
+    // if (massForm.phases[idx].StartDuration > valueInp) {
+    //   massForm.phases[idx].StartDuration = valueInp;
+    //   props.setOpen(true, massForm, true); // полный ререндер
+    // }
+    // HAVE++;
+    // setTrigger(!trigger); // ререндер
+    if (massForm.phases[idx].StartDuration < valueInp) {
       props.setOpen(true, massForm, true); // полный ререндер
+    } else {
+      massForm.phases[idx].MinDuration = valueInp;
+      Haver();
+      //setTrigger(!trigger); // ререндер
     }
-    HAVE++;
   };
 
   const SetStDuration = (valueInp: number, idx: number) => {
-    if (massForm.phases[idx].MinDuration >= valueInp) {
-      massForm.phases[idx].StartDuration = valueInp;
-      HAVE++;
-    } else {
-      massForm.phases[idx].StartDuration = massForm.phases[idx].MinDuration;
+    // if (massForm.phases[idx].MinDuration >= valueInp) {
+    //   massForm.phases[idx].StartDuration = valueInp;
+    //   HAVE++;
+    //   setTrigger(!trigger); // ререндер
+    // } else {
+    //   massForm.phases[idx].StartDuration = massForm.phases[idx].MinDuration;
+    //   props.setOpen(true, massForm, true); // полный ререндер
+    // }
+    if (massForm.phases[idx].MinDuration > valueInp) {
       props.setOpen(true, massForm, true); // полный ререндер
+    } else {
+      massForm.phases[idx].StartDuration = valueInp;
+      Haver();
+      //setTrigger(!trigger); // ререндер
     }
   };
 
@@ -177,15 +203,15 @@ const MapVertexForma = (props: {
       if (massForm.phases[i].PhaseOrder === valueInp)
         massForm.phases[i].PhaseOrder = oldPhOrder;
     massForm.phases[idx].PhaseOrder = valueInp;
-    HAVE++;
-    setTrigger(!trigger); // ререндер
+    Haver();
+    //setTrigger(!trigger); // ререндер
   };
 
   const handleChangePlan = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrencyPlan(event.target.value);
     massForm.nomPlan = Number(event.target.value) + 1;
     massForm.optimal = false;
-    HAVE++;
+    Haver();
   };
 
   const FirstFree = (MASSFAZA: Array<number>) => {
@@ -228,7 +254,7 @@ const MapVertexForma = (props: {
     }
     FAZA = newFAZA;
     massRab.kolFaz = newFAZA;
-    HAVE++;
+    Haver();
     oldIdx = -1;
     props.setOpen(true, massRab, openSetErr); // полный ререндер
     setCurrencyFaza(event.target.value);
@@ -236,7 +262,7 @@ const MapVertexForma = (props: {
 
   const ChangeOptimal = () => {
     massForm.optimal = !massForm.optimal;
-    HAVE++;
+    Haver();
     setTrigger(!trigger); // ререндер
   };
 
@@ -267,14 +293,14 @@ const MapVertexForma = (props: {
       for (let i = 0; i < massRab.kolFaz; i++)
         massRab.phases[i].PhaseOrder = temp2[i];
       nomDelFaz = -1;
-      HAVE++;
+      Haver();
       oldIdx = -1;
       props.setOpen(true, massRab, openSetErr); // полный ререндер
     }
   };
 
   const hChPhase = (event: any, i: number) => {
-    HAVE++;
+    Haver();
     let num = Number(event.target.value);
     let currencies = CURR[i];
     MASSFAZA[i] = Number(currencies[num].label);
@@ -307,8 +333,8 @@ const MapVertexForma = (props: {
               {InputFromList((e: any) => hChPhase(e, i), currency, currencies)}
             </Box>
           </Grid>
-          {MainTablInp(2.75, WaysInput(i, minDur, SetMinDuration, 0, 20), 3)}
-          {MainTablInp(2.75, WaysInput(i, startDur, SetStDuration, 0, 20), 3)}
+          {MainTablInp(2.75, WaysInput(i, minDur, SetMinDuration, 1, 20), 3)}
+          {MainTablInp(2.75, WaysInput(i, startDur, SetStDuration, 1, 20), 3)}
           {MainTablInp(2.75, WaysInput(i, phOrder, SetPhaseOrder, 1, FAZA), 3)}
           <Grid xs={1} item sx={styleFT033} onClick={() => ChangeStrDel(i)}>
             {DelCross(i, nomDelFaz)}

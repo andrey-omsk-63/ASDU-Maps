@@ -85,9 +85,7 @@ const MapWaysFormaMain = (props: {
     } else {
       massForm.phases[mode] = -1;
     }
-    HAVE++;
-    props.setHave(HAVE);
-    setTrigger(!trigger);
+    Haver()
   };
 
   const StrokaMainTabl = () => {
@@ -153,52 +151,50 @@ const MapWaysFormaMain = (props: {
     !HAVE && SaveForm(true);
   };
 
-  const SetSatur = (valueInp: number) => {
-    massForm.satur = valueInp;
+  const Haver = () => {
     HAVE++;
     props.setHave(HAVE);
+    setTrigger(!trigger); // ререндер
+  };
+//=== Функции - обработчики ==============================
+  const SetSatur = (valueInp: number) => {
+    massForm.satur = valueInp;
+    Haver()
   };
 
   const SetIntensTr = (valueInp: number) => {
     massForm.intensTr = valueInp;
-    HAVE++;
-    props.setHave(HAVE);
+    Haver()
   };
 
   const SetDispers = (valueInp: number) => {
     massForm.dispers = valueInp;
-    HAVE++;
-    props.setHave(HAVE);
+    Haver()
   };
 
   const SetPeregon = (valueInp: number) => {
     massForm.peregon = valueInp;
-    HAVE++;
-    props.setHave(HAVE);
+    Haver()
   };
 
   const SetWtStop = (valueInp: number) => {
     massForm.wtStop = valueInp;
-    HAVE++;
-    props.setHave(HAVE);
+    Haver()
   };
 
   const SetWtDelay = (valueInp: number) => {
     massForm.wtDelay = valueInp;
-    HAVE++;
-    props.setHave(HAVE);
+    Haver()
   };
 
   const SetOffsetBeginGreen = (valueInp: number) => {
     massForm.offsetBeginGreen = valueInp;
-    HAVE++;
-    props.setHave(HAVE);
+    Haver();
   };
 
   const SetOffsetEndGreen = (valueInp: number) => {
     massForm.offsetEndGreen = valueInp;
-    HAVE++;
-    props.setHave(HAVE);
+    Haver()
   };
 
   const handleCloseOpponent = () => {
@@ -207,9 +203,7 @@ const MapWaysFormaMain = (props: {
     } else {
       massForm.opponent = oldOpponent;
     }
-    HAVE++;
-    props.setHave(HAVE);
-    setTrigger(!trigger);
+    Haver()
   };
 
   const handleChangeOpp = (event: React.ChangeEvent<HTMLInputElement>) => {

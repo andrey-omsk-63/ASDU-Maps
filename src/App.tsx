@@ -87,6 +87,7 @@ export interface Stater {
   nomMenu: number; // номер активного плана ПК
   exampleImg1: any; // отладочное изображение перекрёстка
   exampleImg2: any; // отладочное изображение перекрёстка
+  have: 0; // счётчик изменений в форме параметров перекрёстка
 }
 
 export let dateStat: Stater = {
@@ -100,6 +101,7 @@ export let dateStat: Stater = {
   nomMenu: -1, // номер активного плана ПК
   exampleImg1: null,
   exampleImg2: null,
+  have: 0,
 };
 
 export let massRoute: Router[] = [];

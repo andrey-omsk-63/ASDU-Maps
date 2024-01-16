@@ -22,6 +22,7 @@ import MapSpisPK from "./MapComponents/MapPKComponents/MapSpisPK";
 import MapWindPK from "./MapComponents/MapPKComponents/MapWindPK";
 import MapSetupPK from "./MapComponents/MapPKComponents/MapSetupPK";
 import MapDispCalc from "./MapComponents/MapCalcComponents/MapDispCalc";
+import MapDispOptim from "./MapComponents/MapOptimComponents/MapDispOptim";
 import MapDispPKForm from "./MapComponents/MapPKComponents/MapDispPKForm";
 
 import { RecordMassRoute, MakeNewPointContent } from "./MapServiceFunctions";
@@ -40,6 +41,7 @@ import { PreparCurrenciesMode, CenterCoordBegin } from "./MapServiceFunctions";
 import { PreparCurrenciesForm, InputMenuMODE } from "./MapServiceFunctions";
 import { PreparCurrenciesPK, SubareaFindById } from "./MapServiceFunctions";
 import { PreparCurrenciesCalc, InputMenuCalc } from "./MapServiceFunctions";
+import { PreparCurrenciesOptim, InputMenuOptim } from "./MapServiceFunctions";
 
 import { MakeMultiRouteIn, MakePolyRoute } from "./MapRouteFunctions";
 import { MakeMultiRoute, MakeMainRoute } from "./MapRouteFunctions";
@@ -54,6 +56,7 @@ export let AREA = ZONE.toString(); // район  0 - все районы
 export let MODE = "-1"; // режим работы - меню режимов  0 - заголовок
 export let PK = "0"; // режим работы - меню ПК и моделей  0 - заголовок
 export let CALC = "0"; // режим работы - меню расчётов  0 - заголовок
+export let OPTIM = "0"; // режим работы - меню оптимизации ПК  0 - заголовок
 export let FORM = "0"; // какую форму нужно выдать через диспетчер
 export let homeRegion: any = 0;
 export let debug: boolean = false;
@@ -91,6 +94,7 @@ let currencies: any = [];
 let currenciesMode: any = [];
 let currenciesPK: any = [];
 let currenciesCalc: any = [];
+let currenciesOptim: any = [];
 let currenciesForm: any = [];
 let idxDel: number, pointAaIndex: number;
 let indexPoint: number, pointBbIndex: number;
@@ -144,6 +148,7 @@ const MainMap = (props: {
   const [currencyMode, setCurrencyMode] = React.useState("0");
   const [currencyPK, setCurrencyPK] = React.useState("0");
   const [currencyCalc, setCurrencyCalc] = React.useState("0");
+  const [currencyOptim, setCurrencyOptim] = React.useState("0");
   const [currencyForm, setCurrencyForm] = React.useState("0");
   const [openInf, setOpenInf] = React.useState(false);
   const [openPro, setOpenPro] = React.useState(false);
@@ -154,6 +159,7 @@ const MainMap = (props: {
   const [openPKSpis, setOpenPKSpis] = React.useState(false);
   const [openPKSetup, setOpenPKSetup] = React.useState(false);
   const [dispCalc, setDispCalc] = React.useState(false);
+  const [dispOptim, setDispOptim] = React.useState(false);
   const [dispPKForm, setDispPKForm] = React.useState(false);
   const [openEr, setOpenEr] = React.useState(false);
   const [openBind, setOpenBind] = React.useState(false);
@@ -452,12 +458,11 @@ const MainMap = (props: {
         if (MODE === "2") setOpenVertSetup(true);
         break;
       case 401: // кнопка №3
-        soobError = "Здесь будет действие по кнопке №3";
+        soobError = "Здесь будет расчёт целевой функции";
         setExtra(true);
         break;
-      case 402: // кнопка №4
-        soobError = "Здесь будет действие по кнопке №4";
-        setExtra(true);
+      case 402: // вызов диспетчера форм расчётов
+        setDispOptim(true);
     }
   };
 
@@ -475,7 +480,7 @@ const MainMap = (props: {
         MakeСollectionRoute(MODE === "1" ? false : true);
         setFlagPusk(true);
       }
-      if (MODE === "1" && !openWaysForm) {
+      if (MODE === "1" && !openWaysForm && !datestat.have) {
         VertexForma = null;
         datestat.oldIdxForm = -1;
         HandlLockUp(true);
@@ -640,6 +645,7 @@ const MainMap = (props: {
 
   const InstanceRefDo = (ref: React.Ref<any>) => {
     if (ref) {
+      // console.log('2###:',MODE, openWaysForm,datestat.have)
       mapp.current = ref;
       mapp.current.events.remove("contextmenu", funcContex); // нажата правая кнопка мыши
       funcContex = function (e: any) {
@@ -764,6 +770,12 @@ const MainMap = (props: {
     PressButton(205);
   };
 
+  const handleChOptim = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCurrencyOptim(event.target.value);
+    OPTIM = event.target.value;
+    PressButton(402);
+  };
+
   const handleChangeForm = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrencyForm(event.target.value);
     FORM = event.target.value;
@@ -824,6 +836,11 @@ const MainMap = (props: {
     setDispCalc(mode);
   };
 
+  const SetDispOptim = (mode: boolean) => {
+    setCurrencyOptim((OPTIM = "0"));
+    setDispOptim(mode);
+  };
+
   const SetOpenPKSetup = (mode: boolean) => {
     setCurrencyPK((PK = "0")); // переключение меню 'ПЛ и модели' на заголовок
     setOpenPKSetup(mode);
@@ -859,6 +876,7 @@ const MainMap = (props: {
     currenciesMode = PreparCurrenciesMode(); // для меню подрайонов режимов работы
     currenciesPK = PreparCurrenciesPK(); // для меню ПК и модели
     currenciesCalc = PreparCurrenciesCalc(); // для меню расчётов
+    currenciesOptim = PreparCurrenciesOptim(); // для меню оптимизации ПК
     currenciesForm = PreparCurrenciesForm(); // для меню диспетчера форм
     flagOpen = true;
     console.log("map:", map);
@@ -921,18 +939,19 @@ const MainMap = (props: {
           {InputMenuPK(handleChangePK, currencyPK, currenciesPK)}
           {PLANER > 0 && (
             <>
+              {InputMenuForm(handleChangeForm, currencyForm, currenciesForm)}
               {InputMenuCalc(handleChangeCalc, currencyCalc, currenciesCalc)}
+              {InputMenuOptim(handleChOptim, currencyOptim, currenciesOptim)}
               {StrokaMenuGlob("Целевая функция", PressButton, 401)}
-              {StrokaMenuGlob("Оптимизация ПК", PressButton, 402)}
             </>
           )}
         </>
       )}
       {MakeRevers(makeRevers, needRevers, PressButton)}
       {ShowFormalRoute(flagDemo, PressButton)}
-      {MODE === "2" && datestat.needMenuForm && massplan.plans.length > 0 && (
+      {/* {MODE === "2" && datestat.needMenuForm && massplan.plans.length > 0 && (
         <>{InputMenuForm(handleChangeForm, currencyForm, currenciesForm)}</>
-      )}
+      )} */}
       {MainMenu(flagPusk, flagRoute, PressButton)}
       {flagPro && MODE === "0" && (
         <>{StrokaMenuGlob("Протокол", PressButton, 24)}</>
@@ -956,6 +975,7 @@ const MainMap = (props: {
               <MapWindPK close={setRoutePKW} route={routePKW} svg={masSvg} />
             )}
             {dispCalc && <MapDispCalc setOpen={SetDispCalc} />}
+            {dispOptim && <MapDispOptim setOpen={SetDispOptim} />}
             {dispPKForm && <MapDispPKForm setOpen={SetDispPKForm} />}
             {openPro && <MapRouteProtokol setOpen={setOpenPro} />}
             {openVertForm && pointAaIndex >= 0 && triggerForm && (
