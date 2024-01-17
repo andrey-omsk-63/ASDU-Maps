@@ -469,6 +469,7 @@ const MainMap = (props: {
   };
 
   const OnPlacemarkClickPoint = (index: number, coor: any) => {
+    if (MODE === "1" && pointAa !== 0 && !datestat.have) pointAa = 0; // листание некорректированных перекрёстков
     let soob = "Связь между перекрёстками в разных подрайонах создовать нельзя";
     let COORD = coor ? coor : MassCoord(massdk[index]);
     if (pointAa === 0) {
@@ -490,6 +491,7 @@ const MainMap = (props: {
         setOpenVertForm(true); // запуск новой формы
       }
     } else {
+      console.log("OnPl2:", index, MODE, pointAa, massdk[index].area);
       if (MODE === "0") {
         if (pointBb === 0) {
           if (pointAaIndex === index) {
