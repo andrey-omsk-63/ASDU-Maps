@@ -92,7 +92,7 @@ let maskForm: Directions = JSON.parse(JSON.stringify(MaskFormWay()));
 let massForm: Directions = JSON.parse(JSON.stringify(MaskFormWay()));
 
 const MapRouteBind = (props: {
-  setOpen: any; // 
+  setOpen: any; //
   svg: any;
   idxA: number;
   idxB: number;
@@ -297,6 +297,7 @@ const MapRouteBind = (props: {
   };
 
   const SetFrom = (mode: number, valueInp: number) => {
+    HAVE++
     masFormFrom[mode].intensTr = valueInp; // из левой верхней таблицы
     for (let i = 0; i < kolIn; i++) {
       massTotal[kolFrom * i + mode].intensTrFrom = valueInp;
@@ -306,6 +307,7 @@ const MapRouteBind = (props: {
   };
 
   const SetIn = (mode: number, valueInp: number) => {
+    HAVE++
     masFormIn[mode].intensTr = valueInp; // из правой верхней таблицы
     masFormIn[mode].edited = true;
     ReCalcIntensFl();
@@ -335,6 +337,7 @@ const MapRouteBind = (props: {
 
   const SetOpenFormFrom = (mode: boolean, mask: Directions, idx: number) => {
     if (mode) {
+      HAVE++;
       masFormFrom[idx] = mask; // из левой формы
       for (let i = 0; i < kolIn; i++) {
         massTotal[kolFrom * i + idx].intensTrFrom = mask.intensTr;
@@ -347,6 +350,7 @@ const MapRouteBind = (props: {
 
   const SetOpenFormIn = (mode: boolean, mask: Directions, idx: number) => {
     if (mode) {
+      HAVE++;
       let pr = JSON.parse(JSON.stringify(masFormIn[idx].intensTr)); // из правой формы
       masFormIn[idx] = mask;
       if (pr !== masFormIn[idx].intensTr) masFormIn[idx].edited = true;
@@ -402,13 +406,13 @@ const MapRouteBind = (props: {
     for (let i = 0; i < massTotal.length; i++) {
       if (massTotal[i].have) have++;
     }
-    HAVE = have;
+    HAVE = HAVE + have;
     let saveTitle = props.mode ? "Сохранение изменений" : "Сохранение связи";
     return (
       <Grid container sx={{ marginTop: "2vh", height: 27, width: "100%" }}>
         <Grid item xs={3.5}></Grid>
         <Grid item xs={5} sx={{ border: 0 }}>
-          {have ? (
+          {HAVE ? (
             <Box sx={{ textAlign: "center" }}>
               {StrokaMenuFooterBind("Отмена", 0, handleCloseBad)}
               {StrokaMenuFooterBind(saveTitle, 1, handleCloseGood)}

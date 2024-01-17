@@ -134,8 +134,9 @@ const MapWaysFormaMain = (props: {
   const SaveForm = (mode: boolean) => {
     if (mode) {
       oldName = "";
+      let mod = HAVE ? true : false;
       HAVE = 0;
-      props.setClose(mode, massForm);
+      props.setClose(mod, massForm);
     } else {
       setBadExit(true);
     }
@@ -143,7 +144,10 @@ const MapWaysFormaMain = (props: {
 
   const handleCloseBadExit = (mode: boolean) => {
     setBadExit(false);
-    mode && SaveForm(true);
+    if (mode) {
+      HAVE = 0;
+      SaveForm(true);
+    }
   };
 
   const handleCloseBad = () => {

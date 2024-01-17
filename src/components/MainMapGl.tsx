@@ -458,6 +458,8 @@ const MainMap = (props: {
         if (MODE === "2") setOpenVertSetup(true);
         break;
       case 401: // кнопка №3
+        setCurrencyMode("0"); // переключение меню 'Перекрёстки и связи' на заголовок
+        MODE = "2";
         soobError = "Здесь будет расчёт целевой функции";
         setExtra(true);
         break;
@@ -765,18 +767,22 @@ const MainMap = (props: {
   };
 
   const handleChangeCalc = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCurrencyMode("0"); // переключение меню 'Перекрёстки и связи' на заголовок
+    MODE = "2";
     setCurrencyCalc(event.target.value);
     CALC = event.target.value;
     PressButton(205);
   };
 
   const handleChOptim = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCurrencyMode("0"); // переключение меню 'Перекрёстки и связи' на заголовок
+    MODE = "2";
     setCurrencyOptim(event.target.value);
     OPTIM = event.target.value;
     PressButton(402);
   };
 
-  const handleChangeForm = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChForm = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrencyForm(event.target.value);
     FORM = event.target.value;
     PressButton(203);
@@ -939,7 +945,9 @@ const MainMap = (props: {
           {InputMenuPK(handleChangePK, currencyPK, currenciesPK)}
           {PLANER > 0 && (
             <>
-              {InputMenuForm(handleChangeForm, currencyForm, currenciesForm)}
+              {MODE !== "0" && (
+                <>{InputMenuForm(handleChForm, currencyForm, currenciesForm)}</>
+              )}
               {InputMenuCalc(handleChangeCalc, currencyCalc, currenciesCalc)}
               {InputMenuOptim(handleChOptim, currencyOptim, currenciesOptim)}
               {StrokaMenuGlob("Целевая функция", PressButton, 401)}

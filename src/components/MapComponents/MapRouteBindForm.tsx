@@ -71,9 +71,6 @@ const MapRouteBindForm = (props: {
   let soob1 = massdk[props.idxA].area ? " перекрёстка " : " объекта ";
   let soob2 = massdk[props.idxB].area ? " c перекрёстком " : " c объектом ";
 
-  // let massRab = props.maskForm
-  // massRab.opponent = massNameDir[2];
-
   return (
     <>
       <Modal open={openSetForm} onClose={handleCloseEnd}>
@@ -89,7 +86,6 @@ const MapRouteBindForm = (props: {
           </Box>
           <MapWaysFormaMain
             maskForm={props.maskForm}
-            //maskForm={massRab}
             setClose={handleClose}
             setHave={SetHave}
             massDir={massNameDir}
