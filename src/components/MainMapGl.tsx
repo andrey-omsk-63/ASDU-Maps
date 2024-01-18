@@ -174,7 +174,6 @@ const MainMap = (props: {
   const [openAdress, setOpenAdress] = React.useState(false);
   const [openRevers, setOpenRevers] = React.useState(false);
   const [makeRevers, setMakeRevers] = React.useState(false);
-  const [extra, setExtra] = React.useState(false); // для отладки
   const [needRevers, setNeedRevers] = React.useState(0);
   const [routePKW, setRoutePKW] = React.useState<any>(null);
   const [ymaps, setYmaps] = React.useState<YMapsApi | null>(null);
@@ -460,8 +459,7 @@ const MainMap = (props: {
       case 401: // кнопка №3
         setCurrencyMode("0"); // переключение меню 'Перекрёстки и связи' на заголовок
         MODE = "2";
-        soobError = "Здесь будет расчёт целевой функции";
-        setExtra(true);
+        SoobOpenSetEr("Здесь будет расчёт целевой функции");
         break;
       case 402: // вызов диспетчера форм расчётов
         setDispOptim(true);
@@ -469,7 +467,13 @@ const MainMap = (props: {
   };
 
   const OnPlacemarkClickPoint = (index: number, coor: any) => {
-    if (MODE === "1" && pointAa !== 0 && !datestat.have) pointAa = 0; // листание некорректированных перекрёстков
+    if (MODE === "1" && pointAa !== 0) {
+      // листание перекрёстков
+      if (datestat.have) {
+        SoobOpenSetEr("Завершите работу с перекрёстком нормальным образом");
+        return;
+      } else pointAa = 0;
+    }
     let soob = "Связь между перекрёстками в разных подрайонах создовать нельзя";
     let COORD = coor ? coor : MassCoord(massdk[index]);
     if (pointAa === 0) {
@@ -491,7 +495,6 @@ const MainMap = (props: {
         setOpenVertForm(true); // запуск новой формы
       }
     } else {
-      console.log("OnPl2:", index, MODE, pointAa, massdk[index].area);
       if (MODE === "0") {
         if (pointBb === 0) {
           if (pointAaIndex === index) {
@@ -959,9 +962,6 @@ const MainMap = (props: {
       )}
       {MakeRevers(makeRevers, needRevers, PressButton)}
       {ShowFormalRoute(flagDemo, PressButton)}
-      {/* {MODE === "2" && datestat.needMenuForm && massplan.plans.length > 0 && (
-        <>{InputMenuForm(handleChangeForm, currencyForm, currenciesForm)}</>
-      )} */}
       {MainMenu(flagPusk, flagRoute, PressButton)}
       {flagPro && MODE === "0" && (
         <>{StrokaMenuGlob("Протокол", PressButton, 24)}</>
@@ -1031,16 +1031,6 @@ const MainMap = (props: {
                 toCross={toCross}
                 update={UpdateAddRoute}
                 setSvg={props.setSvg}
-              />
-            )}
-            {extra && (
-              <MapPointDataError
-                setOpen={setExtra}
-                sErr={soobError}
-                fromCross={0}
-                toCross={0}
-                update={0}
-                setSvg={{}}
               />
             )}
             {openInf && (
