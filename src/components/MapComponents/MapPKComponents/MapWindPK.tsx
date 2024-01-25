@@ -153,6 +153,7 @@ const MapWindPK = (props: {
     masSvg = [];
     for (let key in dat) masSvg.push(dat[key]);
     svg = masSvg[1];
+    if (svg === undefined) svg = "";
   }
   //========================================================
   const CloseEnd = React.useCallback(() => {
@@ -259,6 +260,10 @@ const MapWindPK = (props: {
   };
 
   const ContentTabl = (idx: number) => {
+    // svg = undefined;
+    // console.log("###:", props.svg, masSvg, svg === undefined);
+    // console.log("SVG:", svg);
+    if (svg === undefined) svg = "";
     let expSvg = ReplaceInSvg(svg, "136");
     return (
       <Box sx={styleWindPK01}>
