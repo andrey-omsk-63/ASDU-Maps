@@ -56,6 +56,7 @@
     ]
   },
   "devDependencies": {
-    "@types/uniqid": "^5.3.2"
+    "@types/uniqid": "^5.3.2",
+    "gh-pages": "^6.1.1"
   }
 }

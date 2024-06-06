@@ -871,7 +871,8 @@ export const InputMenuForm = (func: any, currency: any, currencies: any) => {
                 value={option.value}
                 sx={{
                   color: option.label === "Выхоные формы:" ? "blue" : "black",
-                  cursor: option.label === "Выхоные формы:" ? "none" : "pointer",
+                  cursor:
+                    option.label === "Выхоные формы:" ? "none" : "pointer",
                 }}
               >
                 {option.label}
@@ -976,9 +977,14 @@ export const GetPointOptions = (
 
   const Hoster = () => {
     let host = "";
+    let hostt =
+      window.location.origin.slice(0, 22) === "https://localhost:3000"
+        ? "https://localhost:3000/"
+        : "./";
     if (idxMap >= 0) {
       if (SubArea === SUBAREA || SUBAREA === "0") {
-        host = "http://localhost:3000/1.svg";
+        host = hostt + "1.svg";
+
         if (!debug && idxMap >= 0)
           host = window.location.origin + "/free/img/trafficLights/1.svg";
         if (!debug && idxMap < 0) host = "";
@@ -987,14 +993,14 @@ export const GetPointOptions = (
     //================================= потом исправить ======
     if (massdk[index].newCoordinates > 0) {
       if (SubArea === SUBAREA || SUBAREA === "0") {
-        host = "http://localhost:3000/3.svg";
+        host = hostt + "3.svg";
         if (!debug)
           host = window.location.origin + "/free/img/trafficLights/3.svg";
       }
     }
     //========================================================
     const HosterIllum = (nom: string) => {
-      host = "http://localhost:3000/" + nom + ".svg";
+      host = hostt + nom + ".svg";
       if (!debug)
         host =
           window.location.origin + "/free/img/trafficLights/" + nom + ".svg";
@@ -1004,6 +1010,7 @@ export const GetPointOptions = (
       if (MASSPK.indexOf(massdk[index].ID) >= 0) HosterIllum("4");
     if (MODE === "1")
       if (index === pointBbIndex || index === pointAaIndex) HosterIllum("2");
+
     return host;
   };
 
@@ -1026,6 +1033,7 @@ export const GetPointOptions = (
   };
 
   const YesImg = () => {
+    //console.log("hoster:", Hoster());
     return {
       // данный тип макета
       iconLayout: "default#image",

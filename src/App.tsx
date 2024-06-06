@@ -158,7 +158,12 @@ const App = () => {
     WS = new WebSocket(host);
     flagOpenWS = false;
     dateStat.ws = WS;
-    if (WS.url === "wss://localhost:3000/W") dateStat.debug = true;
+    console.log("WS.url:", WS.url);
+    if (
+      WS.url.slice(0, 20) === "wss://localhost:3000" ||
+      WS.url.slice(0, 27) === "wss://andrey-omsk-63.github"
+    )
+      dateStat.debug = true;
     dispatch(statsaveCreate(dateStat));
     let pageUrl = new URL(window.location.href);
     homeRegion = Number(pageUrl.searchParams.get("Region"));
@@ -306,8 +311,12 @@ const App = () => {
     };
   }, [dispatch, massdk, coordinates, svg, trigger, FilterArea]);
 
-  if (WS.url === "wss://localhost:3000/W" && flagOpen) {
+  if (dateStat.debug && flagOpen) {
     console.log("РЕЖИМ ОТЛАДКИ!!!", dataMap.tflight);
+    let road =
+      window.location.origin.slice(0, 22) === "https://localhost:3000"
+        ? "https://localhost:3000/"
+        : "./";
     FilterArea(dataMap); // берём в работу заданный район
     console.log("dataRoute.data:", dataRoute.data);
     dateRouteGl = { ...dataRoute.data };
@@ -318,16 +327,16 @@ const App = () => {
     flagOpen = false;
     dispatch(massrouteCreate(dateRouteGl));
     dispatch(massrouteproCreate(dateRouteProGl));
-    axios.get("http://localhost:3000/otladkaPlans.json").then(({ data }) => {
+    axios.get(road + "/otladkaPlans.json").then(({ data }) => {
       datePlan = data.data;
       dispatch(massplanCreate(datePlan));
       console.log("datePlan:", datePlan);
     });
-    axios.get("http://localhost:3000/examplSvg1.svg").then(({ data }) => {
+    axios.get(road + "/examplSvg1.svg").then(({ data }) => {
       dateStat.exampleImg1 = data;
       dispatch(statsaveCreate(dateStat));
     });
-    axios.get("http://localhost:3000/examplSvg2.svg").then(({ data }) => {
+    axios.get(road + "/examplSvg2.svg").then(({ data }) => {
       dateStat.exampleImg2 = data;
       dispatch(statsaveCreate(dateStat));
     });

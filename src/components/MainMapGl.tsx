@@ -141,7 +141,7 @@ const MainMap = (props: {
   });
   const dispatch = useDispatch();
   const WS = datestat.ws;
-  if (WS.url === "wss://localhost:3000/W") debug = true;
+  debug = datestat.debug;
   //===========================================================
   const [triggerForm, setTriggerForm] = React.useState(false);
   const [currency, setCurrency] = React.useState("0");
