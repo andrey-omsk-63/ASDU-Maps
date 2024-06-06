@@ -1,38 +1,18 @@
-//import { INCREMENT, DECREMENT, INPUT_TEXT, COMM_CREATE, MASSFAZ_CREATE } from './types';
 import {
   MAP_CREATE,
-  //COMM_CREATE,
   MASSDK_CREATE,
   MASSROUTE_CREATE,
+  MASSROUTEPRO_CREATE,
   COORDINATES_CREATE,
-} from "./types";
+  STATSAVE_CREATE,
+  MASSPLAN_CREATE,
+} from './types';
 
-//import { DateRPU } from './../interfaceRPU.d';
-import { DateMAP } from "./../interfaceMAP.d";
+import { DateMAP } from './../interfaceMAP.d';
 import { DateRoute } from './../interfaceRoute.d';
-//import { Tflight } from './../interfaceMAP.d';
-import { Pointer } from "./../App";
-//import { Coordinates } from './../App';
-//import { Router } from "./../App";
-
-// export function incrementLikes() {
-//   return {
-//     type: INCREMENT,
-//   };
-// }
-
-// export function decrementLikes() {
-//   return {
-//     type: DECREMENT,
-//   };
-// }
-
-// export function commCreate(dateRpu: DateRPU) {
-//   return {
-//     type: COMM_CREATE,
-//     data: { dateRpu },
-//   };
-// }
+import { DatePlan } from './../interfacePlans.d';
+import { Pointer } from './../App';
+import { Stater } from './../App';
 
 export function massdkCreate(massDka: Pointer[] = []) {
   return {
@@ -42,7 +22,6 @@ export function massdkCreate(massDka: Pointer[] = []) {
 }
 
 export function mapCreate(dateMap: DateMAP) {
-  //export function mapCreate(dateMap: Tflight[]) {
   return {
     type: MAP_CREATE,
     data: { dateMap },
@@ -56,9 +35,30 @@ export function massrouteCreate(massRouter: DateRoute) {
   };
 }
 
+export function massplanCreate(massPlan: DatePlan) {
+  return {
+    type: MASSPLAN_CREATE,
+    data: massPlan,
+  };
+}
+
+export function massrouteproCreate(massRouterPro: DateRoute) {
+  return {
+    type: MASSROUTEPRO_CREATE,
+    data: massRouterPro,
+  };
+}
+
 export function coordinatesCreate(Coordinates: Array<Array<number>>) {
   return {
     type: COORDINATES_CREATE,
     data: Coordinates,
+  };
+}
+
+export function statsaveCreate(dateStat: Stater) {
+  return {
+    type: STATSAVE_CREATE,
+    data: dateStat,
   };
 }

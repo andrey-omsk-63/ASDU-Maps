@@ -1,5 +1,4 @@
 //import { DateMAP } from './interfaceMAP.d';
-
 export const dataMap = {
   "areaInfo": {
     "Мосавтодор": {

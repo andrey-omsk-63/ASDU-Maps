@@ -1,13 +1,12 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  mapCreate,
-  massrouteCreate,
-  coordinatesCreate,
-  massdkCreate,
-} from "./redux/actions";
+import { mapCreate, massrouteCreate, massplanCreate } from "./redux/actions";
+import { massrouteproCreate, coordinatesCreate } from "./redux/actions";
+import { massdkCreate, statsaveCreate } from "./redux/actions";
 
 import Grid from "@mui/material/Grid";
+
+import axios from "axios";
 
 import MainMap from "./components/MainMapGl";
 import AppSocketError from "./AppSocketError";
@@ -18,16 +17,22 @@ import {
   SoobErrorDeleteWayToPoint,
   SoobErrorCreateWayFromPoint,
   SoobErrorDeleteWayFromPoint,
-} from "./components/MapServiceFunctions";
+} from "./components/MapSocketFunctions";
 
-//import { DateMAP } from './interfaceMAP.d';
+import { ZONE } from "./components/MapConst";
+
+import { PlanCoord } from "./interfacePlans.d";
+//import { DatePlan } from "./interfacePlans.d";
 //import { DateRoute } from "./interfaceRoute.d";
 //import { Tflight } from "./interfaceMAP.d";
 import { dataMap } from "./otladkaMaps";
 import { dataRoute } from "./otladkaRoutes";
+import { dataPlan } from "./otladkaPlans";
 
 export let dateMapGl: any;
 export let dateRouteGl: any;
+export let dateRouteProGl: any;
+export let datePlan: any;
 
 export interface Pointer {
   ID: number;
@@ -35,6 +40,8 @@ export interface Pointer {
   nameCoordinates: string;
   region: number;
   area: number;
+  subarea: number;
+  phases: number[];
   newCoordinates: number;
 }
 export let massDk: Pointer[] = [];
@@ -52,30 +59,65 @@ export interface Router {
   lenght: number;
   time: number;
 }
+
+export interface Directions {
+  name: string; // номер направления
+  satur: number; // Насыщение(т.е./ч.)
+  intensTr: number; // Интенсивность(т.е./ч.)
+  dispers: number; // Дисперсия пачки(%)
+  peregon: number; // Длинна перегона(м)
+  wtStop: number; // Вес остановки
+  wtDelay: number; // Вес задержки
+  offsetBeginGreen: number; // Смещ.начала зелёного(сек)
+  offsetEndGreen: number; // Смещ.конца зелёного(сек)
+  intensFl: number; // Интенсивность пост.потока(т.е./ч.)
+  phases: Array<number>; // зелёные фазы для данного направления
+  edited: boolean; //
+  opponent: string; // Левый поворот конкурирует с направлением...
+}
+
+export interface Stater {
+  ws: any;
+  debug: boolean;
+  oldIdxForm: number;
+  needMakeSpisPK: boolean; // вызов списка ПК после корректровки ПК
+  lockUp: boolean; // блокировка меню районов и меню режимов
+  needMenuForm: boolean; // выводить меню форм ПК
+  idxMenu: number; // активная строка списка ПК
+  nomMenu: number; // номер активного плана ПК
+  exampleImg1: any; // отладочное изображение перекрёстка
+  exampleImg2: any; // отладочное изображение перекрёстка
+  have: 0; // счётчик изменений в форме параметров перекрёстка
+}
+
+export let dateStat: Stater = {
+  ws: null,
+  debug: false,
+  oldIdxForm: -1,
+  needMakeSpisPK: true,
+  lockUp: false,
+  needMenuForm: false,
+  idxMenu: 0,
+  nomMenu: -1, // номер активного плана ПК
+  exampleImg1: null,
+  exampleImg2: null,
+  have: 0,
+};
+
 export let massRoute: Router[] = [];
+export let massPlan: PlanCoord[] = [];
+export let massRoutePro: Router[] = [];
 export let Coordinates: Array<Array<number>> = []; // массив координат
 
 let flagOpen = true;
+let flagOpenКостыль = true;
 let flagOpenWS = true;
-//let flagWS = true;
 let WS: any = null;
 let homeRegion: any = "";
 let soob = "";
 
 const App = () => {
   //== Piece of Redux ======================================
-  // const comm = useSelector((state: any) => {
-  //   const { commReducer } = state;
-  //   return commReducer.comm;
-  // });
-  // //console.log('comm_App:', comm);
-
-  // const map = useSelector((state: any) => {
-  //   const { mapReducer } = state;
-  //   return mapReducer.map;
-  // });
-  //console.log("map_App:", map);
-
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;
     return massdkReducer.massdk;
@@ -85,12 +127,9 @@ const App = () => {
     const { coordinatesReducer } = state;
     return coordinatesReducer.coordinates;
   });
-  console.log("coordinates_App:", coordinates);
 
   const dispatch = useDispatch();
   //========================================================
-  //const host = "wss://192.168.115.25/mapW";
-  //const host = "wss://192.168.115.25/user/andrey_omsk/graphManageW";
   const host =
     "wss://" +
     window.location.host +
@@ -99,13 +138,35 @@ const App = () => {
     window.location.search;
 
   const [openSetErr, setOpenSetErr] = React.useState(false);
+  const [trigger, setTrigger] = React.useState(false);
+  const [svg, setSvg] = React.useState<any>(null);
+
+  const FilterArea = React.useCallback(
+    (data: any) => {
+      dateMapGl = data;
+      if (ZONE) {
+        dateMapGl.tflight = dataMap.tflight.filter(
+          (user) => user.area.num === ZONE.toString()
+        );
+      }
+      dispatch(mapCreate(dateMapGl));
+    },
+    [dispatch]
+  );
 
   if (flagOpenWS) {
     WS = new WebSocket(host);
     flagOpenWS = false;
+    dateStat.ws = WS;
+    console.log("WS.url:", WS.url);
+    if (
+      WS.url.slice(0, 20) === "wss://localhost:3000" ||
+      WS.url.slice(0, 27) === "wss://andrey-omsk-63.github"
+    )
+      dateStat.debug = true;
+    dispatch(statsaveCreate(dateStat));
     let pageUrl = new URL(window.location.href);
     homeRegion = Number(pageUrl.searchParams.get("Region"));
-    console.log("homeRegion+WS:", homeRegion, WS);
   }
 
   React.useEffect(() => {
@@ -127,17 +188,26 @@ const App = () => {
       console.log("пришло:", allData.type, data);
       switch (allData.type) {
         case "mapInfo":
-          dateMapGl = data;
-          dispatch(mapCreate(dateMapGl));
+          FilterArea(data); // берём в работу заданный район
           break;
         case "graphInfo":
-          dateRouteGl = data;
+          let pointRab = JSON.parse(JSON.stringify(data));
+          pointRab.points = []; // массив протоколов
+          pointRab.vertexes = [];
+          pointRab.ways = [];
+          dateRouteProGl = JSON.parse(JSON.stringify(pointRab));
+          dateRouteGl = JSON.parse(JSON.stringify(data));
+          if (dateRouteGl.points === null) dateRouteGl.points = [];
+          if (dateRouteGl.vertexes === null) dateRouteGl.vertexes = [];
+          if (dateRouteGl.ways === null) dateRouteGl.ways = [];
           dispatch(massrouteCreate(dateRouteGl));
+          dispatch(massrouteproCreate(dateRouteProGl));
           break;
         case "createPoint":
           if (data.status) {
             dateRouteGl.vertexes[dateRouteGl.vertexes.length - 1].id = data.id;
             massdk[massdk.length - 1].ID = data.id;
+            setTrigger(!trigger);
           } else {
             dateRouteGl.vertexes.splice(dateRouteGl.vertexes.length - 1, 1);
             massdk.splice(massdk.length - 1, 1);
@@ -176,9 +246,14 @@ const App = () => {
         case "createWay":
           if (!data.status) {
             soob = SoobErrorCreateWay(data);
-            dateRouteGl.ways.splice(dateRouteGl.ways.length - 1, 1);
-            dispatch(massrouteCreate(dateRouteGl));
-            setOpenSetErr(true);
+            //================================= потом исправить ======
+            console.log("createWay:", soob);
+            // dateRouteGl.ways.splice(dateRouteGl.ways.length - 1, 1);
+            // dateRouteProGl.ways.splice(dateRouteGl.ways.length - 1, 1);
+            // dispatch(massrouteproCreate(dateRouteProGl));
+            // dispatch(massrouteCreate(dateRouteGl));
+            // console.log('dateRouteGl:',dateRouteGl)
+            // setOpenSetErr(true);
           }
           break;
         case "deleteWay":
@@ -190,9 +265,13 @@ const App = () => {
         case "createWayToPoint":
           if (!data.status) {
             soob = SoobErrorCreateWayToPoint(data);
-            dateRouteGl.ways.splice(dateRouteGl.ways.length - 1, 1);
-            dispatch(massrouteCreate(dateRouteGl));
-            setOpenSetErr(true);
+            //================================= потом исправить ======
+            console.log("createWayToPoint:", soob);
+            // dateRouteGl.ways.splice(dateRouteGl.ways.length - 1, 1);
+            // dispatch(massrouteCreate(dateRouteGl));
+            // dateRouteProGl.ways.splice(dateRouteGl.ways.length - 1, 1);
+            // dispatch(massrouteproCreate(dateRouteProGl));
+            // setOpenSetErr(true);
           }
           break;
         case "deleteWayToPoint":
@@ -204,10 +283,13 @@ const App = () => {
         case "createWayFromPoint":
           if (!data.status) {
             soob = SoobErrorCreateWayFromPoint(data);
-            console.log('soob:',soob)
-            dateRouteGl.ways.splice(dateRouteGl.ways.length - 1, 1);
-            dispatch(massrouteCreate(dateRouteGl));
-            setOpenSetErr(true);
+            //================================= потом исправить ======
+            console.log("createWayFromPoint:", soob);
+            // dateRouteGl.ways.splice(dateRouteGl.ways.length - 1, 1);
+            // dispatch(massrouteCreate(dateRouteGl));
+            // dateRouteProGl.ways.splice(dateRouteGl.ways.length - 1, 1);
+            // dispatch(massrouteproCreate(dateRouteProGl));
+            // setOpenSetErr(true);
           }
           break;
         case "deleteWayFromPoint":
@@ -216,55 +298,71 @@ const App = () => {
             setOpenSetErr(true);
           }
           break;
+        case "getSvg":
+          if (!data.status) {
+            soob = "Ошибка при получении изображений перекрёстков";
+            setOpenSetErr(true);
+            setSvg(0);
+          } else setSvg(data.svg);
+          break;
         default:
           console.log("data_default:", data);
       }
     };
-  }, [dispatch, massdk, coordinates]);
+  }, [dispatch, massdk, coordinates, svg, trigger, FilterArea]);
 
-  //для отладки
-  if (WS.url === "wss://localhost:3000/W" && flagOpen) {
-    console.log("РЕЖИМ ОТЛАДКИ!!!");
-    dateMapGl = dataMap;
-    dispatch(mapCreate(dateMapGl));
-    dateRouteGl = dataRoute.data;
+  if (dateStat.debug && flagOpen) {
+    console.log("РЕЖИМ ОТЛАДКИ!!!", dataMap.tflight);
+    let road =
+      window.location.origin.slice(0, 22) === "https://localhost:3000"
+        ? "https://localhost:3000/"
+        : "./";
+    FilterArea(dataMap); // берём в работу заданный район
+    console.log("dataRoute.data:", dataRoute.data);
+    dateRouteGl = { ...dataRoute.data };
+    dateRouteProGl = { ...dataRoute.data };
+    dateRouteProGl.points = []; // массив протоколов
+    dateRouteProGl.vertexes = [];
+    dateRouteProGl.ways = [];
     flagOpen = false;
-    console.log("@@@dateRouteGl", dateRouteGl);
     dispatch(massrouteCreate(dateRouteGl));
+    dispatch(massrouteproCreate(dateRouteProGl));
+    axios.get(road + "/otladkaPlans.json").then(({ data }) => {
+      datePlan = data.data;
+      dispatch(massplanCreate(datePlan));
+      console.log("datePlan:", datePlan);
+    });
+    axios.get(road + "/examplSvg1.svg").then(({ data }) => {
+      dateStat.exampleImg1 = data;
+      dispatch(statsaveCreate(dateStat));
+    });
+    axios.get(road + "/examplSvg2.svg").then(({ data }) => {
+      dateStat.exampleImg2 = data;
+      dispatch(statsaveCreate(dateStat));
+    });
+  } else {
+    if (flagOpenКостыль) {
+      datePlan = { ...dataPlan.data }; // временный костыль
+      dispatch(massplanCreate(datePlan));
+      console.log("datePlan:", datePlan);
+      flagOpenКостыль = false;
+    }
   }
 
   return (
     <Grid container sx={{ height: "100vh", width: "100%", bgcolor: "#E9F5D8" }}>
       <Grid item xs>
         {openSetErr && <AppSocketError sErr={soob} setOpen={setOpenSetErr} />}
-        <MainMap ws={WS} region={homeRegion} sErr={soob} />
+        <MainMap
+          region={homeRegion}
+          sErr={soob}
+          svg={svg}
+          setSvg={setSvg}
+          trigger={trigger}
+        />
       </Grid>
     </Grid>
   );
 };
 
 export default App;
-
-// if (flagRoute === 1) {
-//   console.log("dateRouteGl:", dateRouteGl);
-//   // проверка/удаление дубликатных связей
-//   let dateRouteRab: any = [];
-//   let flagDubl = false;
-//   for (let i = 0; i < dateRouteGl.ways.length; i++) {
-//     for (let j = 0; j < dateRouteRab.length; j++) {
-//       if (
-//         dateRouteRab[j].starts === dateRouteGl.ways[i].starts &&
-//         dateRouteRab[j].stops === dateRouteGl.ways[i].stops
-//       )
-//         flagDubl = true;
-//     }
-//     if (!flagDubl) dateRouteRab.push(dateRouteGl.ways[i]);
-//     flagDubl = false;
-//   }
-//   dateRouteGl.ways.splice(0, dateRouteGl.ways.length);
-//   dateRouteGl.ways = dateRouteRab;
-//   dispatch(massrouteCreate(dateRouteGl));
-//   flagRoute = 2;
-//   //setSize(window.innerWidth + Math.random());
-// }
-//console.log("dateRouteGl:", dateRouteGl);

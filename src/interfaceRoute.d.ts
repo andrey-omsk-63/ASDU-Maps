@@ -6,6 +6,7 @@ export interface DateRoute {
 export interface Data {
     points:   any[];
     vertexes: Vertex[];
+    //vertexes: any[];
     ways:     Way[];
 }
 

@@ -1,30 +1,34 @@
-import * as React from "react";
+import * as React from 'react';
 
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
-import Typography from "@mui/material/Typography";
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
+import Typography from '@mui/material/Typography';
 
-import MapCreatePoint from "./MapCreatePoint";
-import MapCreateVertex from "./MapCreateVertex";
+import MapCreatePoint from './MapCreatePoint';
+import MapCreateVertex from './MapCreateVertex';
 
-import { styleModalEnd, styleModalMenu } from "./../MainMapStyle";
+import { KnopProps } from './../MapServiceFunctions';
+
+import { styleModalEnd, styleModalMenu } from './../MainMapStyle';
+import { styleTypography } from './../MainMapStyle';
+
+import { AREA } from './../MainMapGl';
 
 const MapCreatePointVertex = (props: {
   setOpen: any;
-  region: number;
   coord: any;
   createPoint: any;
 }) => {
   const styleSet = {
-    position: "absolute",
-    marginTop: "24vh",
-    marginLeft: "27vh",
+    outline: 'none',
+    position: 'absolute',
+    marginTop: '24vh',
+    marginLeft: '27vh',
     width: 340,
-    bgcolor: "background.paper",
-    border: "3px solid #000",
-    borderColor: "primary.main",
-    borderRadius: 2,
+    bgcolor: 'background.paper',
+    border: "1px solid #FFFFFF",
+    borderRadius: 1,
     boxShadow: 24,
     p: 1.5,
   };
@@ -33,55 +37,49 @@ const MapCreatePointVertex = (props: {
   const [openSetPoint, setOpenSetPoint] = React.useState(false);
   const [openSetVert, setOpenSetVert] = React.useState(false);
 
-  const handleCloseSet = (event: any, reason: string) => {
-    if (reason !== "backdropClick") setOpenSet(false);
-  };
-
   const handleCloseSetEnd = () => {
     props.setOpen(false);
     setOpenSet(false);
   };
 
+  const handleCloseSet = (event: any, reason: string) => {
+    if (reason !== 'backdropClick') handleCloseSetEnd();
+  };
+
   const handleClose = (mode: number) => {
-    if (mode === 1) {
-      setOpenSetPoint(true);
+    if (typeof mode !== 'number') {
+      handleCloseSetEnd();
     } else {
-      setOpenSetVert(true);
+      if (mode === 1) {
+        setOpenSetPoint(true);
+      } else {
+        setOpenSetVert(true);
+      }
+      setOpenSet(false);
     }
-    setOpenSet(false);
   };
 
   return (
     <>
-      <Modal
-        open={openSet}
-        onClose={handleCloseSet}
-        disableEnforceFocus
-        hideBackdrop
-      >
-        <>
-          <Box sx={styleSet}>
-            <Button sx={styleModalEnd} onClick={handleCloseSetEnd}>
-              <b>&#10006;</b>
-            </Button>
-            <Box sx={{ textAlign: "center" }}>
-              <Typography variant="h6">Что создаём?</Typography>
-              <br />
-              <Button sx={styleModalMenu} onClick={() => handleClose(1)}>
-                Точку
-              </Button>
-              &nbsp;
-              <Button sx={styleModalMenu} onClick={() => handleClose(2)}>
-                Перекрёсток
-              </Button>
-            </Box>
+      <Modal open={openSet} onClose={handleCloseSet}>
+        <Box sx={styleSet}>
+          <Button sx={styleModalEnd} onClick={handleCloseSetEnd}>
+            <b>&#10006;</b>
+          </Button>
+          <Box sx={{ textAlign: 'center' }}>
+            <Typography variant="h6" sx={styleTypography}>
+              Что создаём?
+            </Typography>
+            <br />
+            {KnopProps(styleModalMenu, handleClose, 'Точку', 1)}
+            &nbsp;
+            {KnopProps(styleModalMenu, handleClose, 'Перекрёсток', 2)}
           </Box>
-        </>
+        </Box>
       </Modal>
       {openSetPoint && (
         <MapCreatePoint
           setOpen={props.setOpen}
-          region={props.region}
           coord={props.coord}
           createPoint={props.createPoint}
         />
@@ -89,7 +87,7 @@ const MapCreatePointVertex = (props: {
       {openSetVert && (
         <MapCreateVertex
           setOpen={props.setOpen}
-          region={props.region}
+          area={AREA}
           coord={props.coord}
           createPoint={props.createPoint}
         />

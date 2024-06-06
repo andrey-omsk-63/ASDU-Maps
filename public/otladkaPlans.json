@@ -1,0 +1,92 @@
+{
+  "type": "planInfo",
+  "data": {
+    "setup": {
+      "sumPhases": 3,
+      "minDuration": 8,
+      "optimal": false,
+      "satur": 3600,
+      "intens": 600,
+      "peregon": 250,
+      "dispers": 50,
+      "offsetBeginGreen": 8,
+      "offsetEndGreen": 0,
+      "wtStop": 0,
+      "wtDelay": 0
+    },
+    "plans": [
+      {
+        "nomPK": 1,
+        "areaPK": 1,
+        "subareaPK": 3,
+        "namePK": "План координации(26.10.2023 13:35:01)12345678901234567890",
+        "timeCycle": 80,
+        "ki": 100,
+        "ks": 100,
+        "phaseOptim": true,
+        "coordPlan": [
+          {
+            "id": 139
+          },
+          {
+            "id": 61
+          },
+          {
+            "id": 42
+          },
+          {
+            "id": 39
+          }
+        ]
+      },
+      {
+        "nomPK": 6,
+        "areaPK": 1,
+        "subareaPK": 3,
+        "namePK": "План координации(25.10.2023 12:12:12)",
+        "timeCycle": 80,
+        "ki": 100,
+        "ks": 100,
+        "phaseOptim": true,
+        "coordPlan": [
+          {
+            "id": 39
+          },
+          {
+            "id": 38
+          },
+          {
+            "id": 36
+          },
+          {
+            "id": 35
+          }
+        ]
+      },
+      {
+        "nomPK": 21,
+        "areaPK": 1,
+        "subareaPK": 3,
+        "namePK": "План координации(28.10.2023 12:12:12)",
+        "timeCycle": 80,
+        "ki": 100,
+        "ks": 100,
+        "phaseOptim": true,
+        "coordPlan": [
+          {
+            "id": 34
+          },
+          {
+            "id": 35
+          },
+          {
+            "id": 36
+          },
+          {
+            "id": 38
+          }
+        ]
+      }
+    ]
+  }
+}
