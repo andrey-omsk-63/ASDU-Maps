@@ -327,16 +327,16 @@ const App = () => {
     flagOpen = false;
     dispatch(massrouteCreate(dateRouteGl));
     dispatch(massrouteproCreate(dateRouteProGl));
-    axios.get(road + "/otladkaPlans.json").then(({ data }) => {
+    axios.get(road + "otladkaPlans.json").then(({ data }) => {
       datePlan = data.data;
       dispatch(massplanCreate(datePlan));
       console.log("datePlan:", datePlan);
     });
-    axios.get(road + "/examplSvg1.svg").then(({ data }) => {
+    axios.get(road + "examplSvg1.svg").then(({ data }) => {
       dateStat.exampleImg1 = data;
       dispatch(statsaveCreate(dateStat));
     });
-    axios.get(road + "/examplSvg2.svg").then(({ data }) => {
+    axios.get(road + "examplSvg2.svg").then(({ data }) => {
       dateStat.exampleImg2 = data;
       dispatch(statsaveCreate(dateStat));
     });
