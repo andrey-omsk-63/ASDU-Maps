@@ -87,7 +87,7 @@ export interface Stater {
   nomMenu: number; // номер активного плана ПК
   exampleImg1: any; // отладочное изображение перекрёстка
   exampleImg2: any; // отладочное изображение перекрёстка
-  have: 0; // счётчик изменений в форме параметров перекрёстка
+  have: number; // счётчик изменений в форме параметров перекрёстка
 }
 
 export let dateStat: Stater = {

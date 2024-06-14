@@ -339,7 +339,7 @@ const MainMap = (props: {
     ymaps && addRoute(ymaps); // перерисовка связей
   };
 
-  const ReversRoute = () => {
+  const ReversRoute = (mode: number) => {
     let noDoublRoute = true;
     let pa = pointAa;
     pointAa = pointBb;
@@ -353,7 +353,7 @@ const MainMap = (props: {
       ZeroRoute((noDoublRoute = false));
     } else {
       MakeСollectionRoute(true);
-      setRevers(!revers); // ререндер
+      mode && setRevers(!revers); // ререндер
     }
     return noDoublRoute;
   };
@@ -384,7 +384,7 @@ const MainMap = (props: {
         ymaps && addRoute(ymaps); // перерисовка связей
         break;
       case 12: // реверс связи
-        ReversRoute();
+        ReversRoute(1);
         break;
       case 24: // вывод протокола
         setOpenPro(true);
@@ -398,11 +398,11 @@ const MainMap = (props: {
         ZeroRoute(false);
         break;
       case 36: // реверс связи + привязка направлений + сохранение связи
-        if (ReversRoute()) LinkBind();
+        if (ReversRoute(1)) LinkBind();
         setMakeRevers(false);
         break;
       case 37: // реверс связи + редактирование
-        if (ReversRoute()) {
+        if (ReversRoute(1)) {
           const ReadyRoute = () => {
             if (activeRoute) {
               setOpenInf((needLinkBind = true));

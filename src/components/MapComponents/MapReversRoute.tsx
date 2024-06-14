@@ -24,6 +24,11 @@ const MapReversRoute = (props: {
     color: "black",
   };
 
+  const styleTittle = {
+    color: "#5B1080", // сиреневый
+    textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+  };
+
   const [openSetEr, setOpenSetEr] = React.useState(true);
 
   const handleCloseSetEnd = () => {
@@ -37,14 +42,20 @@ const MapReversRoute = (props: {
     handleCloseSetEnd();
   };
 
+  const CloseEnd = (event: any, reason: string) => {
+    if (reason === "escapeKeyDown") handleClose(0);
+  };
+
   return (
-    <Modal open={openSetEr} onClose={handleCloseSetEnd}>
+    <Modal open={openSetEr} onClose={CloseEnd}>
       <Box sx={styleSetInf}>
         <Button sx={styleModalEnd} onClick={() => handleClose(0)}>
           <b>&#10006;</b>
         </Button>
         <Box sx={{ textAlign: "center" }}>
-          <Typography variant="h6">Создать реверсную связь?</Typography>
+          <Typography variant="h6" sx={styleTittle}>
+            Создать реверсную связь?
+          </Typography>
           <Box>
             <Button sx={styleModalMenu} onClick={() => handleClose(1)}>
               Да, создать

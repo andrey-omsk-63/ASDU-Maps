@@ -337,8 +337,11 @@ const MapPointDataError = (props: {
                 {СontentStrErr(2.3, InputerDlTm(valueTm, handleChangeTm), 0)}
                 {СontentStrErr(1.75, "сек)", 0)}
               </Grid>
-              <Box sx={{ marginLeft: 1.5, marginTop: 1.5 }}>
-                <b> Средняя скорость прохождения:</b>&nbsp;{sRoute0} км/ч
+              <Box sx={{ marginLeft: 1.5, marginTop: 1.5, display: "flex" }}>
+                <Box sx={{ color: "#5B1080" }}>
+                  <b> Средняя скорость прохождения:</b>
+                </Box>
+                &nbsp;{sRoute0} км/ч
               </Box>
               {flagSave && <>{FooterError()}</>}
               {!flagSave && <>{questionForDelete(handleCloseDel)}</>}

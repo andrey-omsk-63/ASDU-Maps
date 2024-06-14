@@ -2330,7 +2330,7 @@ export const СontentStrErr = (xss: number, soob: any, mode: number) => {
   return (
     <>
       {mode > 0 ? (
-        <Grid item xs={xss} sx={{ border: 0 }}>
+        <Grid item xs={xss} sx={{ color: "#5B1080" }}>
           <b>{soob}</b>
         </Grid>
       ) : (

@@ -124,11 +124,15 @@ const MapRouteInfo = (props: {
           <b>&#10006;</b>
         </Button>
         <Box>
-          <b>Исходящая точка связи:</b> <br />
+          <Box sx={{ color: "#5B1080" }}>
+            <b>Исходящая точка связи:</b> <br />
+          </Box>
           Район: <b>{massdk[props.idxA].area}</b>
           &nbsp;ID:&nbsp;<b>{massdk[props.idxA].ID}</b> <br />
           {massdk[props.idxA].nameCoordinates} <br /> <br />
-          <b>Входящая точка связи:</b> <br />
+          <Box sx={{ color: "#5B1080" }}>
+            <b>Входящая точка связи:</b> <br />
+          </Box>
           Pайон: <b>{massdk[props.idxB].area}</b>
           &nbsp;ID:&nbsp;<b>{massdk[props.idxB].ID}</b> <br />
           {massdk[props.idxB].nameCoordinates} <br /> <br />
@@ -146,8 +150,11 @@ const MapRouteInfo = (props: {
           {СontentStrErr(2.3, InputerDlTm(valueTm, handleChangeTm), 0)}
           {СontentStrErr(1.75, "сек)", 0)}
         </Grid>
-        <Box sx={{ marginTop: 1.5 }}>
-          <b>Средняя скорость прохождения:</b> {sRoute1} км/ч <br />
+        <Box sx={{ marginTop: 1.5, display: "flex" }}>
+          <Box sx={{ color: "#5B1080" }}>
+            <b>Средняя скорость прохождения:</b>
+          </Box>
+          &nbsp;{sRoute1} км/ч <br />
         </Box>
         {props.activeRoute && props.activeRoute.properties.get("blocked") && (
           <Box>Имеются участки с перекрытыми дорогами</Box>

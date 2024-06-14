@@ -62,18 +62,29 @@ const MapRouteProtokol = (props: { setOpen: any }) => {
     width: 460,
     bgcolor: "background.paper",
     border: "1px solid #FFFFFF",
-    //borderColor: "primary.main",
     borderRadius: 1,
     boxShadow: 24,
-    textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
     p: 1.5,
+  };
+
+  const styleProtokol01 = {
+    marginTop: 0.5,
+    overflowX: "auto",
+    bgcolor: "#F1F5FB",
+    border: "1px solid #d4d4d4",
+    borderRadius: 1,
+    boxShadow: 6,
   };
 
   const StrokaProtokol = () => {
     let resStr = [];
     for (let i = 0; i < massProtokol.length; i++) {
       resStr.push(
-        <Grid key={i} container>
+        <Grid
+          key={i}
+          container
+          sx={{ textShadow: "2px 2px 3px rgba(0,0,0,0.3)" }}
+        >
           <Grid item xs={1.3}></Grid>
           <Grid item xs={6.1}>
             &nbsp;&nbsp;Район: <b>{massProtokol[i].sourceArea}</b>
@@ -97,10 +108,17 @@ const MapRouteProtokol = (props: { setOpen: any }) => {
         <Button sx={styleModalEnd} onClick={() => handleCloseSetEndPro()}>
           <b>&#10006;</b>
         </Button>
-        <Box sx={{ marginTop: -0.5, textAlign: "center" }}>
+        <Box
+          sx={{
+            marginTop: -0.5,
+            textAlign: "center",
+            color: "#5B1080", // сиреневый
+            textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+          }}
+        >
           <b>Протокол созданных связей:</b>
         </Box>
-        <Box sx={{ marginTop: 0.5 }}>
+        <Box sx={styleProtokol01}>
           <Grid container sx={{ bgcolor: "#C0E2C3" }}>
             <Grid item xs={6} sx={{ textAlign: "center" }}>
               <b>Выход</b> (из)
