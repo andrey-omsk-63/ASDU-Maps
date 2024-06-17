@@ -146,6 +146,7 @@ const MapVertexSetup = (props: { close: Function }) => {
 
   const handleChangeFaza = (event: React.ChangeEvent<HTMLInputElement>) => {
     massForm.sumPhases = Number(event.target.value) + 2;
+    HAVE++;
     setCurrencyFaza(event.target.value);
   };
   //========================================================

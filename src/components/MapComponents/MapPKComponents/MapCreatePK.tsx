@@ -72,6 +72,8 @@ let massBoard = [
   },
 ];
 
+let soobForArrow = "";
+
 const MapCreatePK = (props: {
   setOpen: Function; // функция возврата в родительский компонент
   SetMass: Function; // массив "подсвечиваемых" перекрёстков
@@ -105,6 +107,7 @@ const MapCreatePK = (props: {
   const [currentBoard, setCurrentBoard] = React.useState<any>(null);
   const [currentItem, setCurrentItem] = React.useState<any>(null);
   const [trigger, setTrigger] = React.useState(false);
+  const [arrow, setArrow] = React.useState(false);
 
   let subAreA = SUBAREA === "0" ? 1 : Number(SUBAREA);
 
@@ -430,6 +433,7 @@ const MapCreatePK = (props: {
     }
     props.SetMass(massPkId, subAreA, 1);
     HAVE++;
+    setArrow(false);
     setTrigger(!trigger); // ререндер
   };
 
@@ -443,31 +447,65 @@ const MapCreatePK = (props: {
     massPkId = []; // удаление подсветки из правого окна
     props.SetMass(massPkId, subAreA, 1);
     HAVE++;
+    setArrow(false);
     setTrigger(!trigger); // ререндер
   };
 
-  const FooterFormPK = () => {
+  const handleMouseEnterLeft = (e: any) => {
+    soobForArrow = "Все элементы из левого окна переместятся в правое";
+    setArrow(true);
+    setTrigger(!trigger); // ререндер
+  };
+
+  const handleMouseEnterRight = (e: any) => {
+    soobForArrow = "Все элементы из правого окна переместятся в левое";
+    setArrow(true);
+    setTrigger(!trigger); // ререндер
+  };
+
+  const handleMouseLeave = (e: any) => {
+    setArrow(false);
+    setTrigger(!trigger); // ререндер
+  };
+
+  const FooterFormPK = (arrow: boolean) => {
     return (
       <Grid container sx={{ border: 0 }}>
         <Grid item xs={1.1} sx={{ border: 0 }}>
           {boards[0].items.length > 0 && (
-            <Button sx={styleFormPK06} onClick={() => MoveLeftWind()}>
+            <Button
+              sx={styleFormPK06}
+              onMouseEnter={handleMouseEnterLeft}
+              onClick={() => MoveLeftWind()}
+              onMouseLeave={handleMouseLeave}
+            >
               🢡
             </Button>
           )}
         </Grid>
         <Grid item xs={9.8} sx={{ border: 0 }}>
-          {HAVE > 0 ? (
-            <>{SaveFormPK(SaveForm, modeWork === "edit")}</>
+          {arrow ? (
+            <Box sx={styleFormPK05}>{soobForArrow}</Box>
           ) : (
-            <Box sx={styleFormPK05}>
-              "Перетяните" курсором нужные элементы из одного окна в другое
-            </Box>
+            <>
+              {HAVE > 0 ? (
+                <>{SaveFormPK(SaveForm, modeWork === "edit")}</>
+              ) : (
+                <Box sx={styleFormPK05}>
+                  "Перетяните" курсором нужные элементы из одного окна в другое
+                </Box>
+              )}
+            </>
           )}
         </Grid>
         <Grid item xs={1.1} sx={{ border: 0 }}>
           {boards[1].items.length > 0 && (
-            <Button sx={styleFormPK06} onClick={() => MoveRightWind()}>
+            <Button
+              sx={styleFormPK06}
+              onMouseEnter={handleMouseEnterRight}
+              onClick={() => MoveRightWind()}
+              onMouseLeave={handleMouseLeave}
+            >
               🢠
             </Button>
           )}
@@ -527,7 +565,7 @@ const MapCreatePK = (props: {
             ))}
           </Box>
         ))}
-        {FooterFormPK()}
+        {FooterFormPK(arrow)}
       </Box>
       {setupPlan && (
         <MapSetupPK

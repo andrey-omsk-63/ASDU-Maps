@@ -235,7 +235,7 @@ const MapSetupPK = (props: {
   return (
     <>
       <Modal open={open} onClose={CloseEnd} hideBackdrop={false}>
-        <Box sx={styleSetPK01(700, 248)}>
+        <Box sx={styleSetPK01(700, 240)}>
           <Button sx={styleModalEnd} onClick={() => handleCloseBad()}>
             <b>&#10006;</b>
           </Button>

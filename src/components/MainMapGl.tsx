@@ -305,9 +305,7 @@ const MainMap = (props: {
         } else {
           if (massroute.vertexes[pointBbIndex].area === 0) {
             SendSocketCreateWayToPoint(WS, fromCross, toCross, mass, aRou);
-          } else {
-            SendSocketCreateWay(WS, fromCross, toCross, mass, aRou);
-          }
+          } else SendSocketCreateWay(WS, fromCross, toCross, mass, aRou);
         }
         setFlagPro(true); //включение протокола
       }
