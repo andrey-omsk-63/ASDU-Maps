@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/ASDU-Maps/static/css/main.4f2414ef.css",
-    "main.js": "/ASDU-Maps/static/js/main.929f096b.js",
+    "main.js": "/ASDU-Maps/static/js/main.8ef980dd.js",
     "index.html": "/ASDU-Maps/index.html",
     "main.4f2414ef.css.map": "/ASDU-Maps/static/css/main.4f2414ef.css.map",
-    "main.929f096b.js.map": "/ASDU-Maps/static/js/main.929f096b.js.map"
+    "main.8ef980dd.js.map": "/ASDU-Maps/static/js/main.8ef980dd.js.map"
   },
   "entrypoints": [
     "static/css/main.4f2414ef.css",
-    "static/js/main.929f096b.js"
+    "static/js/main.8ef980dd.js"
   ]
 }
