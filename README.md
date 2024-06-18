@@ -1,8 +1,8 @@
 # ASDU-Maps
 
 Базовая демо-версия:
+https://andrey-omsk-63.github.io/ASDU-Maps
 
-https://andrey-omsk-63.github.io/ASDU-Maps/
 
 Запуск актуальной демо-версии:
 
