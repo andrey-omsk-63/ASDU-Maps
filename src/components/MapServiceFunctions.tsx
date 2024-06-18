@@ -317,9 +317,9 @@ export const PreparCurrenciesMode = () => {
   const currencies: any = [];
   let dat = [
     "Перекрёстки и связи:",
-    "Работа с перекрёстками",
-    "Создание связей",
-    "Настройки",
+    "● Работа с перекрёстками",
+    "● Создание связей",
+    "● Настройки",
   ];
   let massKey: any = [];
   let massDat: any = [];
@@ -343,10 +343,10 @@ export const PreparCurrenciesPK = () => {
   const currencies: any = [];
   let dat = [
     "ПК и модели:",
-    "Создание нового ПК",
-    "Список ПК",
-    "Список моделей",
-    "Настройки",
+    "● Создание нового ПК",
+    "● Список ПК",
+    "● Список моделей",
+    "● Настройки",
   ];
   let massKey: any = [];
   let massDat: any = [];
@@ -370,8 +370,8 @@ export const PreparCurrenciesCalc = () => {
   const currencies: any = [];
   let dat = [
     "Расчёты:",
-    "Оптимальное время цикла",
-    "Устойчивость программы координации",
+    "● Оптимальное время цикла",
+    "● Устойчивость программы координации",
   ];
   let massKey: any = [];
   let massDat: any = [];
@@ -395,8 +395,8 @@ export const PreparCurrenciesOptim = () => {
   const currencies: any = [];
   let dat = [
     "Оптимизация ПК:",
-    "Относительно начального сдвига фаз",
-    "Относительно длительности фаз",
+    "● Относительно начального сдвига фаз",
+    "● Относительно длительности фаз",
   ];
   let massKey: any = [];
   let massDat: any = [];
@@ -420,11 +420,11 @@ export const PreparCurrenciesForm = () => {
   const currencies: any = [];
   let dat = [
     "Выхоные формы:",
-    "Данные о перекрёстках",
-    "Начальные параметры перекрёстков",
-    "Выходные данные по направлениям",
-    "Начальные параметры направлений",
-    "Программа координации",
+    "● Данные о перекрёстках",
+    "● Начальные параметры перекрёстков",
+    "● Выходные данные по направлениям",
+    "● Начальные параметры направлений",
+    "● Программа координации",
   ];
   let massKey: any = [];
   let massDat: any = [];
@@ -449,7 +449,7 @@ export const PreparCurrencies = () => {
   let dat: Array<string> = [];
   dat.push("Все подрайоны");
   for (let i = 0; i < SubArea.length; i++) {
-    dat.push(SubArea[i].toString() + "-й подрайон");
+    dat.push("● " + SubArea[i].toString() + "-й подрайон");
   }
   let massKey: any = [];
   let massDat: any = [];
@@ -468,7 +468,7 @@ export const PreparCurrencies = () => {
   }
   if (debug) {
     maskCurrencies.value = (massKey.length + 1).toString();
-    maskCurrencies.label = "Добавить подрайон";
+    maskCurrencies.label = "● Добавить подрайон";
     currencies.push({ ...maskCurrencies });
   }
   return currencies;
@@ -551,7 +551,7 @@ export const InputMenu = (func: any, currency: any, currencies: any) => {
                 value={option.value}
                 sx={{
                   color:
-                    option.label === "Добавить подрайон" ? "green" : "black",
+                    option.label === "● Добавить подрайон" ? "green" : "black",
                 }}
               >
                 {option.label}
