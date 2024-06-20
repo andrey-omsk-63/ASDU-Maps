@@ -1628,7 +1628,13 @@ export const HeaderBind = (
         <Grid item xs={0.25}></Grid>
         {!haveSvgA && <Grid item xs={2}></Grid>}
         {haveSvgA && (
-          <Grid item xs={2} onClick={() => ClickBlok(0)} sx={styleSetImg}>
+          <Grid
+            item
+            xs={2}
+            sx={styleSetImg}
+            //onClick={() => ClickBlok(0)}
+            onMouseEnter={() => ClickBlok(0)}
+          >
             <Box sx={{ textAlign: "center", cursor: "pointer" }}>
               {masSvg[0] === "" && <>{AppIconAsdu(heightImg)}</>}
               {masSvg[0] !== "" && <>{ExampleComponent(0, masSvg)}</>}
@@ -1637,7 +1643,13 @@ export const HeaderBind = (
         )}
         {HeaderBindMiddle(Route, nameA, nameB)}
         {haveSvgB && (
-          <Grid item xs={2} onClick={() => ClickBlok(1)} sx={styleSetImg}>
+          <Grid
+            item
+            xs={2}
+            sx={styleSetImg}
+            //onClick={() => ClickBlok(1)}
+            onMouseEnter={() => ClickBlok(1)}
+          >
             <Box sx={{ textAlign: "center", cursor: "pointer" }}>
               {masSvg[1] === "" && <>{AppIconAsdu(heightImg)}</>}
               {masSvg[1] !== "" && <>{ExampleComponent(1, masSvg)}</>}
