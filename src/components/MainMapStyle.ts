@@ -421,6 +421,16 @@ export const styleBind08 = {
   boxShadow: 6,
 };
 
+export const StyleBind09 = (top: number) => {
+  const styleBind09 = {
+    fontSize: 15,
+    cursor: "pointer",
+    padding: top + "px 10px 5px 10px",
+    textIndent: "15px", // с красной строки
+  };
+  return styleBind09;
+};
+
 export const styleSetBindForm = {
   outline: "none",
   position: "absolute",
@@ -1136,6 +1146,14 @@ export const styleWindPK05 = {
   height: 155,
   cursor: "pointer",
 };
+
+export const styleWindPK055 = {
+  height: 136,
+  fontSize: 12.9,
+  cursor: "pointer",
+  textAlign: "center",
+};
+
 
 export const styleWindPK06 = {
   fontSize: 8.3,

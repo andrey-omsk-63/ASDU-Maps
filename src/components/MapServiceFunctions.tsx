@@ -33,7 +33,7 @@ import { styleModalEndAttent, styleFT03, styleFT033 } from "./MainMapStyle";
 import { styleBind02, styleTypography, searchControl } from "./MainMapStyle";
 import { styleBind03, styleBind033, styleSetImg } from "./MainMapStyle";
 import { styleFT04, styleFT05, styleModalEnd } from "./MainMapStyle";
-import { styleSetPK04 } from "./MainMapStyle";
+import { styleSetPK04, StyleBind09 } from "./MainMapStyle";
 
 import { styleModalMenuErr, styleHeadError } from "./MapPointDataErrorStyle";
 import { styleBoxFormArea, styleSetArea } from "./MapPointDataErrorStyle";
@@ -1564,7 +1564,13 @@ export const HeaderBind = (
   haveSvgB: boolean
 ) => {
   const [openSvg, setOpenSvg] = React.useState(false);
+  const [comment0, setComment0] = React.useState(false);
+  const [comment1, setComment1] = React.useState(false);
   const heightWind = window.innerHeight * 0.8;
+
+  const handleClose = () => {
+    setOpenSvg(false);
+  };
 
   const ClickBlok = (idx: number) => {
     HeaderBindIDX = idx;
@@ -1572,10 +1578,6 @@ export const HeaderBind = (
   };
 
   const ViewSvg = (idx: number) => {
-    const handleClose = () => {
-      setOpenSvg(false);
-    };
-
     const CloseEnd = (event: any, reason: string) => {
       if (reason === "escapeKeyDown") handleClose();
     };
@@ -1606,7 +1608,10 @@ export const HeaderBind = (
     };
 
     let lngth = Math.round(heightWind).toString();
-    let expSvg = ReplaceInSvg(masSvg[idx], lngth);
+    let expSvg = ReplaceInSvg(JSON.parse(JSON.stringify(masSvg[idx])), lngth);
+
+    console.log("!!!!!!###000:", lngth, masSvg[0]);
+    console.log("!!!!!!###111:", lngth, masSvg[1]);
 
     return (
       <Modal open={openSvg} onClose={CloseEnd} hideBackdrop={false}>
@@ -1622,6 +1627,9 @@ export const HeaderBind = (
     );
   };
 
+  let soobComment =
+    "Для более детального просмотра изображения нажмите левую кнопку мыши";
+
   return (
     <>
       <Grid container sx={{ marginTop: "1vh", height: heightImg + 5 }}>
@@ -1632,13 +1640,18 @@ export const HeaderBind = (
             item
             xs={2}
             sx={styleSetImg}
-            //onClick={() => ClickBlok(0)}
-            onMouseEnter={() => ClickBlok(0)}
+            onMouseEnter={() => setComment0(true)}
+            onClick={() => ClickBlok(0)}
+            onMouseLeave={() => setComment0(false)}
           >
-            <Box sx={{ textAlign: "center", cursor: "pointer" }}>
-              {masSvg[0] === "" && <>{AppIconAsdu(heightImg)}</>}
-              {masSvg[0] !== "" && <>{ExampleComponent(0, masSvg)}</>}
-            </Box>
+            {comment0 ? (
+              <Box sx={StyleBind09(55)}>{soobComment}</Box>
+            ) : (
+              <Box sx={{ textAlign: "center", cursor: "pointer" }}>
+                {masSvg[0] === "" && <>{AppIconAsdu(heightImg)}</>}
+                {masSvg[0] !== "" && <>{ExampleComponent(0, masSvg)}</>}
+              </Box>
+            )}
           </Grid>
         )}
         {HeaderBindMiddle(Route, nameA, nameB)}
@@ -1647,13 +1660,18 @@ export const HeaderBind = (
             item
             xs={2}
             sx={styleSetImg}
-            //onClick={() => ClickBlok(1)}
-            onMouseEnter={() => ClickBlok(1)}
+            onMouseEnter={() => setComment1(true)}
+            onClick={() => ClickBlok(1)}
+            onMouseLeave={() => setComment1(false)}
           >
-            <Box sx={{ textAlign: "center", cursor: "pointer" }}>
-              {masSvg[1] === "" && <>{AppIconAsdu(heightImg)}</>}
-              {masSvg[1] !== "" && <>{ExampleComponent(1, masSvg)}</>}
-            </Box>
+            {comment1 ? (
+              <Box sx={StyleBind09(55)}>{soobComment}</Box>
+            ) : (
+              <Box sx={{ textAlign: "center", cursor: "pointer" }}>
+                {masSvg[1] === "" && <>{AppIconAsdu(heightImg)}</>}
+                {masSvg[1] !== "" && <>{ExampleComponent(1, masSvg)}</>}
+              </Box>
+            )}
           </Grid>
         )}
         <Grid item xs={0.25}></Grid>

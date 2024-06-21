@@ -26,7 +26,7 @@ import { styleBind042, MakeStyleBind00, styleBind043 } from "./../MainMapStyle";
 import { styleBind03, styleBind033, styleBind041 } from "./../MainMapStyle";
 import { styleBind01, styleBind04, styleBind05 } from "./../MainMapStyle";
 import { styleBind06, styleBind07, styleBind08 } from "./../MainMapStyle";
-import { styleBind0333 } from "./../MainMapStyle";
+import { styleBind0333, StyleBind09 } from "./../MainMapStyle";
 
 import { Chart as ChartJS, CategoryScale } from "chart.js";
 import { LinearScale, PointElement } from "chart.js";
@@ -117,6 +117,7 @@ const MapRouteBind = (props: {
   const [openFormIn, setOpenFormIn] = React.useState(false);
   const [openGraf, setOpenGraf] = React.useState(false);
   const [badExit, setBadExit] = React.useState(false);
+  const [comment, setComment] = React.useState(false);
   const [trigger, setTrigger] = React.useState(false);
   const SEC = props.reqRoute.tmRoute;
   let heightImg = Math.round(window.innerWidth / 7);
@@ -297,7 +298,7 @@ const MapRouteBind = (props: {
   };
 
   const SetFrom = (mode: number, valueInp: number) => {
-    HAVE++
+    HAVE++;
     masFormFrom[mode].intensTr = valueInp; // из левой верхней таблицы
     for (let i = 0; i < kolIn; i++) {
       massTotal[kolFrom * i + mode].intensTrFrom = valueInp;
@@ -307,7 +308,7 @@ const MapRouteBind = (props: {
   };
 
   const SetIn = (mode: number, valueInp: number) => {
-    HAVE++
+    HAVE++;
     masFormIn[mode].intensTr = valueInp; // из правой верхней таблицы
     masFormIn[mode].edited = true;
     ReCalcIntensFl();
@@ -613,21 +614,34 @@ const MapRouteBind = (props: {
     let nom = beginMassTotal / kolFrom + 1;
     let nameRoute = massroute.vertexes[props.idxB].id + "." + nom.toString();
     return (
-      <Box sx={styleBind06} onClick={() => ClickBlok(nom)}>
-        <Grid container>
-          <Grid item xs={0.3} sx={{}}>
-            <Box sx={styleBind07}>
-              <b>Tе:Тцикла*C</b>
+      <Box
+        sx={styleBind06}
+        onMouseEnter={() => setComment(true)}
+        onMouseLeave={() => setComment(false)}
+        onClick={() => ClickBlok(nom)}
+      >
+        {comment ? (
+          <Box sx={StyleBind09(96)}>
+            Для более детального просмотра графика нажмите левую кнопку мыши
+          </Box>
+        ) : (
+          <>
+            <Grid container>
+              <Grid item xs={0.3} sx={{}}>
+                <Box sx={styleBind07}>
+                  <b>Tе:Тцикла*C</b>
+                </Box>
+              </Grid>
+              <Grid item xs={11.7} sx={{ textAlign: "center" }}>
+                Изменение потока на направлении <b>{nameRoute}</b>
+                <Box sx={styleBind08}>{PointsGraf00()}</Box>
+              </Grid>
+            </Grid>
+            <Box sx={{ marginTop: -0.3, textAlign: "center" }}>
+              <b>Тцикла</b>
             </Box>
-          </Grid>
-          <Grid item xs={11.7} sx={{ textAlign: "center" }}>
-            Изменение потока на направлении <b>{nameRoute}</b>
-            <Box sx={styleBind08}>{PointsGraf00()}</Box>
-          </Grid>
-        </Grid>
-        <Box sx={{ marginTop: -0.3, textAlign: "center" }}>
-          <b>Тцикла</b>
-        </Box>
+          </>
+        )}
       </Box>
     );
   };

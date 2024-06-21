@@ -19,7 +19,7 @@ import { homeRegion, debug } from "../../MainMapGl";
 import { styleWindPK00, styleWindPK01 } from "../../MainMapStyle";
 import { styleWindPK02, styleWindPK05 } from "../../MainMapStyle";
 import { styleWindPK90, styleWindPKEnd } from "../../MainMapStyle";
-import { styleWindPK06 } from "../../MainMapStyle";
+import { styleWindPK06, StyleBind09, styleWindPK055 } from "../../MainMapStyle";
 import { styleWindPK07, styleWindPK08 } from "../../MainMapStyle";
 
 import { Directions } from "../../../App"; // интерфейс massForm
@@ -229,7 +229,7 @@ const MapWindPK = (props: {
 
   const OutputGraf = (idx: number) => {
     return (
-      <Box sx={styleWindPK05} onClick={() => ClickBlok(idx)}>
+      <Box sx={styleWindPK05}>
         <Grid container>
           <Grid item xs={0.5} sx={{ border: 0 }}>
             <Box sx={styleWindPK06}>
@@ -252,14 +252,9 @@ const MapWindPK = (props: {
     );
   };
 
-  const styleWindPK055 = {
-    height: 136,
-    fontSize: 12.9,
-    cursor: "pointer",
-    textAlign: "center",
-  };
-
-  const ContentTabl = (idx: number) => {
+  const ContentTabl = (props: { idx: number }) => {
+    const [comment0, setComment0] = React.useState(false);
+    const [comment1, setComment1] = React.useState(false);
     // svg = undefined;
     // console.log("###:", props.svg, masSvg, svg === undefined);
     // console.log("SVG:", svg);
@@ -269,12 +264,41 @@ const MapWindPK = (props: {
       <Box sx={styleWindPK01}>
         <Box sx={styleWindPK90(712)}>
           <Box sx={styleWindPK02}>
-            <Box sx={styleWindPK055} onClick={() => ClickImg(idx)}>
-              <div dangerouslySetInnerHTML={{ __html: expSvg }} />
+            <Box
+              sx={styleWindPK055}
+              onMouseEnter={() => setComment0(true)}
+              onMouseLeave={() => setComment0(false)}
+              onClick={() => ClickImg(props.idx)}
+            >
+              {!comment0 ? (
+                <div dangerouslySetInnerHTML={{ __html: expSvg }} />
+              ) : (
+                <Box sx={StyleBind09(33)}>
+                  Для более детального просмотра изображения нажмите левую
+                  кнопку мыши
+                </Box>
+              )}
             </Box>
           </Box>
           <b>Свойства направления</b>
-          <Box sx={styleWindPK02}>{OutputGraf(idx)}</Box>
+          <Box sx={styleWindPK02}>
+            <Box
+              onMouseEnter={() => setComment1(true)}
+              onMouseLeave={() => setComment1(false)}
+              onClick={() => ClickBlok(props.idx)}
+            >
+              {comment1 ? (
+                <Box sx={styleWindPK05}>
+                  <Box sx={StyleBind09(33)}>
+                    Для более детального просмотра графика нажмите левую
+                    кнопку мыши
+                  </Box>
+                </Box>
+              ) : (
+                <>{OutputGraf(props.idx)}</>
+              )}
+            </Box>
+          </Box>
           <Box sx={styleWindPK02}>
             <Box sx={{ marginBottom: 0.5 }}>
               {StrokaTablWindPK("Номер", massForm.name)}
@@ -325,7 +349,8 @@ const MapWindPK = (props: {
       valueSl = value + RandomNumber(0, 10); // костыль!!!!!!!!!!!!
       resStr.push(
         <Grid key={i} item xs={12 / sum} sx={{ border: 0 }}>
-          <Box>{ContentTabl(i)}</Box>
+          {/* <Box>{ContentTabl(i)}</Box> */}
+          <ContentTabl idx={i} />
         </Grid>
       );
     }
