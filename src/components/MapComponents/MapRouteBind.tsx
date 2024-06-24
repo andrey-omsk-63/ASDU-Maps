@@ -164,7 +164,6 @@ const MapRouteBind = (props: {
     oldIdxB = -1;
     props.setOpen(false);
     setOpenSetBind(false);
-    //props.setSvg(null);
     if (MODE === "2") {
       datestat.needMenuForm = false; //  не выдавать меню форм
       dispatch(statsaveCreate(datestat));
@@ -576,7 +575,6 @@ const MapRouteBind = (props: {
   const PointsGraf00 = () => {
     while (labels.length > 0) labels.pop(); // labels = [];
     for (let i = 0; i < timeInterval; i++) labels.push(i.toString());
-    //for (let i = 0; i < timeInterval; i++) labels.push(i.toString());
     // let int = 0;
     // //график прямого
     // let datas = [];

@@ -332,7 +332,7 @@ const App = () => {
       dispatch(massplanCreate(datePlan));
       console.log("datePlan:", datePlan);
     });
-    axios.get(road + "examplSvg1.svg").then(({ data }) => {
+    axios.get(road + "examplSvg0.svg").then(({ data }) => {
       dateStat.exampleImg1 = data;
       dispatch(statsaveCreate(dateStat));
     });

@@ -1608,10 +1608,7 @@ export const HeaderBind = (
     };
 
     let lngth = Math.round(heightWind).toString();
-    let expSvg = ReplaceInSvg(JSON.parse(JSON.stringify(masSvg[idx])), lngth);
-
-    console.log("!!!!!!###000:", lngth, masSvg[0]);
-    console.log("!!!!!!###111:", lngth, masSvg[1]);
+    let expSvg = ReplaceInSvg(masSvg[idx], lngth);
 
     return (
       <Modal open={openSvg} onClose={CloseEnd} hideBackdrop={false}>
@@ -1645,7 +1642,7 @@ export const HeaderBind = (
             onMouseLeave={() => setComment0(false)}
           >
             {comment0 ? (
-              <Box sx={StyleBind09(55)}>{soobComment}</Box>
+              <Box sx={StyleBind09(75)}>{soobComment}</Box>
             ) : (
               <Box sx={{ textAlign: "center", cursor: "pointer" }}>
                 {masSvg[0] === "" && <>{AppIconAsdu(heightImg)}</>}
@@ -1665,7 +1662,7 @@ export const HeaderBind = (
             onMouseLeave={() => setComment1(false)}
           >
             {comment1 ? (
-              <Box sx={StyleBind09(55)}>{soobComment}</Box>
+              <Box sx={StyleBind09(75)}>{soobComment}</Box>
             ) : (
               <Box sx={{ textAlign: "center", cursor: "pointer" }}>
                 {masSvg[1] === "" && <>{AppIconAsdu(heightImg)}</>}
