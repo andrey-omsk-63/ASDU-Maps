@@ -31,7 +31,7 @@ export const styleModalEnd = {
   height: "21px",
   maxWidth: "2%",
   minWidth: "2%",
-  color: "black",
+  color: "#7620a2", // сиреневый
   textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
 };
 
@@ -77,7 +77,7 @@ export const styleModalEndMapGl = {
   minHeight: "21px",
   maxWidth: "2%",
   minWidth: "2%",
-  color: "black",
+  color: "#7620a2", // сиреневый
   textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
 };
 
@@ -259,6 +259,7 @@ export const styleSetImg = {
   borderRadius: 1,
   textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
   boxShadow: 24,
+  cursor: "pointer",
 };
 
 export const styleAppBind = {
@@ -281,7 +282,7 @@ export const styleModalEndBind = {
   height: "21px",
   maxWidth: "2%",
   minWidth: "2%",
-  color: "black",
+  color: "#7620a2", // сиреневый
   textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
 };
 
@@ -424,9 +425,9 @@ export const styleBind08 = {
 export const StyleBind09 = (top: number) => {
   const styleBind09 = {
     fontSize: 15,
-    cursor: "pointer",
     padding: top + "px 10px 5px 10px",
     textIndent: "15px", // с красной строки
+    cursor: "help",
   };
   return styleBind09;
 };
@@ -486,6 +487,7 @@ export const styleFormName = {
   marginTop: 0.5,
   marginBottom: 2,
   textAlign: "center",
+  color: "#5B1080", // сиреневый
   textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
 };
 
@@ -667,6 +669,7 @@ export const styleFormNameRoute = {
   marginTop: 0.5,
   marginBottom: 2,
   textAlign: "center",
+  color: "#5B1080", // сиреневый
 };
 
 export const styleFormFWTabl00 = {
@@ -1083,7 +1086,6 @@ export const styleWindPK90 = (ht: number) => {
     width: 222,
     height: ht,
     bgcolor: "background.paper",
-    //opacity: 0.3,
     border: "1px solid #FFFFFF",
     borderRadius: 1,
     boxShadow: 24,
@@ -1100,7 +1102,7 @@ export const styleWindPKEnd = {
   height: "21px",
   maxWidth: "2%",
   minWidth: "2%",
-  color: "black",
+  color: "#7620a2", // сиреневый
   textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
 };
 

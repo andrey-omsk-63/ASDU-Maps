@@ -241,7 +241,9 @@ const MapWaysFormaMain = (props: {
   return (
     <>
       {badExit && <>{BadExit(badExit, handleCloseBadExit)}</>}
-      <Box sx={{ fontSize: 12, marginTop: 0.5 }}>Основные свойства</Box>
+      <Box sx={{ fontSize: 12, marginTop: 0.5, color: "#5B1080" }}>
+        Основные свойства
+      </Box>
       {StrTab("№ Направления", massForm.name)}
       {StrTab(
         "Насыщение(т.е./ч.)",
@@ -274,7 +276,7 @@ const MapWaysFormaMain = (props: {
       )}
       {StrTab("Интенсивность пост.потока(т.е./ч.)", massForm.intensFl)}
       {OpponentDirect()}
-      <Box sx={{ fontSize: 12, marginTop: 1.5 }}>
+      <Box sx={{ fontSize: 12, marginTop: 1.5, color: "#5B1080" }}>
         Выберите зелёные фазы для данного направления
       </Box>
       <Box sx={styleFormFWTabl00}>{StrokaMainTabl()}</Box>

@@ -153,7 +153,7 @@ const MapVertexSetup = (props: { close: Function }) => {
   const VertexContent = () => {
     return (
       <>
-        <Box sx={{ fontSize: 12 }}>Параметры перекрёстка</Box>
+        <Box sx={{ fontSize: 12, color: "#5B1080" }}>Параметры перекрёстка</Box>
         {StrTablVert(
           9,
           "Количество фаз",
@@ -176,7 +176,9 @@ const MapVertexSetup = (props: { close: Function }) => {
   const DirectContent = () => {
     return (
       <>
-        <Box sx={{ fontSize: 12, marginTop: 0.5 }}>Параметры направлений</Box>
+        <Box sx={{ fontSize: 12, marginTop: 0.5, color: "#5B1080" }}>
+          Параметры направлений
+        </Box>
         {StrTablVert(
           9,
           "Насыщение(т.е./ч.)",

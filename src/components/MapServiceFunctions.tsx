@@ -1014,11 +1014,12 @@ export const GetPointOptions = (
     return host;
   };
 
-  let colorBalloon = "islands#violetCircleDotIcon";
+  //let colorBalloon = "islands#violetCircleDotIcon";
+  let colorBalloon = "Icon";
   if (massdk[index].area === 0 && (SubArea === SUBAREA || SUBAREA === "0")) {
-    colorBalloon = "islands#violetCircleIcon";
+    colorBalloon = "islands#violetCircleDotIcon";
     if (massdk[index].newCoordinates > 0)
-      colorBalloon = "islands#darkOrangeCircleIcon";
+      colorBalloon = "islands#darkOrangeCircleDotIcon";
   }
 
   if (index === pointAaIndex && MODE === "0")
@@ -1047,7 +1048,7 @@ export const GetPointOptions = (
     };
   };
 
-  return colorBalloon === "islands#violetCircleDotIcon" ? YesImg() : NoImg();
+  return colorBalloon === "Icon" ? YesImg() : NoImg();
 };
 //=== Разное =======================================
 export const RecevKeySvg = (recMassroute: any) => {
@@ -1554,6 +1555,7 @@ export function AppIconAsdu(heightImg: number) {
 }
 
 let HeaderBindIDX = -1;
+
 export const HeaderBind = (
   nameA: string,
   nameB: string,
@@ -1761,10 +1763,10 @@ export const BindInput = (
             size="small"
             onKeyPress={handleKey} //отключение Enter
             type="number"
-            InputProps={{
-              disableUnderline: true,
-              style: { fontSize: 13.3, backgroundColor: "#FFFBE5" },
+            inputProps={{
+              style: { cursor: "pointer", fontSize: 13.3 },
             }}
+            InputProps={{ disableUnderline: true }}
             value={value}
             onChange={handleChange}
             variant="standard"
@@ -1859,8 +1861,8 @@ export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
     transform: "translate(-50%, -50%)",
     width: 400,
     bgcolor: "background.paper",
-    border: "1px solid #000",
-    borderColor: "red",
+    border: "1px solid #fff",
+    //borderColor: "red",
     borderRadius: 1,
     boxShadow: 24,
     textAlign: "center",
@@ -1961,13 +1963,13 @@ export const WaysInput = (
           size="small"
           onKeyPress={handleKey} //отключение Enter
           type="number"
-          InputProps={{
-            disableUnderline: true,
+          InputProps={{ disableUnderline: true }}
+          inputProps={{
             style: {
-              maxHeight: "1px",
-              minHeight: "1px",
+              marginTop: "-16px",
               fontSize: 14,
               backgroundColor: "#FFFBE5", // топлёное молоко
+              cursor: "pointer",
             },
           }}
           value={value}
@@ -2285,7 +2287,7 @@ export const DelCross = (i: number, nomDelFaz: number) => {
           <b>&#10006;</b>
         </Box>
       ) : (
-        <Box>&#215;</Box>
+        <Box sx={{color: 'red'}}>&#215;</Box>
       )}
     </Box>
   );
@@ -2420,10 +2422,10 @@ export const InputNamePK = (handleChangeName: any, valuen: string) => {
         <TextField
           size="small"
           onKeyPress={handleKey} //отключение Enter
-          InputProps={{
-            disableUnderline: true,
-            style: { fontSize: 15 },
+          inputProps={{
+            style: { cursor: "pointer", fontSize: 15 },
           }}
+          InputProps={{ disableUnderline: true }}
           value={valuen}
           onChange={handleChangeName}
           variant="standard"
@@ -2524,7 +2526,7 @@ export const StrokaTablWindPK = (rec1: string, rec2: any) => {
       <Grid item xs={8} sx={{ border: 0 }}>
         {rec1}
       </Grid>
-      <Grid item xs sx={{ border: 0 }}>
+      <Grid item xs sx={{ color: "#5B1080", border: 0 }}>
         <b>{rec2}</b>
       </Grid>
     </Grid>
