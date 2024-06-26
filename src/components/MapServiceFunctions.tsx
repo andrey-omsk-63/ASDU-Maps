@@ -1006,26 +1006,25 @@ export const GetPointOptions = (
           window.location.origin + "/free/img/trafficLights/" + nom + ".svg";
     };
 
-    if (SubArea === SUBAREA)
-      if (MASSPK.indexOf(massdk[index].ID) >= 0) HosterIllum("4");
+    if (SubArea === SUBAREA && MASSPK.indexOf(massdk[index].ID) >= 0)
+      HosterIllum("4"); // подсветка светофора в ПК
     if (MODE === "1")
       if (index === pointBbIndex || index === pointAaIndex) HosterIllum("2");
 
     return host;
   };
 
-  //let colorBalloon = "islands#violetCircleDotIcon";
   let colorBalloon = "Icon";
   if (massdk[index].area === 0 && (SubArea === SUBAREA || SUBAREA === "0")) {
-    colorBalloon = "islands#violetCircleDotIcon";
+    colorBalloon = "islands#violetCircleDotIcon"; // точка
     if (massdk[index].newCoordinates > 0)
-      colorBalloon = "islands#darkOrangeCircleDotIcon";
+      colorBalloon = "islands#darkOrangeCircleDotIcon"; // новая точка
   }
 
   if (index === pointAaIndex && MODE === "0")
-    colorBalloon = "islands#redStretchyIcon";
+    colorBalloon = "islands#redStretchyIcon"; // начало связи
   if (index === pointBbIndex && MODE === "0")
-    colorBalloon = "islands#darkBlueStretchyIcon";
+    colorBalloon = "islands#darkBlueStretchyIcon"; // конец связи
 
   const NoImg = () => {
     return {
@@ -1034,7 +1033,6 @@ export const GetPointOptions = (
   };
 
   const YesImg = () => {
-    //console.log("hoster:", Hoster());
     return {
       // данный тип макета
       iconLayout: "default#image",
@@ -2287,7 +2285,7 @@ export const DelCross = (i: number, nomDelFaz: number) => {
           <b>&#10006;</b>
         </Box>
       ) : (
-        <Box sx={{color: 'red'}}>&#215;</Box>
+        <Box sx={{ color: "red" }}>&#215;</Box>
       )}
     </Box>
   );
