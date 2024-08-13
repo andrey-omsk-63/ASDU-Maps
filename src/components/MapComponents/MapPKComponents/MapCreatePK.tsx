@@ -93,7 +93,6 @@ const MapCreatePK = (props: {
     const { massplanReducer } = state;
     return massplanReducer.massplan;
   });
-  //console.log("MapCreatePKmassplan:", massplan);
   let datestat = useSelector((state: any) => {
     const { statsaveReducer } = state;
     return statsaveReducer.datestat;
@@ -308,6 +307,9 @@ const MapCreatePK = (props: {
           needSort = false;
         }
         dispatch(massplanCreate(massplan));
+        //========================================================
+        // здесь должен быть запрос на запись к серверу
+        //========================================================
         console.log("Finish:", massplan);
         CloseEnd(mode); // выход с сохранением
       } else {
@@ -470,8 +472,8 @@ const MapCreatePK = (props: {
 
   const FooterFormPK = (arrow: boolean) => {
     return (
-      <Grid container sx={{ border: 0 }}>
-        <Grid item xs={1.1} sx={{ border: 0 }}>
+      <Grid container>
+        <Grid item xs={1.1}>
           {boards[0].items.length > 0 && (
             <Button
               sx={styleFormPK06}

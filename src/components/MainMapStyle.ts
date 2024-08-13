@@ -731,7 +731,8 @@ export const MakeStyleFormPK022 = (idx: any) => {
   const styleFormPK02 = {
     width: "340px",
     height: window.innerHeight * ratio,
-    bgcolor: "#F1F5FB",
+    //bgcolor: "#F1F5FB",
+    background: "linear-gradient(160deg, #F1F5FB 63%, #D0DEF0 )",
     border: "1px solid #F1F5FB",
     borderRadius: 1,
     marginTop: 0.8,
@@ -760,8 +761,7 @@ export const styleFormPK03 = {
 export const styleFormPK04 = {
   fontSize: 14,
   width: "96%",
-  border: "1px solid #000",
-  borderColor: "#d4d4d4", // серый
+  border: "1px solid #d4d4d4", // серый
   borderRadius: 2,
   margin: "1px 0 5px 5px",
   cursor: "grab",
@@ -807,7 +807,8 @@ export const MakeStylSpisPK01 = () => {
   const styleSpisPK01 = {
     width: "97.8%",
     height: window.innerHeight * ratio,
-    bgcolor: "#F1F5FB",
+    //bgcolor: "#F1F5FB",
+    background: "linear-gradient(160deg, #F1F5FB 63%, #D0DEF0 )",
     border: "1px solid #d4d4d4",
     borderRadius: 1,
     marginTop: 1,
@@ -961,7 +962,8 @@ export const styleSetPK02 = {
 export const styleSetPK03 = {
   fontSize: 15,
   textAlign: "left",
-  bgcolor: "#F1F5FB",
+  //bgcolor: "#F1F5FB",
+  background: "linear-gradient(160deg, #F1F5FB 63%, #D0DEF0 )",
   border: "1px solid #d4d4d4",
   borderRadius: 1,
   color: "black",
@@ -1117,7 +1119,8 @@ export const styleWindPK01 = {
 export const styleWindPK02 = {
   fontSize: 12.9,
   textAlign: "left",
-  bgcolor: "#F1F5FB",
+  //bgcolor: "#F1F5FB",
+  background: "linear-gradient(160deg, #F1F5FB 63%, #D0DEF0 )",
   border: "1px solid #d4d4d4",
   borderRadius: 1,
   color: "black",

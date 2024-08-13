@@ -1,5 +1,6 @@
 import * as React from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { massplanCreate } from "./../../../redux/actions";
 
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -35,6 +36,7 @@ const MapSetupPK = (props: {
     return massplanReducer.massplan;
   });
   console.log("massplan:", PLANER, massplan);
+  const dispatch = useDispatch();
   //========================================================
   const [open, setOpen] = React.useState(true);
   const [badExit, setBadExit] = React.useState(false);
@@ -128,7 +130,13 @@ const MapSetupPK = (props: {
     if (mode) {
       if (props.setplan) {
         props.setplan(plan); // вызов из MapCreatePK
-      } else massplan.plans = plan;
+      } else {
+        massplan.plans = plan;
+        dispatch(massplanCreate(massplan));
+        //========================================================
+        // здесь должен быть запрос на запись к серверу
+        //========================================================
+      }
       handleClose();
     } else handleCloseBad();
   };
@@ -174,7 +182,7 @@ const MapSetupPK = (props: {
             <Grid item xs={1} sx={styleCalc03}>
               <b>{metka}</b>
             </Grid>
-            <Grid item xs sx={{ fontSize: 12.9, border: 0 }}>
+            <Grid item xs sx={{ fontSize: 12.9 }}>
               <Button sx={illum} onClick={() => SetOptim()}>
                 Оптимизировать длительность фаз
               </Button>

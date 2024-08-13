@@ -155,6 +155,9 @@ const MapSpisPK = (props: {
     massplan.plans = [];
     massplan.plans = massplanPlans;
     dispatch(massplanCreate(massplan));
+    //========================================================
+    // здесь должен быть запрос на запись к серверу
+    //========================================================
     ChangeIDX(0);
     setTrigger(!trigger); // ререндер
   };

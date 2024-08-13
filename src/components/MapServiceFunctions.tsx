@@ -1860,7 +1860,6 @@ export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
     width: 400,
     bgcolor: "background.paper",
     border: "1px solid #fff",
-    //borderColor: "red",
     borderRadius: 1,
     boxShadow: 24,
     textAlign: "center",
@@ -1876,7 +1875,6 @@ export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
     backgroundColor: "#E6F5D6", // светло салатовый
     color: "black",
     textTransform: "unset !important",
-    textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
     boxShadow: 6,
   };
 
@@ -1889,17 +1887,25 @@ export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
   };
 
   return (
-    <Modal open={badExit} onClose={CloseEnd} hideBackdrop>
+    <Modal open={badExit} onClose={CloseEnd} hideBackdrop={false}>
       <Box sx={styleSetPoint}>
         <Button sx={styleModalEndAttent} onClick={() => handleClose(false)}>
           <b>&#10006;</b>
         </Button>
-        <Typography variant="h6" sx={{ color: "red" }}>
-          Предупреждение
+        <Typography
+          variant="h6"
+          sx={{ color: "red", textShadow: "2px 2px 3px rgba(0,0,0,0.3)" }}
+        >
+          ⚠️Предупреждение
         </Typography>
         <Box sx={{ marginTop: 0.5 }}>
-          <Box sx={{ marginBottom: 1.2 }}>
-            <b>Будет произведён выход без сохранения. Продолжать?</b>
+          <Box
+            sx={{
+              marginBottom: 1.2,
+              textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+            }}
+          >
+            Будет произведён выход без сохранения. Продолжать?
           </Box>
           <Button sx={styleModalMenu} onClick={() => handleClose(false)}>
             Нет
