@@ -76,30 +76,55 @@ const MapRouteProtokol = (props: { setOpen: any }) => {
     boxShadow: 6,
   };
 
+  const styleProtokol02 = {
+    marginTop: -0.5,
+    textAlign: "center",
+    color: "#5B1080", // сиреневый
+    textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+  };
+
   const StrokaProtokol = () => {
-    let resStr = [];
-    for (let i = 0; i < massProtokol.length; i++) {
-      resStr.push(
-        <Grid
-          key={i}
-          container
-          sx={{ textShadow: "2px 2px 3px rgba(0,0,0,0.3)" }}
-        >
+    // let resStr = [];
+    // for (let i = 0; i < massProtokol.length; i++) {
+    //   resStr.push(
+    //     <Grid
+    //       key={i}
+    //       container
+    //       sx={{ textShadow: "2px 2px 3px rgba(0,0,0,0.3)" }}
+    //     >
+    //       <Grid item xs={1.3}></Grid>
+    //       <Grid item xs={6.1}>
+    //         &nbsp;&nbsp;Район: <b>{massProtokol[i].sourceArea}</b>
+    //         &nbsp;ID:&nbsp;
+    //         <b>{massProtokol[i].sourceID}</b>
+    //       </Grid>
+    //       <Grid item xs>
+    //         &nbsp;&nbsp;Район: <b>{massProtokol[i].targetArea}</b>
+    //         &nbsp;ID:&nbsp;
+    //         <b>{massProtokol[i].targetID}</b>
+    //       </Grid>
+    //     </Grid>
+    //   );
+    // }
+    // return resStr;
+    return massProtokol.map((mProtokol: any, idx: number, array: any) => {
+      let tSh = "2px 2px 3px rgba(0,0,0,0.3)";
+      return (
+        <Grid key={idx} container sx={{ textShadow: tSh }}>
           <Grid item xs={1.3}></Grid>
           <Grid item xs={6.1}>
-            &nbsp;&nbsp;Район: <b>{massProtokol[i].sourceArea}</b>
+            &nbsp;&nbsp;Район: <b>{mProtokol.sourceArea}</b>
             &nbsp;ID:&nbsp;
-            <b>{massProtokol[i].sourceID}</b>
+            <b>{mProtokol.sourceID}</b>
           </Grid>
           <Grid item xs>
-            &nbsp;&nbsp;Район: <b>{massProtokol[i].targetArea}</b>
+            &nbsp;&nbsp;Район: <b>{mProtokol.targetArea}</b>
             &nbsp;ID:&nbsp;
-            <b>{massProtokol[i].targetID}</b>
+            <b>{mProtokol.targetID}</b>
           </Grid>
         </Grid>
       );
-    }
-    return resStr;
+    });
   };
 
   return (
@@ -108,14 +133,7 @@ const MapRouteProtokol = (props: { setOpen: any }) => {
         <Button sx={styleModalEnd} onClick={() => handleCloseSetEndPro()}>
           <b>&#10006;</b>
         </Button>
-        <Box
-          sx={{
-            marginTop: -0.5,
-            textAlign: "center",
-            color: "#5B1080", // сиреневый
-            textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
-          }}
-        >
+        <Box sx={styleProtokol02}>
           <b>Протокол созданных связей:</b>
         </Box>
         <Box sx={styleProtokol01}>

@@ -681,7 +681,6 @@ export const styleFormFWTabl00 = {
   marginRight: -0.5,
   height: 96,
   overflowX: "auto",
-  //boxShadow: 'inset 2px 2px 5px 0px #d4d4d4',
   boxShadow: 6,
 };
 //=== CreatePK ========================================================
@@ -689,7 +688,6 @@ export const MakeStyleFormPK00 = (wdth: number, PLANER: number) => {
   const styleFormPK00 = {
     outline: "none",
     position: "relative",
-    //marginTop: '-94.0vh',
     marginTop: PLANER > 0 ? "-94vh" : "-97vh",
     marginLeft: "auto",
     marginRight: "9px",
@@ -731,7 +729,6 @@ export const MakeStyleFormPK022 = (idx: any) => {
   const styleFormPK02 = {
     width: "340px",
     height: window.innerHeight * ratio,
-    //bgcolor: "#F1F5FB",
     background: 'linear-gradient(180deg, #F1F5FB 59%, #DEE8F5 )',
     border: "1px solid #F1F5FB",
     borderRadius: 1,
@@ -962,7 +959,6 @@ export const styleSetPK02 = {
 export const styleSetPK03 = {
   fontSize: 15,
   textAlign: "left",
-  //bgcolor: "#F1F5FB",
   background: 'linear-gradient(180deg, #F1F5FB 59%, #DEE8F5 )',
   border: "1px solid #d4d4d4",
   borderRadius: 1,
@@ -1119,7 +1115,6 @@ export const styleWindPK01 = {
 export const styleWindPK02 = {
   fontSize: 12.9,
   textAlign: "left",
-  //bgcolor: "#F1F5FB",
   background: 'linear-gradient(180deg, #F1F5FB 59%, #DEE8F5 )',
   border: "1px solid #d4d4d4",
   borderRadius: 1,
@@ -1129,11 +1124,11 @@ export const styleWindPK02 = {
   margin: "3px 0 1px 0",
 };
 
-export const styleWindPK03 = {
+//export const styleWindPK03 = {
   //marginBottom: 0.5,
   //height: window.innerHeight * 0.1,
   //padding: "0px 0px 5px",
-};
+//};
 
 export const styleWindPK04 = {
   border: "1px solid #d4d4d4",
@@ -1206,8 +1201,6 @@ export const styleWVG01 = (ht: number) => {
   const styleWVG01 = {
     marginTop: 1,
     height: ht + "vh",
-    // marginLeft: ht !== 55 ? 2.4 : 0,
-    //bgcolor: "#F1F5FB", // светло серый
     background: 'linear-gradient(180deg, #F1F5FB 59%, #DEE8F5 )',
     border: "1px solid #d4d4d4", // серый
     borderRadius: 1,

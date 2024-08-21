@@ -152,9 +152,7 @@ const MapVertexForma = (props: {
       MASSDK.phases = MASSFAZA;
       dispatch(massdkCreate(massdk));
       CloseEnd(); // здесь должно быть сохранение
-    } else {
-      handleCloseBad();
-    }
+    } else handleCloseBad();
   };
 
   const SetOffset = (valueInp: number) => {
@@ -163,37 +161,20 @@ const MapVertexForma = (props: {
   };
 
   const SetMinDuration = (valueInp: number, idx: number) => {
-    // massForm.phases[idx].MinDuration = valueInp;
-    // if (massForm.phases[idx].StartDuration > valueInp) {
-    //   massForm.phases[idx].StartDuration = valueInp;
-    //   props.setOpen(true, massForm, true); // полный ререндер
-    // }
-    // HAVE++;
-    // setTrigger(!trigger); // ререндер
     if (massForm.phases[idx].StartDuration < valueInp) {
       props.setOpen(true, massForm, true); // полный ререндер
     } else {
       massForm.phases[idx].MinDuration = valueInp;
       Haver();
-      //setTrigger(!trigger); // ререндер
     }
   };
 
   const SetStDuration = (valueInp: number, idx: number) => {
-    // if (massForm.phases[idx].MinDuration >= valueInp) {
-    //   massForm.phases[idx].StartDuration = valueInp;
-    //   HAVE++;
-    //   setTrigger(!trigger); // ререндер
-    // } else {
-    //   massForm.phases[idx].StartDuration = massForm.phases[idx].MinDuration;
-    //   props.setOpen(true, massForm, true); // полный ререндер
-    // }
     if (massForm.phases[idx].MinDuration > valueInp) {
       props.setOpen(true, massForm, true); // полный ререндер
     } else {
       massForm.phases[idx].StartDuration = valueInp;
       Haver();
-      //setTrigger(!trigger); // ререндер
     }
   };
 
@@ -204,7 +185,6 @@ const MapVertexForma = (props: {
         massForm.phases[i].PhaseOrder = oldPhOrder;
     massForm.phases[idx].PhaseOrder = valueInp;
     Haver();
-    //setTrigger(!trigger); // ререндер
   };
 
   const handleChangePlan = (event: React.ChangeEvent<HTMLInputElement>) => {

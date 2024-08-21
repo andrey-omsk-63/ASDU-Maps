@@ -36,15 +36,15 @@ const MapFormPK04 = (props: { view: boolean; handleClose: Function }) => {
   };
   //========================================================
   const StrokaFormPK04 = () => {
+    const stylePKForm03 = {
+      padding: "10px 0px 10px 0px",
+      borderBottom: "1px solid #d4d4d4",
+    };
     let resStr = [];
     for (let i = 0; i < 48; i++) {
       let aa = RandomNumber(0, 5);
       let bb = RandomNumber(1, 12) * 100;
       let arg7 = !aa ? 0 : aa === 1 ? -bb : bb;
-      const stylePKForm03 = {
-        padding: "10px 0px 10px 0px",
-        borderBottom: "1px solid #d4d4d4",
-      };
       resStr.push(
         <Grid key={i} container sx={{ marginBottom: 0 }}>
           {TablStr(0.25, i + 1, stylePKForm03)}

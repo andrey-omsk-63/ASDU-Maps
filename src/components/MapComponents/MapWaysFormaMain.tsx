@@ -39,7 +39,6 @@ const MapWaysFormaMain = (props: {
   setHave: Function;
   massDir: Array<string>;
 }) => {
-  //console.log("massDir:", props.massDir);
   const [badExit, setBadExit] = React.useState(false);
   const [trigger, setTrigger] = React.useState(false);
   const [currencyOpp, setCurrencyOpp] = React.useState(
@@ -57,15 +56,8 @@ const MapWaysFormaMain = (props: {
       massKey.push(key);
       massDat.push(dat[key]);
     }
-    let maskCurrencies = {
-      value: "0",
-      label: "Все режимы",
-    };
-    for (let i = 0; i < massKey.length; i++) {
-      maskCurrencies.value = massKey[i];
-      maskCurrencies.label = massDat[i];
-      currencies.push({ ...maskCurrencies });
-    }
+    for (let i = 0; i < massKey.length; i++)
+      currencies.push({ value: massKey[i], label: massDat[i] });
     return currencies;
   };
 
@@ -82,9 +74,7 @@ const MapWaysFormaMain = (props: {
   const handleCloseFaz = (mode: number) => {
     if (massForm.phases[mode] === -1) {
       massForm.phases[mode] = 1;
-    } else {
-      massForm.phases[mode] = -1;
-    }
+    } else massForm.phases[mode] = -1;
     Haver();
   };
 
@@ -137,9 +127,7 @@ const MapWaysFormaMain = (props: {
       let mod = HAVE ? true : false;
       HAVE = 0;
       props.setClose(mod, massForm);
-    } else {
-      setBadExit(true);
-    }
+    } else setBadExit(true);
   };
 
   const handleCloseBadExit = (mode: boolean) => {

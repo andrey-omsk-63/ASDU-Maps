@@ -52,15 +52,8 @@ const MapCreatePoint = (props: {
       massKey.push(key);
       massDat.push(dat[key]);
     }
-    for (let i = 0; i < massKey.length; i++) {
-      let maskCurrencies = {
-        value: "",
-        label: "",
-      };
-      maskCurrencies.value = massKey[i];
-      maskCurrencies.label = massDat[i];
-      currencies.push(maskCurrencies);
-    }
+    for (let i = 0; i < massKey.length; i++)
+      currencies.push({ value: massKey[i], label: massDat[i] });
     flagInput = false;
   }
 

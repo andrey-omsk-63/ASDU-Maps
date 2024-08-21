@@ -184,10 +184,9 @@ const MapCreatePK = (props: {
           }
         }
         currenciesPlan = PreparCurrenciesPlan(sumPlan, massNumPk);
-        for (let i = 0; i < currenciesPlan.length; i++) {
+        for (let i = 0; i < currenciesPlan.length; i++)
           if (currenciesPlan[i].label === NewCoordPlan.nomPK.toString())
             startPlan = currenciesPlan[i].value;
-        }
         // создание списка перекрёстков в правом окне
         for (let i = 0; i < massplan.plans[props.idx].coordPlan.length; i++)
           massPkId.push(massplan.plans[props.idx].coordPlan[i].id);
@@ -282,9 +281,8 @@ const MapCreatePK = (props: {
             // Сохранить как новый
             if (NewCoordPlan.nomPK === oldNomPK) {
               let nom = -1;
-              for (let i = 0; i < currenciesPlan.length; i++) {
+              for (let i = 0; i < currenciesPlan.length; i++) 
                 if (currenciesPlan[i].label === oldNomPK.toString()) nom = i;
-              }
               let nomm = nom === currenciesPlan.length - 1 ? nom - 1 : nom + 1;
               NewCoordPlan.nomPK = Number(currenciesPlan[nomm].label);
             }

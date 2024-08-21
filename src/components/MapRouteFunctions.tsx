@@ -164,9 +164,6 @@ const MakeCONT = (massRoute: any, massroute: any) => {
     "<div class='my-balloon'>" +
     '<a class="exit" href="#"><b>&#10006;</b></a>' +
     cont;
-  //PLANER - номер выбраного ПК
-  //VIEWDIR - разрешение посмотра инф-ии о направл.в балунt
-  //console.log('###:',VIEWDIR)
   if (PLANER > 0 && VIEWDIR) {
     CONT +=
       "<div class='go-over'>" +
@@ -234,7 +231,6 @@ export const MakePolyRoute = (
       getMassPolyRouteOptions1(ymaps, massRoute1[i], InfoRoute, RunReBing)
     );
     mapp.current.geoObjects.add(massPolyRoute1[i]);
-    //massPolyRoute1[i].options.set('boundsAutoApply', true);
   }
 
   for (let i = 0; i < massCoord2.length; i++) {

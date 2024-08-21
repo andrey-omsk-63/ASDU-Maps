@@ -2,7 +2,6 @@ import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { massplanCreate } from "../../redux/actions";
 
-//import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
@@ -11,7 +10,6 @@ import { FooterContent, BadExit, WaysInput } from "./../MapServiceFunctions";
 import { StrTablVert, ShiftOptimal } from "./../MapServiceFunctions";
 import { PreparCurrenciesFaza, InputFromList } from "./../MapServiceFunctions";
 
-//import { PLANER } from "./../MainMapGl";
 import { MaxFaz } from "./../MapConst";
 
 //import { Setuper } from "./../../interfacePlans.d"; // интерфейс
@@ -46,7 +44,6 @@ const MapVertexSetup = (props: { close: Function }) => {
     return massplanReducer.massplan;
   });
   const dispatch = useDispatch();
-  //console.log("Setup_massplan:", massplan);
   //========================================================
   const [open, setOpen] = React.useState(true);
   const [badExit, setBadExit] = React.useState(false);

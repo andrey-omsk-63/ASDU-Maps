@@ -35,11 +35,7 @@ let MasSvg: any = ["", ""];
 let propsSvg: any;
 let waitPict = false;
 
-const MapWaysFormMenu = (props: {
-  setOpen: any;
-  idx: number;
-  setSvg: any;
-}) => {
+const MapWaysFormMenu = (props: { setOpen: any; idx: number; setSvg: any }) => {
   //console.log("MapWaysFormMenu:", oldIdx);
 
   //== Piece of Redux =======================================
@@ -120,9 +116,7 @@ const MapWaysFormMenu = (props: {
       if (massTargetRoute.length === 1) {
         fromIdx = massTargetNum[0];
         OpenBind(0);
-      } else {
-        OpenMenu = true;
-      }
+      } else OpenMenu = true;
     }
   }
   //==========================================================

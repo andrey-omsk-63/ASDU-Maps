@@ -203,9 +203,7 @@ const MapPointDataError = (props: {
       } else {
         if (props.toCross.pointBbArea === "0") {
           SendSocketDeleteWayToPoint(WS, props.fromCross, props.toCross);
-        } else {
-          SendSocketDeleteWay(WS, props.fromCross, props.toCross);
-        }
+        } else SendSocketDeleteWay(WS, props.fromCross, props.toCross);
       }
     }
     handleCloseEnd();
@@ -304,7 +302,7 @@ const MapPointDataError = (props: {
 
   const MakeRecordMassRoute = (mode: boolean, mass: any) => {
     props.setSvg(null);
-    console.log("!!!MakeRecordMassRoute:", mode, mass);
+    //console.log("!!!MakeRecordMassRoute:", mode, mass);
   };
 
   return (

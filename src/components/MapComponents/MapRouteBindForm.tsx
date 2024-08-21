@@ -14,8 +14,6 @@ import { Directions } from "../../App"; // интерфейс massForm
 import { styleSetBindForm } from "../MainMapStyle";
 import { styleFormNameRoute, styleModalEnd } from "../MainMapStyle";
 
-//import { StrokaMenuFooterBind } from "./../MapServiceFunctions";
-
 let HAVE = 0;
 
 const MapRouteBindForm = (props: {
@@ -67,7 +65,7 @@ const MapRouteBindForm = (props: {
     let nameDir = NAME + i.toString();
     if (nameDir !== props.maskForm.name) massNameDir.push(nameDir);
   }
- 
+
   let soob1 = massdk[props.idxA].area ? " перекрёстка " : " объекта ";
   let soob2 = massdk[props.idxB].area ? " c перекрёстком " : " c объектом ";
 

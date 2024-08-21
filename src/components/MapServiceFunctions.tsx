@@ -327,15 +327,8 @@ export const PreparCurrenciesMode = () => {
     massKey.push(key);
     massDat.push(dat[key]);
   }
-  let maskCurrencies = {
-    value: "0",
-    label: "Все режимы",
-  };
-  for (let i = 0; i < massKey.length; i++) {
-    maskCurrencies.value = massKey[i];
-    maskCurrencies.label = massDat[i];
-    currencies.push({ ...maskCurrencies });
-  }
+  for (let i = 0; i < massKey.length; i++)
+    currencies.push({ value: massKey[i], label: massDat[i] });
   return currencies;
 };
 
@@ -354,15 +347,8 @@ export const PreparCurrenciesPK = () => {
     massKey.push(key);
     massDat.push(dat[key]);
   }
-  let maskCurrencies = {
-    value: "0",
-    label: "Все режимы",
-  };
-  for (let i = 0; i < massKey.length; i++) {
-    maskCurrencies.value = massKey[i];
-    maskCurrencies.label = massDat[i];
-    currencies.push({ ...maskCurrencies });
-  }
+  for (let i = 0; i < massKey.length; i++)
+    currencies.push({ value: massKey[i], label: massDat[i] });
   return currencies;
 };
 
@@ -379,15 +365,8 @@ export const PreparCurrenciesCalc = () => {
     massKey.push(key);
     massDat.push(dat[key]);
   }
-  let maskCurrencies = {
-    value: "0",
-    label: "Все режимы",
-  };
-  for (let i = 0; i < massKey.length; i++) {
-    maskCurrencies.value = massKey[i];
-    maskCurrencies.label = massDat[i];
-    currencies.push({ ...maskCurrencies });
-  }
+  for (let i = 0; i < massKey.length; i++)
+    currencies.push({ value: massKey[i], label: massDat[i] });
   return currencies;
 };
 
@@ -404,15 +383,8 @@ export const PreparCurrenciesOptim = () => {
     massKey.push(key);
     massDat.push(dat[key]);
   }
-  let maskCurrencies = {
-    value: "0",
-    label: "Все режимы",
-  };
-  for (let i = 0; i < massKey.length; i++) {
-    maskCurrencies.value = massKey[i];
-    maskCurrencies.label = massDat[i];
-    currencies.push({ ...maskCurrencies });
-  }
+  for (let i = 0; i < massKey.length; i++)
+    currencies.push({ value: massKey[i], label: massDat[i] });
   return currencies;
 };
 
@@ -432,15 +404,8 @@ export const PreparCurrenciesForm = () => {
     massKey.push(key);
     massDat.push(dat[key]);
   }
-  let maskCurrencies = {
-    value: "0",
-    label: "Все режимы",
-  };
-  for (let i = 0; i < massKey.length; i++) {
-    maskCurrencies.value = massKey[i];
-    maskCurrencies.label = massDat[i];
-    currencies.push({ ...maskCurrencies });
-  }
+  for (let i = 0; i < massKey.length; i++)
+    currencies.push({ value: massKey[i], label: massDat[i] });
   return currencies;
 };
 
@@ -448,28 +413,21 @@ export const PreparCurrencies = () => {
   const currencies: any = [];
   let dat: Array<string> = [];
   dat.push("Все подрайоны");
-  for (let i = 0; i < SubArea.length; i++) {
+  for (let i = 0; i < SubArea.length; i++)
     dat.push("● " + SubArea[i].toString() + "-й подрайон");
-  }
   let massKey: any = [];
   let massDat: any = [];
   for (let key in dat) {
     massKey.push(key);
     massDat.push(dat[key]);
   }
-  let maskCurrencies = {
-    value: "0",
-    label: "Все районы",
-  };
-  for (let i = 0; i < massKey.length; i++) {
-    maskCurrencies.value = massKey[i];
-    maskCurrencies.label = massDat[i];
-    currencies.push({ ...maskCurrencies });
-  }
+  for (let i = 0; i < massKey.length; i++)
+    currencies.push({ value: massKey[i], label: massDat[i] });
   if (debug) {
-    maskCurrencies.value = (massKey.length + 1).toString();
-    maskCurrencies.label = "● Добавить подрайон";
-    currencies.push({ ...maskCurrencies });
+    currencies.push({
+      value: (massKey.length + 1).toString(),
+      label: "● Добавить подрайон",
+    });
   }
   return currencies;
 };
@@ -484,15 +442,8 @@ export const PreparCurrenciesFaza = (mazFaz: number) => {
     massKey.push(key);
     massDat.push(dat[key]);
   }
-  let maskCurrencies = {
-    value: "0",
-    label: "Все режимы",
-  };
-  for (let i = 0; i < massKey.length; i++) {
-    maskCurrencies.value = massKey[i];
-    maskCurrencies.label = massDat[i];
-    currencies.push({ ...maskCurrencies });
-  }
+  for (let i = 0; i < massKey.length; i++)
+    currencies.push({ value: massKey[i], label: massDat[i] });
   return currencies;
 };
 
@@ -563,7 +514,7 @@ export const InputMenu = (func: any, currency: any, currencies: any) => {
     </>
   );
 };
-//color: currency === "0" ? "blue" : "black",
+
 export const InputMenuMODE = (func: any, currency: any, currencies: any) => {
   const styleSet = {
     width: "160px",
@@ -964,7 +915,6 @@ export const GetPointOptions = (
   pointAaIndex: number,
   pointBbIndex: number,
   massdk: any
-  //massroute: any
 ) => {
   let idxMap = -1;
   let SubArea = massdk[index].subarea.toString();
@@ -2246,15 +2196,8 @@ export const PreparCurrenciesPlan = (
     massKey.push(key);
     massDat.push(dat[key]);
   }
-  let maskCurrencies = {
-    value: "0",
-    label: "Все режимы",
-  };
-  for (let i = 0; i < massKey.length; i++) {
-    maskCurrencies.value = massKey[i];
-    maskCurrencies.label = massDat[i];
-    currencies.push({ ...maskCurrencies });
-  }
+  for (let i = 0; i < massKey.length; i++)
+    currencies.push({ value: massKey[i], label: massDat[i] });
   return currencies;
 };
 

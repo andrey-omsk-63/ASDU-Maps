@@ -12,10 +12,6 @@ import { MakeStylSpisPK06 } from '../../MainMapStyle';
 
 const MapViewPK = (props: { view: boolean; idx: number; handleClose: Function }) => {
   //== Piece of Redux =======================================
-  // const map = useSelector((state: any) => {
-  //   const { mapReducer } = state;
-  //   return mapReducer.map;
-  // });
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
     return massrouteReducer.massroute;
@@ -62,9 +58,8 @@ const MapViewPK = (props: { view: boolean; idx: number; handleClose: Function })
   const InputArrowView = (id: number) => {
     let exitId = -1;
     let area = plan.areaPK;
-    for (let i = 0; i < plan.coordPlan.length; i++) {
+    for (let i = 0; i < plan.coordPlan.length; i++) 
       if (i && plan.coordPlan[i].id === id) exitId = plan.coordPlan[i - 1].id;
-    }
     let have = false;
     if (exitId >= 0) {
       for (let i = 0; i < massroute.ways.length; i++) {
