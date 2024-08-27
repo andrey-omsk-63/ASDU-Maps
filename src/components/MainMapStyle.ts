@@ -135,8 +135,7 @@ export const styleSetAdress = {
   height: "14vh",
   marginTop: "9vh",
   marginLeft: "48px",
-  border: "3px solid #000",
-  borderColor: "#FFFEF7",
+  border: "3px solid #FFFEF7", // молоко
   borderRadius: 1,
   boxShadow: 24,
   bgcolor: "#FFFEF7",
@@ -264,13 +263,12 @@ export const styleSetImg = {
 
 export const styleAppBind = {
   fontSize: 14,
-  border: "2px solid #000",
   bgcolor: "background.paper",
   width: 180,
   maxHeight: "27px",
   minHeight: "27px",
-  borderColor: "primary.main",
-  borderRadius: 2,
+  border: "2px solid #fff",
+  borderRadius: 1,
   color: "black",
   textTransform: "unset !important",
 };
@@ -326,13 +324,12 @@ export const styleBind0333 = {
 
 export const styleBind04 = {
   fontSize: 12,
-  border: "1px solid #000",
   bgcolor: "#E6F5D6", // светло-салатовый
   maxHeight: "27px",
   minHeight: "27px",
   maxWidth: 58,
   minWidth: 58,
-  borderColor: "#d4d4d4", // серый
+  border: "1px solid #d4d4d4", // серый
   borderRadius: 1,
   color: "black",
   textTransform: "unset !important",
@@ -341,13 +338,12 @@ export const styleBind04 = {
 
 export const styleBind043 = {
   fontSize: 14,
-  border: "1px solid #000",
-  bgcolor: "#BAE186", // тёмно-салатовый
+  bgcolor: "#BAE186", // салатовый
   maxHeight: "27px",
   minHeight: "27px",
   maxWidth: 58,
   minWidth: 58,
-  borderColor: "#93D145",
+  border: "1px solid #93D145", // тёмно-салатовый
   borderRadius: 1,
   color: "black",
   textTransform: "unset !important",
@@ -356,13 +352,12 @@ export const styleBind043 = {
 
 export const styleBind041 = {
   fontSize: 12,
-  border: "1px solid #000",
   bgcolor: "#E6F5D6",
   maxHeight: "27px",
   minHeight: "27px",
   maxWidth: 58,
   minWidth: 58,
-  borderColor: "#d4d4d4", // серый
+  border: "1px solid #d4d4d4", // серый
   borderRadius: 1,
   color: "black",
   textTransform: "unset !important",
@@ -371,13 +366,12 @@ export const styleBind041 = {
 
 export const styleBind042 = {
   fontSize: 14,
-  border: "1px solid #000",
-  bgcolor: "#BAE186", // тёмно-салатовый
+  bgcolor: "#BAE186", // салатовый
   maxHeight: "27px",
   minHeight: "27px",
   maxWidth: 58,
   minWidth: 58,
-  borderColor: "#93D145",
+  border: "1px solid #93D145", // тёмно-салатовый
   borderRadius: 1,
   color: "black",
   textTransform: "unset !important",
@@ -386,13 +380,12 @@ export const styleBind042 = {
 
 export const styleBind05 = {
   fontSize: 12,
-  border: "1px solid #000",
-  bgcolor: "#E6F5D6",
+  bgcolor: "#E6F5D6", // светло-салатовый
   width: 150,
   maxHeight: "21px",
   minHeight: "21px",
+  border: "1px solid #d4d4d4", // серый
   borderRadius: 1,
-  borderColor: "#d4d4d4",
   color: "black",
   textTransform: "unset !important",
   boxShadow: 6,
@@ -416,7 +409,7 @@ export const styleBind08 = {
   fontSize: 9.8,
   height: "24.8vh",
   width: "99%",
-  bgcolor: "#F1F5FB", // светло серый
+  bgcolor: "#F1F5FB", // светло-серый
   border: "1px solid #d4d4d4", // серый
   borderRadius: 1,
   boxShadow: 6,
@@ -607,8 +600,7 @@ export const styleFW03 = {
   backgroundColor: "#E9F5D8",
   color: "black",
   marginTop: 1,
-  border: "1px solid #000",
-  borderColor: "#d4d4d4", // серый
+  border: "1px solid #d4d4d4", // серый
   borderRadius: 1,
   textTransform: "unset !important",
   boxShadow: 1,
@@ -619,11 +611,10 @@ export const styleFW04 = {
   maxHeight: "21px",
   minHeight: "21px",
   width: 369,
-  backgroundColor: "#bae186",
+  backgroundColor: "#bae186", // салатовый
   color: "black",
   marginTop: 1,
-  border: "1px solid #000",
-  borderColor: "#93D145",
+  border: "1px solid #93D145", // тёмно-салатовый
   borderRadius: 1,
   textTransform: "unset !important",
   boxShadow: 6,
@@ -636,8 +627,7 @@ export const styleFW05 = {
   width: 285,
   backgroundColor: "#E9F5D8", // светло салатовый
   color: "black",
-  border: "1px solid #000",
-  borderColor: "#d4d4d4", // серый
+  border: "1px solid #d4d4d4", // серый
   borderRadius: 1,
   textTransform: "unset !important",
   textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
@@ -651,8 +641,7 @@ export const styleFW06 = {
   width: 285,
   backgroundColor: "#bae186", // тёмно салатовый
   color: "black",
-  border: "1px solid #000",
-  borderColor: "#93D145",
+  border: "1px solid #93D145", // тёмно-салатовый
   borderRadius: 1,
   textTransform: "unset !important",
   textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
@@ -712,10 +701,9 @@ export const styleFormPK01 = {
 export const MakeStyleFormPK02 = () => {
   let ratio = window.innerHeight < 800 ? 0.775 : 0.803;
   const styleFormPK02 = {
-    border: "1px solid #000",
     bgcolor: "#F0F0F0",
     height: window.innerHeight * ratio,
-    borderColor: "primary.main",
+    border: "1px solid #fff",
     borderRadius: 1,
     overflowX: "auto",
     boxShadow: 6,
@@ -729,8 +717,8 @@ export const MakeStyleFormPK022 = (idx: any) => {
   const styleFormPK02 = {
     width: "340px",
     height: window.innerHeight * ratio,
-    background: 'linear-gradient(180deg, #F1F5FB 59%, #DEE8F5 )',
-    border: "1px solid #F1F5FB",
+    background: "linear-gradient(180deg, #F1F5FB 59%, #DEE8F5 )",
+    border: "1px solid #F1F5FB", // серый
     borderRadius: 1,
     marginTop: 0.8,
     marginRight: mr,
@@ -746,9 +734,8 @@ export const styleFormPK03 = {
   maxHeight: "24px",
   minHeight: "24px",
   backgroundColor: "#E6F5D6", // светло салатовый
-  border: "1px solid #000",
+  border: "1px solid #d4d4d4", // серый
   borderRadius: 1,
-  borderColor: "#d4d4d4", // серый
   textTransform: "unset !important",
   boxShadow: 6,
   textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
@@ -762,7 +749,7 @@ export const styleFormPK04 = {
   borderRadius: 2,
   margin: "1px 0 5px 5px",
   cursor: "grab",
-  bgcolor: "#F8FCF3", // светло светло салатовый
+  bgcolor: "#F8FCF3", // светло-светло-салатовый
   display: "flex",
   paddingLeft: 0.5,
   boxShadow: 4,
@@ -804,8 +791,7 @@ export const MakeStylSpisPK01 = () => {
   const styleSpisPK01 = {
     width: "97.8%",
     height: window.innerHeight * ratio,
-    //bgcolor: "#F1F5FB",
-    background: 'linear-gradient(180deg, #F1F5FB 59%, #DEE8F5 )',
+    background: "linear-gradient(180deg, #F1F5FB 59%, #DEE8F5 )",
     border: "1px solid #d4d4d4",
     borderRadius: 1,
     marginTop: 1,
@@ -864,9 +850,8 @@ export const styleSpisPK03 = {
   width: 180,
   marginBottom: 0.7,
   backgroundColor: "#E6F5D6", // светло салатовый
-  border: "1px solid #000",
   borderRadius: 1,
-  borderColor: "#d4d4d4", // серый
+  border: "1px solid #d4d4d4", // серый
   textTransform: "unset !important",
   color: "black",
   boxShadow: 6,
@@ -959,7 +944,7 @@ export const styleSetPK02 = {
 export const styleSetPK03 = {
   fontSize: 15,
   textAlign: "left",
-  background: 'linear-gradient(180deg, #F1F5FB 59%, #DEE8F5 )',
+  background: "linear-gradient(180deg, #F1F5FB 59%, #DEE8F5 )",
   border: "1px solid #d4d4d4",
   borderRadius: 1,
   color: "black",
@@ -982,8 +967,7 @@ export const styleSetPK05 = {
   width: 285,
   backgroundColor: "#E9F5D8", // светло салатовый
   color: "black",
-  border: "1px solid #000",
-  borderColor: "#d4d4d4", // серый
+  border: "1px solid #d4d4d4", // серый
   borderRadius: 1,
   textTransform: "unset !important",
   textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
@@ -995,10 +979,9 @@ export const styleSetPK06 = {
   maxHeight: "28px",
   minHeight: "28px",
   width: 285,
-  backgroundColor: "#bae186", // тёмно салатовый
+  backgroundColor: "#bae186", // салатовый
   color: "black",
-  border: "1px solid #000",
-  borderColor: "#93D145",
+  border: "1px solid #93D145", // тёмно-салатовый
   borderRadius: 1,
   textTransform: "unset !important",
   textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
@@ -1008,8 +991,8 @@ export const styleSetPK06 = {
 export const stylePKForm00 = {
   maxHeight: window.innerHeight * 0.8,
   minHeight: "10px",
-  bgcolor: "#F1F5FB", // серо голубой
-  border: "1px solid #F1F5FB", // цвет фона
+  bgcolor: "#F1F5FB", // серо-голубой
+  border: "1px solid #F1F5FB", // серо-голубой
   borderBottomLeftRadius: 2,
   borderBottomRightRadius: 2,
   textAlign: "center",
@@ -1115,7 +1098,7 @@ export const styleWindPK01 = {
 export const styleWindPK02 = {
   fontSize: 12.9,
   textAlign: "left",
-  background: 'linear-gradient(180deg, #F1F5FB 59%, #DEE8F5 )',
+  background: "linear-gradient(180deg, #F1F5FB 59%, #DEE8F5 )",
   border: "1px solid #d4d4d4",
   borderRadius: 1,
   color: "black",
@@ -1123,12 +1106,6 @@ export const styleWindPK02 = {
   p: 0.5,
   margin: "3px 0 1px 0",
 };
-
-//export const styleWindPK03 = {
-  //marginBottom: 0.5,
-  //height: window.innerHeight * 0.1,
-  //padding: "0px 0px 5px",
-//};
 
 export const styleWindPK04 = {
   border: "1px solid #d4d4d4",
@@ -1153,7 +1130,6 @@ export const styleWindPK055 = {
   cursor: "pointer",
   textAlign: "center",
 };
-
 
 export const styleWindPK06 = {
   fontSize: 8.3,
@@ -1201,7 +1177,7 @@ export const styleWVG01 = (ht: number) => {
   const styleWVG01 = {
     marginTop: 1,
     height: ht + "vh",
-    background: 'linear-gradient(180deg, #F1F5FB 59%, #DEE8F5 )',
+    background: "linear-gradient(180deg, #F1F5FB 59%, #DEE8F5 )",
     border: "1px solid #d4d4d4", // серый
     borderRadius: 1,
     boxShadow: 12,

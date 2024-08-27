@@ -1,14 +1,6 @@
 //import * as React from "react";
 //import { useSelector } from "react-redux";
 
-// import Grid from "@mui/material/Grid";
-// import Button from "@mui/material/Button";
-// import Box from "@mui/material/Box";
-// import TextField from "@mui/material/TextField";
-// import MenuItem from "@mui/material/MenuItem";
-// import Modal from "@mui/material/Modal";
-// import Typography from "@mui/material/Typography";
-
 import "./MainMapStyle.css";
 
 import { DecodingCoord } from "./MapServiceFunctions";

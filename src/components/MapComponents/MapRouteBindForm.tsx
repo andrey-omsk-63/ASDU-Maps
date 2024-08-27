@@ -2,17 +2,16 @@ import * as React from "react";
 import { useSelector } from "react-redux";
 
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 
 import MapWaysFormaMain from "./MapWaysFormaMain";
 
-import { BadExit } from "../MapServiceFunctions";
+import { BadExit, ExitCross } from "../MapServiceFunctions";
 
 import { Directions } from "../../App"; // интерфейс massForm
 
 import { styleSetBindForm } from "../MainMapStyle";
-import { styleFormNameRoute, styleModalEnd } from "../MainMapStyle";
+import { styleFormNameRoute } from "../MainMapStyle";
 
 let HAVE = 0;
 
@@ -73,9 +72,7 @@ const MapRouteBindForm = (props: {
     <>
       <Modal open={openSetForm} onClose={handleCloseEnd}>
         <Box sx={styleSetBindForm}>
-          <Button sx={styleModalEnd} onClick={handleCloseSetEnd}>
-            <b>&#10006;</b>
-          </Button>
+          {ExitCross(handleCloseSetEnd)}
           <Box sx={styleFormNameRoute}>
             Входящая связь {soob1}
             <b>{massdk[props.idxA].nameCoordinates}</b>

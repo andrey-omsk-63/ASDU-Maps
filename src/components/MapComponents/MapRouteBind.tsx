@@ -100,7 +100,6 @@ const MapRouteBind = (props: {
   func: any; // функция возврата в родительский компонент
   mode: number; // режим открытия RouteBind
 }) => {
-  //console.log('MapRouteBind:', props.mode, props.reqRoute);
   //== Piece of Redux ======================================
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
@@ -278,22 +277,20 @@ const MapRouteBind = (props: {
   const ReCalcIntensTr = () => {
     if (!masFormIn[beginMassTotal / kolFrom].edited) {
       let chPr = 0;
-      for (let i = 0; i < kolFrom; i++) {
+      for (let i = 0; i < kolFrom; i++)
         if (massTotal[beginMassTotal + i].have)
           chPr += massTotal[beginMassTotal + i].intensTrIn;
-      }
       masFormIn[beginMassTotal / kolFrom].intensTr = chPr;
     }
   };
 
   const ReCalcIntensFl = () => {
     let sumIntensTrIn = 0;
-    for (let i = 0; i < kolFrom; i++) {
+    for (let i = 0; i < kolFrom; i++)
       if (massTotal[beginMassTotal + i].have)
         sumIntensTrIn += massTotal[beginMassTotal + i].intensTrIn;
-    }
-    masFormIn[beginMassTotal / kolFrom].intensFl =
-      masFormIn[beginMassTotal / kolFrom].intensTr - sumIntensTrIn;
+    let idx = beginMassTotal / kolFrom;
+    masFormIn[idx].intensFl = masFormIn[idx].intensTr - sumIntensTrIn;
   };
 
   const SetFrom = (mode: number, valueInp: number) => {

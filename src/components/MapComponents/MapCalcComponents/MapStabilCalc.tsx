@@ -9,7 +9,6 @@ import Modal from "@mui/material/Modal";
 import { StrTablVert, WaysInput } from "../../MapServiceFunctions";
 
 import { styleWVG00, styleModalEndBind } from "../../MainMapStyle";
-//import { styleSetPK05, styleSetPK06 } from "../../MainMapStyle";
 import { styleFormPK03, styleSetPK04 } from "../../MainMapStyle";
 import { styleWVG01, styleWVG02, styleFormPK01 } from "../../MainMapStyle";
 import { styleCalc01, styleCalc02 } from "../../MainMapStyle";

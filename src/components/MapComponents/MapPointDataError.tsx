@@ -63,7 +63,6 @@ const MapPointDataError = (props: {
   update: any;
   setSvg: any;
 }) => {
-  //console.log("MapPointDataError_svg:", props.svg);
   //== Piece of Redux =======================================
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
@@ -184,9 +183,8 @@ const MapPointDataError = (props: {
         props.fromCross.pointAaID === massroutepro.ways[i].sourceID &&
         props.toCross.pointBbID === massroutepro.ways[i].targetID &&
         props.toCross.pointBbArea === massroutepro.ways[i].targetArea.toString()
-      ) {
+      )
         idx = i;
-      }
     }
     if (idx >= 0) {
       massroutepro.ways.splice(idx, 1);
@@ -302,7 +300,6 @@ const MapPointDataError = (props: {
 
   const MakeRecordMassRoute = (mode: boolean, mass: any) => {
     props.setSvg(null);
-    //console.log("!!!MakeRecordMassRoute:", mode, mass);
   };
 
   return (

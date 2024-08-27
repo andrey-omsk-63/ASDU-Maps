@@ -73,15 +73,21 @@ export const KnopProps = (styleXX: any, func: any, rec: any, idx: any) => {
   );
 };
 
+export const ExitCross = (func: any) => {
+  return (
+    <Button sx={styleModalEnd} onClick={() => func()}>
+      <b>&#10006;</b>
+    </Button>
+  );
+};
+
 export const SubareaFindById = (massdk: any, area: number, id: number) => {
   let subarea = -1;
   let areA = area ? Number(AREA) : 0;
-
   for (let j = 0; j < massdk.length; j++) {
     if (massdk[j].ID === id && massdk[j].area === areA)
       subarea = massdk[j].subarea;
   }
-
   return subarea;
 };
 

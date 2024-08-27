@@ -3,20 +3,18 @@ import { useSelector, useDispatch } from "react-redux";
 import { massplanCreate } from "../../redux/actions";
 
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 
 import { FooterContent, BadExit, WaysInput } from "./../MapServiceFunctions";
-import { StrTablVert, ShiftOptimal } from "./../MapServiceFunctions";
+import { StrTablVert, ShiftOptimal, ExitCross } from "./../MapServiceFunctions";
 import { PreparCurrenciesFaza, InputFromList } from "./../MapServiceFunctions";
 
 import { MaxFaz } from "./../MapConst";
 
 //import { Setuper } from "./../../interfacePlans.d"; // интерфейс
 
-import { styleModalEnd, styleSetPK03 } from "./../MainMapStyle";
+import { styleSetPK03 } from "./../MainMapStyle";
 import { styleSetPK01, styleSetPK02 } from "./../MainMapStyle";
-//import { styleSetPK05, styleSetPK06 } from "./../MainMapStyle";
 
 // let maskForm: Setuper = {
 //   sumPhases: 3, // количество фаз
@@ -87,58 +85,55 @@ const MapVertexSetup = (props: { close: Function }) => {
       handleClose();
     } else handleCloseBad();
   };
-  const SetMinDuration = (valueInp: number) => {
-    massForm.minDuration = valueInp;
+
+  const Haver = () => {
     HAVE++;
     setTrigger(!trigger); // ререндер
+  };
+
+  const SetMinDuration = (valueInp: number) => {
+    massForm.minDuration = valueInp;
+    Haver();
   };
 
   const ChangeOptimal = () => {
     massForm.optimal = !massForm.optimal;
-    HAVE++;
-    setTrigger(!trigger); // ререндер
+    Haver();
   };
 
   const SetSatur = (valueInp: number) => {
     massForm.satur = valueInp; // поток насыщения(т.е./ч.)
-    HAVE++;
-    setTrigger(!trigger); // ререндер
+    Haver();
   };
 
   const SetIntens = (valueInp: number) => {
     massForm.intens = valueInp;
-    HAVE++;
-    setTrigger(!trigger); // ререндер
+    Haver();
   };
 
   const SetDispers = (valueInp: number) => {
     massForm.dispers = valueInp;
-    HAVE++;
-    setTrigger(!trigger); // ререндер
+    Haver();
   };
 
   const SetOffsetBeginGreen = (valueInp: number) => {
     massForm.offsetBeginGreen = valueInp;
-    HAVE++;
-    setTrigger(!trigger); // ререндер
+    Haver();
   };
 
   const SetOffsetEndGreen = (valueInp: number) => {
     massForm.offsetEndGreen = valueInp;
-    HAVE++;
-    setTrigger(!trigger); // ререндер
+    Haver();
   };
 
   const SetWtStop = (valueInp: number) => {
     massForm.wtStop = valueInp;
-    HAVE++;
-    setTrigger(!trigger); // ререндер
+    Haver();
   };
 
   const SetWtDelay = (valueInp: number) => {
     massForm.wtDelay = valueInp;
-    HAVE++;
-    setTrigger(!trigger); // ререндер
+    Haver();
   };
 
   const handleChangeFaza = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -219,9 +214,7 @@ const MapVertexSetup = (props: { close: Function }) => {
     <>
       <Modal open={open} onClose={CloseEnd} hideBackdrop={false}>
         <Box sx={styleSetPK01(500, 505)}>
-          <Button sx={styleModalEnd} onClick={() => handleCloseBad()}>
-            <b>&#10006;</b>
-          </Button>
+          {ExitCross(handleCloseBad)}
           <Box sx={styleSetPK02}>
             <b>Системные параметры по умолчанию</b>
           </Box>

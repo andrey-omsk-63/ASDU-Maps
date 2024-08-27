@@ -7,13 +7,13 @@ import Button from "@mui/material/Button";
 import MapPointDataError from "./MapPointDataError";
 import MapRouteBind from "./MapRouteBind";
 
-import { RecevKeySvg } from "./../MapServiceFunctions";
+import { RecevKeySvg } from "../MapServiceFunctions";
 
-import { SendSocketGetSvg } from "./../MapSocketFunctions";
+import { SendSocketGetSvg } from "../MapSocketFunctions";
 
-import { styleModalEnd, styleFW01, styleFW02 } from "./../MainMapStyle";
+import { styleModalEnd, styleFW01, styleFW02 } from "../MainMapStyle";
 
-import { masSvg } from "./../MainMapGl";
+import { masSvg } from "../MainMapGl";
 
 let openSetErr = false;
 let soobErr = "";
@@ -36,8 +36,6 @@ let propsSvg: any;
 let waitPict = false;
 
 const MapWaysFormMenu = (props: { setOpen: any; idx: number; setSvg: any }) => {
-  //console.log("MapWaysFormMenu:", oldIdx);
-
   //== Piece of Redux =======================================
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;
@@ -137,7 +135,7 @@ const MapWaysFormMenu = (props: { setOpen: any; idx: number; setSvg: any }) => {
     let resStr = [];
     resStr.push(
       <Button
-        key={Math.random()}
+        //key={Math.random()}
         sx={styleModalEnd}
         onClick={() => handleClose(777)}
       >

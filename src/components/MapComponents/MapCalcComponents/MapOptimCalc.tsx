@@ -153,9 +153,7 @@ const MapOptimCalc = (props: {
     if (mode) {
       openGrafik = true;
       setTrigger(!trigger);
-    } else {
-      handleClose();
-    }
+    } else handleClose();
   };
 
   const SetTimeMin = (valueInp: number) => {

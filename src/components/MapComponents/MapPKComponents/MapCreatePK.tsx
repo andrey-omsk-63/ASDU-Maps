@@ -12,14 +12,14 @@ import MapSetupPK from "./MapSetupPK";
 import { BadExit, UniqueName, InputFromList } from "../../MapServiceFunctions";
 import { PreparCurrenciesPlan, InputNamePK } from "../../MapServiceFunctions";
 import { SaveFormPK, InputArrow, ExitArrow } from "../../MapServiceFunctions";
-import { SubareaFindById } from "../../MapServiceFunctions";
+import { SubareaFindById, ExitCross } from "../../MapServiceFunctions";
 
 import { AREA, SUBAREA, MASSPK, PLANER } from "../../MainMapGl";
-import { SUMPK } from "../../MapConst";
+import { SUMPK, MassBoard } from "../../MapConst";
 
 import { PlanCoord } from "../../../interfacePlans.d"; // интерфейс
 
-import { styleModalEnd, MakeStyleFormPK00 } from "../../MainMapStyle";
+import { MakeStyleFormPK00 } from "../../MainMapStyle";
 import { styleFormPK01, styleFormPK04 } from "../../MainMapStyle";
 import { MakeStyleFormPK022, styleFormPK05 } from "../../MainMapStyle";
 import { styleFormPK07 } from "../../MainMapStyle";
@@ -44,8 +44,9 @@ let soobErr = "";
 let EscClinch = false;
 let needSort = false;
 let oldNomPK = -1;
-
 let currenciesPlan: any = [];
+let massBoard = MassBoard;
+let soobForArrow = "";
 
 let NewCoordPlan: PlanCoord = {
   nomPK: 0, // номер плана координации
@@ -58,21 +59,6 @@ let NewCoordPlan: PlanCoord = {
   phaseOptim: true, // оптимизировать длительност фаз
   coordPlan: [], // id перекрёстков входящих в ПК
 };
-
-let massBoard = [
-  {
-    ID: 0,
-    title: "Откуда",
-    items: [],
-  },
-  {
-    ID: 1,
-    title: "Куда",
-    items: [],
-  },
-];
-
-let soobForArrow = "";
 
 const MapCreatePK = (props: {
   setOpen: Function; // функция возврата в родительский компонент
@@ -97,7 +83,6 @@ const MapCreatePK = (props: {
     const { statsaveReducer } = state;
     return statsaveReducer.datestat;
   });
-  //console.log("massplan:", massplan);
   const dispatch = useDispatch();
   //===========================================================
   const [openSetErr, setOpenSetErr] = React.useState(false);
@@ -157,10 +142,9 @@ const MapCreatePK = (props: {
         startPlan = "0";
         // создания списка свободных номеров ПК
         for (let i = 0; i < massplan.plans.length; i++) {
-          for (let j = 0; j < sumPlan; j++) {
+          for (let j = 0; j < sumPlan; j++)
             if (j + 1 === massplan.plans[i].nomPK)
               massNumPk.push(massplan.plans[i].nomPK);
-          }
         }
         currenciesPlan = PreparCurrenciesPlan(sumPlan, massNumPk);
         NewCoordPlan.nomPK = Number(currenciesPlan[0].label);
@@ -175,13 +159,12 @@ const MapCreatePK = (props: {
         NewCoordPlan.ks = massplan.plans[props.idx].ks;
         NewCoordPlan.phaseOptim = massplan.plans[props.idx].phaseOptim;
         for (let i = 0; i < massplan.plans.length; i++) {
-          for (let j = 0; j < sumPlan; j++) {
+          for (let j = 0; j < sumPlan; j++)
             if (
               j + 1 === massplan.plans[i].nomPK &&
               j + 1 !== NewCoordPlan.nomPK
             )
               massNumPk.push(massplan.plans[i].nomPK);
-          }
         }
         currenciesPlan = PreparCurrenciesPlan(sumPlan, massNumPk);
         for (let i = 0; i < currenciesPlan.length; i++)
@@ -216,10 +199,9 @@ const MapCreatePK = (props: {
         return b.id < a.id ? 1 : b.id > a.id ? -1 : 0;
       });
       let massRab: any = [];
-      for (let i = 0; i < massPkId.length; i++) {
+      for (let i = 0; i < massPkId.length; i++)
         for (let j = 0; j < massExist.length; j++)
           if (massPkId[i] === massExist[j].id) massRab.push(massExist[j]);
-      }
       massBoard[0].items = massVert; // левое окно
       massBoard[1].items = massRab; // правое окно
       isOpen = true;
@@ -281,7 +263,7 @@ const MapCreatePK = (props: {
             // Сохранить как новый
             if (NewCoordPlan.nomPK === oldNomPK) {
               let nom = -1;
-              for (let i = 0; i < currenciesPlan.length; i++) 
+              for (let i = 0; i < currenciesPlan.length; i++)
                 if (currenciesPlan[i].label === oldNomPK.toString()) nom = i;
               let nomm = nom === currenciesPlan.length - 1 ? nom - 1 : nom + 1;
               NewCoordPlan.nomPK = Number(currenciesPlan[nomm].label);
@@ -531,9 +513,7 @@ const MapCreatePK = (props: {
     <>
       {badExit && <>{BadExit(badExit, handleCloseBadExit)}</>}
       <Box sx={MakeStyleFormPK00(696, PLANER)}>
-        <Button sx={styleModalEnd} onClick={() => handleCloseBad()}>
-          <b>&#10006;</b>
-        </Button>
+        {ExitCross(handleCloseBad)}
         {HeaderFormPK()}
         {boards.map((board: any) => (
           <Box

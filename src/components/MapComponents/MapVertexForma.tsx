@@ -243,7 +243,7 @@ const MapVertexForma = (props: {
   const ChangeOptimal = () => {
     massForm.optimal = !massForm.optimal;
     Haver();
-    setTrigger(!trigger); // ререндер
+    //setTrigger(!trigger); // ререндер
   };
 
   const ChangeStrDel = (idx: number) => {

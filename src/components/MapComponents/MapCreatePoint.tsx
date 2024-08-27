@@ -24,7 +24,6 @@ let currencies: any = [];
 
 const MapCreatePoint = (props: {
   setOpen: any;
-  //region: number;
   coord: any;
   createPoint: any;
 }) => {
@@ -128,7 +127,6 @@ const MapCreatePoint = (props: {
   const handleChangeSArea = (event: React.ChangeEvent<HTMLInputElement>) => {
     let sub = Number(event.target.value);
     subArea = SubArea[sub];
-    console.log("subArea:", subArea);
     setCurrency(event.target.value);
   };
 

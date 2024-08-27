@@ -2,12 +2,10 @@ import * as React from "react";
 //import { useSelector } from "react-redux";
 
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 
-import { ReplaceInSvg } from "../../MapServiceFunctions";
+import { ReplaceInSvg, ExitCross } from "../../MapServiceFunctions";
 
-import { styleModalEnd } from "../../MainMapStyle";
 import { styleWVI00, styleWVI01 } from "../../MainMapStyle";
 
 //import { KolIn } from "./../../MapConst";
@@ -73,9 +71,7 @@ const MapWindViewImg = (props: {
   return (
     <Modal open={openImg} onClose={CloseEndGl} hideBackdrop={false}>
       <Box sx={styleWVI00}>
-        <Button sx={styleModalEnd} onClick={() => handleClose()}>
-          <b>&#10006;</b>
-        </Button>
+        {ExitCross(handleClose)}
         Перекрёсток с направлением <b>{nameIn + (props.idx + 1)}</b>
         <Box sx={styleWVI01}>
           <div dangerouslySetInnerHTML={{ __html: expSvg }} />

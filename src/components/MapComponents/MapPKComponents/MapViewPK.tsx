@@ -1,16 +1,21 @@
-import * as React from 'react';
-import { useSelector } from 'react-redux';
+import * as React from "react";
+import { useSelector } from "react-redux";
 
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Modal from '@mui/material/Modal';
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
 
-import { styleModalEnd, styleSpisPK05 } from '../../MainMapStyle';
-import { styleFormPK01, styleSpisPK04 } from '../../MainMapStyle';
-import { MakeStylSpisPK06 } from '../../MainMapStyle';
+import { ExitCross } from "../../MapServiceFunctions";
 
-const MapViewPK = (props: { view: boolean; idx: number; handleClose: Function }) => {
+import { styleSpisPK05 } from "../../MainMapStyle";
+import { styleFormPK01, styleSpisPK04 } from "../../MainMapStyle";
+import { MakeStylSpisPK06 } from "../../MainMapStyle";
+
+const MapViewPK = (props: {
+  view: boolean;
+  idx: number;
+  handleClose: Function;
+}) => {
   //== Piece of Redux =======================================
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
@@ -20,17 +25,17 @@ const MapViewPK = (props: { view: boolean; idx: number; handleClose: Function })
     const { massplanReducer } = state;
     return massplanReducer.massplan;
   });
-  console.log('massplan:', massplan);
+  console.log("massplan:", massplan);
   //=== инициализация ======================================
   let plan = massplan.plans[props.idx];
-  let nameArea = '';
+  let nameArea = "";
   //========================================================
   const handleClose = () => {
     props.handleClose(false);
   };
 
   const CloseEnd = (event: any, reason: string) => {
-    if (reason === 'escapeKeyDown') handleClose();
+    if (reason === "escapeKeyDown") handleClose();
   };
 
   const ExitArrowView = (id: number) => {
@@ -49,7 +54,7 @@ const MapViewPK = (props: { view: boolean; idx: number; handleClose: Function })
       }
     }
     return (
-      <Box sx={{ color: !have ? '#F1F5FB' : '#9265ff' }}>
+      <Box sx={{ color: !have ? "#F1F5FB" : "#9265ff" }}>
         <b>⬇</b>
       </Box>
     );
@@ -58,7 +63,7 @@ const MapViewPK = (props: { view: boolean; idx: number; handleClose: Function })
   const InputArrowView = (id: number) => {
     let exitId = -1;
     let area = plan.areaPK;
-    for (let i = 0; i < plan.coordPlan.length; i++) 
+    for (let i = 0; i < plan.coordPlan.length; i++)
       if (i && plan.coordPlan[i].id === id) exitId = plan.coordPlan[i - 1].id;
     let have = false;
     if (exitId >= 0) {
@@ -69,7 +74,7 @@ const MapViewPK = (props: { view: boolean; idx: number; handleClose: Function })
       }
     }
     return (
-      <Box sx={{ color: !have ? '#F1F5FB' : '#7dc36b' }}>
+      <Box sx={{ color: !have ? "#F1F5FB" : "#7dc36b" }}>
         <b>⬆</b>
       </Box>
     );
@@ -78,7 +83,7 @@ const MapViewPK = (props: { view: boolean; idx: number; handleClose: Function })
   const StrokaPK = () => {
     let resStr = [];
     for (let i = 0; i < plan.coordPlan.length; i++) {
-      let nameVert = '';
+      let nameVert = "";
       for (let j = 0; j < massroute.vertexes.length; j++) {
         if (
           massroute.vertexes[j].area === plan.areaPK &&
@@ -90,19 +95,19 @@ const MapViewPK = (props: { view: boolean; idx: number; handleClose: Function })
       }
       resStr.push(
         <Grid key={i} container sx={{ marginBottom: 1.5 }}>
-          <Grid item xs={0.6} sx={{ padding: '1px 0px 1px 5px', border: 0 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'left' }}>
+          <Grid item xs={0.6} sx={{ padding: "1px 0px 1px 5px", border: 0 }}>
+            <Box sx={{ display: "flex", justifyContent: "left" }}>
               {ExitArrowView(plan.coordPlan[i].id)}
               {InputArrowView(plan.coordPlan[i].id)}
             </Box>
           </Grid>
-          <Grid item xs={1} sx={{ padding: '1px 0px 1px 5px', border: 0 }}>
+          <Grid item xs={1} sx={{ padding: "1px 0px 1px 5px", border: 0 }}>
             {plan.coordPlan[i].id}
           </Grid>
           <Grid item xs sx={{ border: 0 }}>
             {nameVert}
           </Grid>
-        </Grid>,
+        </Grid>
       );
     }
     return resStr;
@@ -111,9 +116,7 @@ const MapViewPK = (props: { view: boolean; idx: number; handleClose: Function })
   return (
     <Modal open={props.view} onClose={CloseEnd} hideBackdrop={false}>
       <Box sx={styleSpisPK04}>
-        <Button sx={styleModalEnd} onClick={() => handleClose()}>
-          <b>&#10006;</b>
-        </Button>
+        {ExitCross(handleClose)}
         <Box sx={styleFormPK01}>
           <b>План координации №{plan.nomPK}</b>
         </Box>

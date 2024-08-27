@@ -70,3 +70,16 @@ export const optionsMiniGraf: any = {
     },
   },
 };
+
+export const MassBoard = [
+  {
+    ID: 0,
+    title: "Откуда",
+    items: [],
+  },
+  {
+    ID: 1,
+    title: "Куда",
+    items: [],
+  },
+];

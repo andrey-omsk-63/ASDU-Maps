@@ -3,9 +3,6 @@ import * as React from "react";
 import MapPointDataError from "../MapPointDataError";
 import MapOptimCalc from "./MapOptimCalc";
 import MapStabilCalc from "./MapStabilCalc";
-// import MapFormPK03 from './MapFormPK03';
-// import MapFormPK04 from './MapFormPK04';
-// import MapFormPK05 from './MapFormPK05';
 
 import { CALC } from "../../MainMapGl";
 

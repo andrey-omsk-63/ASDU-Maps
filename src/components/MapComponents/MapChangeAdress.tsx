@@ -129,13 +129,11 @@ const MapChangeAdress = (props: {
         }
       }
       SendSocketDeletePoint(WS, idPoint);
-      //SendSocketCreatePoint(deb, WS, coor, valuen);
       handleSendOpen(); // создание новой точки со старым ID
 
       massdk.splice(props.iP, 1); // удаление самой точки
       massroute.vertexes.splice(props.iP, 1);
       coordinates.splice(props.iP, 1);
-
       massdk.push(recMassdk); // пересоздание точки
       massroute.vertexes.push(recMassroute);
       coordinates.push(recCoordinates);

@@ -71,15 +71,8 @@ const MapCreateVertex = (props: {
       massKey.push(key);
       massDat.push(dat[key]);
     }
-    for (let i = 0; i < massKey.length; i++) {
-      let maskCurrencies = {
-        value: "",
-        label: "",
-      };
-      maskCurrencies.value = massKey[i];
-      maskCurrencies.label = massDat[i];
-      currencies.push(maskCurrencies);
-    }
+    for (let i = 0; i < massKey.length; i++)
+      currencies.push({ value: massKey[i], label: massDat[i] });
 
     AREA = props.area;
     Area = AREA === "0" ? "1" : props.area;
@@ -96,15 +89,8 @@ const MapCreateVertex = (props: {
       massKeyt.push(key);
       massDatt.push(datt[key]);
     }
-    for (let i = 0; i < massKeyt.length; i++) {
-      let maskCurrencies = {
-        value: "",
-        label: "",
-      };
-      maskCurrencies.value = massKeyt[i];
-      maskCurrencies.label = massDatt[i];
-      currenciest.push(maskCurrencies);
-    }
+    for (let i = 0; i < massKeyt.length; i++)
+      currenciest.push({ value: massKey[i], label: massDat[i] });
   }
   //========================================================
   const [openSetAdress, setOpenSetAdress] = React.useState(true);

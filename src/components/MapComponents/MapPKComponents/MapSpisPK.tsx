@@ -16,7 +16,6 @@ import { MASSPK, PLANER } from "../../MainMapGl";
 import { styleModalEnd, MakeStyleFormPK00 } from "../../MainMapStyle";
 import { styleFormPK01, MakeStylSpisPK01 } from "../../MainMapStyle";
 import { StylSpisPK02, styleSpisPK03, StylSpisPK022 } from "../../MainMapStyle";
-//import { styleSpisPK04 } from "../../MainMapStyle";
 
 let flagDel = 0;
 let soobErr = "";

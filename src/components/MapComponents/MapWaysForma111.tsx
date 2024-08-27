@@ -2,18 +2,17 @@ import * as React from "react";
 import { useSelector } from "react-redux";
 
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 
 import MapWaysFormaMain from "./MapWaysFormaMain";
 
-import { ComplianceMapMassdk, BadExit } from "./../MapServiceFunctions";
+import { ComplianceMapMassdk, BadExit } from "../MapServiceFunctions";
+import { ExitCross } from "../MapServiceFunctions";
 
-import { MaxFaz } from "./../MapConst";
+import { MaxFaz } from "../MapConst";
 
-import { Directions } from "./../../App"; // интерфейс massForm
+import { Directions } from "../../App"; // интерфейс massForm
 
-import { styleModalEnd, styleFormInf } from "./../MainMapStyle";
-import { styleFormNameRoute } from "./../MainMapStyle";
+import { styleFormNameRoute, styleFormInf } from "../MainMapStyle";
 
 let massTargetRoute: Array<number> = [];
 let massTargetName: Array<string> = [];
@@ -107,12 +106,9 @@ const MapWaysForma = (props: {
       edited: false,
       opponent: "",
     };
-    massForm = maskForm;
     let lng = idxMap >= 0 ? MAP.phases.length : MaxFaz;
-
-    console.log("Lng:", lng, idxMap, MAP.phases);
-
     for (let i = 0; i < lng; i++) maskForm.phases.push(-1);
+    massForm = maskForm;
   }
 
   const handleCloseEnd = React.useCallback(() => {
@@ -160,9 +156,7 @@ const MapWaysForma = (props: {
   return (
     <>
       <Box sx={styleFormInf}>
-        <Button sx={styleModalEnd} onClick={() => handleCloseSetEnd()}>
-          <b>&#10006;</b>
-        </Button>
+        {ExitCross(handleCloseEnd)}
         {massdk.length > props.idx && (
           <>
             <Box sx={styleFormNameRoute}>

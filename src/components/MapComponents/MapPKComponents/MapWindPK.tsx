@@ -85,7 +85,6 @@ const MapWindPK = (props: {
   route: any;
   svg: any;
 }) => {
-  //console.log("MapWindPK:", props.route);
   //== Piece of Redux =======================================
   // let massplan = useSelector((state: any) => {
   //   const { massplanReducer } = state;
@@ -290,8 +289,8 @@ const MapWindPK = (props: {
               {comment1 ? (
                 <Box sx={styleWindPK05}>
                   <Box sx={StyleBind09(33)}>
-                    Для более детального просмотра графика нажмите левую
-                    кнопку мыши
+                    Для более детального просмотра графика нажмите левую кнопку
+                    мыши
                   </Box>
                 </Box>
               ) : (
@@ -348,8 +347,7 @@ const MapWindPK = (props: {
       massForm.name = nameIn + (i + 1).toString();
       valueSl = value + RandomNumber(0, 10); // костыль!!!!!!!!!!!!
       resStr.push(
-        <Grid key={i} item xs={12 / sum} sx={{ border: 0 }}>
-          {/* <Box>{ContentTabl(i)}</Box> */}
+        <Grid key={i} item xs={12 / sum}>
           <ContentTabl idx={i} />
         </Grid>
       );

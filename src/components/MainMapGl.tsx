@@ -264,9 +264,7 @@ const MainMap = (props: {
       VIEWDIR = false; // разрешение посмотра инф-ии о направл.в балуне
       datestat.needMakeSpisPK = false;
       dispatch(statsaveCreate(datestat));
-    } else {
-      setCurrencyPK("0"); // переключение меню 'ПК и модели' на заголовок
-    }
+    } else setCurrencyPK("0"); // переключение меню 'ПК и модели' на заголовок
     ymaps && addRoute(ymaps); // перерисовка связей
   };
 
@@ -650,7 +648,6 @@ const MainMap = (props: {
 
   const InstanceRefDo = (ref: React.Ref<any>) => {
     if (ref) {
-      // console.log('2###:',MODE, openWaysForm,datestat.have)
       mapp.current = ref;
       mapp.current.events.remove("contextmenu", funcContex); // нажата правая кнопка мыши
       funcContex = function (e: any) {
@@ -875,7 +872,7 @@ const MainMap = (props: {
     dispatch(massdkCreate(massdk));
     dispatch(massrouteCreate(massroute));
     dispatch(coordinatesCreate(coordinates));
-    pointCenter = CenterCoordBegin(map);
+    pointCenter = CenterCoordBegin(map); // координаты центра отоброжаемой карты
     let massVert = map.dateMap.tflight;
     for (let i = 0; i < massVert.length; i++)
       if (SubArea.indexOf(massVert[i].subarea) < 0)
@@ -907,18 +904,15 @@ const MainMap = (props: {
   if (!debug && props.svg !== oldPropsSvg) {
     oldPropsSvg = props.svg;
     if (props.svg && pointAaIndex >= 0 && pointBbIndex >= 0) {
-      // передача изображений в обычную привязку
-      masSvg[0] = props.svg[RecevKeySvg(massroute.vertexes[pointAaIndex])];
+      masSvg[0] = props.svg[RecevKeySvg(massroute.vertexes[pointAaIndex])]; // передача изображений в обычную привязку
       masSvg[1] = props.svg[RecevKeySvg(massroute.vertexes[pointBbIndex])];
     }
     if (props.svg && openEr) {
-      // передача изображений в привязку через "дубликатные связи"
-      masSvg[0] = props.svg[RecevKeySvg(massroute.vertexes[fromIdx])];
+      masSvg[0] = props.svg[RecevKeySvg(massroute.vertexes[fromIdx])]; // передача изображений в привязку через "дубликатные связи"
       masSvg[1] = props.svg[RecevKeySvg(massroute.vertexes[inIdx])];
     }
     if (PLANER > 0 && routePKW) {
-      // передача изображений в привязку через "инф-я о направлениях"
-      let regArea = homeRegion.toString() + "-" + AREA + "-";
+      let regArea = homeRegion.toString() + "-" + AREA + "-"; // передача изображений в привязку через "инф-я о направлениях"
       masSvg[0] = props.svg[regArea + routePKW.sourceID.toString()];
       masSvg[1] = props.svg[regArea + routePKW.targetID.toString()];
     }
@@ -1077,4 +1071,3 @@ const MainMap = (props: {
 };
 
 export default MainMap;
-

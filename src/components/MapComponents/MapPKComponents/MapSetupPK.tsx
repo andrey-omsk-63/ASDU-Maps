@@ -8,13 +8,13 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 
 import { InputFromList, WaysInput, BadExit } from "../../MapServiceFunctions";
-import { FooterContent } from "../../MapServiceFunctions";
+import { FooterContent, ExitCross } from "../../MapServiceFunctions";
 
 import { PLANER } from "../../MainMapGl";
 
 import { PlanCoord } from "../../../interfacePlans.d"; // интерфейс
 
-import { styleModalEnd, styleSetPK03 } from "../../MainMapStyle";
+import { styleSetPK03 } from "../../MainMapStyle";
 import { styleSetPK01, styleSetPK02 } from "../../MainMapStyle";
 import { styleSetPK05, styleSetPK06, styleCalc03 } from "../../MainMapStyle";
 
@@ -43,7 +43,6 @@ const MapSetupPK = (props: {
   const [trigger, setTrigger] = React.useState(false);
   //=== инициализация ======================================
   if (flagInput) {
-    //console.log('props.plan:',props.plan)
     plan = JSON.parse(JSON.stringify(massplan.plans));
     if (props.plan) {
       // вызов из MapCreatePK
@@ -63,15 +62,8 @@ const MapSetupPK = (props: {
       massKey.push(key);
       massDat.push(dat[key]);
     }
-    let maskCurrencies = {
-      value: "0",
-      label: "Все режимы",
-    };
-    for (let i = 0; i < massKey.length; i++) {
-      maskCurrencies.value = massKey[i];
-      maskCurrencies.label = massDat[i];
-      currenciesPlan.push({ ...maskCurrencies });
-    }
+    for (let i = 0; i < massKey.length; i++)
+      currenciesPlan.push({ value: massKey[i], label: massDat[i] });
     flagInput = false;
   }
   //========================================================
@@ -244,9 +236,7 @@ const MapSetupPK = (props: {
     <>
       <Modal open={open} onClose={CloseEnd} hideBackdrop={false}>
         <Box sx={styleSetPK01(700, 240)}>
-          <Button sx={styleModalEnd} onClick={() => handleCloseBad()}>
-            <b>&#10006;</b>
-          </Button>
+          {ExitCross(handleCloseBad)}
           <Box sx={styleSetPK02}>
             <b>Изменение параметров планов координации</b>
           </Box>
