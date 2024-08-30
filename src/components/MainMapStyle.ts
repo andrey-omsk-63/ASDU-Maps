@@ -48,6 +48,7 @@ export const styleSetInf = {
   //======
   width: 430,
   bgcolor: "background.paper",
+  //background: "linear-gradient(180deg, #F1F5FB 59%, #DEE8F5 )",
   border: "1px solid #FFFFFF",
   borderRadius: 1,
   boxShadow: 24,
@@ -690,7 +691,7 @@ export const MakeStyleFormPK00 = (wdth: number, PLANER: number) => {
   };
   return styleFormPK00;
 };
-//inline
+
 export const styleFormPK01 = {
   fontSize: 21,
   textAlign: "center",

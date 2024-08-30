@@ -90,12 +90,13 @@ let funcBound: any = null;
 let oldPropsSvg: any = null;
 let funcContex: any, VertexForma: any, funcClick: any, activeRoute: any;
 funcContex = VertexForma = funcClick = activeRoute = null;
-let currencies: any = [];
-let currenciesMode: any = [];
-let currenciesPK: any = [];
-let currenciesCalc: any = [];
-let currenciesOptim: any = [];
-let currenciesForm: any = [];
+    SubArea.sort((a, b) => a - b); // сортировка по возрастанию
+let currencies: any = []; // для меню подрайонов
+let currenciesMode: any = []; // для меню подрайонов режимов работы
+let currenciesPK: any = []; // для меню ПК и модели
+let currenciesCalc: any = []; // для меню расчётов
+let currenciesOptim: any = []; // для меню оптимизации ПК
+let currenciesForm: any = []; // для меню диспетчера форм
 let idxDel: number, pointAaIndex: number;
 let indexPoint: number, pointBbIndex: number;
 idxDel = indexPoint = pointAaIndex = pointBbIndex = -1;
@@ -261,8 +262,7 @@ const MainMap = (props: {
     ZeroRoute(false);
     if (datestat.needMenuForm) {
       setOpenPKSpis(true);
-      VIEWDIR = false; // разрешение посмотра инф-ии о направл.в балуне
-      datestat.needMakeSpisPK = false;
+      VIEWDIR = datestat.needMakeSpisPK = false; // разрешение посмотра инф-ии о направл.в балуне
       dispatch(statsaveCreate(datestat));
     } else setCurrencyPK("0"); // переключение меню 'ПК и модели' на заголовок
     ymaps && addRoute(ymaps); // перерисовка связей
@@ -676,9 +676,8 @@ const MainMap = (props: {
     let arOn = massroute.vertexes[pointBbIndex].area;
     let idOn = massroute.vertexes[pointBbIndex].id;
     SendSocketGetSvg(WS, homeRegion, arIn, idIn, arOn, idOn);
-    flagBind = true;
     modeBind = 0; // режим открытия RouteBind
-    setOpenBind(true);
+    setOpenBind(flagBind = true);
   };
 
   const SetReqRoute = (mode: any, need: boolean) => {
@@ -722,7 +721,7 @@ const MainMap = (props: {
       setCurrency("1"); // встать на перваый подрайон в списке
     } else {
       if (Number(event.target.value) > SubArea.length) {
-        console.log("Здесь будет добавление подрайона");
+        console.log("Здесь будет добавление подрайона"); //=====================
       } else {
         if (Number(event.target.value)) {
           SUBAREA = SubArea[Number(event.target.value) - 1].toString();
@@ -755,9 +754,8 @@ const MainMap = (props: {
   const handleChangePK = (event: React.ChangeEvent<HTMLInputElement>) => {
     let pk = Number(event.target.value);
     if (!pk) pk++;
-    setCurrencyPK(pk.toString());
+    setCurrencyPK(PK = pk.toString());
     setCurrencyMode("0"); // переключение меню 'Перекрёстки и связи' на заголовок
-    PK = pk.toString();
     MODE = "2";
     TurnOnDemoRoute(); // влючение ФС
     ZeroRoute(false);
@@ -769,22 +767,19 @@ const MainMap = (props: {
   const handleChangeCalc = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrencyMode("0"); // переключение меню 'Перекрёстки и связи' на заголовок
     MODE = "2";
-    setCurrencyCalc(event.target.value);
-    CALC = event.target.value;
+    setCurrencyCalc(CALC = event.target.value);
     PressButton(205);
   };
 
   const handleChOptim = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrencyMode("0"); // переключение меню 'Перекрёстки и связи' на заголовок
     MODE = "2";
-    setCurrencyOptim(event.target.value);
-    OPTIM = event.target.value;
+    setCurrencyOptim(OPTIM = event.target.value);
     PressButton(402);
   };
 
   const handleChForm = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrencyForm(event.target.value);
-    FORM = event.target.value;
+    setCurrencyForm(FORM = event.target.value);
     PressButton(203);
   };
 
@@ -816,10 +811,9 @@ const MainMap = (props: {
     SUBAREA = massplan.plans[idx].subareaPK.toString();
     setCurrency((SubArea.indexOf(Number(SUBAREA)) + 1).toString());
     setOpenPKSpis((BALLOON = false)); // запрет на выдачу балуна / закрытие списка планов
-    VIEWDIR = true; // разрешение посмотра инф-ии о направл.в балуне
     datestat.needMenuForm = false; //  не выдавать меню форм
     dispatch(statsaveCreate(datestat));
-    HandlLockUp(true); // блокировка меню районов и меню режимов
+    HandlLockUp(VIEWDIR = true); // блокировка меню районов и меню режимов / разрешение посмотра инф-ии о направл.в балуне
     setOpenPKForm(true); // окрытие MapCreatePK
     TurnOnDemoRoute();
   };
