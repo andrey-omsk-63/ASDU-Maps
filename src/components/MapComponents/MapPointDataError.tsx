@@ -85,7 +85,7 @@ const MapPointDataError = (props: {
 
   const WS = datestat.ws;
   let colorBorder = props.sErr === "Дубликатная связь" ? "#FFFFFF" : "red";
-  let colorEnd = props.sErr === "Дубликатная связь" ? "black" : "red";
+  let colorEnd = props.sErr === "Дубликатная связь" ? "#5B1080" : "red";
   let styleModalEnd = styleModalEndErr(colorEnd);
   let styleSetInf = styleSetInfErr(colorBorder);
   let soob = flagSave

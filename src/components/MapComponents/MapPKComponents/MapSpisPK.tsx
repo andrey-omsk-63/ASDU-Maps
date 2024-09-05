@@ -180,12 +180,12 @@ const MapSpisPK = (props: {
               </Box>
             </Button>
           </Grid>
-          <Grid item xs={1.5} sx={{ border: 0 }}>
+          <Grid item xs={1.5}>
             {!del && (
               <>{KnopProps(StylSpisPK02(fl, fl), ViewPlan, "Просмотр", i)}</>
             )}
           </Grid>
-          <Grid item xs={1.5} sx={{ border: 0 }}>
+          <Grid item xs={1.5}>
             {!del && (
               <>{KnopProps(StylSpisPK02(fl, fl), EditPlan, "Изменить", i)}</>
             )}

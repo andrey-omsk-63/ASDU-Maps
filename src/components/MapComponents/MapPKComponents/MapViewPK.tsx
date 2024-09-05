@@ -25,7 +25,7 @@ const MapViewPK = (props: {
     const { massplanReducer } = state;
     return massplanReducer.massplan;
   });
-  console.log("massplan:", massplan);
+  //console.log("massplan:", massplan);
   //=== инициализация ======================================
   let plan = massplan.plans[props.idx];
   let nameArea = "";

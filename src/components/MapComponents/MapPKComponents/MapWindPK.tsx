@@ -254,9 +254,6 @@ const MapWindPK = (props: {
   const ContentTabl = (props: { idx: number }) => {
     const [comment0, setComment0] = React.useState(false);
     const [comment1, setComment1] = React.useState(false);
-    // svg = undefined;
-    // console.log("###:", props.svg, masSvg, svg === undefined);
-    // console.log("SVG:", svg);
     if (svg === undefined) svg = "";
     let expSvg = ReplaceInSvg(svg, "136");
     return (

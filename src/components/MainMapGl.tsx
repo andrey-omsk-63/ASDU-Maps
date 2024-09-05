@@ -141,8 +141,7 @@ const MainMap = (props: {
     return massplanReducer.massplan;
   });
   const dispatch = useDispatch();
-  const WS = datestat.ws;
-  debug = datestat.debug;
+  
   //===========================================================
   const [triggerForm, setTriggerForm] = React.useState(false);
   const [currency, setCurrency] = React.useState("0");
@@ -179,6 +178,8 @@ const MainMap = (props: {
   const [routePKW, setRoutePKW] = React.useState<any>(null);
   const [ymaps, setYmaps] = React.useState<YMapsApi | null>(null);
   const mapp = React.useRef<any>(null);
+  const WS = datestat.ws;
+  debug = datestat.debug;
 
   const DelCollectionRoutes = () => {
     coordStart = [];

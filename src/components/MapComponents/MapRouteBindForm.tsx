@@ -23,7 +23,6 @@ const MapRouteBindForm = (props: {
   idxB: number;
   kolDir: number;
 }) => {
-  //console.log("MapRouteBindForm:", props.kolDir, props.maskForm);
   //== Piece of Redux =======================================
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;
