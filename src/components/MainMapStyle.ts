@@ -1191,7 +1191,8 @@ export const styleWVG02 = {
   transform: "rotate(270deg)",
   position: "relative",
   top: "50%",
-  marginLeft: -0.5,
+  marginLeft: 0.25,
+  color: "blue",
 };
 //=== WindViewImg =====================================================
 export const styleWVI00 = {
