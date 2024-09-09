@@ -632,7 +632,7 @@ const MapRouteBind = (props: {
                 <Box sx={styleBind08}>{PointsGraf00()}</Box>
               </Grid>
             </Grid>
-            <Box sx={{ marginTop: -0.3, textAlign: "center" }}>
+            <Box sx={{ marginTop: -0.3, textAlign: "center", color: "blue" }}>
               <b>Тцикла</b>
             </Box>
           </>

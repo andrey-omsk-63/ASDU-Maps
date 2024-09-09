@@ -403,7 +403,8 @@ export const styleBind07 = {
   transform: "rotate(270deg)",
   position: "relative",
   top: "63%",
-  marginLeft: -0.3,
+  marginLeft: 0.3,
+  color: "blue",
 };
 
 export const styleBind08 = {
@@ -1137,7 +1138,8 @@ export const styleWindPK06 = {
   transform: "rotate(270deg)",
   position: "relative",
   top: "63%",
-  marginLeft: -0.9,
+  marginLeft: -0.3,
+  color: "blue",
 };
 
 export const styleWindPK07 = {

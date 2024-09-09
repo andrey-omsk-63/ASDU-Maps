@@ -205,7 +205,7 @@ const MapWindViewGraf = (props: {
           <Grid item xs sx={{ border: 0 }}>
             Изменение потока на направлении <b>{nameIn + (props.idx + 1)}</b>
             <Box sx={styleWVG01(55)}>{PointsGraf00()}</Box>
-            <Box sx={{ fontSize: 12.1 }}>
+            <Box sx={{ fontSize: 12.1, color: "blue" }}>
               <b>Тцикла</b>
             </Box>
           </Grid>

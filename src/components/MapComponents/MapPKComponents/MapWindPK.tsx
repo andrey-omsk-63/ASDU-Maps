@@ -244,7 +244,7 @@ const MapWindPK = (props: {
           </Grid>
         </Grid>
 
-        <Box sx={{ fontSize: 8.1, textAlign: "center" }}>
+        <Box sx={{ fontSize: 8.1, textAlign: "center", color: "blue" }}>
           <b>Тцикла</b>
         </Box>
       </Box>
