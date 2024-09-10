@@ -24,12 +24,10 @@ const MapFormPK05 = (props: { view: boolean; handleClose: Function }) => {
     const { massplanReducer } = state;
     return massplanReducer.massplan;
   });
-  //console.log('###massplan:', massplan);
   let datestat = useSelector((state: any) => {
     const { statsaveReducer } = state;
     return statsaveReducer.datestat;
   });
-  //console.log('massplan:', massplan, massSpis);
   //=== инициализация ======================================
   let plan = massplan.plans[datestat.idxMenu];
   //========================================================
@@ -116,7 +114,7 @@ const MapFormPK05 = (props: { view: boolean; handleClose: Function }) => {
                   </Box>
                 </Box>
               </Grid>
-              <Grid item xs={2.1} sx={{ border: 0 }}>
+              <Grid item xs={2.1}>
                 <Box
                   sx={{ fontSize: 14.5, marginTop: 0.5, textAlign: "center" }}
                 >
@@ -124,7 +122,7 @@ const MapFormPK05 = (props: { view: boolean; handleClose: Function }) => {
                 </Box>
               </Grid>
               <Grid item xs sx={{ border: 0 }}>
-                <Box sx={{ position: "absolute", right: "6px", border: 0 }}>
+                <Box sx={{ position: "absolute", right: "6px" }}>
                   <Box sx={styleSpisPK05}>
                     <Box sx={{}}>
                       <b>Подрайон: {plan.subareaPK}</b> &nbsp;

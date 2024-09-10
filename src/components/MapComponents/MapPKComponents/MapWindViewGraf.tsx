@@ -50,7 +50,6 @@ const MapWindViewGraf = (props: {
   idx: number; //
   name: any;
 }) => {
-  //console.log("MapWindPK:", props.name);
   //== Piece of Redux =======================================
   // let massplan = useSelector((state: any) => {
   //   const { massplanReducer } = state;

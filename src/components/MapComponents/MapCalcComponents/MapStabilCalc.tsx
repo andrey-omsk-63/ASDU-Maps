@@ -28,6 +28,7 @@ ChartJS.register(
 );
 
 //import { Directions } from "../../../App"; // интерфейс massForm
+
 interface DataGl {
   labels: string[];
   datasets: Datasets[];

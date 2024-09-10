@@ -19,7 +19,6 @@ const MapFormPK04 = (props: { view: boolean; handleClose: Function }) => {
     const { massplanReducer } = state;
     return massplanReducer.massplan;
   });
-  //console.log("###massplan:", massplan);
   let datestat = useSelector((state: any) => {
     const { statsaveReducer } = state;
     return statsaveReducer.datestat;

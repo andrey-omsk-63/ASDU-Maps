@@ -65,11 +65,6 @@ const MapSpisPK = (props: {
   flagDel = 0;
   let massSp = [];
   for (let i = 0; i < massplan.plans.length; i++) {
-    let mask = {
-      nom: massplan.plans[i].nomPK,
-      name: massplan.plans[i].namePK,
-      del: false,
-    };
     let have = false;
     for (let j = 0; j < massSpis.length; j++) {
       if (massSpis[j].nom === massplan.plans[i].nomPK) {
@@ -79,7 +74,12 @@ const MapSpisPK = (props: {
         have = true;
       }
     }
-    !have && massSp.push(mask);
+    !have &&
+      massSp.push({
+        nom: massplan.plans[i].nomPK,
+        name: massplan.plans[i].namePK,
+        del: false,
+      });
   }
   massSpis = [];
   massSpis = massSp;
@@ -112,14 +112,13 @@ const MapSpisPK = (props: {
       flagDel++;
     } else flagDel--;
     if (!massSpis[idx].del) ChangeIDX(idx);
-    if (idx === IDX && massSpis[idx].del) {
+    if (idx === IDX && massSpis[idx].del)
       for (let i = 0; i < massSpis.length; i++) {
         if (!massSpis[i].del) {
           ChangeIDX(i);
           break;
         }
       }
-    }
     setTrigger(!trigger); // ререндер
   };
 
@@ -148,9 +147,8 @@ const MapSpisPK = (props: {
 
   const DelSpis = () => {
     let massplanPlans = [];
-    for (let i = 0; i < massSpis.length; i++) {
+    for (let i = 0; i < massSpis.length; i++)
       if (!massSpis[i].del) massplanPlans.push({ ...massplan.plans[i] });
-    }
     massplan.plans = [];
     massplan.plans = massplanPlans;
     dispatch(massplanCreate(massplan));

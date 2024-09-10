@@ -15,11 +15,10 @@ import { stylePKForm04 } from "../../MainMapStyle";
 
 const MapFormPK03 = (props: { view: boolean; handleClose: Function }) => {
   //== Piece of Redux =======================================
-   let massplan = useSelector((state: any) => {
+  let massplan = useSelector((state: any) => {
     const { massplanReducer } = state;
     return massplanReducer.massplan;
   });
-  //console.log('###massplan:', massplan);
   let datestat = useSelector((state: any) => {
     const { statsaveReducer } = state;
     return statsaveReducer.datestat;
@@ -48,23 +47,20 @@ const MapFormPK03 = (props: { view: boolean; handleClose: Function }) => {
           (RandomNumber(1, 7) * 100 + RandomNumber(0, 99)) +
           ") " +
           RandomNumber(20, 99);
-      let coler = i === 1 || i === 3 ? "#ffdbec" : !i ? "#D5E9F9" : "#F1F5FB";
+      let coler = i === 1 || i === 3 ? "#ffdbec" : !i ? "#D5E9F9" : "#F1F5FB"; // розовый / голубой / cветло-серый
       const stylePKForm03 = {
         padding: "10px 0px 10px 0px",
-        borderBottom: "1px solid #d4d4d4",
+        borderBottom: "1px solid #d4d4d4", // серый
         bgcolor: coler,
       };
+      let rec1 = RandomNumber(0, 16) + RandomNumber(100, 1000) / 1000;
       resStr.push(
         <Grid key={i} container sx={{ marginBottom: 0 }}>
           {TablStr(0.25, i + 1, stylePKForm03)}
           {TablStr(0.75, i * 10 - i + 2, stylePKForm03)}
           {TablStr(1.5, RandomNumber(5, 12) * 100, stylePKForm03)}
           {TablStr(1.5, RandomNumber(0, 16) * 100, stylePKForm03)}
-          {TablStr(
-            1.5,
-            (RandomNumber(0, 16) + RandomNumber(100, 1000) / 1000).toFixed(3),
-            stylePKForm03
-          )}
+          {TablStr(1.5, rec1.toFixed(3), stylePKForm03)}
           {TablStr(1.5, RandomNumber(0, 1000) / 1000, stylePKForm03)}
           {TablStr(2, arg6, stylePKForm03)}
           {TablStr(1.5, arg7, stylePKForm03)}

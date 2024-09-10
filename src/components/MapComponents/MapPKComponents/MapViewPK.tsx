@@ -41,10 +41,9 @@ const MapViewPK = (props: {
   const ExitArrowView = (id: number) => {
     let inputId = -1;
     let area = plan.areaPK;
-    for (let i = 0; i < plan.coordPlan.length; i++) {
+    for (let i = 0; i < plan.coordPlan.length; i++)
       if (i !== plan.coordPlan.length - 1 && plan.coordPlan[i].id === id)
         inputId = plan.coordPlan[i + 1].id;
-    }
     let have = false;
     if (inputId >= 0) {
       for (let i = 0; i < massroute.ways.length; i++) {
@@ -95,7 +94,7 @@ const MapViewPK = (props: {
       }
       resStr.push(
         <Grid key={i} container sx={{ marginBottom: 1.5 }}>
-          <Grid item xs={0.6} sx={{ padding: "1px 0px 1px 5px", border: 0 }}>
+          <Grid item xs={0.6} sx={{ padding: "1px 0px 1px 5px" }}>
             <Box sx={{ display: "flex", justifyContent: "left" }}>
               {ExitArrowView(plan.coordPlan[i].id)}
               {InputArrowView(plan.coordPlan[i].id)}

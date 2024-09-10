@@ -18,7 +18,6 @@ const MapWindViewImg = (props: {
   name: any;
   svg: any;
 }) => {
-  //console.log("MapWindPK:", props.route);
   //== Piece of Redux =======================================
   // let massplan = useSelector((state: any) => {
   //   const { massplanReducer } = state;

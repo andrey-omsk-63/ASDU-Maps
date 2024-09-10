@@ -256,45 +256,82 @@ const MapWindPK = (props: {
     const [comment1, setComment1] = React.useState(false);
     if (svg === undefined) svg = "";
     let expSvg = ReplaceInSvg(svg, "136");
+
+    const WindImg = () => {
+      return (
+        <Box sx={styleWindPK02}>
+          <Box
+            sx={styleWindPK055}
+            onMouseEnter={() => setComment0(true)}
+            onMouseLeave={() => setComment0(false)}
+            onClick={() => ClickImg(props.idx)}
+          >
+            {!comment0 ? (
+              <div dangerouslySetInnerHTML={{ __html: expSvg }} />
+            ) : (
+              <Box sx={StyleBind09(33)}>
+                Для более детального просмотра изображения нажмите левую кнопку
+                мыши
+              </Box>
+            )}
+          </Box>
+        </Box>
+      );
+    };
+
+    const WindTabl = () => {
+      return (
+        <Box sx={styleWindPK02}>
+          <Box
+            onMouseEnter={() => setComment1(true)}
+            onMouseLeave={() => setComment1(false)}
+            onClick={() => ClickBlok(props.idx)}
+          >
+            {comment1 ? (
+              <Box sx={styleWindPK05}>
+                <Box sx={StyleBind09(33)}>
+                  Для более детального просмотра графика нажмите левую кнопку
+                  мыши
+                </Box>
+              </Box>
+            ) : (
+              <>{OutputGraf(props.idx)}</>
+            )}
+          </Box>
+        </Box>
+      );
+    };
+
+    const WindSlider = () => {
+      return (
+        <Box sx={styleWindPK02}>
+          Насыщенность зелёного = <b>{valueSl}</b>%
+          <Box sx={{ width: 200, height: 40 }}>
+            <Slider
+              value={valueSl}
+              onChange={handleSliderChange}
+              color="secondary"
+              disabled={true}
+            />
+          </Box>
+          <Grid container sx={{ height: window.innerHeight * 0.015 }}>
+            <Grid item xs={3} sx={{ bgcolor: "#C2ECAE" }}></Grid>
+            <Grid item xs={3} sx={{ bgcolor: "#9DDB59" }}></Grid>
+            <Grid item xs={3} sx={{ bgcolor: "#69A824" }}></Grid>
+            <Grid item xs={3} sx={{ bgcolor: "#477218" }}></Grid>
+          </Grid>
+        </Box>
+      );
+    };
+
+    let rec1 = massForm.offsetBeginGreen;
+
     return (
       <Box sx={styleWindPK01}>
         <Box sx={styleWindPK90(712)}>
-          <Box sx={styleWindPK02}>
-            <Box
-              sx={styleWindPK055}
-              onMouseEnter={() => setComment0(true)}
-              onMouseLeave={() => setComment0(false)}
-              onClick={() => ClickImg(props.idx)}
-            >
-              {!comment0 ? (
-                <div dangerouslySetInnerHTML={{ __html: expSvg }} />
-              ) : (
-                <Box sx={StyleBind09(33)}>
-                  Для более детального просмотра изображения нажмите левую
-                  кнопку мыши
-                </Box>
-              )}
-            </Box>
-          </Box>
+          {WindImg()}
           <b>Свойства направления</b>
-          <Box sx={styleWindPK02}>
-            <Box
-              onMouseEnter={() => setComment1(true)}
-              onMouseLeave={() => setComment1(false)}
-              onClick={() => ClickBlok(props.idx)}
-            >
-              {comment1 ? (
-                <Box sx={styleWindPK05}>
-                  <Box sx={StyleBind09(33)}>
-                    Для более детального просмотра графика нажмите левую кнопку
-                    мыши
-                  </Box>
-                </Box>
-              ) : (
-                <>{OutputGraf(props.idx)}</>
-              )}
-            </Box>
-          </Box>
+          {WindTabl()}
           <Box sx={styleWindPK02}>
             <Box sx={{ marginBottom: 0.5 }}>
               {StrokaTablWindPK("Номер", massForm.name)}
@@ -304,10 +341,7 @@ const MapWindPK = (props: {
               {StrokaTablWindPK("Длина перегона", massForm.peregon)}
               {StrokaTablWindPK("Вес остановки", massForm.wtStop)}
               {StrokaTablWindPK("Вес задержки", massForm.wtDelay)}
-              {StrokaTablWindPK(
-                "Смещ-е нач.зелёного",
-                massForm.offsetBeginGreen
-              )}
+              {StrokaTablWindPK("Смещ-е нач.зелёного", rec1)}
               {StrokaTablWindPK("Смещ-е кон.зелёного", massForm.offsetEndGreen)}
               {StrokaTablWindPK("Интенс-ть пост.потока", massForm.intensFl)}
               {StrokaTablWindPK("Т остановки", 0)}
@@ -315,24 +349,7 @@ const MapWindPK = (props: {
               {StrokaTablWindPK("Тсл.+перегр.", 0.473)}
             </Box>
           </Box>
-
-          <Box sx={styleWindPK02}>
-            Насыщенность зелёного = <b>{valueSl}</b>%
-            <Box sx={{ width: 200, height: 40 }}>
-              <Slider
-                value={valueSl}
-                onChange={handleSliderChange}
-                color="secondary"
-                disabled={true}
-              />
-            </Box>
-            <Grid container sx={{ height: window.innerHeight * 0.015 }}>
-              <Grid item xs={3} sx={{ bgcolor: "#C2ECAE" }}></Grid>
-              <Grid item xs={3} sx={{ bgcolor: "#9DDB59" }}></Grid>
-              <Grid item xs={3} sx={{ bgcolor: "#69A824" }}></Grid>
-              <Grid item xs={3} sx={{ bgcolor: "#477218" }}></Grid>
-            </Grid>
-          </Box>
+          {WindSlider()}
         </Box>
       </Box>
     );
