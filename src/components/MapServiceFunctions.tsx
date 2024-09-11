@@ -1718,7 +1718,11 @@ export const BindInput = (
             onKeyPress={handleKey} //отключение Enter
             type="number"
             inputProps={{
-              style: { cursor: "pointer", fontSize: 13.3 },
+              style: {
+                cursor: "pointer",
+                fontSize: 13.3,
+                padding: "3px 0px 0px 0px",
+              },
             }}
             InputProps={{ disableUnderline: true }}
             value={value}
@@ -1927,6 +1931,7 @@ export const WaysInput = (
           inputProps={{
             style: {
               marginTop: "-16px",
+              padding: "4px 0px 0px 0px",
               fontSize: 14,
               backgroundColor: "#FFFBE5", // топлёное молоко
               cursor: "pointer",

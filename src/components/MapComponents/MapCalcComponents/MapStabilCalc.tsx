@@ -107,10 +107,7 @@ const MapStabilCalc = (props: {
   //=== обработка Esc ======================================
   const escFunction = React.useCallback(
     (event) => {
-      if (event.keyCode === 27) {
-        console.log("ESC!!!");
-        handleClose();
-      }
+      if (event.keyCode === 27) handleClose();
     },
     [handleClose]
   );
@@ -124,9 +121,7 @@ const MapStabilCalc = (props: {
     if (mode) {
       openGrafik = true;
       setTrigger(!trigger);
-    } else {
-      handleClose();
-    }
+    } else handleClose();
   };
 
   const SetSumIterate = (valueInp: number) => {
@@ -199,15 +194,15 @@ const MapStabilCalc = (props: {
 
   const CalcGraf = () => {
     return (
-      <Grid container sx={{}}>
-        <Grid item xs={0.15} sx={{ border: 0 }}>
+      <Grid container>
+        <Grid item xs={0.15}>
           <Box sx={styleWVG02}>
             <b>P(X)</b>
           </Box>
         </Grid>
-        <Grid item xs sx={{ border: 0 }}>
+        <Grid item xs>
           <Box sx={styleWVG01(55)}>{openGrafik && <>{PointsGraf00()}</>}</Box>
-          <Box sx={{ fontSize: 12.1 }}>
+          <Box sx={{ fontSize: 12.1, color: 'blue' }}>
             <b>Количество заторных направлений</b>
           </Box>
         </Grid>
@@ -217,7 +212,7 @@ const MapStabilCalc = (props: {
 
   const CalcTablLeftPart = () => {
     return (
-      <Grid item xs={6} sx={{ border: 0 }}>
+      <Grid item xs={6}>
         <Box sx={styleCalc02}>
           {StrTablVert(
             3,
@@ -231,7 +226,7 @@ const MapStabilCalc = (props: {
 
   const CalcTablRightPart = () => {
     return (
-      <Grid item xs={6} sx={{ border: 0 }}>
+      <Grid item xs={6}>
         <Box sx={styleCalc02}>
           {StrTablVert(
             6,
@@ -245,7 +240,7 @@ const MapStabilCalc = (props: {
 
   const CalcTabl = () => {
     return (
-      <Grid container sx={{}}>
+      <Grid container>
         <Grid item xs={0.15}></Grid>
         <Grid item xs>
           <Box sx={styleWVG01(9)}>

@@ -742,6 +742,7 @@ export const styleFormPK03 = {
   boxShadow: 6,
   textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
   color: "black",
+  padding: "2px 8px 0px 8px",
 };
 
 export const styleFormPK04 = {
@@ -974,6 +975,7 @@ export const styleSetPK05 = {
   textTransform: "unset !important",
   textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
   boxShadow: 1,
+  padding: "2px 8px 0px 8px",
 };
 
 export const styleSetPK06 = {

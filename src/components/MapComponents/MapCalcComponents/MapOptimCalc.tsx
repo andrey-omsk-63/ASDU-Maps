@@ -29,6 +29,7 @@ ChartJS.register(
 );
 
 //import { Directions } from "../../../App"; // интерфейс massForm
+
 interface DataGl {
   labels: string[];
   datasets: Datasets[];
@@ -232,7 +233,7 @@ const MapOptimCalc = (props: {
 
   const CalcGraf = () => {
     return (
-      <Grid container sx={{}}>
+      <Grid container>
         <Grid item xs={0.15} sx={{ border: 0 }}>
           <Box sx={styleWVG02}>
             <b>Tзадержки</b>
@@ -240,7 +241,7 @@ const MapOptimCalc = (props: {
         </Grid>
         <Grid item xs sx={{ border: 0 }}>
           <Box sx={styleWVG01(55)}>{openGrafik && <>{PointsGraf00()}</>}</Box>
-          <Box sx={{ fontSize: 12.1, color: 'blue' }}>
+          <Box sx={{ fontSize: 12.1, color: "blue" }}>
             <b>Время цикла (сек)</b>
           </Box>
         </Grid>
@@ -250,7 +251,7 @@ const MapOptimCalc = (props: {
 
   const CalcTablLeftPart = () => {
     return (
-      <Grid item xs={6} sx={{ border: 0 }}>
+      <Grid item xs={6}>
         <Box sx={styleCalc02}>
           {StrTablVert(
             6,
@@ -277,23 +278,23 @@ const MapOptimCalc = (props: {
     let illumShift = metkaShift === "✔" ? styleSetPK06 : styleSetPK05;
 
     return (
-      <Grid item xs={6} sx={{ border: 0 }}>
+      <Grid item xs={6}>
         <Box sx={styleCalc02}>
           <Grid container>
             <Grid item xs={1} sx={styleCalc03}>
               <b>{metkaTime}</b>
             </Grid>
-            <Grid item xs sx={{ fontSize: 12.9, border: 0 }}>
+            <Grid item xs sx={{ fontSize: 12.9 }}>
               <Button sx={illumTime} onClick={() => SetOptimTime()}>
                 Оптимизировать длительность фаз
               </Button>
             </Grid>
           </Grid>
-          <Grid container sx={{ marginTop: 2, border: 0 }}>
+          <Grid container sx={{ marginTop: 2 }}>
             <Grid item xs={1} sx={styleCalc03}>
               <b>{metkaShift}</b>
             </Grid>
-            <Grid item xs sx={{ fontSize: 12.9, border: 0 }}>
+            <Grid item xs sx={{ fontSize: 12.9 }}>
               <Button sx={illumShift} onClick={() => SetOptimShift()}>
                 Оптимизировать сдвиги фаз
               </Button>
@@ -306,7 +307,7 @@ const MapOptimCalc = (props: {
 
   const CalcTabl = () => {
     return (
-      <Grid container sx={{}}>
+      <Grid container>
         <Grid item xs={0.15}></Grid>
         <Grid item xs>
           <Box sx={styleWVG01(15)}>
