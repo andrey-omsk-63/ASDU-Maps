@@ -939,7 +939,7 @@ export const styleSetPK01 = (wdth: number, hdth: number) => {
 export const styleSetPK02 = {
   fontSize: 20,
   textAlign: "center",
-  color: "#5B1080",
+  color: "#5B1080", // сиреневый
   margin: "15px 0 10px 0",
   textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
 };
@@ -1229,6 +1229,8 @@ export const styleCalc01 = {
   marginTop: 0.5,
   textAlign: "left",
   padding: "0px 5px 5px 5px",
+  color: "#5B1080", // сиреневый
+  textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
 };
 
 export const styleCalc02 = {

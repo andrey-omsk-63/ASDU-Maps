@@ -28,7 +28,6 @@ const MapViewPK = (props: {
   //console.log("massplan:", massplan);
   //=== инициализация ======================================
   let plan = massplan.plans[props.idx];
-  let nameArea = "";
   //========================================================
   const handleClose = () => {
     props.handleClose(false);
@@ -72,6 +71,7 @@ const MapViewPK = (props: {
           if (rec.sourceID === exitId) have = true;
       }
     }
+    
     return (
       <Box sx={{ color: !have ? "#F1F5FB" : "#7dc36b" }}>
         <b>⬆</b>
@@ -100,10 +100,10 @@ const MapViewPK = (props: {
               {InputArrowView(plan.coordPlan[i].id)}
             </Box>
           </Grid>
-          <Grid item xs={1} sx={{ padding: "1px 0px 1px 5px", border: 0 }}>
+          <Grid item xs={1} sx={{ padding: "1px 0px 1px 5px" }}>
             {plan.coordPlan[i].id}
           </Grid>
-          <Grid item xs sx={{ border: 0 }}>
+          <Grid item xs>
             {nameVert}
           </Grid>
         </Grid>
@@ -128,12 +128,8 @@ const MapViewPK = (props: {
           </Box>
         </Box>
         <Box sx={styleSpisPK05}>
-          <Box sx={{}}>
-            <b>Подрайон: {plan.subareaPK}</b> &nbsp;
-          </Box>
-          <Box sx={{ fontSize: 15 }}>
-            <em>{nameArea}</em>
-          </Box>
+          <b>Подрайон:</b>&nbsp;
+          <em>{plan.subareaPK}</em>
         </Box>
         <Box sx={MakeStylSpisPK06()}>{StrokaPK()}</Box>
       </Box>

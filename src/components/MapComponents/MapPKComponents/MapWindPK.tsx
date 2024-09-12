@@ -41,6 +41,7 @@ ChartJS.register(
 );
 
 //import { Directions } from "../../../App"; // интерфейс massForm
+
 interface DataGl {
   labels: string[];
   datasets: Datasets[];
@@ -95,7 +96,6 @@ const MapWindPK = (props: {
     const { statsaveReducer } = state;
     return statsaveReducer.datestat;
   });
-  //console.log('massplan:', massplan, massSpis);
   //===========================================================
   const WS = datestat.ws;
   const [value, setValue] = React.useState(69);
@@ -162,10 +162,7 @@ const MapWindPK = (props: {
   //=== обработка Esc ======================================
   const escFunction = React.useCallback(
     (event) => {
-      if (event.keyCode === 27) {
-        console.log("ESC!!!");
-        CloseEnd();
-      }
+      if (event.keyCode === 27) CloseEnd();
     },
     [CloseEnd]
   );

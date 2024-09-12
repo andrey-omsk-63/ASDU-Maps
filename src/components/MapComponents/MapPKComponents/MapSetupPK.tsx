@@ -81,7 +81,7 @@ const MapSetupPK = (props: {
   };
 
   const CloseEnd = (event: any, reason: string) => {
-    if (reason === "escapeKeyDown") handleCloseBad();
+    if (reason === "escapeKeyDown") handleCloseBad(); // нажали Esc
   };
 
   const handleCloseBadExit = (mode: boolean) => {
@@ -136,7 +136,7 @@ const MapSetupPK = (props: {
   const StrokaSetup01 = () => {
     return (
       <Grid container sx={{ marginTop: 1.5 }}>
-        <Grid item xs={1.5} sx={{ border: 0 }}>
+        <Grid item xs={1.5}>
           <b>Номер ПК</b>
         </Grid>
         <Grid item xs={1.5} sx={{ textAlign: "center", marginTop: -0.5 }}>
@@ -148,7 +148,7 @@ const MapSetupPK = (props: {
             </Box>
           )}
         </Grid>
-        <Grid item xs sx={{ border: 0 }}>
+        <Grid item xs>
           <em>{plan[idxPK].namePK}</em>
         </Grid>
       </Grid>
@@ -160,7 +160,7 @@ const MapSetupPK = (props: {
     let metka = plan[idxPK].phaseOptim ? "✔" : "";
     return (
       <Grid container sx={{ marginTop: 3 }}>
-        <Grid item xs={5.4} sx={{ border: 0 }}>
+        <Grid item xs={5.4}>
           <Box sx={{ marginTop: -0.8, display: "flex" }}>
             <b>{soob1}</b>
             <Box sx={{ marginTop: -0.3, display: "inline-block" }}>
@@ -169,7 +169,7 @@ const MapSetupPK = (props: {
             <b>сек.</b>
           </Box>
         </Grid>
-        <Grid item xs sx={{ marginTop: -1.1, border: 0 }}>
+        <Grid item xs sx={{ marginTop: -1.1 }}>
           <Grid container>
             <Grid item xs={1} sx={styleCalc03}>
               <b>{metka}</b>
