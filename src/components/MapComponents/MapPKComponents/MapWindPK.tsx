@@ -227,13 +227,13 @@ const MapWindPK = (props: {
     return (
       <Box sx={styleWindPK05}>
         <Grid container>
-          <Grid item xs={0.5} sx={{ border: 0 }}>
+          <Grid item xs={0.5}>
             <Box sx={styleWindPK06}>
               <b>Tе:Тцикла*C</b>
             </Box>
           </Grid>
 
-          <Grid item xs={11.5} sx={{ fontSize: 8.3, border: 0 }}>
+          <Grid item xs={11.5} sx={{ fontSize: 8.3 }}>
             <Box sx={styleWindPK07}>
               Изменение потока на направлении <b>{nameIn + (idx + 1)}</b>
               <Box sx={styleWindPK08}>{PointsGraf00()}</Box>

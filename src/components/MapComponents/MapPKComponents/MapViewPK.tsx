@@ -25,7 +25,6 @@ const MapViewPK = (props: {
     const { massplanReducer } = state;
     return massplanReducer.massplan;
   });
-  //console.log("massplan:", massplan);
   //=== инициализация ======================================
   let plan = massplan.plans[props.idx];
   //========================================================
@@ -71,7 +70,7 @@ const MapViewPK = (props: {
           if (rec.sourceID === exitId) have = true;
       }
     }
-    
+
     return (
       <Box sx={{ color: !have ? "#F1F5FB" : "#7dc36b" }}>
         <b>⬆</b>
@@ -80,36 +79,34 @@ const MapViewPK = (props: {
   };
 
   const StrokaPK = () => {
-    let resStr = [];
-    for (let i = 0; i < plan.coordPlan.length; i++) {
+    return plan.coordPlan.map((planCoordPlan: any, idx: number) => {
       let nameVert = "";
       for (let j = 0; j < massroute.vertexes.length; j++) {
         if (
           massroute.vertexes[j].area === plan.areaPK &&
-          massroute.vertexes[j].id === plan.coordPlan[i].id
+          massroute.vertexes[j].id === planCoordPlan.id
         ) {
           nameVert = massroute.vertexes[j].name;
           break;
         }
       }
-      resStr.push(
-        <Grid key={i} container sx={{ marginBottom: 1.5 }}>
+      return (
+        <Grid key={idx} container sx={{ marginBottom: 1.5 }}>
           <Grid item xs={0.6} sx={{ padding: "1px 0px 1px 5px" }}>
             <Box sx={{ display: "flex", justifyContent: "left" }}>
-              {ExitArrowView(plan.coordPlan[i].id)}
-              {InputArrowView(plan.coordPlan[i].id)}
+              {ExitArrowView(planCoordPlan.id)}
+              {InputArrowView(planCoordPlan.id)}
             </Box>
           </Grid>
           <Grid item xs={1} sx={{ padding: "1px 0px 1px 5px" }}>
-            {plan.coordPlan[i].id}
+            {planCoordPlan.id}
           </Grid>
           <Grid item xs>
             {nameVert}
           </Grid>
         </Grid>
       );
-    }
-    return resStr;
+    });
   };
 
   return (

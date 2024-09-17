@@ -11,7 +11,7 @@ import { TablStr, RandomNumber } from "../../MapServiceFunctions";
 import { styleModalEndBind, stylePKForm00 } from "../../MainMapStyle";
 import { styleFormPK01, stylePKForm01 } from "../../MainMapStyle";
 import { stylePKForm02, styleSpisPK05 } from "../../MainMapStyle";
-import { stylePKForm04 } from "../../MainMapStyle";
+import { stylePKForm04, stylePKForm08 } from "../../MainMapStyle";
 
 const MapFormPK04 = (props: { view: boolean; handleClose: Function }) => {
   //== Piece of Redux =======================================
@@ -35,10 +35,6 @@ const MapFormPK04 = (props: { view: boolean; handleClose: Function }) => {
   };
   //========================================================
   const StrokaFormPK04 = () => {
-    const stylePKForm03 = {
-      padding: "10px 0px 10px 0px",
-      borderBottom: "1px solid #d4d4d4",
-    };
     let resStr = [];
     for (let i = 0; i < 48; i++) {
       let aa = RandomNumber(0, 5);
@@ -46,15 +42,15 @@ const MapFormPK04 = (props: { view: boolean; handleClose: Function }) => {
       let arg7 = !aa ? 0 : aa === 1 ? -bb : bb;
       resStr.push(
         <Grid key={i} container sx={{ marginBottom: 0 }}>
-          {TablStr(0.25, i + 1, stylePKForm03)}
-          {TablStr(0.75, i * 10 - i + 2, stylePKForm03)}
-          {TablStr(1.4, RandomNumber(5, 12) * 100, stylePKForm03)}
-          {TablStr(1.4, RandomNumber(18, 55) * 100, stylePKForm03)}
-          {TablStr(1.4, "1, 2, 4", stylePKForm03)}
-          {TablStr(1.4, RandomNumber(6, 11), stylePKForm03)}
-          {TablStr(1.4, 0, stylePKForm03)}
-          {TablStr(1.4, arg7, stylePKForm03)}
-          {TablStr(0, "№21, 500 авт/ч, 18с.", stylePKForm03)}
+          {TablStr(0.25, i + 1, stylePKForm08)}
+          {TablStr(0.75, i * 10 - i + 2, stylePKForm08)}
+          {TablStr(1.4, RandomNumber(5, 12) * 100, stylePKForm08)}
+          {TablStr(1.4, RandomNumber(18, 55) * 100, stylePKForm08)}
+          {TablStr(1.4, "1, 2, 4", stylePKForm08)}
+          {TablStr(1.4, RandomNumber(6, 11), stylePKForm08)}
+          {TablStr(1.4, 0, stylePKForm08)}
+          {TablStr(1.4, arg7, stylePKForm08)}
+          {TablStr(0, "№21, 500 авт/ч, 18с.", stylePKForm08)}
         </Grid>
       );
     }

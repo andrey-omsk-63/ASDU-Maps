@@ -788,6 +788,11 @@ export const styleFormPK07 = {
   textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
   boxShadow: 4,
 };
+
+export const stylePKForm08 = {
+  padding: "10px 0px 10px 0px",
+  borderBottom: "1px solid #d4d4d4",
+};
 //=== SpisPK ==========================================================
 export const MakeStylSpisPK01 = () => {
   let ratio = window.innerHeight < 800 ? 0.826 : 0.84;

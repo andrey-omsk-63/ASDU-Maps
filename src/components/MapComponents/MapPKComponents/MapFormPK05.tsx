@@ -39,24 +39,24 @@ const MapFormPK05 = (props: { view: boolean; handleClose: Function }) => {
     if (reason === "escapeKeyDown") handleClose();
   };
 
-  const StrokaFormPK01 = () => {
-    let resStr = [];
-    for (let i = 0; i < plan.coordPlan.length; i++) {
+  const StrokaFormPK05 = () => {
+    return plan.coordPlan.map((planCoordPlan: any, idx: number) => {
       let nameVert = "";
       for (let j = 0; j < massroute.vertexes.length; j++) {
         if (
           massroute.vertexes[j].area === plan.areaPK &&
-          massroute.vertexes[j].id === plan.coordPlan[i].id
+          massroute.vertexes[j].id === planCoordPlan.id
         ) {
           nameVert = massroute.vertexes[j].name;
           break;
         }
       }
-      let brb: any = i === plan.coordPlan.length - 1 ? 0 : "1px solid #d4d4d4";
-      resStr.push(
-        <Grid key={i} container sx={{ marginBottom: 0 }}>
-          {TablStr(0.25, i + 1, stylePKForm03(brb))}
-          {TablStr(0.5, plan.coordPlan[i].id, stylePKForm03(brb))}
+      let brb: any =
+        idx === plan.coordPlan.length - 1 ? 0 : "1px solid #d4d4d4";
+      return (
+        <Grid key={idx} container>
+          {TablStr(0.25, idx + 1, stylePKForm03(brb))}
+          {TablStr(0.5, planCoordPlan.id, stylePKForm03(brb))}
           {TablStr(3.25, nameVert, stylePKForm033(brb))}
           {TablStr(0.89, 107, stylePKForm03(brb))}
           {TablStr(0.89, 3, stylePKForm03(brb))}
@@ -69,8 +69,7 @@ const MapFormPK05 = (props: { view: boolean; handleClose: Function }) => {
           {TablStr(0, 71, stylePKForm03(brb))}
         </Grid>
       );
-    }
-    return resStr;
+    });
   };
 
   const HeaderTabl = () => {
@@ -132,7 +131,7 @@ const MapFormPK05 = (props: { view: boolean; handleClose: Function }) => {
               </Grid>
             </Grid>
             {HeaderTabl()}
-            <Box sx={stylePKForm00}>{StrokaFormPK01()}</Box>
+            <Box sx={stylePKForm00}>{StrokaFormPK05()}</Box>
           </>
         ) : (
           <Box sx={styleFormPK01}>

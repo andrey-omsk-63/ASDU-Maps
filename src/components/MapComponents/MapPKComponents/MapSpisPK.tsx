@@ -38,7 +38,6 @@ const MapSpisPK = (props: {
     const { statsaveReducer } = state;
     return statsaveReducer.datestat;
   });
-  //console.log('massplan:', massplan, massSpis);
   const dispatch = useDispatch();
   //===========================================================
   const [openSetErr, setOpenSetErr] = React.useState(false);
@@ -52,10 +51,9 @@ const MapSpisPK = (props: {
       dispatch(statsaveCreate(datestat));
       massPkId = [];
       // создание списка перекрёстков выбранного плана
-      if (massplan.plans.length) {
+      if (massplan.plans.length)
         for (let i = 0; i < massplan.plans[idx].coordPlan.length; i++)
           massPkId.push(massplan.plans[idx].coordPlan[i].id);
-      }
       massPkId.length &&
         props.SetMass(massPkId, massplan.plans[idx].subareaPK, 1);
     }
@@ -160,41 +158,42 @@ const MapSpisPK = (props: {
   };
   //========================================================
   const StrokaSpisPlan = () => {
-    let resStr = [];
-    for (let i = 0; i < massSpis.length; i++) {
-      let del = massSpis[i].del;
+    return massSpis.map((masspis: any, idx: number) => {
+      let del = masspis.del;
       let fl = false;
       let titleDel = del ? "Восстановить" : "Удалить";
-      let illum = i === IDX ? true : false;
-      resStr.push(
-        <Grid key={i} container>
-          <Grid item xs={7} sx={{ border: 0 }}>
-            <Button sx={StylSpisPK022(del, illum)} onClick={() => MarkPlan(i)}>
-              {massSpis[i].nom < 10 && <Box>&nbsp;&nbsp;</Box>}
-              <Box sx={{ color: "#5B1080" }}>{massSpis[i].nom}.</Box>
+      let illum = idx === IDX ? true : false;
+      return (
+        <Grid key={idx} container>
+          <Grid item xs={7}>
+            <Button
+              sx={StylSpisPK022(del, illum)}
+              onClick={() => MarkPlan(idx)}
+            >
+              {masspis.nom < 10 && <Box>&nbsp;&nbsp;</Box>}
+              <Box sx={{ color: "#5B1080" }}>{masspis.nom}.</Box>
               <Box>&nbsp;</Box>
               <Box>
-                <b>{massSpis[i].name.slice(0, 45)}</b>
+                <b>{masspis.name.slice(0, 45)}</b>
               </Box>
             </Button>
           </Grid>
           <Grid item xs={1.5}>
             {!del && (
-              <>{KnopProps(StylSpisPK02(fl, fl), ViewPlan, "Просмотр", i)}</>
+              <>{KnopProps(StylSpisPK02(fl, fl), ViewPlan, "Просмотр", idx)}</>
             )}
           </Grid>
           <Grid item xs={1.5}>
             {!del && (
-              <>{KnopProps(StylSpisPK02(fl, fl), EditPlan, "Изменить", i)}</>
+              <>{KnopProps(StylSpisPK02(fl, fl), EditPlan, "Изменить", idx)}</>
             )}
           </Grid>
           <Grid item xs>
-            {KnopProps(StylSpisPK02(del, fl), MarkSpis, titleDel, i)}
+            {KnopProps(StylSpisPK02(del, fl), MarkSpis, titleDel, idx)}
           </Grid>
         </Grid>
       );
-    }
-    return resStr;
+    });
   };
   //=== обработка Esc ======================================
   const escFunction = React.useCallback(

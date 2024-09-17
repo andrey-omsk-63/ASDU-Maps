@@ -79,24 +79,22 @@ const MapWaysFormaMain = (props: {
   };
 
   const StrokaMainTabl = () => {
-    let resStr = [];
-    for (let i = 0; i < massForm.phases.length; i++) {
-      let metka = massForm.phases[i] > 0 ? "✔" : "";
-      let illum = massForm.phases[i] > 0 ? styleFW04 : styleFW03;
-      resStr.push(
-        <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
+    return massForm.phases.map((massFormPhases: any, idx: number) => {
+      let metka = massFormPhases > 0 ? "✔" : "";
+      let illum = massFormPhases > 0 ? styleFW04 : styleFW03;
+      return (
+        <Grid key={idx} container item xs={12} sx={{ fontSize: 14 }}>
           <Grid xs={1.2} item sx={{ marginTop: 1, textAlign: "center" }}>
             <b>{metka}</b>
           </Grid>
           <Grid xs item>
-            <Button key={i} sx={illum} onClick={() => handleCloseFaz(i)}>
-              <b>{i + 1} -я фаза</b>
+            <Button sx={illum} onClick={() => handleCloseFaz(idx)}>
+              <b>{idx + 1} -я фаза</b>
             </Button>
           </Grid>
         </Grid>
       );
-    }
-    return resStr;
+    });
   };
 
   const StrTab = (recLeft: string, recRight: any) => {

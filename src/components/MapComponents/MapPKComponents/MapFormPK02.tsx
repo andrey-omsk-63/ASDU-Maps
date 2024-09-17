@@ -40,23 +40,23 @@ const MapFormPK02 = (props: { view: boolean; handleClose: Function }) => {
   };
   //========================================================
   const StrokaFormPK02 = () => {
-    let resStr = [];
-    for (let i = 0; i < plan.coordPlan.length; i++) {
+    return plan.coordPlan.map((planCoordPlan: any, idx: number) => {
       let nameVert = "";
       for (let j = 0; j < massroute.vertexes.length; j++) {
         if (
           massroute.vertexes[j].area === plan.areaPK &&
-          massroute.vertexes[j].id === plan.coordPlan[i].id
+          massroute.vertexes[j].id === planCoordPlan.id
         ) {
           nameVert = massroute.vertexes[j].name;
           break;
         }
       }
-      let brb: any = i === plan.coordPlan.length - 1 ? 0 : "1px solid #d4d4d4";
-      resStr.push(
-        <Grid key={i} container sx={{ marginBottom: 0 }}>
-          {TablStr(0.125, i + 1, stylePKForm03(brb))}
-          {TablStr(0.365, plan.coordPlan[i].id, stylePKForm03(brb))}
+      let brb: any =
+        idx === plan.coordPlan.length - 1 ? 0 : "1px solid #d4d4d4";
+      return (
+        <Grid key={idx} container>
+          {TablStr(0.125, idx + 1, stylePKForm03(brb))}
+          {TablStr(0.365, planCoordPlan.id, stylePKForm03(brb))}
           {TablStr(2.125, nameVert, stylePKForm033(brb))}
           {TablStr(0.5, 107, stylePKForm03(brb))}
           {TablStr(0.5, 4, stylePKForm03(brb))}
@@ -71,8 +71,7 @@ const MapFormPK02 = (props: { view: boolean; handleClose: Function }) => {
           {TablStr(0, "3(5)", stylePKForm03(brb))}
         </Grid>
       );
-    }
-    return resStr;
+    });
   };
 
   const HeaderTabl = () => {

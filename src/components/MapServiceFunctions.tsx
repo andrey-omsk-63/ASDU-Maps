@@ -1675,6 +1675,7 @@ export const BindInput = (
     width: "28px",
     maxHeight: "1px",
     minHeight: "1px",
+    marginTop: "2px",
     border: "1px solid #d4d4d4", // серый
     borderRadius: 1,
     bgcolor: "#FFFBE5", // топлёное молоко

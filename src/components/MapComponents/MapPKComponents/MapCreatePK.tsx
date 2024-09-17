@@ -194,7 +194,7 @@ const MapCreatePK = (props: {
           } else massExist.push(maskVert); // правое окно
         }
       }
-
+      // сортировка массива
       massVert.sort(function Func(a: any, b: any) {
         return b.id < a.id ? 1 : b.id > a.id ? -1 : 0;
       });
@@ -375,14 +375,14 @@ const MapCreatePK = (props: {
           <b>{soob}плана координации</b>
         </Box>
         <Grid container sx={styleSpisPK08}>
-          <Grid item xs={1.6} sx={{ border: 0 }}>
+          <Grid item xs={1.6}>
             <b>Номер ПК</b>
           </Grid>
           <Grid item xs={1} sx={{ marginTop: -0.8 }}>
             {InputFromList(handleChangePlan, currencyPlan, currenciesPlan)}
           </Grid>
           <Grid item xs={2.6}></Grid>
-          <Grid item xs={1.7} sx={{ border: 0 }}>
+          <Grid item xs={1.7}>
             <b>Подрайон {subAreA}</b> <em>{nameArea}</em>
           </Grid>
           <Grid item xs sx={{ textAlign: "right", padding: "0 1px 0 0" }}>
@@ -392,7 +392,7 @@ const MapCreatePK = (props: {
           </Grid>
         </Grid>
         <Grid container sx={styleSpisPK09}>
-          <Grid item xs={1.6} sx={{ border: 0 }}>
+          <Grid item xs={1.6}>
             <b>Название ПК</b>
           </Grid>
           <Grid item xs sx={{ marginTop: -0.2 }}>
@@ -465,7 +465,7 @@ const MapCreatePK = (props: {
             </Button>
           )}
         </Grid>
-        <Grid item xs={9.8} sx={{ border: 0 }}>
+        <Grid item xs={9.8}>
           {arrow ? (
             <Box sx={styleFormPK05}>{soobForArrow}</Box>
           ) : (
@@ -480,7 +480,7 @@ const MapCreatePK = (props: {
             </>
           )}
         </Grid>
-        <Grid item xs={1.1} sx={{ border: 0 }}>
+        <Grid item xs={1.1}>
           {boards[1].items.length > 0 && (
             <Button
               sx={styleFormPK06}
