@@ -498,7 +498,6 @@ const MapCreatePK = (props: {
   //=== обработка Esc ======================================
   const escFunction = React.useCallback((event) => {
     if (event.keyCode === 27) {
-      console.log("ESC!!!", HAVE);
       EscClinch = true;
       event.preventDefault();
     }

@@ -234,12 +234,12 @@ const MapOptimCalc = (props: {
   const CalcGraf = () => {
     return (
       <Grid container>
-        <Grid item xs={0.15} sx={{ border: 0 }}>
+        <Grid item xs={0.15}>
           <Box sx={styleWVG02}>
             <b>Tзадержки</b>
           </Box>
         </Grid>
-        <Grid item xs sx={{ border: 0 }}>
+        <Grid item xs>
           <Box sx={styleWVG01(55)}>{openGrafik && <>{PointsGraf00()}</>}</Box>
           <Box sx={{ fontSize: 12.1, color: "blue" }}>
             <b>Время цикла (сек)</b>
