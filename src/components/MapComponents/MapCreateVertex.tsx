@@ -372,8 +372,9 @@ const MapCreateVertex = (props: {
           <Grid item>
             <Grid item container sx={styleSetAdrArea}>
               <Grid item xs={9.5}>
-                {AREA === "0" && <InputArea />}
-                {AREA !== "0" && (
+                {AREA === "0" ? (
+                  <InputArea />
+                ) : (
                   <Box sx={styleSetAdrAreaLess}>
                     {massDat[Number(AREA) - 1]}
                   </Box>

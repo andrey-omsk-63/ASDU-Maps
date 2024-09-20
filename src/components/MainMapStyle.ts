@@ -12,7 +12,7 @@ export const styleApp01 = {
   width: "19%",
   maxHeight: "21px",
   minHeight: "21px",
-  backgroundColor: "#D7F1C0",
+  bgcolor: "#D7F1C0",
   color: "black",
   textTransform: "unset !important",
 };
@@ -99,7 +99,7 @@ export const styleModalMenu = {
   fontSize: 17,
   maxHeight: "21px",
   minHeight: "21px",
-  backgroundColor: "#E6F5D6",
+  bgcolor: "#E6F5D6",
   color: "black",
   marginRight: 1,
   marginBottom: 2,
@@ -125,7 +125,7 @@ export const styleInpKnop = {
   minHeight: "28px",
   maxWidth: "62px",
   minWidth: "62px",
-  backgroundColor: "#FFDB4D",
+  bgcolor: "#FFDB4D",
   textTransform: "unset !important",
   boxShadow: 5,
 };
@@ -148,7 +148,6 @@ export const styleBoxForm = {
     marginTop: "-9px",
     marginLeft: "-15px",
     width: "258px",
-    border: 0,
   },
 };
 //=== InputVertex =====================================================
@@ -302,23 +301,27 @@ export const styleBind03 = {
   height: "2vh",
   lineHeight: "1.8vh",
   textAlign: "center",
-  bgcolor: "#C0E2C3", // салатовый
-  border: "1px solid #C0E2C3", // салатовый
+  //bgcolor: "#C0E2C3", // салатовый
+  bgcolor: "#B8CBB9", // зелёный для шапки
+  border: "1px solid #B8CBB9", // зелёный для шапки
   borderTopLeftRadius: 5,
   borderTopRightRadius: 5,
+  color: "#5B1080",
 };
 
 export const styleBind033 = {
   height: "2vh",
   lineHeight: "1.8vh",
   textAlign: "center",
-  bgcolor: "#C0E2C3", // салатовый
-  border: "1px solid #C0E2C3", // салатовый
+  //bgcolor: "#C0E2C3", // салатовый
+  bgcolor: "#B8CBB9", // зелёный для шапки
+  border: "1px solid #B8CBB9", // зелёный для шапки
 };
 
 export const styleBind0333 = {
-  bgcolor: "#C0E2C3", // салатовый
-  border: "1px solid #C0E2C3", // салатовый
+  //bgcolor: "#C0E2C3", // салатовый
+  bgcolor: "#B8CBB9", // зелёный для шапки
+  border: "1px solid #B8CBB9", // зелёный для шапки
   borderTopLeftRadius: 5,
   borderTopRightRadius: 5,
 };
@@ -491,7 +494,7 @@ export const styleFormMenu = {
   marginRight: 1,
   maxHeight: "24px",
   minHeight: "24px",
-  backgroundColor: "#E6F5D6", // светло салатовый
+  bgcolor: "#E6F5D6", // светло салатовый
   border: "1px solid #d4d4d4", // серый
   borderRadius: 1,
   textTransform: "unset !important",
@@ -589,7 +592,7 @@ export const styleFW02 = {
   maxHeight: "21px",
   minHeight: "21px",
   width: 550,
-  backgroundColor: "#E9F5D8",
+  bgcolor: "#E9F5D8",
   color: "black",
   marginTop: 1,
   textTransform: "unset !important",
@@ -599,7 +602,7 @@ export const styleFW03 = {
   maxHeight: "21px",
   minHeight: "21px",
   width: 369,
-  backgroundColor: "#E9F5D8",
+  bgcolor: "#E9F5D8",
   color: "black",
   marginTop: 1,
   border: "1px solid #d4d4d4", // серый
@@ -613,7 +616,7 @@ export const styleFW04 = {
   maxHeight: "21px",
   minHeight: "21px",
   width: 369,
-  backgroundColor: "#bae186", // салатовый
+  bgcolor: "#bae186", // салатовый
   color: "black",
   marginTop: 1,
   border: "1px solid #93D145", // тёмно-салатовый
@@ -627,7 +630,7 @@ export const styleFW05 = {
   maxHeight: "28px",
   minHeight: "28px",
   width: 285,
-  backgroundColor: "#E9F5D8", // светло салатовый
+  bgcolor: "#E9F5D8", // светло салатовый
   color: "black",
   border: "1px solid #d4d4d4", // серый
   borderRadius: 1,
@@ -641,7 +644,7 @@ export const styleFW06 = {
   maxHeight: "28px",
   minHeight: "28px",
   width: 285,
-  backgroundColor: "#bae186", // тёмно салатовый
+  bgcolor: "#bae186", // тёмно салатовый
   color: "black",
   border: "1px solid #93D145", // тёмно-салатовый
   borderRadius: 1,
@@ -1027,7 +1030,8 @@ export const stylePKForm01 = {
 export const stylePKForm02 = {
   fontSize: 15,
   textAlign: "center",
-  bgcolor: "#C0E2C3",
+  //bgcolor: "#C0E2C3", // салатовый
+  bgcolor: "#B8CBB9", // зелёный для шапки
   borderTopLeftRadius: 2,
   borderTopRightRadius: 2,
   boxShadow: 6,
@@ -1157,6 +1161,7 @@ export const styleWindPK07 = {
   borderRadius: 1,
   boxShadow: 8,
   textAlign: "center",
+  color: "#5B1080",
 };
 
 export const styleWindPK08 = {

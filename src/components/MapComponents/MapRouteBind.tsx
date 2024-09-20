@@ -26,7 +26,7 @@ import { styleBind042, MakeStyleBind00, styleBind043 } from "./../MainMapStyle";
 import { styleBind03, styleBind033, styleBind041 } from "./../MainMapStyle";
 import { styleBind01, styleBind04, styleBind05 } from "./../MainMapStyle";
 import { styleBind06, styleBind07, styleBind08 } from "./../MainMapStyle";
-import { styleBind0333, StyleBind09 } from "./../MainMapStyle";
+import { styleBind0333, StyleBind09, styleTypography } from "./../MainMapStyle";
 
 import { Chart as ChartJS, CategoryScale } from "chart.js";
 import { LinearScale, PointElement } from "chart.js";
@@ -400,9 +400,7 @@ const MapRouteBind = (props: {
   //========================================================
   const FooterBind = () => {
     let have = 0;
-    for (let i = 0; i < massTotal.length; i++) {
-      if (massTotal[i].have) have++;
-    }
+    for (let i = 0; i < massTotal.length; i++) if (massTotal[i].have) have++;
     HAVE = HAVE + have;
     let saveTitle = props.mode ? "Сохранение изменений" : "Сохранение связи";
     return (
@@ -627,7 +625,7 @@ const MapRouteBind = (props: {
                   <b>Tе:Тцикла*C</b>
                 </Box>
               </Grid>
-              <Grid item xs={11.7} sx={{ textAlign: "center" }}>
+              <Grid item xs={11.7} sx={styleTypography}>
                 Изменение потока на направлении <b>{nameRoute}</b>
                 <Box sx={styleBind08}>{PointsGraf00()}</Box>
               </Grid>

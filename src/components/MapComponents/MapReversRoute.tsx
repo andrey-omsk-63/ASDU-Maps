@@ -16,7 +16,7 @@ const MapReversRoute = (props: {
     fontSize: 16,
     maxHeight: "24px",
     minHeight: "24px",
-    backgroundColor: "#E6F5D6",
+    bgcolor: "#E6F5D6",
     border: "1px solid #d4d4d4", // серый
     borderRadius: 1,
     textTransform: "unset !important",

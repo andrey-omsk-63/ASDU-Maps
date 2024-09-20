@@ -166,10 +166,10 @@ const MapCreatePoint = (props: {
             </Grid>
           </Grid>
           <Grid item container sx={styleSetAdrID}>
-            <Grid item xs={9.5} sx={{ border: 0 }}>
+            <Grid item xs={9.5}>
               {InputAdress()}
             </Grid>
-            <Grid item xs={2.2} sx={{ border: 0 }}>
+            <Grid item xs={2.2}>
               <Button sx={styleInpKnop} onClick={handleCloseSetAdr}>
                 Ввод
               </Button>
