@@ -683,6 +683,7 @@ const MainMap = (props: {
 
   const SetReqRoute = (mode: any, need: boolean) => {
     reqRoute = JSON.parse(JSON.stringify(mode));
+    //reqRoute = mode;
     need && LinkBind();
     needLinkBind = false;
   };
