@@ -53,7 +53,6 @@ const MapVertexForma = (props: {
   forma: any;
   openErr: boolean;
 }) => {
-  //console.log("MapVertexForma:", props.idx, oldIdx, props.forma);
   //== Piece of Redux =======================================
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;

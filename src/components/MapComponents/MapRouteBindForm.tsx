@@ -52,9 +52,7 @@ const MapRouteBindForm = (props: {
     if (reason === "escapeKeyDown") handleCloseSetEnd();
   };
 
-  const SetHave = (have: number) => {
-    HAVE = have;
-  };
+  const SetHave = (have: number) => (HAVE = have);
 
   let NAME = props.maskForm.name.slice(0, -1);
 

@@ -482,10 +482,9 @@ const MapRouteBind = (props: {
     let metka = massTotal[i].have ? "✔" : "";
     let illum = massTotal[i].have ? styleBind043 : styleBind04;
     let pusto = massTotal[i].have ? 1 : 0;
-    if (pusto) {
+    if (pusto)
       if (massTotTrFrom[i] && massTotTrIn[i] > 0 && !massTotal[i].editIntensPr)
         massTotPr[i] = Math.round((massTotTrIn[i] * 100) / massTotTrFrom[i]);
-    }
 
     return (
       <>

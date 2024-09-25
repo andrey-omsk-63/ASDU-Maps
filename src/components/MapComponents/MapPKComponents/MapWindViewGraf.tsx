@@ -106,10 +106,7 @@ const MapWindViewGraf = (props: {
   //=== обработка Esc ======================================
   const escFunction = React.useCallback(
     (event) => {
-      if (event.keyCode === 27) {
-        console.log("ESC!!!");
-        CloseEnd();
-      }
+      if (event.keyCode === 27) CloseEnd();
     },
     [CloseEnd]
   );

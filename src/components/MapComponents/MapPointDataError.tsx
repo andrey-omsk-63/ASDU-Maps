@@ -298,9 +298,7 @@ const MapPointDataError = (props: {
     setOpenSetBind(true);
   };
 
-  const MakeRecordMassRoute = (mode: boolean, mass: any) => {
-    props.setSvg(null);
-  };
+  const MakeRecordMassRoute = (mode: boolean, mass: any) => props.setSvg(null);
 
   return (
     <>

@@ -35,7 +35,6 @@ const MapSetupPK = (props: {
     const { massplanReducer } = state;
     return massplanReducer.massplan;
   });
-  console.log("massplan:", PLANER, massplan);
   const dispatch = useDispatch();
   //========================================================
   const [open, setOpen] = React.useState(true);

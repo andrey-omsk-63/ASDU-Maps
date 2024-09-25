@@ -28,9 +28,7 @@ const MapViewPK = (props: {
   //=== инициализация ======================================
   let plan = massplan.plans[props.idx];
   //========================================================
-  const handleClose = () => {
-    props.handleClose(false);
-  };
+  const handleClose = () => props.handleClose(false);
 
   const CloseEnd = (event: any, reason: string) => {
     if (reason === "escapeKeyDown") handleClose();

@@ -20,6 +20,7 @@ let sec = 0;
 let tmRouteBegin = 0;
 let sRoute1 = 0;
 let sRouteBegin = 0;
+
 let maskRoute: any = {
   dlRoute: 0,
   tmRoute: 0,

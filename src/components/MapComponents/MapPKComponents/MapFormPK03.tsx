@@ -26,9 +26,7 @@ const MapFormPK03 = (props: { view: boolean; handleClose: Function }) => {
   //=== инициализация ======================================
   let plan = massplan.plans[datestat.idxMenu];
   //========================================================
-  const handleClose = () => {
-    props.handleClose(false);
-  };
+  const handleClose = () => props.handleClose(false);
 
   const CloseEnd = (event: any, reason: string) => {
     if (reason === "escapeKeyDown") handleClose();
@@ -54,6 +52,7 @@ const MapFormPK03 = (props: { view: boolean; handleClose: Function }) => {
         bgcolor: coler,
       };
       let rec1 = RandomNumber(0, 16) + RandomNumber(100, 1000) / 1000;
+
       resStr.push(
         <Grid key={i} container>
           {TablStr(0.25, i + 1, stylePKForm03)}

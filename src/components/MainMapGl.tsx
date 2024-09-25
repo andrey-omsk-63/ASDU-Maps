@@ -90,7 +90,7 @@ let funcBound: any = null;
 let oldPropsSvg: any = null;
 let funcContex: any, VertexForma: any, funcClick: any, activeRoute: any;
 funcContex = VertexForma = funcClick = activeRoute = null;
-    SubArea.sort((a, b) => a - b); // сортировка по возрастанию
+SubArea.sort((a, b) => a - b); // сортировка по возрастанию
 let currencies: any = []; // для меню подрайонов
 let currenciesMode: any = []; // для меню подрайонов режимов работы
 let currenciesPK: any = []; // для меню ПК и модели
@@ -141,7 +141,7 @@ const MainMap = (props: {
     return massplanReducer.massplan;
   });
   const dispatch = useDispatch();
-  
+
   //===========================================================
   const [triggerForm, setTriggerForm] = React.useState(false);
   const [currency, setCurrency] = React.useState("0");
@@ -308,6 +308,9 @@ const MainMap = (props: {
         }
         setFlagPro(true); //включение протокола
       }
+
+      console.log("needRevers:", needRevers,flagRevers);
+
       if (flagRevers && needRevers !== 3) {
         setOpenRevers(true);
         flagRevers = false;
@@ -370,6 +373,7 @@ const MainMap = (props: {
   };
 
   const PressButton = (mode: number) => {
+    console.log('MODE:',mode)
     switch (mode) {
       case 3: // режим включения Demo сети связей
         TurnOnDemoRoute();
@@ -678,19 +682,18 @@ const MainMap = (props: {
     let idOn = massroute.vertexes[pointBbIndex].id;
     SendSocketGetSvg(WS, homeRegion, arIn, idIn, arOn, idOn);
     modeBind = 0; // режим открытия RouteBind
-    setOpenBind(flagBind = true);
+    setOpenBind((flagBind = true));
   };
 
   const SetReqRoute = (mode: any, need: boolean) => {
     reqRoute = JSON.parse(JSON.stringify(mode));
-    //reqRoute = mode;
     need && LinkBind();
     needLinkBind = false;
+    flagRevers = false; // !!!!!!
+    console.log('SetReqRoute:',flagRevers)
   };
 
-  const UpdateAddRoute = () => {
-    ymaps && addRoute(ymaps); // перерисовка связей
-  };
+  const UpdateAddRoute = () => ymaps && addRoute(ymaps); // перерисовка связей
 
   const handleCloseDel = (mode: boolean) => {
     if (mode) {
@@ -756,7 +759,7 @@ const MainMap = (props: {
   const handleChangePK = (event: React.ChangeEvent<HTMLInputElement>) => {
     let pk = Number(event.target.value);
     if (!pk) pk++;
-    setCurrencyPK(PK = pk.toString());
+    setCurrencyPK((PK = pk.toString()));
     setCurrencyMode("0"); // переключение меню 'Перекрёстки и связи' на заголовок
     MODE = "2";
     TurnOnDemoRoute(); // влючение ФС
@@ -769,19 +772,19 @@ const MainMap = (props: {
   const handleChangeCalc = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrencyMode("0"); // переключение меню 'Перекрёстки и связи' на заголовок
     MODE = "2";
-    setCurrencyCalc(CALC = event.target.value);
+    setCurrencyCalc((CALC = event.target.value));
     PressButton(205);
   };
 
   const handleChOptim = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrencyMode("0"); // переключение меню 'Перекрёстки и связи' на заголовок
     MODE = "2";
-    setCurrencyOptim(OPTIM = event.target.value);
+    setCurrencyOptim((OPTIM = event.target.value));
     PressButton(402);
   };
 
   const handleChForm = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrencyForm(FORM = event.target.value);
+    setCurrencyForm((FORM = event.target.value));
     PressButton(203);
   };
 
@@ -815,7 +818,7 @@ const MainMap = (props: {
     setOpenPKSpis((BALLOON = false)); // запрет на выдачу балуна / закрытие списка планов
     datestat.needMenuForm = false; //  не выдавать меню форм
     dispatch(statsaveCreate(datestat));
-    HandlLockUp(VIEWDIR = true); // блокировка меню районов и меню режимов / разрешение посмотра инф-ии о направл.в балуне
+    HandlLockUp((VIEWDIR = true)); // блокировка меню районов и меню режимов / разрешение посмотра инф-ии о направл.в балуне
     setOpenPKForm(true); // окрытие MapCreatePK
     TurnOnDemoRoute();
   };

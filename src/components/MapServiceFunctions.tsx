@@ -84,10 +84,9 @@ export const ExitCross = (func: any) => {
 export const SubareaFindById = (massdk: any, area: number, id: number) => {
   let subarea = -1;
   let areA = area ? Number(AREA) : 0;
-  for (let j = 0; j < massdk.length; j++) {
+  for (let j = 0; j < massdk.length; j++)
     if (massdk[j].ID === id && massdk[j].area === areA)
       subarea = massdk[j].subarea;
-  }
   return subarea;
 };
 
@@ -1365,11 +1364,7 @@ export const NoVertex = (openSetErr: boolean, handleCloseErr: Function) => {
   );
 };
 //=== RouteBind =======================================================
-export const ReplaceInSvg = (
-  Svg: any,
-  widthHeight: string
-  //: number
-) => {
+export const ReplaceInSvg = (Svg: any, widthHeight: string) => {
   let ch = "";
   let svgPipa = Svg;
   let vxod = Svg.indexOf("width=");
@@ -1377,18 +1372,15 @@ export const ReplaceInSvg = (
     if (isNaN(Number(svgPipa[vxod + 7 + i]))) break;
     ch = ch + svgPipa[vxod + 7 + i];
   }
-  for (let i = 0; i < 6; i++) {
-    svgPipa = svgPipa.replace(ch, widthHeight);
-  }
+  for (let i = 0; i < 6; i++) svgPipa = svgPipa.replace(ch, widthHeight);
   let chh = "";
   let vxodh = Svg.indexOf("height=");
   for (let i = 0; i < 100; i++) {
     if (isNaN(Number(svgPipa[vxodh + 8 + i]))) break;
     chh = chh + svgPipa[vxodh + 8 + i];
   }
-  for (let i = 0; i < 6; i++) {
-    svgPipa = svgPipa.replace(chh, widthHeight);
-  }
+  for (let i = 0; i < 6; i++) svgPipa = svgPipa.replace(chh, widthHeight);
+
   return svgPipa;
 };
 
@@ -1524,9 +1516,7 @@ export const HeaderBind = (
   const [comment1, setComment1] = React.useState(false);
   const heightWind = window.innerHeight * 0.8;
 
-  const handleClose = () => {
-    setOpenSvg(false);
-  };
+  const handleClose = () => setOpenSvg(false);
 
   const ClickBlok = (idx: number) => {
     HeaderBindIDX = idx;
@@ -1839,9 +1829,7 @@ export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
     boxShadow: 6,
   };
 
-  const handleClose = (mode: boolean) => {
-    handleCloseEnd(mode);
-  };
+  const handleClose = (mode: boolean) => handleCloseEnd(mode);
 
   const CloseEnd = (event: any, reason: string) => {
     if (reason === "escapeKeyDown") handleClose(false);
@@ -2253,17 +2241,16 @@ export const DelCross = (i: number, nomDelFaz: number) => {
 };
 //=== PointDataError ==================================================
 export const HeadDoublError = (flagSave: boolean, propsErr: string) => {
+  const styleForm = {
+    textAlign: "center",
+    color: "red",
+    textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+  };
+
   return (
     <>
       {!flagSave ? (
-        <Typography
-          variant="h6"
-          sx={{
-            textAlign: "center",
-            color: "red",
-            textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
-          }}
-        >
+        <Typography variant="h6" sx={styleForm}>
           {propsErr}
         </Typography>
       ) : (
@@ -2381,9 +2368,7 @@ export const InputNamePK = (handleChangeName: any, valuen: string) => {
         <TextField
           size="small"
           onKeyPress={handleKey} //отключение Enter
-          inputProps={{
-            style: { cursor: "pointer", fontSize: 15 },
-          }}
+          inputProps={{ style: { cursor: "pointer", fontSize: 15 } }}
           InputProps={{ disableUnderline: true }}
           value={valuen}
           onChange={handleChangeName}
@@ -2445,9 +2430,8 @@ export const ExitArrow = (board: any, id: number, massroute: any) => {
 export const InputArrow = (board: any, id: number, massroute: any) => {
   let exitId = -1;
   let area = board.items[0].area;
-  for (let i = 0; i < board.items.length; i++) {
+  for (let i = 0; i < board.items.length; i++) 
     if (i && board.items[i].id === id) exitId = board.items[i - 1].id;
-  }
   let have = false;
   if (exitId >= 0) {
     for (let i = 0; i < massroute.ways.length; i++) {
@@ -2456,6 +2440,7 @@ export const InputArrow = (board: any, id: number, massroute: any) => {
         if (rec.sourceID === exitId) have = true;
     }
   }
+
   return (
     <Box sx={{ color: !have ? "#F8FCF3" : "#7dc36b" }}>
       <b>⬆</b>
@@ -2482,10 +2467,10 @@ export const TablStr = (xss: number, arg: any, style: any) => {
 export const StrokaTablWindPK = (rec1: string, rec2: any) => {
   return (
     <Grid container sx={{ marginBottom: 0.5 }}>
-      <Grid item xs={8} sx={{ border: 0 }}>
+      <Grid item xs={8}>
         {rec1}
       </Grid>
-      <Grid item xs sx={{ color: "#5B1080", border: 0 }}>
+      <Grid item xs sx={{ color: "#5B1080" }}>
         <b>{rec2}</b>
       </Grid>
     </Grid>

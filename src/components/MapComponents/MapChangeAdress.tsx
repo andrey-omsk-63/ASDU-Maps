@@ -61,19 +61,15 @@ const MapChangeAdress = (props: {
   const dispatch = useDispatch();
   //========================================================
   const [openSetAdress, setOpenSetAdress] = React.useState(true);
+  const [valuen, setValuen] = React.useState(massdk[props.iP].nameCoordinates);
   const WS = datestat.ws;
-
-  const [valuen, setValuen] = React.useState(
-    massdk[props.iP].nameCoordinates
-  );
 
   const handleKey = (event: any) => {
     if (event.key === "Enter") event.preventDefault();
   };
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     setValuen(event.target.value.trimStart()); // удаление пробелов в начале строки
-  };
 
   const handleCloseSet = () => {
     props.Open(false);

@@ -26,9 +26,7 @@ const MapFormPK04 = (props: { view: boolean; handleClose: Function }) => {
   //=== инициализация ======================================
   let plan = massplan.plans[datestat.idxMenu];
   //========================================================
-  const handleClose = () => {
-    props.handleClose(false);
-  };
+  const handleClose = () => props.handleClose(false);
 
   const CloseEnd = (event: any, reason: string) => {
     if (reason === "escapeKeyDown") handleClose();

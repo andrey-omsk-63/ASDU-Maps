@@ -31,9 +31,7 @@ const MapFormPK01 = (props: { view: boolean; handleClose: Function }) => {
   //=== инициализация ======================================
   let plan = massplan.plans[datestat.idxMenu];
   //========================================================
-  const handleClose = () => {
-    props.handleClose(false);
-  };
+  const handleClose = () => props.handleClose(false);
 
   const CloseEnd = (event: any, reason: string) => {
     if (reason === "escapeKeyDown") handleClose();
@@ -54,6 +52,7 @@ const MapFormPK01 = (props: { view: boolean; handleClose: Function }) => {
       }
       let brb: any =
         idx === plan.coordPlan.length - 1 ? 0 : "1px solid #d4d4d4";
+
       return (
         <Grid key={idx} container>
           {TablStr(0.25, idx + 1, stylePKForm03(brb))}
