@@ -103,6 +103,7 @@ idxDel = indexPoint = pointAaIndex = pointBbIndex = -1;
 let openEF = false;
 let fromIdx: number, inIdx: number, idxPKForm: number, modeBind: number;
 fromIdx = inIdx = idxPKForm = modeBind = -1;
+let menuRevers = true; //флаг выдачи меню окрытия реверсной связи
 
 const MainMap = (props: {
   region: any;
@@ -248,7 +249,7 @@ const MainMap = (props: {
       setOpenWaysForm(false);
       setOpenPKForm(false);
       setRoutePKW(null);
-      BALLOON = true; // разрешение на выдачу балуна
+      BALLOON = menuRevers = true; // разрешение на выдачу балуна / флаг выдачи меню окрытия реверсной связи
       setOpenPKSpis(false);
       HandlLockUp(false); // разблокировка меню районов и меню режимов
       ymaps && addRoute(ymaps); // перерисовка связей
@@ -308,12 +309,9 @@ const MainMap = (props: {
         }
         setFlagPro(true); //включение протокола
       }
-
-      console.log("needRevers:", needRevers,flagRevers);
-
-      if (flagRevers && needRevers !== 3) {
+      if (menuRevers && flagRevers && needRevers !== 3) {
         setOpenRevers(true);
-        flagRevers = false;
+        flagRevers = menuRevers = false; // не нужно повторное открытие меню окрытия реверсной связи
       } else ZeroRoute(mode);
     }
     setCurrencyPK((PK = "0")); // переключение меню 'ПК и модели' на заголовок
@@ -373,7 +371,7 @@ const MainMap = (props: {
   };
 
   const PressButton = (mode: number) => {
-    console.log('MODE:',mode)
+    //console.log("MODE:", mode);
     switch (mode) {
       case 3: // режим включения Demo сети связей
         TurnOnDemoRoute();
@@ -410,7 +408,7 @@ const MainMap = (props: {
             } else {
               setTimeout(() => {
                 ReadyRoute();
-              }, 100);
+              }, 500);
             }
           };
           ReadyRoute();
@@ -419,8 +417,10 @@ const MainMap = (props: {
         setNeedRevers(3);
         break;
       case 69: // редактирование связи
-        setOpenInf(true);
-        setNeedRevers(0);
+        setTimeout(() => {
+          setOpenInf(true);
+          setNeedRevers(0);
+        }, 500);
         break;
       case 77: // удаление связи / отмена назначений
         ZeroRoute(false);
@@ -689,8 +689,6 @@ const MainMap = (props: {
     reqRoute = JSON.parse(JSON.stringify(mode));
     need && LinkBind();
     needLinkBind = false;
-    flagRevers = false; // !!!!!!
-    console.log('SetReqRoute:',flagRevers)
   };
 
   const UpdateAddRoute = () => ymaps && addRoute(ymaps); // перерисовка связей

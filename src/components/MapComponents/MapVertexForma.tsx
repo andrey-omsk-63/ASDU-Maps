@@ -242,7 +242,6 @@ const MapVertexForma = (props: {
   const ChangeOptimal = () => {
     massForm.optimal = !massForm.optimal;
     Haver();
-    //setTrigger(!trigger); // ререндер
   };
 
   const ChangeStrDel = (idx: number) => {
@@ -279,12 +278,12 @@ const MapVertexForma = (props: {
   };
 
   const hChPhase = (event: any, i: number) => {
-    Haver();
     let num = Number(event.target.value);
     let currencies = CURR[i];
     MASSFAZA[i] = Number(currencies[num].label);
     massForm.phases[i].NumPhase = MASSFAZA[i];
-    setTrigger(!trigger); // ререндер
+    Haver();
+    //setTrigger(!trigger); // ререндер
   };
   //========================================================
   const StrokaMainTabl = () => {

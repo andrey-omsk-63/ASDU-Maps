@@ -10,7 +10,7 @@ import { styleModalEnd, styleSetInf } from "./../MainMapStyle";
 const MapReversRoute = (props: {
   setOpen: any;
   makeRevers: any;
-  needRevers: any;
+  needRevers: any; // создавать или нет реверсную связь
 }) => {
   const styleModalMenu = {
     fontSize: 16,

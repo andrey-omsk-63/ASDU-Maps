@@ -1060,11 +1060,13 @@ export const MakeRevers = (
   needRevers: number,
   PressButton: Function
 ) => {
+  //console.log("MakeRevers:", makeRevers, needRevers);
   return (
     <>
       {makeRevers && needRevers === 0 && <>{PressButton(35)}</>}
       {makeRevers && needRevers === 1 && <>{PressButton(36)}</>}
       {makeRevers && needRevers === 2 && <>{PressButton(37)}</>}
+      {!makeRevers && needRevers === 3 && <>{PressButton(69)}</>}
     </>
   );
 };
@@ -2430,7 +2432,7 @@ export const ExitArrow = (board: any, id: number, massroute: any) => {
 export const InputArrow = (board: any, id: number, massroute: any) => {
   let exitId = -1;
   let area = board.items[0].area;
-  for (let i = 0; i < board.items.length; i++) 
+  for (let i = 0; i < board.items.length; i++)
     if (i && board.items[i].id === id) exitId = board.items[i - 1].id;
   let have = false;
   if (exitId >= 0) {
