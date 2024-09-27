@@ -7,12 +7,12 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 
 import { TablStr } from "../../MapServiceFunctions";
+import { FormPKnamePK, FormPKsubareaPK } from "../../MapServiceFunctions";
 
 import { styleModalEndBind, stylePKForm00 } from "../../MainMapStyle";
 import { styleFormPK01, stylePKForm01 } from "../../MainMapStyle";
 import { stylePKForm03, stylePKForm033 } from "../../MainMapStyle";
-import { stylePKForm02, styleSpisPK05 } from "../../MainMapStyle";
-import { stylePKForm04 } from "../../MainMapStyle";
+import { stylePKForm02, stylePKForm04 } from "../../MainMapStyle";
 
 const MapFormPK02 = (props: { view: boolean; handleClose: Function }) => {
   //== Piece of Redux =======================================
@@ -106,25 +106,8 @@ const MapFormPK02 = (props: { view: boolean; handleClose: Function }) => {
               <b>Начальные параметры перекрёстков ПК №{plan.nomPK}</b>
             </Box>
             <Grid container>
-              <Grid item xs={8} sx={{ border: 0 }}>
-                <Box sx={styleSpisPK05}>
-                  <Box sx={{}}>
-                    <b>Название ПК:</b>&nbsp;&nbsp;
-                  </Box>
-                  <Box sx={{ fontSize: 15 }}>
-                    <em>{plan.namePK.slice(0, 53)}</em>
-                  </Box>
-                </Box>
-              </Grid>
-              <Grid item xs sx={{ textAlign: "right", border: 0 }}>
-                <Box sx={{ position: "absolute", right: "6px", border: 0 }}>
-                  <Box sx={styleSpisPK05}>
-                    <Box sx={{}}>
-                      <b>Подрайон: {plan.subareaPK}</b> &nbsp;
-                    </Box>
-                  </Box>
-                </Box>
-              </Grid>
+              {FormPKnamePK(plan)}
+              {FormPKsubareaPK(plan)}
             </Grid>
             {HeaderTabl()}
             <Box sx={stylePKForm00}>{StrokaFormPK02()}</Box>

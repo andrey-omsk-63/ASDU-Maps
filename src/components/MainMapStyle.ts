@@ -506,7 +506,8 @@ export const styleFT02 = {
   fontSize: 14,
   padding: 0.7,
   textAlign: "center",
-  bgcolor: "#C0E2C3",
+  // bgcolor: "#C0E2C3", // салатовый
+  bgcolor: "#B8CBB9", //  зелёный для шапки
   borderTopLeftRadius: 3,
   borderTopRightRadius: 3,
 };
@@ -518,6 +519,7 @@ export const styleFormTabl00 = {
   marginLeft: -0.5,
   marginRight: -0.5,
   boxShadow: 6,
+  textShadow: "0px 0px 0px rgba(0,0,0,0.3)",
 };
 
 export const styleFormTabl01 = {
@@ -525,6 +527,7 @@ export const styleFormTabl01 = {
   bgcolor: "background.paper",
   borderBottomLeftRadius: 5,
   borderBottomRightRadius: 5,
+  textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
 };
 
 export const styleFormTabl02 = {
@@ -699,7 +702,7 @@ export const MakeStyleFormPK00 = (wdth: number, PLANER: number) => {
 export const styleFormPK01 = {
   fontSize: 21,
   textAlign: "center",
-  color: "#5B1080",
+  color: "#5B1080", // сиреневый
   textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
 };
 
@@ -1030,7 +1033,6 @@ export const stylePKForm01 = {
 export const stylePKForm02 = {
   fontSize: 15,
   textAlign: "center",
-  //bgcolor: "#C0E2C3", // салатовый
   bgcolor: "#B8CBB9", // зелёный для шапки
   borderTopLeftRadius: 2,
   borderTopRightRadius: 2,
@@ -1057,7 +1059,13 @@ export const stylePKForm033 = (brb: number) => {
 
 export const stylePKForm04 = {
   padding: "5px 0px 5px 0px",
-  border: 0,
+};
+
+export const stylePKForm05 = {
+  fontSize: 14.0,
+  marginTop: 0.5,
+  color: "#5B1080", // сиреневый
+  textAlign: "center",
 };
 //=== WindPK ==========================================================
 export const styleWindPK00 = (sum: number) => {

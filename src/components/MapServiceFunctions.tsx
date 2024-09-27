@@ -33,7 +33,7 @@ import { styleModalEndAttent, styleFT03, styleFT033 } from "./MainMapStyle";
 import { styleBind02, styleTypography, searchControl } from "./MainMapStyle";
 import { styleBind03, styleBind033, styleSetImg } from "./MainMapStyle";
 import { styleFT04, styleFT05, styleModalEnd } from "./MainMapStyle";
-import { styleSetPK04, StyleBind09 } from "./MainMapStyle";
+import { styleSetPK04, StyleBind09, styleSpisPK05 } from "./MainMapStyle";
 
 import { styleModalMenuErr, styleHeadError } from "./MapPointDataErrorStyle";
 import { styleBoxFormArea, styleSetArea } from "./MapPointDataErrorStyle";
@@ -2463,6 +2463,38 @@ export const TablStr = (xss: number, arg: any, style: any) => {
         </Grid>
       )}
     </>
+  );
+};
+
+export const FormPKnamePK = (plan: any) => {
+  return (
+    <Grid item xs={8}>
+      <Box sx={styleSpisPK05}>
+        <Box sx={{}}>
+          <b>Название ПК:</b>&nbsp;&nbsp;
+        </Box>
+        <Box sx={{ fontSize: 15, color: "#5B1080" }}>
+          <em>{plan.namePK.slice(0, 53)}</em>
+        </Box>
+      </Box>
+    </Grid>
+  );
+};
+
+export const FormPKsubareaPK = (plan: any) => {
+  return (
+    <Grid item xs sx={{ textAlign: "right" }}>
+      <Box sx={{ position: "absolute", right: "6px" }}>
+        <Box sx={styleSpisPK05}>
+          <Box sx={{}}>
+            <b>Подрайон:</b> &nbsp;
+          </Box>
+          <Box sx={{ color: "#5B1080" }}>
+            <em> {plan.subareaPK}</em> &nbsp;
+          </Box>
+        </Box>
+      </Box>
+    </Grid>
   );
 };
 //=== WindPK ==========================================================

@@ -7,12 +7,13 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 
 import { TablStr } from "../../MapServiceFunctions";
+import { FormPKnamePK, FormPKsubareaPK } from "../../MapServiceFunctions";
 
 import { styleModalEndBind, stylePKForm00 } from "../../MainMapStyle";
 import { styleFormPK01, stylePKForm01 } from "../../MainMapStyle";
 import { stylePKForm03, stylePKForm033 } from "../../MainMapStyle";
-import { stylePKForm02, styleSpisPK05 } from "../../MainMapStyle";
-import { stylePKForm04 } from "../../MainMapStyle";
+import { stylePKForm02, stylePKForm04 } from "../../MainMapStyle";
+import { stylePKForm05 } from "../../MainMapStyle";
 
 const MapFormPK05 = (props: { view: boolean; handleClose: Function }) => {
   //== Piece of Redux =======================================
@@ -51,7 +52,7 @@ const MapFormPK05 = (props: { view: boolean; handleClose: Function }) => {
       }
       let brb: any =
         idx === plan.coordPlan.length - 1 ? 0 : "1px solid #d4d4d4";
-        
+
       return (
         <Grid key={idx} container>
           {TablStr(0.25, idx + 1, stylePKForm03(brb))}
@@ -102,32 +103,13 @@ const MapFormPK05 = (props: { view: boolean; handleClose: Function }) => {
               <b>Программа координации ПК №{plan.nomPK}</b>
             </Box>
             <Grid container sx={{ textShadow: "1px 1px 2px rgba(0,0,0,0.3)" }}>
-              <Grid item xs={7.8} sx={{ border: 0 }}>
-                <Box sx={styleSpisPK05}>
-                  <Box sx={{}}>
-                    <b>Название ПК:</b>&nbsp;&nbsp;
-                  </Box>
-                  <Box sx={{ fontSize: 15 }}>
-                    <em>{plan.namePK.slice(0, 53)}</em>
-                  </Box>
-                </Box>
-              </Grid>
+              {FormPKnamePK(plan)}
               <Grid item xs={2.1}>
-                <Box
-                  sx={{ fontSize: 14.5, marginTop: 0.5, textAlign: "center" }}
-                >
-                  Время эфф.зелёного = 1
+                <Box sx={stylePKForm05}>
+                  <em>Время эфф.зелёного = 1</em>
                 </Box>
               </Grid>
-              <Grid item xs sx={{ border: 0 }}>
-                <Box sx={{ position: "absolute", right: "6px" }}>
-                  <Box sx={styleSpisPK05}>
-                    <Box sx={{}}>
-                      <b>Подрайон: {plan.subareaPK}</b> &nbsp;
-                    </Box>
-                  </Box>
-                </Box>
-              </Grid>
+              {FormPKsubareaPK(plan)}
             </Grid>
             {HeaderTabl()}
             <Box sx={stylePKForm00}>{StrokaFormPK05()}</Box>

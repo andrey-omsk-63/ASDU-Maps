@@ -118,13 +118,17 @@ const MapViewPK = (props: {
           <Box sx={{}}>
             <b>Название ПК:</b>&nbsp;&nbsp;
           </Box>
-          <Box sx={{ fontSize: 15 }}>
+          <Box sx={{ fontSize: 15, color: "#5B1080" }}>
             <em>{plan.namePK.slice(0, 96)}</em>
           </Box>
         </Box>
         <Box sx={styleSpisPK05}>
-          <b>Подрайон:</b>&nbsp;
-          <em>{plan.subareaPK}</em>
+          <Box sx={{}}>
+            <b>Подрайон:</b> &nbsp;
+          </Box>
+          <Box sx={{ color: "#5B1080" }}>
+            <em> {plan.subareaPK}</em> &nbsp;
+          </Box>
         </Box>
         <Box sx={MakeStylSpisPK06()}>{StrokaPK()}</Box>
       </Box>

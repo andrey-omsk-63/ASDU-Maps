@@ -39,7 +39,7 @@ let massPkIdOld: any = [];
 let isOpen = false;
 let oldSubArea = -1;
 let oldIdx = -2;
-let nameArea = "";
+//let nameArea = "";
 let soobErr = "";
 let EscClinch = false;
 let needSort = false;
@@ -111,7 +111,6 @@ const MapCreatePK = (props: {
         datestat.needMakeSpisPK = true; // вызов списка ПК после корректровки ПК
         dispatch(statsaveCreate(datestat));
       }
-      // props.setOpen(datestat.nomMenu, mode ? massPkId : massPkIdOld); // полный выход
       massPkId = [];
     },
     [props, modeWork, datestat, dispatch]
@@ -299,9 +298,7 @@ const MapCreatePK = (props: {
     } else handleCloseBad(); // выход без сохранения
   };
 
-  const SetPlan = (plSetup: any) => {
-    HAVE++;
-  };
+  const SetPlan = (plSetup: any) => HAVE++;
   //=== Drag and Drop ======================================
   const dragOverHandler = (e: any, board: any) => {
     e.preventDefault();
@@ -310,9 +307,8 @@ const MapCreatePK = (props: {
       (e.target.style.backgroundColor = "#bae186"); // тёмно салатовый
   };
 
-  const dragLeaveHandler = (e: any) => {
-    e.target.style.backgroundColor = "#F8FCF3"; // светло светло салатовый
-  };
+  const dragLeaveHandler = (e: any) =>
+    (e.target.style.backgroundColor = "#F8FCF3"); // светло светло салатовый
 
   const dragStartHandler = (e: any, board: any, item: any) => {
     setCurrentBoard(board);
@@ -382,8 +378,13 @@ const MapCreatePK = (props: {
             {InputFromList(handleChangePlan, currencyPlan, currenciesPlan)}
           </Grid>
           <Grid item xs={2.6}></Grid>
-          <Grid item xs={1.7}>
-            <b>Подрайон {subAreA}</b> <em>{nameArea}</em>
+          <Grid item xs={1.7} sx={{ display: "flex" }}>
+            <Box sx={{}}>
+              <b>Подрайон:</b> &nbsp;
+            </Box>
+            <Box sx={{ color: "#5B1080" }}>
+              <em> {subAreA}</em> &nbsp;
+            </Box>
           </Grid>
           <Grid item xs sx={{ textAlign: "right", padding: "0 1px 0 0" }}>
             <Button sx={styleFormPK07} onClick={() => setSetupPlan(true)}>

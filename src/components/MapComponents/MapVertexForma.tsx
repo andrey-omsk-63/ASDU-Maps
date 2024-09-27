@@ -283,7 +283,6 @@ const MapVertexForma = (props: {
     MASSFAZA[i] = Number(currencies[num].label);
     massForm.phases[i].NumPhase = MASSFAZA[i];
     Haver();
-    //setTrigger(!trigger); // ререндер
   };
   //========================================================
   const StrokaMainTabl = () => {
@@ -315,7 +314,7 @@ const MapVertexForma = (props: {
           {MainTablInp(2.75, WaysInput(i, startDur, SetStDuration, 1, 20), 3)}
           {MainTablInp(2.75, WaysInput(i, phOrder, SetPhaseOrder, 1, FAZA), 3)}
           <Grid xs={1} item sx={styleFT033} onClick={() => ChangeStrDel(i)}>
-            {DelCross(i, nomDelFaz)}
+            {MASSFAZA.length > 2 && <>{DelCross(i, nomDelFaz)}</>}
           </Grid>
         </Grid>
       );
@@ -361,7 +360,9 @@ const MapVertexForma = (props: {
                 <b>{massdk[props.idx].nameCoordinates}</b>
               </em>
             </Box>
-            <Box sx={{ fontSize: 12, marginTop: 0.5 }}>Общие</Box>
+            <Box sx={{ fontSize: 12, marginTop: 0.5, color: "#5B1080" }}>
+              Общие
+            </Box>
             {StrTablVert(6, "Время цикла cек.", massForm.timeCycle + " сек.")}
             {StrTablVert(6, "Номер перекрёстка", subId)}
             {StrTablVert(
@@ -374,7 +375,9 @@ const MapVertexForma = (props: {
               "Участвует в автоматической оптимизации",
               ShiftOptimal(massForm.optimal, ChangeOptimal, 0.5)
             )}
-            <Box sx={{ fontSize: 12, marginTop: 2.5 }}>Свойства фаз</Box>
+            <Box sx={{ fontSize: 12, marginTop: 2.5, color: "#5B1080" }}>
+              Свойства фаз
+            </Box>
             {StrTablVert(
               6,
               "Количество фаз",
@@ -385,14 +388,16 @@ const MapVertexForma = (props: {
               "Начальное смещение сек.",
               WaysInput(0, massForm.offset, SetOffset, 0, 100)
             )}
-            <Box sx={{ fontSize: 12, marginTop: 2.5 }}>
+            <Box sx={{ fontSize: 12, marginTop: 2.5, color: "#5B1080" }}>
               Таблица параметров фаз
             </Box>
             <Box sx={styleFormTabl00}>
               {HeaderTablFaz()}
               <Box sx={styleFormTabl01}>
                 <Box sx={styleFormTabl02}>{StrokaMainTabl()}</Box>
-                {nomDelFaz >= 0 && <>{DelStrokaFaz(DeleteFaza)}</>}
+                {nomDelFaz >= 0 && MASSFAZA.length > 2 && (
+                  <>{DelStrokaFaz(DeleteFaza)}</>
+                )}
               </Box>
             </Box>
             {SaveFormVert(HAVE, SaveForm)}
