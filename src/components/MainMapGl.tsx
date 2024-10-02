@@ -371,7 +371,6 @@ const MainMap = (props: {
   };
 
   const PressButton = (mode: number) => {
-    //console.log("MODE:", mode);
     switch (mode) {
       case 3: // режим включения Demo сети связей
         TurnOnDemoRoute();
@@ -545,6 +544,12 @@ const MainMap = (props: {
       pointRoute = MassCoord(massdk[indexPoint]);
 
     const handleClose = (param: number) => {
+      const CheckDoublPoint = () => {
+        return (
+          massroute.vertexes[pointAaIndex].area === 0 &&
+          massroute.vertexes[indexPoint].area === 0
+        );
+      };
       switch (param) {
         case 1: // Начальная точка
           if (pointBbIndex === indexPoint) {
@@ -554,7 +559,15 @@ const MainMap = (props: {
             pointAaIndex = indexPoint;
             pointAa = pointRoute;
             fromCross = MakeFromCross(massdk[pointAaIndex]);
-            MakeСollectionRoute(true);
+            if (CheckDoublPoint()) {
+              SoobOpenSetEr("Связь между двумя точками создовать нельзя");
+              ZeroRoute(false);
+            } else {
+              if (DoublRoute(massroute.ways, pointAa, pointBb)) {
+                SoobOpenSetEr("Дубликатная связь");
+                ZeroRoute(false);
+              } else MakeСollectionRoute(true);
+            }
           }
           break;
         case 2: // Конечная точка
@@ -562,10 +575,7 @@ const MainMap = (props: {
             soobError = "Начальная и конечная точки совпадают";
             setOpenErBall(true);
           } else {
-            if (
-              massroute.vertexes[pointAaIndex].area === 0 &&
-              massroute.vertexes[indexPoint].area === 0
-            ) {
+            if (CheckDoublPoint()) {
               SoobOpenSetEr("Связь между двумя точками создовать нельзя");
             } else {
               pointBbIndex = indexPoint;
@@ -574,8 +584,7 @@ const MainMap = (props: {
               if (DoublRoute(massroute.ways, pointAa, pointBb)) {
                 SoobOpenSetEr("Дубликатная связь");
                 ZeroRoute(false);
-              }
-              ymaps && addRoute(ymaps); // перерисовка связей
+              } else ymaps && addRoute(ymaps); // перерисовка связей
             }
           }
           break;
