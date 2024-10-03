@@ -104,6 +104,7 @@ let openEF = false;
 let fromIdx: number, inIdx: number, idxPKForm: number, modeBind: number;
 fromIdx = inIdx = idxPKForm = modeBind = -1;
 let menuRevers = true; //флаг выдачи меню окрытия реверсной связи
+let soobTwoDots = "Связь между двумя точками создовать нельзя";
 
 const MainMap = (props: {
   region: any;
@@ -507,7 +508,7 @@ const MainMap = (props: {
             let areaBb = recB.area;
             if (areaAa === 0 && areaBb === 0) {
               pointBbIndex = 0; // конечная точка
-              SoobOpenSetEr("Связь между двумя точками создовать нельзя");
+              SoobOpenSetEr(soobTwoDots);
             } else {
               let sbAa = SubareaFindById(massdk, areaAa, recA.id);
               let sbBb = SubareaFindById(massdk, areaBb, recB.id);
@@ -550,6 +551,7 @@ const MainMap = (props: {
           massroute.vertexes[indexPoint].area === 0
         );
       };
+      
       switch (param) {
         case 1: // Начальная точка
           if (pointBbIndex === indexPoint) {
@@ -560,7 +562,7 @@ const MainMap = (props: {
             pointAa = pointRoute;
             fromCross = MakeFromCross(massdk[pointAaIndex]);
             if (CheckDoublPoint()) {
-              SoobOpenSetEr("Связь между двумя точками создовать нельзя");
+              SoobOpenSetEr(soobTwoDots);
               ZeroRoute(false);
             } else {
               if (DoublRoute(massroute.ways, pointAa, pointBb)) {
@@ -576,7 +578,7 @@ const MainMap = (props: {
             setOpenErBall(true);
           } else {
             if (CheckDoublPoint()) {
-              SoobOpenSetEr("Связь между двумя точками создовать нельзя");
+              SoobOpenSetEr(soobTwoDots);
             } else {
               pointBbIndex = indexPoint;
               pointBb = pointRoute;
