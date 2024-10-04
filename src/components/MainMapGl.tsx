@@ -489,6 +489,7 @@ const MainMap = (props: {
         setFlagPusk(true);
       }
       if (MODE === "1" && !openWaysForm && !datestat.have) {
+        // работа с формой задания/редактирования реквизитов перекрёстка
         VertexForma = null;
         datestat.oldIdxForm = -1;
         HandlLockUp(true);
@@ -551,7 +552,7 @@ const MainMap = (props: {
           massroute.vertexes[indexPoint].area === 0
         );
       };
-      
+
       switch (param) {
         case 1: // Начальная точка
           if (pointBbIndex === indexPoint) {
