@@ -87,6 +87,7 @@ let Route: any = {
 let From = "";
 let HAVE = 0;
 let timeInterval = 80;
+let comment = false;
 
 let maskForm: Directions = JSON.parse(JSON.stringify(MaskFormWay()));
 let massForm: Directions = JSON.parse(JSON.stringify(MaskFormWay()));
@@ -116,11 +117,12 @@ const MapRouteBind = (props: {
   const [openFormIn, setOpenFormIn] = React.useState(false);
   const [openGraf, setOpenGraf] = React.useState(false);
   const [badExit, setBadExit] = React.useState(false);
-  const [comment, setComment] = React.useState(false);
+  //const [comment, setComment] = React.useState(false);
   const [trigger, setTrigger] = React.useState(false);
   const SEC = props.reqRoute.tmRoute;
   let heightImg = Math.round(window.innerWidth / 7);
   let widthHeight = heightImg.toString();
+  let hBD = props.mode === 2 ? true : false;
   const styleBind00 = MakeStyleBind00(heightImg); // стиль для главного мод.окна
   const labels: string[] = [];
   let data: DataGl = {
@@ -208,6 +210,7 @@ const MapRouteBind = (props: {
   if (oldIdxA !== props.idxA || oldIdxB !== props.idxB) {
     massBind = [1, 2];
     HAVE = 0;
+    comment = false;
     oldIdxA = props.idxA;
     oldIdxB = props.idxB;
     Route.dlRoute = props.reqRoute.dlRoute;
@@ -602,14 +605,19 @@ const MapRouteBind = (props: {
     return <Line options={optionsMiniGraf} data={data} />;
   };
 
+  const SetComment = (mode: boolean) => {
+    comment = mode;
+    setTrigger(!trigger);
+  };
+
   const OutputGraf = () => {
     let nom = beginMassTotal / kolFrom + 1;
     let nameRoute = massroute.vertexes[props.idxB].id + "." + nom.toString();
     return (
       <Box
         sx={styleBind06}
-        onMouseEnter={() => setComment(true)}
-        onMouseLeave={() => setComment(false)}
+        onMouseEnter={() => SetComment(true)}
+        onMouseLeave={() => SetComment(false)}
         onClick={() => ClickBlok(nom)}
       >
         {comment ? (
@@ -637,8 +645,6 @@ const MapRouteBind = (props: {
       </Box>
     );
   };
-
-  let hBD = props.mode === 2 ? true : false;
 
   return (
     <>

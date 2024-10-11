@@ -1451,7 +1451,11 @@ export const HeaderBindMiddle = (
 
 export const HeaderTablBindContent = (xss: number, soob: string) => {
   return (
-    <Grid item xs={xss} sx={{ textAlign: "center" }}>
+    <Grid
+      item
+      xs={xss}
+      sx={{ textAlign: "center", textShadow: "0px 0px 0px rgba(0,0,0,0.3)" }}
+    >
       {soob}
     </Grid>
   );
@@ -1503,6 +1507,8 @@ export function AppIconAsdu(heightImg: number) {
 }
 
 let HeaderBindIDX = -1;
+//let comment0 = false;
+//let comment1 = false;
 
 export const HeaderBind = (
   nameA: string,
@@ -1511,12 +1517,25 @@ export const HeaderBind = (
   heightImg: number,
   masSvg: any,
   haveSvgA: boolean,
-  haveSvgB: boolean
+  haveSvgB: boolean,
+  //setTrigger: Function,
+  //trigger: boolean
 ) => {
   const [openSvg, setOpenSvg] = React.useState(false);
   const [comment0, setComment0] = React.useState(false);
   const [comment1, setComment1] = React.useState(false);
+  //const [trigger, setTrigger] = React.useState(false);
   const heightWind = window.innerHeight * 0.8;
+
+  // const SetComment0 = (mode: boolean) => {
+  //   comment0 = mode;
+  //   setTrigger(!trigger);
+  // };
+
+  // const SetComment1 = (mode: boolean) => {
+  //   comment1 = mode;
+  //   setTrigger(!trigger);
+  // };
 
   const handleClose = () => setOpenSvg(false);
 
@@ -1574,6 +1593,8 @@ export const HeaderBind = (
 
   let soobComment =
     "Для более детального просмотра изображения нажмите левую кнопку мыши";
+
+  //console.log("реренд", comment0, comment1);
 
   return (
     <>
