@@ -796,8 +796,8 @@ export const dataRoute = {
         ltarget: 10,
         starts: "55.60238311111584,36.483017680936115",
         stops: "55.56329146105766,36.698923779905265",
-        lenght: 0,
-        time: 0,
+        lenght: 17903,
+        time: 1145,
       },
       {
         region: 1,
@@ -809,8 +809,8 @@ export const dataRoute = {
         ltarget: 6,
         starts: "55.576443599978575,36.71174938398964",
         stops: "55.56329146105766,36.698923779905265",
-        lenght: 0,
-        time: 0,
+        lenght: 2177,
+        time: 168,
       },
       {
         region: 1,
