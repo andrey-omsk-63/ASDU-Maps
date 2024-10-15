@@ -27,7 +27,6 @@ import { styleFooterError } from "../MapPointDataErrorStyle";
 
 import { masSvg } from "./../MainMapGl";
 
-let lengthRoute = 0;
 let index = -1;
 let fromIdx = -1;
 let inIdx = -1;
@@ -79,7 +78,6 @@ const MapPointDataError = (props: {
   const dispatch = useDispatch();
   //========================================================
   const [openSetEr, setOpenSetEr] = React.useState(true);
-  const [tmRoute2, setTmRoute2] = React.useState(tmRoute1);
   const [openSetBind, setOpenSetBind] = React.useState(false);
   const [badExit, setBadExit] = React.useState(false);
 
@@ -108,8 +106,7 @@ const MapPointDataError = (props: {
         props.toCross.pointBbArea === massroute.ways[i].targetArea.toString()
       ) {
         index = i;
-        lengthRoute = massroute.ways[i].lenght;
-        dlRoute1 = lengthRoute;
+        dlRoute1 = massroute.ways[i].lenght;
         break;
       }
     }
@@ -148,6 +145,8 @@ const MapPointDataError = (props: {
       }
     }
   }
+
+  const [tmRoute2, setTmRoute2] = React.useState(tmRoute1);
   //========================================================
   const handleCloseEnd = () => {
     index = -1;

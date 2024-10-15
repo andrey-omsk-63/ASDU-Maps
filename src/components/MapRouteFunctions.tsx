@@ -1,6 +1,3 @@
-//import * as React from "react";
-//import { useSelector } from "react-redux";
-
 import "./MainMapStyle.css";
 
 import { DecodingCoord } from "./MapServiceFunctions";
@@ -237,13 +234,12 @@ export const MakePolyRoute = (
   return;
 };
 
-export const MakeMainRoute =   (
+export const MakeMainRoute = (
   ymaps: any,
   mapp: any,
   pointAa: any,
   pointBb: any
 ) => {
-  console.log("1######:", pointAa);
   let reqRoute: any = {
     dlRoute: 0,
     tmRoute: 0,
@@ -254,14 +250,13 @@ export const MakeMainRoute =   (
   );
   let activeRoute: any = null;
   mapp.current.geoObjects.add(multiRoute); // основная связь
-  multiRoute.model.events.add("requestsuccess",function () {
+  multiRoute.model.events.add("requestsuccess", function () {
     activeRoute = multiRoute.getActiveRoute();
     if (activeRoute) {
       let dist = activeRoute.properties.get("distance").value;
       reqRoute.dlRoute = Math.round(dist);
       let duration = activeRoute.properties.get("duration").value;
       reqRoute.tmRoute = Math.round(duration);
-      console.log("2######:", activeRoute, reqRoute);
     }
   });
   return [activeRoute, reqRoute];

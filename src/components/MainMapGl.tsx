@@ -24,6 +24,7 @@ import MapSetupPK from "./MapComponents/MapPKComponents/MapSetupPK";
 import MapDispCalc from "./MapComponents/MapCalcComponents/MapDispCalc";
 import MapDispOptim from "./MapComponents/MapOptimComponents/MapDispOptim";
 import MapDispPKForm from "./MapComponents/MapPKComponents/MapDispPKForm";
+import CalculatNullWays from "./MapComponents/MapCalculatNullWays";
 
 import { RecordMassRoute, MakeNewPointContent } from "./MapServiceFunctions";
 import { YandexServices, ShowFormalRoute } from "./MapServiceFunctions";
@@ -105,7 +106,6 @@ let fromIdx: number, inIdx: number, idxPKForm: number, modeBind: number;
 fromIdx = inIdx = idxPKForm = modeBind = -1;
 let menuRevers = true; //флаг выдачи меню окрытия реверсной связи
 let soobTwoDots = "Связь между двумя точками создовать нельзя";
-let flagNullWays = true;
 
 const MainMap = (props: {
   region: any;
@@ -147,6 +147,7 @@ const MainMap = (props: {
 
   //===========================================================
   const [triggerForm, setTriggerForm] = React.useState(false);
+  const [flWays, setFlWays] = React.useState(true); // флаг проверки "пустых" связей
   const [currency, setCurrency] = React.useState("0");
   const [currencyMode, setCurrencyMode] = React.useState("0");
   const [currencyPK, setCurrencyPK] = React.useState("0");
@@ -233,11 +234,8 @@ const MainMap = (props: {
         MakeMultiRouteIn(ymaps, mapp, coordStartIn, coordStopIn); // входящие связи
       if (pointAa) {
         let aa = MakeMainRoute(ymaps, mapp, pointAa, pointBb);
-        setTimeout(() => {
-          activeRoute = aa[0];
-          reqRoute = aa[1];
-          console.log("AA:", activeRoute, reqRoute, aa);
-        }, 1000);
+        activeRoute = aa[0];
+        reqRoute = aa[1];
       }
     },
     [massroute, InfoRoute, RunReBing]
@@ -870,49 +868,6 @@ const MainMap = (props: {
     MODE = "-1";
     setOpenVertSetup(false);
   };
-
-  const CalcNullWays = () => {
-    let have = 0;
-    // for (let i = 0; i < massroute.ways.length; i++) {
-    //for (let i = 0; i < 1; i++) {
-    let i = 0;
-    if (!massroute.ways[i].lenght || !massroute.ways[i].time) {
-      have++;
-      let pAa = DecodingCoord(massroute.ways[i].starts);
-      let pBb = DecodingCoord(massroute.ways[i].stops);
-      if (ymaps) {
-        const multiRoute = new ymaps.multiRouter.MultiRoute(
-          { referencePoints: [pAa, pBb] },
-          {
-            routeActiveStrokeWidth: 5,
-            //routeActiveStrokeColor: "#224E1F",
-            routeStrokeWidth: 1.5,
-            wayPointVisible: false,
-          }
-        );
-        let activeRoute: any = null;
-        mapp.current.geoObjects.add(multiRoute); // основная связь
-        multiRoute.model.events.add("requestsuccess",function () {
-          activeRoute = multiRoute.getActiveRoute();
-          if (activeRoute) {
-            let dist = activeRoute.properties.get("distance").value;
-            reqRoute.dlRoute = Math.round(dist);
-            let duration = activeRoute.properties.get("duration").value;
-            reqRoute.tmRoute = Math.round(duration);
-            console.log("2######:", activeRoute, reqRoute);
-          }
-        });
-      }
-      console.log("###:", i,ymaps, pAa,pBb);
-      // let aa: any = MakeMainRoute(ymaps, mapp, pAa, pBb);
-      // // setTimeout(() => {
-      //   console.log("!!!###:", i, aa);
-      // // }, 1000);
-    }
-    //}
-    console.log("CalcNullWays:", have);
-    flagNullWays = false;
-  };
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(massroute).length) {
     if (props.region) homeRegion = props.region;
@@ -1032,7 +987,9 @@ const MainMap = (props: {
             {PLANER > 0 && (
               <MapWindPK close={setRoutePKW} route={routePKW} svg={masSvg} />
             )}
-            {flagNullWays && ymaps && CalcNullWays()}
+            {flWays && ymaps && (
+              <CalculatNullWays ymaps={ymaps} mapp={mapp} func={setFlWays} />
+            )}
             {dispCalc && <MapDispCalc setOpen={SetDispCalc} />}
             {dispOptim && <MapDispOptim setOpen={SetDispOptim} />}
             {dispPKForm && <MapDispPKForm setOpen={SetDispPKForm} />}
