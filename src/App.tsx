@@ -312,13 +312,12 @@ const App = () => {
   }, [dispatch, massdk, coordinates, svg, trigger, FilterArea]);
 
   if (dateStat.debug && flagOpen) {
-    console.log("РЕЖИМ ОТЛАДКИ!!!", dataMap.tflight);
+    console.log("РЕЖИМ ОТЛАДКИ!!!");
     let road =
       window.location.origin.slice(0, 22) === "https://localhost:3000"
         ? "https://localhost:3000/"
         : "./";
     FilterArea(dataMap); // берём в работу заданный район
-    console.log("dataRoute.data:", dataRoute.data);
     dateRouteGl = { ...dataRoute.data };
     dateRouteProGl = { ...dataRoute.data };
     dateRouteProGl.points = []; // массив протоколов
@@ -330,7 +329,7 @@ const App = () => {
     axios.get(road + "otladkaPlans.json").then(({ data }) => {
       datePlan = data.data;
       dispatch(massplanCreate(datePlan));
-      console.log("datePlan:", datePlan);
+      //console.log("datePlan:", datePlan);
     });
     axios.get(road + "examplSvg0.svg").then(({ data }) => {
       dateStat.exampleImg1 = data;

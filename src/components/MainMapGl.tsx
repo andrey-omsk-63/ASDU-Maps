@@ -123,6 +123,7 @@ const MainMap = (props: {
     const { massrouteReducer } = state;
     return massrouteReducer.massroute;
   });
+  //console.log('Связи:',massroute.ways)
   let massroutepro = useSelector((state: any) => {
     const { massrouteproReducer } = state;
     return massrouteproReducer.massroutepro;
@@ -896,9 +897,9 @@ const MainMap = (props: {
     currenciesOptim = PreparCurrenciesOptim(); // для меню оптимизации ПК
     currenciesForm = PreparCurrenciesForm(); // для меню диспетчера форм
     flagOpen = true;
-    console.log("map:", map);
-    console.log("massroute:", massroute);
-    console.log("!!!massdk:", massdk);
+    console.log("Map:", map);
+    console.log("Massroute:", massroute);
+    console.log("Massdk:", massdk);
   }
   //========================================================
   let mapState: any = {

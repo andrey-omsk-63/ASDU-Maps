@@ -102,19 +102,19 @@ export const getMassMultiRouteOptions = () => {
     balloonCloseButton: false,
     routeStrokeStyle: "dot",
     strokeColor: "#1A9165", // зелёный
-    routeActiveStrokeWidth: 2,
+    routeActiveStrokeWidth: 2, // толщина линии
     routeStrokeWidth: 0,
-    wayPointVisible: false,
+    wayPointVisible: false, // отметки "начало - конец"
   };
 };
 
 export const getMassMultiRouteInOptions = () => {
   return {
-    routeActiveStrokeWidth: 2,
+    routeActiveStrokeWidth: 2, // толщина линии
     routeStrokeStyle: "dot",
     routeActiveStrokeColor: "#E91427", // красный
     routeStrokeWidth: 0,
-    wayPointVisible: false,
+    wayPointVisible: false, // отметки "начало - конец"
   };
 };
 
@@ -270,10 +270,10 @@ const getReferencePoints = (pointA: any, pointB: any) => {
 
 const getMultiRouteOptions = () => {
   return {
-    routeActiveStrokeWidth: 5,
-    //routeActiveStrokeColor: "#224E1F",
-    routeStrokeWidth: 1.5,
-    wayPointVisible: false,
+    routeActiveStrokeWidth: 5, // толщина линии
+    //routeActiveStrokeColor: "#224E1F", // зелёный
+    routeStrokeWidth: 1.5, // толщина линии альтернативного маршрута
+    wayPointVisible: false, // отметки "начало - конец"
   };
 };
 

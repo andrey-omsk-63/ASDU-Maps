@@ -208,7 +208,7 @@ const MapRouteBind = (props: {
 
   //=== инициализация ======================================
   if (oldIdxA !== props.idxA || oldIdxB !== props.idxB) {
-    massBind = [1, 2];
+    massBind = [1, 2]; // ====== потом определится со зачениями lsource и ltarget ======
     HAVE = 0;
     comment = false;
     oldIdxA = props.idxA;

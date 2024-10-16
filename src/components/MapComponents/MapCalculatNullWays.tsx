@@ -24,7 +24,6 @@ const CalculatNullWays = (props: { ymaps: any; mapp: any; func: Function }) => {
   const dispatch = useDispatch();
   const WS = datestat.ws;
   //========================================================
-
   let have = 0;
   let Have = 0;
   for (let i = 0; i < massroute.ways.length; i++) {
@@ -37,9 +36,9 @@ const CalculatNullWays = (props: { ymaps: any; mapp: any; func: Function }) => {
         const multiRoute = new props.ymaps.multiRouter.MultiRoute(
           { referencePoints: [pAa, pBb] },
           {
-            routeActiveStrokeWidth: 0,
-            //routeActiveStrokeColor: "#FA032F",
-            wayPointVisible: false,
+            routeActiveStrokeWidth: 0, // толщина линии
+            //routeActiveStrokeColor: "#FA032F", // красный
+            wayPointVisible: false, // отметки "начало - конец"
           }
         );
         let activeRoute: any = null;
@@ -56,7 +55,7 @@ const CalculatNullWays = (props: { ymaps: any; mapp: any; func: Function }) => {
             rec.lenght = reqRoute.dlRoute = Math.round(dist); // длина связи
             let duration = activeRoute.properties.get("duration").value;
             rec.time = reqRoute.tmRoute = Math.round(duration); // время прохождения
-
+            // запись в базу
             if (!rec.sourceArea) {
               SendSocketDeleteWayFromPoint(WS, pAa, pBb);
               SendSocketCreateWayFromPoint(WS, pAa, pBb, massBind, reqRoute);
@@ -67,20 +66,12 @@ const CalculatNullWays = (props: { ymaps: any; mapp: any; func: Function }) => {
               } else {
                 SendSocketDeleteWay(WS, pAa, pBb);
                 SendSocketCreateWay(WS, pAa, pBb, massBind, reqRoute);
-                // console.log(
-                //   "Обновлена связь:",
-                //   i,
-                //   rec.sourceID,
-                //   rec.targetID,
-                //   reqRoute
-                // );
               }
             }
             Have++;
           }
         });
       }
-      //console.log("###:", i, pAa, pBb);
     }
   }
 
@@ -88,8 +79,9 @@ const CalculatNullWays = (props: { ymaps: any; mapp: any; func: Function }) => {
     const ReadyRoute = () => {
       if (have === Have) {
         dispatch(massrouteCreate(massroute));
+        props.mapp.current.geoObjects.removeAll(); // удаление временных "пустых" связей
         props.func(false);
-        console.log("Готово:", have, Have);
+        console.log("Обновились связи:", have, Have);
       } else {
         setTimeout(() => {
           ReadyRoute();
@@ -97,7 +89,7 @@ const CalculatNullWays = (props: { ymaps: any; mapp: any; func: Function }) => {
       }
     };
     ReadyRoute();
-  }
+  } else props.func(false);
   return <></>; // костыль
 };
 
