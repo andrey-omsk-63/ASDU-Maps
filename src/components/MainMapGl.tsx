@@ -107,6 +107,12 @@ fromIdx = inIdx = idxPKForm = modeBind = -1;
 let menuRevers = true; //флаг выдачи меню окрытия реверсной связи
 let soobTwoDots = "Связь между двумя точками создовать нельзя";
 
+// let mapState: any = {
+//   center: pointCenter,
+//   zoom,
+//   //controls: [],
+// };
+
 const MainMap = (props: {
   region: any;
   sErr: string;
@@ -145,7 +151,6 @@ const MainMap = (props: {
     return massplanReducer.massplan;
   });
   const dispatch = useDispatch();
-
   //===========================================================
   const [triggerForm, setTriggerForm] = React.useState(false);
   const [flWays, setFlWays] = React.useState(true); // флаг проверки "пустых" связей
@@ -186,6 +191,12 @@ const MainMap = (props: {
   const WS = datestat.ws;
   debug = datestat.debug;
 
+  let mapState: any = {
+    center: pointCenter,
+    zoom,
+    //controls: [],
+  };
+  //=== Сервисные функции ==================================
   const DelCollectionRoutes = () => {
     coordStart = [];
     coordStop = [];
@@ -241,7 +252,7 @@ const MainMap = (props: {
     },
     [massroute, InfoRoute, RunReBing]
   );
-  //========================================================
+
   const ZeroRoute = React.useCallback(
     (mode: boolean) => {
       pointAa = pointBb = 0;
@@ -902,12 +913,6 @@ const MainMap = (props: {
     console.log("Massdk:", massdk);
   }
   //========================================================
-  let mapState: any = {
-    center: pointCenter,
-    zoom,
-    controls: [],
-  };
-
   if (props.sErr && props.sErr !== oldsErr) {
     ymaps && addRoute(ymaps); // перерисовка связей
     oldsErr = props.sErr;
