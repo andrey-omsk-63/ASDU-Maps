@@ -158,7 +158,6 @@ const App = () => {
     WS = new WebSocket(host);
     flagOpenWS = false;
     dateStat.ws = WS;
-    console.log("WS.url:", WS.url);
     if (
       WS.url.slice(0, 20) === "wss://localhost:3000" ||
       WS.url.slice(0, 27) === "wss://andrey-omsk-63.github"
@@ -167,6 +166,8 @@ const App = () => {
     dispatch(statsaveCreate(dateStat));
     let pageUrl = new URL(window.location.href);
     homeRegion = Number(pageUrl.searchParams.get("Region"));
+
+    console.log("WS.url:", WS.url,homeRegion);
   }
 
   React.useEffect(() => {
@@ -188,7 +189,8 @@ const App = () => {
       console.log("пришло:", allData.type, data);
       switch (allData.type) {
         case "mapInfo":
-          FilterArea(data); // берём в работу заданный район
+          //FilterArea(data); // берём в работу заданный район 
+          FilterArea(dataMap); // берём в работу заданный район === костыль, потом убрать ================================
           break;
         case "graphInfo":
           let pointRab = JSON.parse(JSON.stringify(data));

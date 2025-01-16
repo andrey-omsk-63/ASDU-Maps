@@ -273,12 +273,37 @@ export const CenterCoord = (aY: number, aX: number, bY: number, bX: number) => {
 };
 
 export const CenterCoordBegin = (map: any) => {
+  let mapp = map.dateMap.tflight;
+  let min = 999;
+  let max = 0;
+  let nomMin = -1;
+  let nomMax = -1;
+  for (let i = 0; i < mapp.length; i++) {
+    if (mapp[i].points.X < min) {
+      nomMin = i;
+      min = mapp[i].points.X
+    }
+    if (mapp[i].points.X > max) {
+      nomMax = i;
+      max = mapp[i].points.X
+    }
+  }
+
+  console.log("###:", nomMin, nomMax);
+
   return CenterCoord(
-    map.dateMap.boxPoint.point0.Y,
-    map.dateMap.boxPoint.point0.X,
-    map.dateMap.boxPoint.point1.Y,
-    map.dateMap.boxPoint.point1.X
+    mapp[nomMin].points.Y,
+    mapp[nomMin].points.X,
+    mapp[nomMax].points.Y,
+    mapp[nomMax].points.X,
   );
+
+  // return CenterCoord(
+  //   map.dateMap.boxPoint.point0.Y,
+  //   map.dateMap.boxPoint.point0.X,
+  //   map.dateMap.boxPoint.point1.Y,
+  //   map.dateMap.boxPoint.point1.X
+  // );
 };
 
 export const MakeNewPointContent = (
@@ -939,7 +964,6 @@ export const GetPointOptions = (
     if (idxMap >= 0) {
       if (SubArea === SUBAREA || SUBAREA === "0") {
         host = hostt + "1.svg";
-
         if (!debug && idxMap >= 0)
           host = window.location.origin + "/free/img/trafficLights/1.svg";
         if (!debug && idxMap < 0) host = "";
@@ -953,6 +977,8 @@ export const GetPointOptions = (
           host = window.location.origin + "/free/img/trafficLights/3.svg";
       }
     }
+
+    //console.log("HOST:", idxMap, SubArea, SUBAREA, host);
     //========================================================
     const HosterIllum = (nom: string) => {
       host = hostt + nom + ".svg";
@@ -1517,7 +1543,7 @@ export const HeaderBind = (
   heightImg: number,
   masSvg: any,
   haveSvgA: boolean,
-  haveSvgB: boolean,
+  haveSvgB: boolean
   //setTrigger: Function,
   //trigger: boolean
 ) => {

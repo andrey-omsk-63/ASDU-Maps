@@ -107,12 +107,6 @@ fromIdx = inIdx = idxPKForm = modeBind = -1;
 let menuRevers = true; //флаг выдачи меню окрытия реверсной связи
 let soobTwoDots = "Связь между двумя точками создовать нельзя";
 
-// let mapState: any = {
-//   center: pointCenter,
-//   zoom,
-//   //controls: [],
-// };
-
 const MainMap = (props: {
   region: any;
   sErr: string;
@@ -743,6 +737,7 @@ const MainMap = (props: {
     dispatch(coordinatesCreate(coordinates));
     setOpenCreate(false);
   };
+  //region
 
   const handleChangeSubArea = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.value === "0" && MODE === "0") {
@@ -897,9 +892,12 @@ const MainMap = (props: {
     dispatch(coordinatesCreate(coordinates));
     pointCenter = CenterCoordBegin(map); // координаты центра отоброжаемой карты
     let massVert = map.dateMap.tflight;
-    for (let i = 0; i < massVert.length; i++)
-      if (SubArea.indexOf(massVert[i].subarea) < 0)
+    for (let i = 0; i < massVert.length; i++) {
+      if (SubArea.indexOf(massVert[i].subarea) < 0) {
+        console.log('@@@:',i,massVert[i])
         SubArea.push(massVert[i].subarea);
+      }
+    }
     SubArea.sort((a, b) => a - b); // сортировка по возрастанию
     currencies = PreparCurrencies(); // для меню подрайонов
     currenciesMode = PreparCurrenciesMode(); // для меню подрайонов режимов работы
