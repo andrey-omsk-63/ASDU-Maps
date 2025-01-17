@@ -257,6 +257,8 @@ export const MakeMainRoute = (
       reqRoute.dlRoute = Math.round(dist);
       let duration = activeRoute.properties.get("duration").value;
       reqRoute.tmRoute = Math.round(duration);
+
+      console.log("0MakeMainRoute:", activeRoute, reqRoute);
     }
   });
   return [activeRoute, reqRoute];
@@ -272,6 +274,7 @@ const getMultiRouteOptions = () => {
   return {
     routeActiveStrokeWidth: 5, // толщина линии
     //routeActiveStrokeColor: "#224E1F", // зелёный
+    routeActiveStrokeColor: "#177BC9", // голубой
     routeStrokeWidth: 1.5, // толщина линии альтернативного маршрута
     wayPointVisible: false, // отметки "начало - конец"
   };

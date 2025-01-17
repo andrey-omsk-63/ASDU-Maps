@@ -281,21 +281,19 @@ export const CenterCoordBegin = (map: any) => {
   for (let i = 0; i < mapp.length; i++) {
     if (mapp[i].points.X < min) {
       nomMin = i;
-      min = mapp[i].points.X
+      min = mapp[i].points.X;
     }
     if (mapp[i].points.X > max) {
       nomMax = i;
-      max = mapp[i].points.X
+      max = mapp[i].points.X;
     }
   }
-
-  console.log("###:", nomMin, nomMax);
 
   return CenterCoord(
     mapp[nomMin].points.Y,
     mapp[nomMin].points.X,
     mapp[nomMax].points.Y,
-    mapp[nomMax].points.X,
+    mapp[nomMax].points.X
   );
 
   // return CenterCoord(

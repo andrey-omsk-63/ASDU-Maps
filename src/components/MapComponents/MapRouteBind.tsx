@@ -192,6 +192,8 @@ const MapRouteBind = (props: {
   };
 
   const handleCloseGood = () => {
+    console.log("Good:",massTotal);
+
     props.func(true, massBind);
     CloseEnd();
   };

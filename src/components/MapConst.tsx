@@ -6,7 +6,7 @@ export const YMapsModul = [
 
 export const MyYandexKey = "65162f5f-2d15-41d1-a881-6c1acf34cfa1"; // ключ
 
-export const ZONE = 0; // район для работы (0 - все районы)
+export const ZONE = 1; // район для работы (0 - все районы)
 
 export const SUMPK = 121; // количество планов координации
 

@@ -360,6 +360,9 @@ const MainMap = (props: {
       ZeroRoute((noDoublRoute = false));
     } else {
       MakeСollectionRoute(true);
+
+      console.log("0######:", reqRoute);
+
       mode && setRevers(!revers); // ререндер
     }
     return noDoublRoute;
@@ -405,7 +408,19 @@ const MainMap = (props: {
         ZeroRoute(false);
         break;
       case 36: // реверс связи + привязка направлений + сохранение связи
-        if (ReversRoute(1)) LinkBind();
+        if (ReversRoute(1)) {
+          const ReadyRoute = () => {
+            if (activeRoute) {
+              LinkBind();
+            } else {
+              setTimeout(() => {
+                ReadyRoute();
+              }, 500);
+            }
+          };
+          ReadyRoute();
+        }
+
         setMakeRevers(false);
         break;
       case 37: // реверс связи + редактирование
@@ -893,10 +908,8 @@ const MainMap = (props: {
     pointCenter = CenterCoordBegin(map); // координаты центра отоброжаемой карты
     let massVert = map.dateMap.tflight;
     for (let i = 0; i < massVert.length; i++) {
-      if (SubArea.indexOf(massVert[i].subarea) < 0) {
-        console.log('@@@:',i,massVert[i])
+      if (SubArea.indexOf(massVert[i].subarea) < 0)
         SubArea.push(massVert[i].subarea);
-      }
     }
     SubArea.sort((a, b) => a - b); // сортировка по возрастанию
     currencies = PreparCurrencies(); // для меню подрайонов
@@ -992,7 +1005,7 @@ const MainMap = (props: {
               <MapWindPK close={setRoutePKW} route={routePKW} svg={masSvg} />
             )}
             {flWays && ymaps && (
-              <CalculatNullWays ymaps={ymaps} mapp={mapp} func={setFlWays} />
+               <CalculatNullWays ymaps={ymaps} mapp={mapp} func={setFlWays} />
             )}
             {dispCalc && <MapDispCalc setOpen={SetDispCalc} />}
             {dispOptim && <MapDispOptim setOpen={SetDispOptim} />}
