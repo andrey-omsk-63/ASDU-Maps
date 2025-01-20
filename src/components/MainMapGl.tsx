@@ -24,7 +24,6 @@ import MapSetupPK from "./MapComponents/MapPKComponents/MapSetupPK";
 import MapDispCalc from "./MapComponents/MapCalcComponents/MapDispCalc";
 import MapDispOptim from "./MapComponents/MapOptimComponents/MapDispOptim";
 import MapDispPKForm from "./MapComponents/MapPKComponents/MapDispPKForm";
-import CalculatNullWays from "./MapComponents/MapCalculatNullWays";
 
 import { RecordMassRoute, MakeNewPointContent } from "./MapServiceFunctions";
 import { YandexServices, ShowFormalRoute } from "./MapServiceFunctions";
@@ -43,6 +42,7 @@ import { PreparCurrenciesForm, InputMenuMODE } from "./MapServiceFunctions";
 import { PreparCurrenciesPK, SubareaFindById } from "./MapServiceFunctions";
 import { PreparCurrenciesCalc, InputMenuCalc } from "./MapServiceFunctions";
 import { PreparCurrenciesOptim, InputMenuOptim } from "./MapServiceFunctions";
+import { CalculatNullWays } from "./MapServiceFunctions";
 
 import { MakeMultiRouteIn, MakePolyRoute } from "./MapRouteFunctions";
 import { MakeMultiRoute, MakeMainRoute } from "./MapRouteFunctions";
@@ -360,9 +360,6 @@ const MainMap = (props: {
       ZeroRoute((noDoublRoute = false));
     } else {
       MakeСollectionRoute(true);
-
-      console.log("0######:", reqRoute);
-
       mode && setRevers(!revers); // ререндер
     }
     return noDoublRoute;
@@ -890,6 +887,14 @@ const MainMap = (props: {
     MODE = "-1";
     setOpenVertSetup(false);
   };
+
+  const SetFlWays = (mode: boolean) => {
+    if (!mode) setFlWays(false);
+    if (mode) {
+      dispatch(massrouteCreate(massroute));
+      setRevers(!revers); // ререндер
+    }
+  };
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(massroute).length) {
     if (props.region) homeRegion = props.region;
@@ -1005,7 +1010,7 @@ const MainMap = (props: {
               <MapWindPK close={setRoutePKW} route={routePKW} svg={masSvg} />
             )}
             {flWays && ymaps && (
-               <CalculatNullWays ymaps={ymaps} mapp={mapp} func={setFlWays} />
+              <>{CalculatNullWays(ymaps, mapp, massroute, SetFlWays)}</>
             )}
             {dispCalc && <MapDispCalc setOpen={SetDispCalc} />}
             {dispOptim && <MapDispOptim setOpen={SetDispOptim} />}

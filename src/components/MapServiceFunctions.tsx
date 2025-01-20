@@ -22,6 +22,12 @@ import { SendSocketCreateVertex } from "./MapSocketFunctions";
 import { SocketDeleteWay } from "./MapSocketFunctions";
 import { SendSocketDeletePoint } from "./MapSocketFunctions";
 import { SendSocketDeleteVertex } from "./MapSocketFunctions";
+import { SendSocketCreateWay } from "./MapSocketFunctions";
+import { SendSocketCreateWayFromPoint } from "./MapSocketFunctions";
+import { SendSocketCreateWayToPoint } from "./MapSocketFunctions";
+import { SendSocketDeleteWayFromPoint } from "./MapSocketFunctions";
+import { SendSocketDeleteWayToPoint } from "./MapSocketFunctions";
+import { SendSocketDeleteWay } from "./MapSocketFunctions";
 
 import { Pointer, Router } from "./../App";
 import { Vertex } from "./../interfaceRoute";
@@ -40,7 +46,7 @@ import { styleBoxFormArea, styleSetArea } from "./MapPointDataErrorStyle";
 
 import { debug, SUBAREA, MODE, MASSPK, SubArea, AREA } from "./MainMapGl";
 import { ZONE, OUTGO } from "./MapConst";
-import { dateMapGl } from "./../App";
+import { WS, dateMapGl } from "./../App";
 
 export const handleKey = (event: any) => {
   if (event.key === "Enter") event.preventDefault();
@@ -976,7 +982,6 @@ export const GetPointOptions = (
       }
     }
 
-    //console.log("HOST:", idxMap, SubArea, SUBAREA, host);
     //========================================================
     const HosterIllum = (nom: string) => {
       host = hostt + nom + ".svg";
@@ -989,6 +994,8 @@ export const GetPointOptions = (
       HosterIllum("4"); // подсветка светофора в ПК
     if (MODE === "1")
       if (index === pointBbIndex || index === pointAaIndex) HosterIllum("2");
+
+    //console.log("0HOST:", host);
 
     return host;
   };
@@ -1024,6 +1031,8 @@ export const GetPointOptions = (
       iconImageOffset: [-15, -15], // центр
     };
   };
+
+  //console.log("HOST:", colorBalloon);
 
   return colorBalloon === "Icon" ? YesImg() : NoImg();
 };
@@ -2573,3 +2582,78 @@ export const FooterContent = (SaveForm: Function) => {
   );
 };
 //=====================================================================
+export const CalculatNullWays = (
+  ymaps: any,
+  mapp: any,
+  massroute: any,
+  func: Function
+) => {
+  let have = 0;
+  let Have = 0;
+  for (let i = 0; i < massroute.ways.length; i++) {
+    if (!massroute.ways[i].lenght || !massroute.ways[i].time) {
+      let rec = massroute.ways[i];
+      have++;
+      let pAa = DecodingCoord(rec.starts);
+      let pBb = DecodingCoord(rec.stops);
+      if (ymaps) {
+        const multiRoute = new ymaps.multiRouter.MultiRoute(
+          { referencePoints: [pAa, pBb] },
+          {
+            routeActiveStrokeWidth: 0, // толщина линии
+            //routeActiveStrokeColor: "#FA032F", // красный
+            wayPointVisible: false, // отметки "начало - конец"
+          }
+        );
+        let activeRoute: any = null;
+        mapp.current.geoObjects.add(multiRoute); // основная связь
+        multiRoute.model.events.add("requestsuccess", function () {
+          activeRoute = multiRoute.getActiveRoute();
+          if (activeRoute) {
+            let reqRoute: any = {
+              dlRoute: 0,
+              tmRoute: 0,
+            };
+            let massBind = [rec.lsource, rec.ltarget];
+            let dist = activeRoute.properties.get("distance").value;
+            rec.lenght = reqRoute.dlRoute = Math.round(dist); // длина связи
+            let duration = activeRoute.properties.get("duration").value;
+            rec.time = reqRoute.tmRoute = Math.round(duration); // время прохождения
+            // запись в базу
+            if (!rec.sourceArea) {
+              SendSocketDeleteWayFromPoint(WS, pAa, pBb);
+              SendSocketCreateWayFromPoint(WS, pAa, pBb, massBind, reqRoute);
+            } else {
+              if (!rec.targetArea) {
+                SendSocketDeleteWayToPoint(WS, pAa, pBb);
+                SendSocketCreateWayToPoint(WS, pAa, pBb, massBind, reqRoute);
+              } else {
+                SendSocketDeleteWay(WS, pAa, pBb);
+                SendSocketCreateWay(WS, pAa, pBb, massBind, reqRoute);
+              }
+            }
+            Have++;
+          }
+        });
+      }
+    }
+  }
+
+  func(false);
+
+  if (have) {
+    // были изменения длины и времени прохождения в связях
+    const ReadyRoute = () => {
+      if (have === Have) {
+        mapp.current.geoObjects.removeAll(); // удаление временных "пустых" связей
+        console.log("Обновились связи:", have, Have);
+        func(true);
+      } else {
+        setTimeout(() => {
+          ReadyRoute();
+        }, 500);
+      }
+    };
+    ReadyRoute();
+  }
+};

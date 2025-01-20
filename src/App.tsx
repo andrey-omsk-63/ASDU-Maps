@@ -108,11 +108,11 @@ export let massRoute: Router[] = [];
 export let massPlan: PlanCoord[] = [];
 export let massRoutePro: Router[] = [];
 export let Coordinates: Array<Array<number>> = []; // массив координат
+export let WS: any = null;
 
 let flagOpen = true;
 let flagOpenКостыль = true;
 let flagOpenWS = true;
-let WS: any = null;
 let homeRegion: any = "";
 let soob = "";
 
