@@ -19,7 +19,7 @@ import {
   SoobErrorDeleteWayFromPoint,
 } from "./components/MapSocketFunctions";
 
-import { ZONE } from "./components/MapConst";
+import { ZONE, zoomStart } from "./components/MapConst";
 
 import { PlanCoord } from "./interfacePlans.d";
 //import { DatePlan } from "./interfacePlans.d";
@@ -137,6 +137,7 @@ const App = () => {
     "W" +
     window.location.search;
 
+  const [openMapGl, setOpenMapGl] = React.useState(false);
   const [openSetErr, setOpenSetErr] = React.useState(false);
   const [trigger, setTrigger] = React.useState(false);
   const [svg, setSvg] = React.useState<any>(null);
@@ -154,6 +155,20 @@ const App = () => {
     [dispatch]
   );
 
+  const Initialisation = () => {
+    // достать начальный zoom Yandex-карты Map из LocalStorage
+    if (window.localStorage.ZoomMap === undefined)
+      window.localStorage.ZoomMap = zoomStart;
+
+    // достать центр координат [0] Yandex-карты Map из LocalStorage
+    if (window.localStorage.PointCenterMap0 === undefined)
+      window.localStorage.PointCenterMap0 = 0;
+
+    // достать центр координат [1] Yandex-карты Map из LocalStorage
+    if (window.localStorage.PointCenterMap1 === undefined)
+      window.localStorage.PointCenterMap1 = 0;
+  };
+  //=== инициализация ======================================
   if (flagOpenWS) {
     WS = new WebSocket(host);
     flagOpenWS = false;
@@ -167,7 +182,7 @@ const App = () => {
     let pageUrl = new URL(window.location.href);
     homeRegion = Number(pageUrl.searchParams.get("Region"));
 
-    console.log("WS.url:", WS.url,homeRegion);
+    console.log("WS.url:", WS.url, homeRegion);
   }
 
   React.useEffect(() => {
@@ -189,7 +204,7 @@ const App = () => {
       console.log("пришло:", allData.type, data);
       switch (allData.type) {
         case "mapInfo":
-          //FilterArea(data); // берём в работу заданный район 
+          //FilterArea(data); // берём в работу заданный район
           FilterArea(dataMap); // берём в работу заданный район === костыль, потом убрать ================================
           break;
         case "graphInfo":
@@ -350,17 +365,24 @@ const App = () => {
     }
   }
 
+  if (!openMapGl) {
+    Initialisation();
+    setOpenMapGl(true);
+  }
+
   return (
     <Grid container sx={{ height: "100vh", width: "100%", bgcolor: "#E9F5D8" }}>
       <Grid item xs>
         {openSetErr && <AppSocketError sErr={soob} setOpen={setOpenSetErr} />}
-        <MainMap
-          region={homeRegion}
-          sErr={soob}
-          svg={svg}
-          setSvg={setSvg}
-          trigger={trigger}
-        />
+        {openMapGl && (
+          <MainMap
+            region={homeRegion}
+            sErr={soob}
+            svg={svg}
+            setSvg={setSvg}
+            trigger={trigger}
+          />
+        )}
       </Grid>
     </Grid>
   );

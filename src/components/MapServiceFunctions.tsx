@@ -310,6 +310,13 @@ export const CenterCoordBegin = (map: any) => {
   // );
 };
 
+export const SaveZoom = (zoom: number, pointCenter: Array<number>) => {
+  window.localStorage.ZoomMap = zoom;
+  window.localStorage.PointCenterMap0 = pointCenter[0];
+  window.localStorage.PointCenterMap1 = pointCenter[1];
+  //console.log("SaveZoom:", pointCenter);
+};
+
 export const MakeNewPointContent = (
   WS: any,
   coords: any,

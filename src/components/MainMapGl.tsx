@@ -29,7 +29,7 @@ import { RecordMassRoute, MakeNewPointContent } from "./MapServiceFunctions";
 import { YandexServices, ShowFormalRoute } from "./MapServiceFunctions";
 import { DecodingCoord, CodingCoord, InputMenu } from "./MapServiceFunctions";
 import { DoublRoute, MakeToCross, MakeRevers } from "./MapServiceFunctions";
-import { getPointData, GetPointOptions } from "./MapServiceFunctions";
+import { getPointData, GetPointOptions, SaveZoom } from "./MapServiceFunctions";
 import { СontentModalPressBalloon, MakeFromCross } from "./MapServiceFunctions";
 import { ChangeCrossFunc, PreparCurrencies } from "./MapServiceFunctions";
 import { RecevKeySvg, StrokaMenuGlob, MasskPoint } from "./MapServiceFunctions";
@@ -702,6 +702,7 @@ const MainMap = (props: {
       funcBound = function () {
         pointCenter = mapp.current.getCenter();
         zoom = mapp.current.getZoom();
+        SaveZoom(zoom, pointCenter);
       };
       mapp.current.events.add("boundschange", funcBound);
     }
@@ -910,7 +911,14 @@ const MainMap = (props: {
     dispatch(massdkCreate(massdk));
     dispatch(massrouteCreate(massroute));
     dispatch(coordinatesCreate(coordinates));
-    pointCenter = CenterCoordBegin(map); // координаты центра отоброжаемой карты
+    // достаём начальный zoom и центр координат Yandex-карты
+    let point0 = window.localStorage.PointCenterMap0;
+    let point1 = window.localStorage.PointCenterMap1;
+    if (!Number(point0) || !Number(point1)) {
+      pointCenter = CenterCoordBegin(map); // начальные координаты центра отоброжаемой карты
+    } else pointCenter = [Number(point0), Number(point1)];
+    zoom = Number(window.localStorage.ZoomMap); // начальный zoom Yandex-карты ДУ
+    // создание массива подрайонов
     let massVert = map.dateMap.tflight;
     for (let i = 0; i < massVert.length; i++) {
       if (SubArea.indexOf(massVert[i].subarea) < 0)

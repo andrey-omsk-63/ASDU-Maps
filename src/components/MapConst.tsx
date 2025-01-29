@@ -16,10 +16,11 @@ export const KolFrom = 4; // количество исходящих напра�
 
 export const KolIn = 5; // количество входящих направлений
 
-export const INCOM = 'Вх.'; // название входяшего напраления
+export const INCOM = "Вх."; // название входяшего напраления
 
-export const OUTGO = 'Исх.'; // название исходяшего напраления
+export const OUTGO = "Исх."; // название исходяшего напраления
 
+export const zoomStart = 12; // начальный zoom Yandex-карты
 
 export const FromCross: any = {
   pointAaRegin: "",
