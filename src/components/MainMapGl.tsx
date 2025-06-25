@@ -91,7 +91,6 @@ let funcBound: any = null;
 let oldPropsSvg: any = null;
 let funcContex: any, VertexForma: any, funcClick: any, activeRoute: any;
 funcContex = VertexForma = funcClick = activeRoute = null;
-SubArea.sort((a, b) => a - b); // сортировка по возрастанию
 let currencies: any = []; // для меню подрайонов
 let currenciesMode: any = []; // для меню подрайонов режимов работы
 let currenciesPK: any = []; // для меню ПК и модели
@@ -123,7 +122,6 @@ const MainMap = (props: {
     const { massrouteReducer } = state;
     return massrouteReducer.massroute;
   });
-  //console.log('Связи:',massroute.ways)
   let massroutepro = useSelector((state: any) => {
     const { massrouteproReducer } = state;
     return massrouteproReducer.massroutepro;
@@ -188,7 +186,6 @@ const MainMap = (props: {
   let mapState: any = {
     center: pointCenter,
     zoom,
-    //controls: [],
   };
   //=== Сервисные функции ==================================
   const DelCollectionRoutes = () => {
@@ -417,7 +414,6 @@ const MainMap = (props: {
           };
           ReadyRoute();
         }
-
         setMakeRevers(false);
         break;
       case 37: // реверс связи + редактирование
@@ -750,7 +746,6 @@ const MainMap = (props: {
     dispatch(coordinatesCreate(coordinates));
     setOpenCreate(false);
   };
-  //region
 
   const handleChangeSubArea = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.value === "0" && MODE === "0") {

@@ -138,6 +138,8 @@ const App = () => {
     window.location.search;
 
   const [openMapGl, setOpenMapGl] = React.useState(false);
+  const [findMapInfo, setFindMapInfo] = React.useState(false);
+  const [findGraphInfo, setFindGraphInfo] = React.useState(false);
   const [openSetErr, setOpenSetErr] = React.useState(false);
   const [trigger, setTrigger] = React.useState(false);
   const [svg, setSvg] = React.useState<any>(null);
@@ -151,6 +153,7 @@ const App = () => {
         );
       }
       dispatch(mapCreate(dateMapGl));
+      setFindMapInfo(true)
     },
     [dispatch]
   );
@@ -219,6 +222,7 @@ const App = () => {
           if (dateRouteGl.ways === null) dateRouteGl.ways = [];
           dispatch(massrouteCreate(dateRouteGl));
           dispatch(massrouteproCreate(dateRouteProGl));
+          setFindGraphInfo(true)
           break;
         case "createPoint":
           if (data.status) {
@@ -356,6 +360,7 @@ const App = () => {
       dateStat.exampleImg2 = data;
       dispatch(statsaveCreate(dateStat));
     });
+    setFindGraphInfo(true)
   } else {
     if (flagOpenКостыль) {
       datePlan = { ...dataPlan.data }; // временный костыль
@@ -365,7 +370,7 @@ const App = () => {
     }
   }
 
-  if (!openMapGl) {
+  if (!openMapGl && findMapInfo && findGraphInfo) {
     Initialisation();
     setOpenMapGl(true);
   }

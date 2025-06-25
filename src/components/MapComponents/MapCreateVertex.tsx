@@ -89,8 +89,9 @@ const MapCreateVertex = (props: {
       massKeyt.push(key);
       massDatt.push(datt[key]);
     }
+
     for (let i = 0; i < massKeyt.length; i++)
-      currenciest.push({ value: massKey[i], label: massDat[i] });
+      currenciest.push({ value: massKeyt[i], label: massDatt[i] });
   }
   //========================================================
   const [openSetAdress, setOpenSetAdress] = React.useState(true);
@@ -101,7 +102,7 @@ const MapCreateVertex = (props: {
   const [openSetInpAdr, setOpenSetInpAdr] = React.useState(false);
   const REGION = homeRegion;
   const [currencyt, setCurrencyt] = React.useState(
-    massKeyt[SubArea.indexOf(subArea)]
+    massKeyt[SubArea.indexOf(subArea)].toString()
   );
   const [valueAdr, setValueAdr] = React.useState("Перекрёсток" + UniqueName());
 
@@ -338,7 +339,7 @@ const MapCreateVertex = (props: {
     };
 
     return (
-      <Modal open={openSetInpAdr} onClose={() => handleCloseEndOther}>
+      <Modal open={openSetInpAdr} onClose={handleCloseEndOther}>
         <Grid item container sx={styleSetSubarea_Adress}>
           <Grid item>
             <Grid item container sx={styleSetAdrArea}>

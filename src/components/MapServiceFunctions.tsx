@@ -464,12 +464,12 @@ export const PreparCurrencies = () => {
   }
   for (let i = 0; i < massKey.length; i++)
     currencies.push({ value: massKey[i], label: massDat[i] });
-  if (debug) {
-    currencies.push({
-      value: (massKey.length + 1).toString(),
-      label: "● Добавить подрайон",
-    });
-  }
+  //if (debug) {
+  currencies.push({
+    value: (massKey.length + 1).toString(),
+    label: "● Добавить подрайон",
+  });
+  //}
   return currencies;
 };
 
@@ -983,9 +983,9 @@ export const GetPointOptions = (
     //================================= потом исправить ======
     if (massdk[index].newCoordinates > 0) {
       if (SubArea === SUBAREA || SUBAREA === "0") {
-        host = hostt + "3.svg";
-        if (!debug)
-          host = window.location.origin + "/free/img/trafficLights/3.svg";
+        host = debug
+          ? hostt + "3.svg"
+          : (host = window.location.origin + "/free/img/trafficLights/3.svg");
       }
     }
 
