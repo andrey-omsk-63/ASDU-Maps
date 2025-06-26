@@ -5,7 +5,7 @@ export const dataRoute = {
       {
         region: 1,
         area: 0,
-        id: 10002,
+        id: 10003,
         dgis: "55.80959863854593,36.50203540676172",
         scale: 1,
         lin: null,

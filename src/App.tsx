@@ -147,13 +147,32 @@ const App = () => {
   const FilterArea = React.useCallback(
     (data: any) => {
       dateMapGl = data;
+
+      console.log(
+        "1FilterArea:",
+        homeRegion,
+        JSON.parse(JSON.stringify(dateMapGl))
+      );
+
+      // if (homeRegion) {
+      //   dateMapGl.tflight = dataMap.tflight.filter(
+      //     (user) => user.region.num === ZONE.toString()
+      //   );
+      // }
+
+      console.log(
+        "2FilterArea:",
+        homeRegion,
+        JSON.parse(JSON.stringify(dateMapGl))
+      );
+
       if (ZONE) {
         dateMapGl.tflight = dataMap.tflight.filter(
           (user) => user.area.num === ZONE.toString()
         );
       }
       dispatch(mapCreate(dateMapGl));
-      setFindMapInfo(true)
+      setFindMapInfo(true);
     },
     [dispatch]
   );
@@ -207,8 +226,8 @@ const App = () => {
       console.log("пришло:", allData.type, data);
       switch (allData.type) {
         case "mapInfo":
-          //FilterArea(data); // берём в работу заданный район
-          FilterArea(dataMap); // берём в работу заданный район === костыль, потом убрать ================================
+          FilterArea(data); // берём в работу заданный район
+          //FilterArea(dataMap); // берём в работу заданный район === костыль, потом убрать ================================
           break;
         case "graphInfo":
           let pointRab = JSON.parse(JSON.stringify(data));
@@ -222,7 +241,7 @@ const App = () => {
           if (dateRouteGl.ways === null) dateRouteGl.ways = [];
           dispatch(massrouteCreate(dateRouteGl));
           dispatch(massrouteproCreate(dateRouteProGl));
-          setFindGraphInfo(true)
+          setFindGraphInfo(true);
           break;
         case "createPoint":
           if (data.status) {
@@ -264,7 +283,7 @@ const App = () => {
             setOpenSetErr(true);
           }
           break;
-        case "createWay":
+        case "createWay": //
           if (!data.status) {
             soob = SoobErrorCreateWay(data);
             //================================= потом исправить ======
@@ -360,7 +379,7 @@ const App = () => {
       dateStat.exampleImg2 = data;
       dispatch(statsaveCreate(dateStat));
     });
-    setFindGraphInfo(true)
+    setFindGraphInfo(true);
   } else {
     if (flagOpenКостыль) {
       datePlan = { ...dataPlan.data }; // временный костыль

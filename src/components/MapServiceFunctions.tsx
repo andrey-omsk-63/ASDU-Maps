@@ -45,7 +45,7 @@ import { styleModalMenuErr, styleHeadError } from "./MapPointDataErrorStyle";
 import { styleBoxFormArea, styleSetArea } from "./MapPointDataErrorStyle";
 
 import { debug, SUBAREA, MODE, MASSPK, SubArea, AREA } from "./MainMapGl";
-import { ZONE, OUTGO } from "./MapConst";
+import { OUTGO } from "./MapConst";
 import { WS, dateMapGl } from "./../App";
 
 export const handleKey = (event: any) => {
@@ -97,19 +97,35 @@ export const SubareaFindById = (massdk: any, area: number, id: number) => {
 };
 
 export const MasrouteAgreeMap = (massroute: any) => {
-  let mass = ZONE ? [] : massroute.vertexes;
-  if (ZONE) {
-    for (let i = 0; i < massroute.vertexes.length; i++) {
-      for (let j = 0; j < dateMapGl.tflight.length; j++) {
-        if (
-          massroute.vertexes[i].area ===
-            Number(dateMapGl.tflight[j].area.num) &&
-          massroute.vertexes[i].id === dateMapGl.tflight[j].ID
-        )
-          mass.push(massroute.vertexes[i]);
+  // let mass: any = ZONE ? [] : massroute.vertexes;
+  // if (ZONE) {
+  //   for (let i = 0; i < massroute.vertexes.length; i++) {
+  //     for (let j = 0; j < dateMapGl.tflight.length; j++) {
+  //       if (
+  //         massroute.vertexes[i].area ===
+  //           Number(dateMapGl.tflight[j].area.num) &&
+  //         massroute.vertexes[i].id === dateMapGl.tflight[j].ID
+  //       )
+  //         mass.push(massroute.vertexes[i]);
+  //     }
+  //   }
+  // }
+  // let mass: any = { ...massroute.vertexes };
+  let mass: any = [];
+  for (let i = 0; i < massroute.vertexes.length; i++) {
+    let have = 0;
+    for (let j = 0; j < dateMapGl.tflight.length; j++) {
+      if (massroute.vertexes[i].id === dateMapGl.tflight[j].ID) {
+        let rec: any = { ...massroute.vertexes[i] };
+        rec.area = dateMapGl.tflight[j].subarea; // замена area на subarea
+        mass.push(rec);
+        have++;
+        break;
       }
     }
+    !have && console.log("на ID", massroute.vertexes[i].id, "нет информации");
   }
+
   return mass;
 };
 
@@ -122,23 +138,22 @@ export const MapssdkNewPoint = (
   id: number
 ) => {
   let masskPoint: Pointer = {
-    ID: 0,
-    coordinates: [],
-    nameCoordinates: "",
-    region: 0,
-    area: 0,
-    subarea: 0,
+    ID: id,
+    coordinates: coords,
+    nameCoordinates: name,
+    region: homeRegion,
+    area: area,
+    subarea: subarea,
     phases: [1, 2, 3],
-    newCoordinates: 0,
+    newCoordinates: 1,
   };
-
-  masskPoint.ID = id;
-  masskPoint.coordinates = coords;
-  masskPoint.nameCoordinates = name;
-  masskPoint.region = homeRegion;
-  masskPoint.area = area;
-  masskPoint.subarea = subarea;
-  masskPoint.newCoordinates = 1;
+  //masskPoint.ID = id;
+  //masskPoint.coordinates = coords;
+  //masskPoint.nameCoordinates = name;
+  //masskPoint.region = homeRegion;
+  //masskPoint.area = area;
+  //masskPoint.subarea = subarea;
+  //masskPoint.newCoordinates = 1;
   return masskPoint;
 };
 
@@ -150,22 +165,22 @@ export const MassrouteNewPoint = (
   id: number
 ) => {
   let masskPoint: Vertex = {
-    region: 0,
-    area: 0,
-    id: 0,
-    dgis: "",
+    region: homeRegion,
+    area: area,
+    id: id,
+    dgis: CodingCoord(coords),
     scale: 0,
     lin: [1, 3, 5, 7, 9, 11],
     lout: [2, 4, 6, 8, 10, 12],
-    name: "",
+    name: name,
   };
 
-  masskPoint.region = homeRegion;
-  masskPoint.area = area;
-  masskPoint.id = id;
-  masskPoint.dgis = CodingCoord(coords);
-  masskPoint.name = name;
-  masskPoint.scale = 0;
+  //masskPoint.region = homeRegion;
+  //masskPoint.area = area;
+  //masskPoint.id = id;
+  //masskPoint.dgis = CodingCoord(coords);
+  //masskPoint.name = name;
+  //masskPoint.scale = 0;
   return masskPoint;
 };
 
@@ -1194,7 +1209,7 @@ export const MasskPoint = (massrouteVertexes: any) => {
     nameCoordinates: "",
     region: 0,
     area: 0,
-    subarea: 3, // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    subarea: 0,
     phases: [1, 2, 7],
     newCoordinates: 0,
   };

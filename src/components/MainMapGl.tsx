@@ -527,6 +527,8 @@ const MainMap = (props: {
               pointBbIndex = 0; // конечная точка
               SoobOpenSetEr(soobTwoDots);
             } else {
+              console.log("###:", recA, recB);
+
               let sbAa = SubareaFindById(massdk, areaAa, recA.id);
               let sbBb = SubareaFindById(massdk, areaBb, recB.id);
               if (sbAa !== sbBb) {
@@ -673,6 +675,9 @@ const MainMap = (props: {
   const ContentContextmenu = (e: any) => {
     newPointCoord = e.get("coords");
     idxDel = NearestPoint(massdk, newPointCoord);
+
+    console.log("ContentContextmenu:", MODE, idxDel);
+
     if (MODE === "1") {
       idxDel >= 0 && setOpenDel(true);
       idxDel < 0 && setOpenCreate(true);
@@ -741,6 +746,8 @@ const MainMap = (props: {
   };
 
   const MakeNewPoint = (coords: any, avail: boolean) => {
+    console.log("MakeNewPoint:", coords, avail);
+
     MakeNewPointContent(WS, coords, avail, homeRegion, massroute);
     coordinates.push(coords);
     dispatch(coordinatesCreate(coordinates));
@@ -896,9 +903,16 @@ const MainMap = (props: {
     if (props.region) homeRegion = props.region;
     if (!props.region && massroute.vertexes.length)
       homeRegion = massroute.vertexes[0].region;
-    massroute.vertexes = MasrouteAgreeMap(massroute);
+
+    console.log("222Massroute:", { ...massroute });
+
+    massroute.vertexes = MasrouteAgreeMap(massroute); // замена area на subarea
+
+    console.log("222Massroute:", massroute);
+
     for (let i = 0; i < massroute.points.length; i++)
       massroute.vertexes.push(massroute.points[i]); // дописывание инф-ии о точках в массив перекрёстков
+    
     for (let i = 0; i < massroute.vertexes.length; i++) {
       massdk.push(MasskPoint(massroute.vertexes[i]));
       coordinates.push(DecodingCoord(massroute.vertexes[i].dgis));

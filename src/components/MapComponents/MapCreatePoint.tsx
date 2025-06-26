@@ -87,11 +87,31 @@ const MapCreatePoint = (props: {
   };
 
   const handleCloseSetAdr = () => {
-    let id = debug ? 0 : 0;
-    massdk.push(MapssdkNewPoint(REGION, props.coord, valueAdr, 0, subArea, id));
-    massroute.vertexes.push(
-      MassrouteNewPoint(REGION, props.coord, valueAdr, 0, 0)
+    let tempId = 10001;
+    let Have = true;
+    while (Have) {
+      let have = 0;
+      for (let i = 0; i < massroute.points.length; i++) {
+        if (tempId === massroute.points[i].id) {
+          tempId++;
+          have++;
+        }
+      }
+      if (!have) Have = false;
+    }
+
+    console.log("tempId:", tempId);
+
+    massdk.push(
+      MapssdkNewPoint(REGION, props.coord, valueAdr, 0, subArea, tempId)
     );
+
+    let rec = MassrouteNewPoint(REGION, props.coord, valueAdr, subArea, tempId);
+    massroute.vertexes.push(rec);
+    massroute.points.push(rec);
+
+    console.log("!!!!!!:", massroute, massdk);
+
     dispatch(massdkCreate(massdk));
     dispatch(massrouteCreate(massroute));
     setOpenSetAdress(false);
