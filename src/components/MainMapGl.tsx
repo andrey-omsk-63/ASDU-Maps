@@ -39,7 +39,10 @@ import { FillMassRouteContent, InputMenuPK } from "./MapServiceFunctions";
 import { InputMenuForm, MasrouteAgreeMap } from "./MapServiceFunctions";
 import { PreparCurrenciesMode, CenterCoordBegin } from "./MapServiceFunctions";
 import { PreparCurrenciesForm, InputMenuMODE } from "./MapServiceFunctions";
-import { PreparCurrenciesPK, SubareaFindById } from "./MapServiceFunctions";
+import {
+  PreparCurrenciesPK,
+  //SubareaFindById
+} from "./MapServiceFunctions";
 import { PreparCurrenciesCalc, InputMenuCalc } from "./MapServiceFunctions";
 import { PreparCurrenciesOptim, InputMenuOptim } from "./MapServiceFunctions";
 import { CalculatNullWays } from "./MapServiceFunctions";
@@ -306,10 +309,10 @@ const MainMap = (props: {
         massroutepro.ways.push(mask);
         dispatch(massrouteCreate(massroute));
         dispatch(massrouteproCreate(massroutepro));
-        if (massroute.vertexes[pointAaIndex].area === 0) {
+        if (!massroute.vertexes[pointAaIndex].lin) {
           SendSocketCreateWayFromPoint(WS, fromCross, toCross, mass, aRou);
         } else {
-          if (massroute.vertexes[pointBbIndex].area === 0) {
+          if (!massroute.vertexes[pointBbIndex].lin) {
             SendSocketCreateWayToPoint(WS, fromCross, toCross, mass, aRou);
           } else SendSocketCreateWay(WS, fromCross, toCross, mass, aRou);
         }
@@ -482,7 +485,7 @@ const MainMap = (props: {
         setDispOptim(true);
     }
   };
-
+  //Перестроение связи
   const OnPlacemarkClickPoint = (index: number, coor: any) => {
     if (MODE === "1" && pointAa !== 0) {
       // листание перекрёстков
@@ -521,22 +524,16 @@ const MainMap = (props: {
             pointBbIndex = index; // конечная точка
             let recA = massroute.vertexes[pointAaIndex];
             let recB = massroute.vertexes[pointBbIndex];
-            let areaAa = recA.area;
-            let areaBb = recB.area;
-            if (areaAa === 0 && areaBb === 0) {
+            if (!recA.lin && !recB.lin) {
               pointBbIndex = 0; // конечная точка
-              SoobOpenSetEr(soobTwoDots);
+              SoobOpenSetEr(soobTwoDots); // Связь между двумя точками создовать нельзя
             } else {
-              console.log("###:", recA, recB);
-
-              let sbAa = SubareaFindById(massdk, areaAa, recA.id);
-              let sbBb = SubareaFindById(massdk, areaBb, recB.id);
-              if (sbAa !== sbBb) {
+              if (recA.area !== recB.area) {
                 pointBbIndex = 0; // конечная точка
-                SoobOpenSetEr(soob);
+                SoobOpenSetEr(soob); //Связь между перекрёстками в разных подрайонах создовать нельзя
               } else {
                 pointBb = COORD;
-                toCross = MakeToCross(massdk[index]);
+                toCross = MakeToCross(massdk[index]); // ===============================================================
                 if (DoublRoute(massroute.ways, pointAa, pointBb)) {
                   SoobOpenSetEr("Дубликатная связь");
                   ZeroRoute(false);
@@ -556,7 +553,6 @@ const MainMap = (props: {
   };
 
   const ModalPressBalloon = () => {
-    const [openErBall, setOpenErBall] = React.useState(false);
     let pointRoute: any = 0;
     let areaPoint = -1;
     if (indexPoint >= 0) areaPoint = massdk[indexPoint].area;
@@ -564,24 +560,22 @@ const MainMap = (props: {
       pointRoute = MassCoord(massdk[indexPoint]);
 
     const handleClose = (param: number) => {
-      const CheckDoublPoint = () => {
+      const CheckDoublPoint = (idx: number) => {
         return (
-          massroute.vertexes[pointAaIndex].area === 0 &&
-          massroute.vertexes[indexPoint].area === 0
+          !massroute.vertexes[idx].lin && !massroute.vertexes[indexPoint].lin
         );
       };
 
       switch (param) {
         case 1: // Начальная точка
           if (pointBbIndex === indexPoint) {
-            soobError = "Начальная и конечная точки совпадают";
-            setOpenErBall(true);
+            SoobOpenSetEr("Начальная и конечная точки совпадают");
           } else {
             pointAaIndex = indexPoint;
             pointAa = pointRoute;
             fromCross = MakeFromCross(massdk[pointAaIndex]);
-            if (CheckDoublPoint()) {
-              SoobOpenSetEr(soobTwoDots);
+            if (CheckDoublPoint(pointBbIndex)) {
+              SoobOpenSetEr(soobTwoDots); // Связь между двумя точками создовать нельзя
               ZeroRoute(false);
             } else {
               if (DoublRoute(massroute.ways, pointAa, pointBb)) {
@@ -592,12 +586,11 @@ const MainMap = (props: {
           }
           break;
         case 2: // Конечная точка
-          if (pointAaIndex === indexPoint) {
-            soobError = "Начальная и конечная точки совпадают";
-            setOpenErBall(true);
+          if (pointAaIndex === indexPoint || pointBbIndex === indexPoint) {
+            SoobOpenSetEr("Начальная и конечная точки совпадают");
           } else {
-            if (CheckDoublPoint()) {
-              SoobOpenSetEr(soobTwoDots);
+            if (CheckDoublPoint(pointAaIndex)) {
+              SoobOpenSetEr(soobTwoDots); // Связь между двумя точками создовать нельзя
             } else {
               pointBbIndex = indexPoint;
               pointBb = pointRoute;
@@ -626,16 +619,6 @@ const MainMap = (props: {
             Open={setOpenAdress}
             zero={ZeroRoute}
             Cl={setOpen}
-          />
-        )}
-        {openErBall && (
-          <MapPointDataError
-            sErr={soobError}
-            setOpen={setOpenErBall}
-            fromCross={fromCross}
-            toCross={toCross}
-            update={UpdateAddRoute}
-            setSvg={props.setSvg}
           />
         )}
       </>
@@ -746,8 +729,6 @@ const MainMap = (props: {
   };
 
   const MakeNewPoint = (coords: any, avail: boolean) => {
-    console.log("MakeNewPoint:", coords, avail);
-
     MakeNewPointContent(WS, coords, avail, homeRegion, massroute);
     coordinates.push(coords);
     dispatch(coordinatesCreate(coordinates));
@@ -903,16 +884,10 @@ const MainMap = (props: {
     if (props.region) homeRegion = props.region;
     if (!props.region && massroute.vertexes.length)
       homeRegion = massroute.vertexes[0].region;
-
-    console.log("222Massroute:", { ...massroute });
-
     massroute.vertexes = MasrouteAgreeMap(massroute); // замена area на subarea
-
-    console.log("222Massroute:", massroute);
-
     for (let i = 0; i < massroute.points.length; i++)
       massroute.vertexes.push(massroute.points[i]); // дописывание инф-ии о точках в массив перекрёстков
-    
+
     for (let i = 0; i < massroute.vertexes.length; i++) {
       massdk.push(MasskPoint(massroute.vertexes[i]));
       coordinates.push(DecodingCoord(massroute.vertexes[i].dgis));

@@ -97,20 +97,6 @@ export const SubareaFindById = (massdk: any, area: number, id: number) => {
 };
 
 export const MasrouteAgreeMap = (massroute: any) => {
-  // let mass: any = ZONE ? [] : massroute.vertexes;
-  // if (ZONE) {
-  //   for (let i = 0; i < massroute.vertexes.length; i++) {
-  //     for (let j = 0; j < dateMapGl.tflight.length; j++) {
-  //       if (
-  //         massroute.vertexes[i].area ===
-  //           Number(dateMapGl.tflight[j].area.num) &&
-  //         massroute.vertexes[i].id === dateMapGl.tflight[j].ID
-  //       )
-  //         mass.push(massroute.vertexes[i]);
-  //     }
-  //   }
-  // }
-  // let mass: any = { ...massroute.vertexes };
   let mass: any = [];
   for (let i = 0; i < massroute.vertexes.length; i++) {
     let have = 0;
@@ -125,7 +111,6 @@ export const MasrouteAgreeMap = (massroute: any) => {
     }
     !have && console.log("на ID", massroute.vertexes[i].id, "нет информации");
   }
-
   return mass;
 };
 
@@ -147,13 +132,6 @@ export const MapssdkNewPoint = (
     phases: [1, 2, 3],
     newCoordinates: 1,
   };
-  //masskPoint.ID = id;
-  //masskPoint.coordinates = coords;
-  //masskPoint.nameCoordinates = name;
-  //masskPoint.region = homeRegion;
-  //masskPoint.area = area;
-  //masskPoint.subarea = subarea;
-  //masskPoint.newCoordinates = 1;
   return masskPoint;
 };
 
@@ -170,17 +148,10 @@ export const MassrouteNewPoint = (
     id: id,
     dgis: CodingCoord(coords),
     scale: 0,
-    lin: [1, 3, 5, 7, 9, 11],
-    lout: [2, 4, 6, 8, 10, 12],
+    lin: null,
+    lout: null,
     name: name,
   };
-
-  //masskPoint.region = homeRegion;
-  //masskPoint.area = area;
-  //masskPoint.id = id;
-  //masskPoint.dgis = CodingCoord(coords);
-  //masskPoint.name = name;
-  //masskPoint.scale = 0;
   return masskPoint;
 };
 
@@ -1204,35 +1175,37 @@ export const СontentModalPressBalloon = (
 
 export const MasskPoint = (massrouteVertexes: any) => {
   let masskPoint: Pointer = {
-    ID: -1,
-    coordinates: [],
-    nameCoordinates: "",
-    region: 0,
+    ID: massrouteVertexes.id,
+    coordinates: DecodingCoord(massrouteVertexes.dgis),
+    nameCoordinates: massrouteVertexes.name,
+    region: massrouteVertexes.region,
     area: 0,
-    subarea: 0,
+    subarea: massrouteVertexes.area, // была замена area на subarea
     phases: [1, 2, 7],
     newCoordinates: 0,
   };
-  masskPoint.ID = massrouteVertexes.id;
-  masskPoint.coordinates = DecodingCoord(massrouteVertexes.dgis);
-  masskPoint.nameCoordinates = massrouteVertexes.name;
-  masskPoint.region = massrouteVertexes.region;
-  masskPoint.area = massrouteVertexes.area;
+  //masskPoint.ID = massrouteVertexes.id;
+  //masskPoint.coordinates = DecodingCoord(massrouteVertexes.dgis);
+  //masskPoint.nameCoordinates = massrouteVertexes.name;
+  //masskPoint.region = massrouteVertexes.region;
+  //masskPoint.area = massrouteVertexes.area; // была замена area на subarea
   //=============================================================
-  if (masskPoint.area) {
-    let subarea = -1;
-    let phases = [1, 2, 7];
+  //let area = massrouteVertexes.area;
+  let area = 0;
+  let phases = [1, 2, 7];
+  if (massrouteVertexes.lin) {
     for (let j = 0; j < dateMapGl.tflight.length; j++) {
       if (dateMapGl.tflight[j].ID === masskPoint.ID) {
-        subarea = dateMapGl.tflight[j].subarea;
+        area = Number(dateMapGl.tflight[j].area.num);
         phases = dateMapGl.tflight[j].phases;
+        break;
       }
     }
-    masskPoint.subarea = subarea;
-    masskPoint.phases = phases;
   }
+  masskPoint.area = area;
+  masskPoint.phases = phases;
   //=============================================================
-  masskPoint.newCoordinates = 0;
+  //masskPoint.newCoordinates = 0;
   return masskPoint;
 };
 
@@ -1276,9 +1249,8 @@ export const DelVerOrPoint = (
     marginTop: "15vh",
     marginLeft: "24vh",
     width: 400,
-    bgcolor: "background.paper",
-    border: "1px solid #000",
-    borderColor: "red",
+    bgcolor: "#fff6d2", // светло-жёлтый
+    border: "1px solid #FFEDA6", // блендно-жёлтый
     borderRadius: 1,
     boxShadow: 24,
     textAlign: "center",
@@ -1302,7 +1274,7 @@ export const DelVerOrPoint = (
         <Box>
           Будет удален {soob}&nbsp;
           <b>
-            [{massdk[idx].area}, {massdk[idx].ID}
+            [{massdk[idx].subarea}, {massdk[idx].ID}
             ]&nbsp;&nbsp;
             {massdk[idx].nameCoordinates}
           </b>
@@ -1359,7 +1331,7 @@ export const DelVerOrPoint = (
           <b>&#10006;</b>
         </Button>
         <Typography variant="h6" sx={{ color: "red" }}>
-          Предупреждение
+          ⚠️Предупреждение
         </Typography>
         {have === 0 && <>{NotHaveWays()}</>}
         {have !== 0 && <>{HaveWays()}</>}

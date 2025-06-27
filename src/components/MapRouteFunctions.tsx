@@ -257,8 +257,6 @@ export const MakeMainRoute = (
       reqRoute.dlRoute = Math.round(dist);
       let duration = activeRoute.properties.get("duration").value;
       reqRoute.tmRoute = Math.round(duration);
-
-      console.log("0MakeMainRoute:", activeRoute, reqRoute);
     }
   });
   return [activeRoute, reqRoute];

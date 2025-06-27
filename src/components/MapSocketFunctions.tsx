@@ -173,6 +173,8 @@ export const SendSocketCreateWayFromPoint = (
   massBind: Array<number>,
   reqRoute: any
 ) => {
+  console.log('CreateWayFromPoint:',fromCr,toCr,massBind,reqRoute)
+  
   const handleSendOpen = () => {
     if (ws.url !== "wss://localhost:3000/W") {
       if (ws.readyState === WebSocket.OPEN) {

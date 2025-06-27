@@ -4,7 +4,7 @@ export const dataRoute = {
     points: [
       {
         region: 1,
-        area: 0,
+        area: 3,
         id: 10003,
         dgis: "55.80959863854593,36.50203540676172",
         scale: 1,
@@ -14,7 +14,7 @@ export const dataRoute = {
       },
       {
         region: 1,
-        area: 0,
+        area: 3,
         id: 10001,
         dgis: "55.78751716921771,36.39074389466697",
         scale: 1,

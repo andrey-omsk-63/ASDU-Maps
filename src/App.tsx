@@ -359,13 +359,18 @@ const App = () => {
         : "./";
     FilterArea(dataMap); // берём в работу заданный район
     dateRouteGl = { ...dataRoute.data };
+    // массив протоколов
     dateRouteProGl = { ...dataRoute.data };
-    dateRouteProGl.points = []; // массив протоколов
+    dateRouteProGl.points = [];
     dateRouteProGl.vertexes = [];
     dateRouteProGl.ways = [];
+
     flagOpen = false;
     dispatch(massrouteCreate(dateRouteGl));
     dispatch(massrouteproCreate(dateRouteProGl));
+
+    console.log("111!!!:", dataRoute);
+
     axios.get(road + "otladkaPlans.json").then(({ data }) => {
       datePlan = data.data;
       dispatch(massplanCreate(datePlan));

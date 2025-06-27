@@ -11,7 +11,8 @@ import MenuItem from "@mui/material/MenuItem";
 
 import { MapssdkNewPoint, MassrouteNewPoint } from "./../MapServiceFunctions";
 
-import { SubArea, debug, homeRegion } from "./../MainMapGl";
+//import { SubArea, debug, homeRegion } from "./../MainMapGl";
+import { SubArea, SUBAREA, homeRegion } from "./../MainMapGl";
 
 import { styleSetAdress, styleBoxForm, styleInpKnop } from "./../MainMapStyle";
 import { styleSet, styleSetAdrArea, styleSetAdrID } from "./../MainMapStyle";
@@ -21,6 +22,8 @@ let subArea = -1;
 let flagInput = true;
 let massKey: string[] = [];
 let currencies: any = [];
+//let subb = 0;
+//let idx = -1;
 
 const MapCreatePoint = (props: {
   setOpen: any;
@@ -38,24 +41,6 @@ const MapCreatePoint = (props: {
   });
   const dispatch = useDispatch();
   //========================================================
-  if (flagInput) {
-    let dat = [];
-    for (let i = 0; i < SubArea.length; i++) {
-      dat.push(SubArea[i].toString() + "-й подрайон");
-      if (!i) subArea = SubArea[i];
-    }
-    massKey = [];
-    let massDat = [];
-    currencies = [];
-    for (let key in dat) {
-      massKey.push(key);
-      massDat.push(dat[key]);
-    }
-    for (let i = 0; i < massKey.length; i++)
-      currencies.push({ value: massKey[i], label: massDat[i] });
-    flagInput = false;
-  }
-
   const NameMode = () => {
     let nameMode =
       "(" +
@@ -70,6 +55,30 @@ const MapCreatePoint = (props: {
   const [valueAdr, setValueAdr] = React.useState("Объект" + NameMode());
   const [currency, setCurrency] = React.useState(massKey[0]);
   const REGION = homeRegion;
+
+  if (flagInput) {
+    let dat = [];
+    for (let i = 0; i < SubArea.length; i++) {
+      dat.push(SubArea[i].toString() + "-й подрайон");
+      //if (!i) subArea = SubArea[i];
+    }
+    massKey = [];
+    let massDat = [];
+    currencies = [];
+    for (let key in dat) {
+      massKey.push(key);
+      massDat.push(dat[key]);
+    }
+    for (let i = 0; i < massKey.length; i++)
+      currencies.push({ value: massKey[i], label: massDat[i] });
+
+    let subb = !Number(SUBAREA) ? SubArea[0] : Number(SUBAREA);
+    let idx = SubArea.indexOf(subb);
+    subArea = SubArea[idx];
+    flagInput = false;
+    setCurrency(massKey[idx]);
+    //console.log("!!!SUBAREA:", SUBAREA,subb, idx,subArea, SubArea);
+  }
 
   const handleKey = (event: any) => {
     if (event.key === "Enter") event.preventDefault();
@@ -100,8 +109,6 @@ const MapCreatePoint = (props: {
       if (!have) Have = false;
     }
 
-    console.log("tempId:", tempId);
-
     massdk.push(
       MapssdkNewPoint(REGION, props.coord, valueAdr, 0, subArea, tempId)
     );
@@ -110,12 +117,14 @@ const MapCreatePoint = (props: {
     massroute.vertexes.push(rec);
     massroute.points.push(rec);
 
-    console.log("!!!!!!:", massroute, massdk);
+    console.log("######:", subArea);
+    console.log(massroute, massdk);
 
     dispatch(massdkCreate(massdk));
     dispatch(massrouteCreate(massroute));
     setOpenSetAdress(false);
     props.createPoint(props.coord, true);
+    flagInput = true;
   };
 
   const handleCloseEnd = (event: any, reason: string) => {
@@ -147,6 +156,9 @@ const MapCreatePoint = (props: {
   const handleChangeSArea = (event: React.ChangeEvent<HTMLInputElement>) => {
     let sub = Number(event.target.value);
     subArea = SubArea[sub];
+
+    console.log("handleChangeSArea:", subArea);
+
     setCurrency(event.target.value);
   };
 
