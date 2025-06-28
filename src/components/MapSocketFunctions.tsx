@@ -1,15 +1,19 @@
 import { Way } from "./../interfaceRoute";
+import { debug, WS } from "./../App";
 
 //=== SendSocket ===================================
 export const SendSocketCreatePoint = (
-  ws: WebSocket,
+  //ws: WebSocket,
   codCoord: string,
-  adress: string
+  adress: string,
+  area: number
 ) => {
-  const handleSendOpen = () => {
-    if (ws.url !== "wss://localhost:3000/W") {
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.send(
+  console.log("CreatePoint:", codCoord, adress);
+
+  if (!debug) {
+    const handleSendOpen = () => {
+      if (WS.readyState === WebSocket.OPEN) {
+        WS.send(
           JSON.stringify({
             type: "createPoint",
             data: {
@@ -23,9 +27,9 @@ export const SendSocketCreatePoint = (
           handleSendOpen();
         }, 100);
       }
-    }
-  };
-  handleSendOpen();
+    };
+    handleSendOpen();
+  }
 };
 
 export const SendSocketDeletePoint = (ws: WebSocket, id: number) => {
@@ -44,15 +48,17 @@ export const SendSocketDeletePoint = (ws: WebSocket, id: number) => {
 };
 
 export const SendSocketCreateVertex = (
-  ws: WebSocket,
+  //ws: WebSocket,
   region: number,
   area: number,
   ID: number
 ) => {
-  const handleSendOpen = () => {
-    if (ws.url !== "wss://localhost:3000/W") {
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.send(
+  console.log("CreateVertex:", region, area, ID);
+
+  if (!debug) {
+    const handleSendOpen = () => {
+      if (WS.readyState === WebSocket.OPEN) {
+        WS.send(
           JSON.stringify({
             type: "createVertex",
             data: {
@@ -67,9 +73,9 @@ export const SendSocketCreateVertex = (
           handleSendOpen();
         }, 100);
       }
-    }
-  };
-  handleSendOpen();
+    };
+    handleSendOpen();
+  }
 };
 
 export const SendSocketDeleteVertex = (
@@ -173,8 +179,8 @@ export const SendSocketCreateWayFromPoint = (
   massBind: Array<number>,
   reqRoute: any
 ) => {
-  console.log('CreateWayFromPoint:',fromCr,toCr,massBind,reqRoute)
-  
+  console.log("CreateWayFromPoint:", fromCr, toCr, massBind, reqRoute);
+
   const handleSendOpen = () => {
     if (ws.url !== "wss://localhost:3000/W") {
       if (ws.readyState === WebSocket.OPEN) {

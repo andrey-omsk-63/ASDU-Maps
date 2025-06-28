@@ -109,6 +109,7 @@ export let massPlan: PlanCoord[] = [];
 export let massRoutePro: Router[] = [];
 export let Coordinates: Array<Array<number>> = []; // массив координат
 export let WS: any = null;
+export let debug = false;
 
 let flagOpen = true;
 let flagOpenКостыль = true;
@@ -199,7 +200,7 @@ const App = () => {
       WS.url.slice(0, 20) === "wss://localhost:3000" ||
       WS.url.slice(0, 27) === "wss://andrey-omsk-63.github"
     )
-      dateStat.debug = true;
+      dateStat.debug = debug = true;
     dispatch(statsaveCreate(dateStat));
     let pageUrl = new URL(window.location.href);
     homeRegion = Number(pageUrl.searchParams.get("Region"));
@@ -245,11 +246,13 @@ const App = () => {
           break;
         case "createPoint":
           if (data.status) {
-            dateRouteGl.vertexes[dateRouteGl.vertexes.length - 1].id = data.id;
+            dateRouteGl.vertexes[dateRouteGl.vertexes.length - 1].id = data.id; // прописывакм реальное ID
+            dateRouteGl.vertexes[dateRouteGl.points.length - 1].id = data.id;
             massdk[massdk.length - 1].ID = data.id;
             setTrigger(!trigger);
           } else {
-            dateRouteGl.vertexes.splice(dateRouteGl.vertexes.length - 1, 1);
+            dateRouteGl.vertexes.splice(dateRouteGl.vertexes.length - 1, 1); // произошла ошибка
+            dateRouteGl.vertexes.splice(dateRouteGl.points.length - 1, 1);
             massdk.splice(massdk.length - 1, 1);
             coordinates.splice(coordinates.length - 1, 1);
             soob = "Произошла ошибка при создании точки";

@@ -729,7 +729,7 @@ const MainMap = (props: {
   };
 
   const MakeNewPoint = (coords: any, avail: boolean) => {
-    MakeNewPointContent(WS, coords, avail, homeRegion, massroute);
+    MakeNewPointContent(coords, avail, homeRegion, massroute);
     coordinates.push(coords);
     dispatch(coordinatesCreate(coordinates));
     setOpenCreate(false);

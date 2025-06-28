@@ -304,7 +304,7 @@ export const SaveZoom = (zoom: number, pointCenter: Array<number>) => {
 };
 
 export const MakeNewPointContent = (
-  WS: any,
+  //WS: any,
   coords: any,
   avail: boolean,
   homeRegion: number,
@@ -314,8 +314,12 @@ export const MakeNewPointContent = (
   let areaV = massroute.vertexes[massroute.vertexes.length - 1].area;
   let idV = massroute.vertexes[massroute.vertexes.length - 1].id;
   let adress = massroute.vertexes[massroute.vertexes.length - 1].name;
-  areaV && avail && SendSocketCreateVertex(WS, homeRegion, areaV, idV); // светофор
-  !areaV && SendSocketCreatePoint(WS, coor, adress); // объект
+  let lin = massroute.vertexes[massroute.vertexes.length - 1].lin;
+
+  console.log("MakeNewPointContent:", avail, lin);
+
+  lin && avail && SendSocketCreateVertex(homeRegion, areaV, idV); // светофор
+  !lin && SendSocketCreatePoint(coor, adress, areaV); // объект
 };
 
 export const DelPointVertexContent = (
@@ -1347,8 +1351,8 @@ export const NoVertex = (openSetErr: boolean, handleCloseErr: Function) => {
     marginTop: "15vh",
     marginLeft: "24vh",
     width: 400,
-    bgcolor: "background.paper",
-    border: "1px solid #FFFFFF", // белый
+    bgcolor: "#fff6d2", // светло-жёлтый
+    border: "1px solid #FFEDA6", // блендно-жёлтый
     borderRadius: 1,
     boxShadow: 24,
     textAlign: "center",
@@ -1372,7 +1376,7 @@ export const NoVertex = (openSetErr: boolean, handleCloseErr: Function) => {
           <b>&#10006;</b>
         </Button>
         <Typography variant="h6" sx={{ color: "red" }}>
-          Предупреждение
+          ⚠️Предупреждение
         </Typography>
         <Box sx={{ marginTop: 0.5 }}>
           <Box sx={{ marginBottom: 1.2 }}>

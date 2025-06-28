@@ -169,7 +169,8 @@ const MapCreateVertex = (props: {
   const SaveVertex = () => {
     console.log("1SaveVertex:", propsCoord);
 
-    let avail = false;
+    //let avail = false;
+    let avail = true;
     if (!propsCoord[0]) {
       // светофор в базе есть
       for (let i = 0; i < map.dateMap.tflight.length; i++) {
@@ -189,11 +190,12 @@ const MapCreateVertex = (props: {
       massdk.push(
         MapssdkNewPoint(REGION, propsCoord, adrV, ar, subArea, Number(valuen))
       );
-      massroute.vertexes.push(
-        MassrouteNewPoint(REGION, propsCoord, adrV, ar, Number(valuen))
-      );
 
-      console.log("2SaveVertex:", massdk,massroute);
+      let rec = MassrouteNewPoint(REGION, propsCoord, adrV, ar, Number(valuen));
+      rec.lin = rec.lout = []
+      massroute.vertexes.push(rec);
+
+      console.log("2SaveVertex:", massdk, massroute);
 
       dispatch(massdkCreate(massdk));
       dispatch(massrouteCreate(massroute));

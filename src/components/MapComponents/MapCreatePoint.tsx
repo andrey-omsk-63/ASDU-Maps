@@ -11,7 +11,6 @@ import MenuItem from "@mui/material/MenuItem";
 
 import { MapssdkNewPoint, MassrouteNewPoint } from "./../MapServiceFunctions";
 
-//import { SubArea, debug, homeRegion } from "./../MainMapGl";
 import { SubArea, SUBAREA, homeRegion } from "./../MainMapGl";
 
 import { styleSetAdress, styleBoxForm, styleInpKnop } from "./../MainMapStyle";
@@ -22,8 +21,6 @@ let subArea = -1;
 let flagInput = true;
 let massKey: string[] = [];
 let currencies: any = [];
-//let subb = 0;
-//let idx = -1;
 
 const MapCreatePoint = (props: {
   setOpen: any;
@@ -58,10 +55,9 @@ const MapCreatePoint = (props: {
 
   if (flagInput) {
     let dat = [];
-    for (let i = 0; i < SubArea.length; i++) {
+    for (let i = 0; i < SubArea.length; i++)
       dat.push(SubArea[i].toString() + "-й подрайон");
-      //if (!i) subArea = SubArea[i];
-    }
+
     massKey = [];
     let massDat = [];
     currencies = [];
@@ -77,7 +73,6 @@ const MapCreatePoint = (props: {
     subArea = SubArea[idx];
     flagInput = false;
     setCurrency(massKey[idx]);
-    //console.log("!!!SUBAREA:", SUBAREA,subb, idx,subArea, SubArea);
   }
 
   const handleKey = (event: any) => {
