@@ -88,6 +88,8 @@ export interface Stater {
   exampleImg1: any; // отладочное изображение перекрёстка
   exampleImg2: any; // отладочное изображение перекрёстка
   have: number; // счётчик изменений в форме параметров перекрёстка
+  permitСreatPoint: boolean; // разрешение создания новой точки
+  permitСreatVertex: boolean; // разрешение создания нового перекрёстка
 }
 
 export let dateStat: Stater = {
@@ -102,6 +104,8 @@ export let dateStat: Stater = {
   exampleImg1: null,
   exampleImg2: null,
   have: 0,
+  permitСreatPoint: true, // разрешение создания новой точки
+  permitСreatVertex: true, // разрешение создания нового перекрёстка
 };
 
 export let massRoute: Router[] = [];
@@ -152,24 +156,30 @@ const App = () => {
       console.log(
         "1FilterArea:",
         homeRegion,
+        homeRegion.toString(),
+        typeof homeRegion,
         JSON.parse(JSON.stringify(dateMapGl))
       );
 
-      // if (homeRegion) {
-      //   dateMapGl.tflight = dataMap.tflight.filter(
-      //     (user) => user.region.num === ZONE.toString()
-      //   );
-      // }
+      if (homeRegion) {
+        dateMapGl.tflight = dateMapGl.tflight.filter(
+          (user: { region: { num: any } }) =>
+            user.region.num === homeRegion.toString()
+        );
+      }
+
+      //(user) => user.region.num ===  homeRegion.toString()
 
       console.log(
-        "2FilterArea:",
+        "!2FilterArea:",
         homeRegion,
+        ZONE,
         JSON.parse(JSON.stringify(dateMapGl))
       );
 
       if (ZONE) {
-        dateMapGl.tflight = dataMap.tflight.filter(
-          (user) => user.area.num === ZONE.toString()
+        dateMapGl.tflight = dateMapGl.tflight.filter(
+          (user: { area: { num: string } }) => user.area.num === ZONE.toString()
         );
       }
       dispatch(mapCreate(dateMapGl));
@@ -204,6 +214,7 @@ const App = () => {
     dispatch(statsaveCreate(dateStat));
     let pageUrl = new URL(window.location.href);
     homeRegion = Number(pageUrl.searchParams.get("Region"));
+    //if (!debug) homeRegion = 2; // костыль, потом поменять
 
     console.log("WS.url:", WS.url, homeRegion);
   }
@@ -259,6 +270,8 @@ const App = () => {
             setOpenSetErr(true);
             dispatch(coordinatesCreate(coordinates));
           }
+          dateStat.permitСreatPoint = true; // можно создавать новые точки
+          dispatch(statsaveCreate(dateStat));
           dispatch(massrouteCreate(dateRouteGl));
           dispatch(massdkCreate(massdk));
           break;
@@ -369,10 +382,11 @@ const App = () => {
     dateRouteProGl.ways = [];
 
     flagOpen = false;
+
+    //for (let i = 0; i < dateRouteGl.vertex.length; i++) {}
+
     dispatch(massrouteCreate(dateRouteGl));
     dispatch(massrouteproCreate(dateRouteProGl));
-
-    console.log("111!!!:", dataRoute);
 
     axios.get(road + "otladkaPlans.json").then(({ data }) => {
       datePlan = data.data;

@@ -730,6 +730,11 @@ const MainMap = (props: {
 
   const MakeNewPoint = (coords: any, avail: boolean) => {
     MakeNewPointContent(coords, avail, homeRegion, massroute);
+    let lin = massroute.vertexes[massroute.vertexes.length - 1].lin;
+    if (!lin) {
+      datestat.permitСreatPoint = false; // запрет на создание новых точек
+      dispatch(statsaveCreate(datestat));
+    }
     coordinates.push(coords);
     dispatch(coordinatesCreate(coordinates));
     setOpenCreate(false);
@@ -884,13 +889,24 @@ const MainMap = (props: {
     if (props.region) homeRegion = props.region;
     if (!props.region && massroute.vertexes.length)
       homeRegion = massroute.vertexes[0].region;
-    massroute.vertexes = MasrouteAgreeMap(massroute); // замена area на subarea
     for (let i = 0; i < massroute.points.length; i++)
       massroute.vertexes.push(massroute.points[i]); // дописывание инф-ии о точках в массив перекрёстков
 
+    console.log("000Massroute:", JSON.parse(JSON.stringify(massroute)));
+
+    massroute.vertexes = MasrouteAgreeMap(massroute); // замена area на subarea
+
+    console.log(
+      "!!!Massroute:",
+      homeRegion,
+      JSON.parse(JSON.stringify(massroute))
+    );
+
     for (let i = 0; i < massroute.vertexes.length; i++) {
-      massdk.push(MasskPoint(massroute.vertexes[i]));
-      coordinates.push(DecodingCoord(massroute.vertexes[i].dgis));
+      if (massroute.vertexes[i].region === homeRegion) {
+        massdk.push(MasskPoint(massroute.vertexes[i]));
+        coordinates.push(DecodingCoord(massroute.vertexes[i].dgis));
+      }
     }
     dispatch(massdkCreate(massdk));
     dispatch(massrouteCreate(massroute));

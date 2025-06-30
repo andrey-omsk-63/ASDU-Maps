@@ -44,7 +44,15 @@ import { styleSetPK04, StyleBind09, styleSpisPK05 } from "./MainMapStyle";
 import { styleModalMenuErr, styleHeadError } from "./MapPointDataErrorStyle";
 import { styleBoxFormArea, styleSetArea } from "./MapPointDataErrorStyle";
 
-import { debug, SUBAREA, MODE, MASSPK, SubArea, AREA } from "./MainMapGl";
+import {
+  debug,
+  SUBAREA,
+  MODE,
+  MASSPK,
+  SubArea,
+  AREA,
+  homeRegion,
+} from "./MainMapGl";
 import { OUTGO } from "./MapConst";
 import { WS, dateMapGl } from "./../App";
 
@@ -99,18 +107,27 @@ export const SubareaFindById = (massdk: any, area: number, id: number) => {
 export const MasrouteAgreeMap = (massroute: any) => {
   let mass: any = [];
   for (let i = 0; i < massroute.vertexes.length; i++) {
-    let have = 0;
-    for (let j = 0; j < dateMapGl.tflight.length; j++) {
-      if (massroute.vertexes[i].id === dateMapGl.tflight[j].ID) {
-        let rec: any = { ...massroute.vertexes[i] };
-        rec.area = dateMapGl.tflight[j].subarea; // замена area на subarea
-        mass.push(rec);
-        have++;
-        break;
+    if (massroute.vertexes[i].lin) {
+      let have = 0;
+      for (let j = 0; j < dateMapGl.tflight.length; j++) {
+        if (
+          massroute.vertexes[i].region === homeRegion &&
+          
+          massroute.vertexes[i].id === dateMapGl.tflight[j].ID
+        ) {
+          let rec: any = { ...massroute.vertexes[i] };
+          rec.area = dateMapGl.tflight[j].subarea; // замена area на subarea
+          mass.push(rec);
+          have++;
+          break;
+        }
       }
+      !have && console.log("на ID", massroute.vertexes[i].id, "нет информации");
     }
-    !have && console.log("на ID", massroute.vertexes[i].id, "нет информации");
   }
+
+  if (!mass.lenght) mass = massroute.vertexes; // костыль, потом убрать
+
   return mass;
 };
 
@@ -1178,6 +1195,9 @@ export const СontentModalPressBalloon = (
 };
 
 export const MasskPoint = (massrouteVertexes: any) => {
+  if (massrouteVertexes.id === 42 || massrouteVertexes.id === 61)
+    console.log("MasskPoint:", massrouteVertexes);
+
   let masskPoint: Pointer = {
     ID: massrouteVertexes.id,
     coordinates: DecodingCoord(massrouteVertexes.dgis),
@@ -2297,7 +2317,7 @@ export const DelCross = (i: number, nomDelFaz: number) => {
 export const HeadDoublError = (flagSave: boolean, propsErr: string) => {
   const styleForm = {
     textAlign: "center",
-    color: "red",
+    color: "black",
     textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
   };
 

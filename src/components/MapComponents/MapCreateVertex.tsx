@@ -191,8 +191,14 @@ const MapCreateVertex = (props: {
         MapssdkNewPoint(REGION, propsCoord, adrV, ar, subArea, Number(valuen))
       );
 
-      let rec = MassrouteNewPoint(REGION, propsCoord, adrV, ar, Number(valuen));
-      rec.lin = rec.lout = []
+      let rec = MassrouteNewPoint(
+        REGION,
+        propsCoord,
+        adrV,
+        subArea,
+        Number(valuen)
+      );
+      rec.lin = rec.lout = [];
       massroute.vertexes.push(rec);
 
       console.log("2SaveVertex:", massdk, massroute);

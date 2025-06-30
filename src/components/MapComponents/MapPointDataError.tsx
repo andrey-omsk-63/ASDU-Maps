@@ -21,7 +21,7 @@ import { SendSocketCreateWayFromPoint } from "./../MapSocketFunctions";
 import { SendSocketCreateWayToPoint } from "./../MapSocketFunctions";
 import { SendSocketGetSvg } from "./../MapSocketFunctions";
 
-import { styleModalEndErr, styleSetInfErr } from "../MapPointDataErrorStyle";
+import { styleModalEndErr } from "../MapPointDataErrorStyle";
 import { styleModalEditBind } from "../MapPointDataErrorStyle";
 import { styleFooterError } from "../MapPointDataErrorStyle";
 
@@ -62,6 +62,8 @@ const MapPointDataError = (props: {
   update: any;
   setSvg: any;
 }) => {
+  console.log("MapPointDataError:", props.sErr, props.fromCross, props.toCross);
+
   //== Piece of Redux =======================================
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
@@ -81,11 +83,32 @@ const MapPointDataError = (props: {
   const [openSetBind, setOpenSetBind] = React.useState(false);
   const [badExit, setBadExit] = React.useState(false);
 
+  const styleSetInfErr = (background: string) => {
+    const styleSetInf = {
+      outline: "none",
+      position: "absolute",
+      left: "50%",
+      top: "50%",
+      transform: "translate(-50%, -50%)",
+      width: 430,
+      //bgcolor: "background.paper",
+      bgcolor: background,
+      border: "1px solid #fff",
+      borderColor: background,
+      borderRadius: 1,
+      boxShadow: 24,
+      textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+      p: 1.5,
+    };
+    return styleSetInf;
+  };
+
   const WS = datestat.ws;
-  let colorBorder = props.sErr === "Дубликатная связь" ? "#FFFFFF" : "red";
-  let colorEnd = props.sErr === "Дубликатная связь" ? "#5B1080" : "red";
-  let styleModalEnd = styleModalEndErr(colorEnd);
-  let styleSetInf = styleSetInfErr(colorBorder);
+  let colorBackground =
+    props.sErr === "Дубликатная связь" ? "background.paper" : "#ffe16e"; // белый/жёлтый
+  //let colorEnd = props.sErr === "Дубликатная связь" ? "#5B1080" : "black";
+  let styleModalEnd = styleModalEndErr("black");
+  let styleSetInf = styleSetInfErr(colorBackground);
   let soob = flagSave
     ? "Редактирование ранее созданной связи между"
     : "Вы пытаетесть создать дубликатную связь между";

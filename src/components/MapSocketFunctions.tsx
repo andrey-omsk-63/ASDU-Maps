@@ -3,12 +3,11 @@ import { debug, WS } from "./../App";
 
 //=== SendSocket ===================================
 export const SendSocketCreatePoint = (
-  //ws: WebSocket,
   codCoord: string,
   adress: string,
-  area: number
+  subarea: number // на самом деле это подрайон
 ) => {
-  console.log("CreatePoint:", codCoord, adress);
+  console.log("CreatePoint:", adress, subarea);
 
   if (!debug) {
     const handleSendOpen = () => {
@@ -19,6 +18,7 @@ export const SendSocketCreatePoint = (
             data: {
               position: codCoord,
               name: adress,
+              area: subarea, // на самом деле это подрайон
             },
           })
         );
@@ -48,7 +48,6 @@ export const SendSocketDeletePoint = (ws: WebSocket, id: number) => {
 };
 
 export const SendSocketCreateVertex = (
-  //ws: WebSocket,
   region: number,
   area: number,
   ID: number

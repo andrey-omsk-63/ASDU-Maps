@@ -9,6 +9,8 @@ import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 
+import MapPointDataError from "./MapPointDataError";
+
 import { MapssdkNewPoint, MassrouteNewPoint } from "./../MapServiceFunctions";
 
 import { SubArea, SUBAREA, homeRegion } from "./../MainMapGl";
@@ -21,6 +23,7 @@ let subArea = -1;
 let flagInput = true;
 let massKey: string[] = [];
 let currencies: any = [];
+let soobErr = "";
 
 const MapCreatePoint = (props: {
   setOpen: any;
@@ -36,6 +39,10 @@ const MapCreatePoint = (props: {
     const { massrouteReducer } = state;
     return massrouteReducer.massroute;
   });
+  let datestat = useSelector((state: any) => {
+    const { statsaveReducer } = state;
+    return statsaveReducer.datestat;
+  });
   const dispatch = useDispatch();
   //========================================================
   const NameMode = () => {
@@ -48,6 +55,7 @@ const MapCreatePoint = (props: {
     return nameMode;
   };
 
+  const [openSetErr, setOpenSetErr] = React.useState(false);
   const [openSetAdress, setOpenSetAdress] = React.useState(true);
   const [valueAdr, setValueAdr] = React.useState("Объект" + NameMode());
   const [currency, setCurrency] = React.useState(massKey[0]);
@@ -91,35 +99,49 @@ const MapCreatePoint = (props: {
   };
 
   const handleCloseSetAdr = () => {
-    let tempId = 10001;
-    let Have = true;
-    while (Have) {
-      let have = 0;
-      for (let i = 0; i < massroute.points.length; i++) {
-        if (tempId === massroute.points[i].id) {
-          tempId++;
-          have++;
+    console.log("handleCloseSetAdr:", datestat.permitСreatPoint);
+
+    if (!datestat.permitСreatPoint) {
+      soobErr =
+        "Новую точку создовать нельзя пока не пришло подтверждение с сервера о том, что обработана информация о создании предыдущей точки";
+      setOpenSetErr(true);
+    } else {
+      let tempId = 10001;
+      let Have = true;
+      while (Have) {
+        let have = 0;
+        for (let i = 0; i < massroute.points.length; i++) {
+          if (tempId === massroute.points[i].id) {
+            tempId++;
+            have++;
+          }
         }
+        if (!have) Have = false;
       }
-      if (!have) Have = false;
+
+      massdk.push(
+        MapssdkNewPoint(REGION, props.coord, valueAdr, 0, subArea, tempId)
+      );
+
+      let rec = MassrouteNewPoint(
+        REGION,
+        props.coord,
+        valueAdr,
+        subArea,
+        tempId
+      );
+      massroute.vertexes.push(rec);
+      massroute.points.push(rec);
+
+      console.log("######:", subArea);
+      console.log(massroute, massdk);
+
+      dispatch(massdkCreate(massdk));
+      dispatch(massrouteCreate(massroute));
+      setOpenSetAdress(false);
+      props.createPoint(props.coord, true);
+      flagInput = true;
     }
-
-    massdk.push(
-      MapssdkNewPoint(REGION, props.coord, valueAdr, 0, subArea, tempId)
-    );
-
-    let rec = MassrouteNewPoint(REGION, props.coord, valueAdr, subArea, tempId);
-    massroute.vertexes.push(rec);
-    massroute.points.push(rec);
-
-    console.log("######:", subArea);
-    console.log(massroute, massdk);
-
-    dispatch(massdkCreate(massdk));
-    dispatch(massrouteCreate(massroute));
-    setOpenSetAdress(false);
-    props.createPoint(props.coord, true);
-    flagInput = true;
   };
 
   const handleCloseEnd = (event: any, reason: string) => {
@@ -184,27 +206,39 @@ const MapCreatePoint = (props: {
   };
 
   return (
-    <Modal open={openSetAdress} onClose={handleCloseEnd}>
-      <Grid item container sx={styleSetAdress}>
-        <Grid item>
-          <Grid item container sx={styleSetAdrArea}>
-            <Grid item xs={9.5}>
-              {InputSubArea()}
+    <>
+      <Modal open={openSetAdress} onClose={handleCloseEnd}>
+        <Grid item container sx={styleSetAdress}>
+          <Grid item>
+            <Grid item container sx={styleSetAdrArea}>
+              <Grid item xs={9.5}>
+                {InputSubArea()}
+              </Grid>
             </Grid>
-          </Grid>
-          <Grid item container sx={styleSetAdrID}>
-            <Grid item xs={9.5}>
-              {InputAdress()}
-            </Grid>
-            <Grid item xs={2.2}>
-              <Button sx={styleInpKnop} onClick={handleCloseSetAdr}>
-                Ввод
-              </Button>
+            <Grid item container sx={styleSetAdrID}>
+              <Grid item xs={9.5}>
+                {InputAdress()}
+              </Grid>
+              <Grid item xs={2.2}>
+                <Button sx={styleInpKnop} onClick={handleCloseSetAdr}>
+                  Ввод
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
-      </Grid>
-    </Modal>
+      </Modal>
+      {openSetErr && (
+        <MapPointDataError
+          sErr={soobErr}
+          setOpen={setOpenSetErr}
+          fromCross={0}
+          toCross={0}
+          update={0}
+          setSvg={{}}
+        />
+      )}
+    </>
   );
 };
 
