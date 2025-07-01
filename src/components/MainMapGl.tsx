@@ -39,10 +39,7 @@ import { FillMassRouteContent, InputMenuPK } from "./MapServiceFunctions";
 import { InputMenuForm, MasrouteAgreeMap } from "./MapServiceFunctions";
 import { PreparCurrenciesMode, CenterCoordBegin } from "./MapServiceFunctions";
 import { PreparCurrenciesForm, InputMenuMODE } from "./MapServiceFunctions";
-import {
-  PreparCurrenciesPK,
-  //SubareaFindById
-} from "./MapServiceFunctions";
+import { PreparCurrenciesPK } from "./MapServiceFunctions";
 import { PreparCurrenciesCalc, InputMenuCalc } from "./MapServiceFunctions";
 import { PreparCurrenciesOptim, InputMenuOptim } from "./MapServiceFunctions";
 import { CalculatNullWays } from "./MapServiceFunctions";
@@ -310,11 +307,11 @@ const MainMap = (props: {
         dispatch(massrouteCreate(massroute));
         dispatch(massrouteproCreate(massroutepro));
         if (!massroute.vertexes[pointAaIndex].lin) {
-          SendSocketCreateWayFromPoint(WS, fromCross, toCross, mass, aRou);
+          SendSocketCreateWayFromPoint(fromCross, toCross, mass, aRou);
         } else {
           if (!massroute.vertexes[pointBbIndex].lin) {
-            SendSocketCreateWayToPoint(WS, fromCross, toCross, mass, aRou);
-          } else SendSocketCreateWay(WS, fromCross, toCross, mass, aRou);
+            SendSocketCreateWayToPoint(fromCross, toCross, mass, aRou);
+          } else SendSocketCreateWay(fromCross, toCross, mass, aRou);
         }
         setFlagPro(true); //включение протокола
       }
@@ -708,7 +705,10 @@ const MainMap = (props: {
     needLinkBind = false;
   };
 
-  const UpdateAddRoute = () => ymaps && addRoute(ymaps); // перерисовка связей
+  const UpdateAddRoute = () => {
+    flagDemo && FillMassRoute();
+    ymaps && addRoute(ymaps); // перерисовка связей
+  };
 
   const handleCloseDel = (mode: boolean) => {
     if (mode) {
@@ -889,18 +889,21 @@ const MainMap = (props: {
     if (props.region) homeRegion = props.region;
     if (!props.region && massroute.vertexes.length)
       homeRegion = massroute.vertexes[0].region;
+    massroute.vertexes = MasrouteAgreeMap(massroute); // замена area на subarea
     for (let i = 0; i < massroute.points.length; i++)
       massroute.vertexes.push(massroute.points[i]); // дописывание инф-ии о точках в массив перекрёстков
-
-    console.log("000Massroute:", JSON.parse(JSON.stringify(massroute)));
-
-    massroute.vertexes = MasrouteAgreeMap(massroute); // замена area на subarea
-
-    console.log(
-      "!!!Massroute:",
-      homeRegion,
-      JSON.parse(JSON.stringify(massroute))
-    );
+    if (debug) {
+      // замена area на subarea в ways
+      for (let i = 0; i < massroute.ways.length; i++) {
+        for (let j = 0; j < massroute.vertexes.length; j++) {
+          if (massroute.vertexes[j].id === massroute.ways[i].sourceID)
+            massroute.ways[i].sourceArea = massroute.vertexes[j].area;
+          if (massroute.vertexes[j].id === massroute.ways[i].targetID)
+            massroute.ways[i].targetArea = massroute.vertexes[j].area;
+        }
+      }
+    }
+    console.log("!!!Massroute:", JSON.parse(JSON.stringify(massroute)));
 
     for (let i = 0; i < massroute.vertexes.length; i++) {
       if (massroute.vertexes[i].region === homeRegion) {

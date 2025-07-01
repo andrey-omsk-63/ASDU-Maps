@@ -81,7 +81,7 @@ const MapViewPK = (props: {
       let nameVert = "";
       for (let j = 0; j < massroute.vertexes.length; j++) {
         if (
-          massroute.vertexes[j].area === plan.areaPK &&
+          massroute.vertexes[j].area === plan.subareaPK &&
           massroute.vertexes[j].id === planCoordPlan.id
         ) {
           nameVert = massroute.vertexes[j].name;

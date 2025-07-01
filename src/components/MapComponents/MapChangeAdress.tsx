@@ -9,6 +9,8 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 
+import { TypeDefinit } from "./../MapServiceFunctions";
+
 import { SendSocketDeletePoint } from "./../MapSocketFunctions";
 import { SocketDeleteWay } from "./../MapSocketFunctions";
 import { SendSocketCreateWayFromPoint } from "./../MapSocketFunctions";
@@ -16,6 +18,8 @@ import { SendSocketCreateWayToPoint } from "./../MapSocketFunctions";
 
 import { styleSet, styleInpKnop, styleSetAdress } from "./../MainMapStyle";
 import { styleBoxForm } from "./../MainMapStyle";
+
+import { debug } from "./../MainMapGl";
 
 let reqRoute: any = {
   dlRoute: 0,
@@ -79,7 +83,7 @@ const MapChangeAdress = (props: {
   const handleCloseSetAdr = () => {
     if (massdk[props.iP].nameCoordinates !== valuen) {
       const handleSendOpen = () => {
-        if (WS.url !== "wss://localhost:3000/W") {
+        if (!debug) {
           if (WS.readyState === WebSocket.OPEN) {
             WS.send(
               JSON.stringify({
@@ -114,14 +118,14 @@ const MapChangeAdress = (props: {
           massroute.ways[i].sourceID === idPoint
         ) {
           massWays.push(massroute.ways[i]);
-          SocketDeleteWay(WS, massroute.ways[i]);
+          SocketDeleteWay(massroute, i);
         }
         if (
           !massroute.ways[i].targetArea &&
           massroute.ways[i].targetID === idPoint
         ) {
           massWays.push(massroute.ways[i]);
-          SocketDeleteWay(WS, massroute.ways[i]);
+          SocketDeleteWay(massroute, i);
         }
       }
       SendSocketDeletePoint(WS, idPoint);
@@ -151,23 +155,11 @@ const MapChangeAdress = (props: {
         massBind[1] = massWays[i].ltarget;
         reqRoute.dlRoute = massWays[i].lenght;
         reqRoute.tmRoute = massWays[i].time;
-        if (!massWays[i].sourceArea) {
-          SendSocketCreateWayFromPoint(
-            WS,
-            fromCross,
-            toCross,
-            massBind,
-            reqRoute
-          );
-        } else {
-          SendSocketCreateWayToPoint(
-            WS,
-            fromCross,
-            toCross,
-            massBind,
-            reqRoute
-          );
-        }
+        // if (!massWays[i].sourceArea) {
+        if (!TypeDefinit(massroute, massWays[i].sourceID)) {
+          SendSocketCreateWayFromPoint(fromCross, toCross, massBind, reqRoute);
+        } else
+          SendSocketCreateWayToPoint(fromCross, toCross, massBind, reqRoute);
       }
       props.zero(false); // очищение списка связей
       props.Cl(false); // закрытие меню работы с точками

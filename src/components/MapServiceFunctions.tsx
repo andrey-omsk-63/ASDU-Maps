@@ -54,7 +54,7 @@ import {
   homeRegion,
 } from "./MainMapGl";
 import { OUTGO } from "./MapConst";
-import { WS, dateMapGl } from "./../App";
+import { dateMapGl } from "./../App";
 
 export const handleKey = (event: any) => {
   if (event.key === "Enter") event.preventDefault();
@@ -112,7 +112,6 @@ export const MasrouteAgreeMap = (massroute: any) => {
       for (let j = 0; j < dateMapGl.tflight.length; j++) {
         if (
           massroute.vertexes[i].region === homeRegion &&
-          
           massroute.vertexes[i].id === dateMapGl.tflight[j].ID
         ) {
           let rec: any = { ...massroute.vertexes[i] };
@@ -126,7 +125,7 @@ export const MasrouteAgreeMap = (massroute: any) => {
     }
   }
 
-  if (!mass.lenght) mass = massroute.vertexes; // костыль, потом убрать
+  if (!mass.length) mass = massroute.vertexes; // костыль, потом убрать
 
   return mass;
 };
@@ -235,7 +234,7 @@ export const MakeFromCross = (mass: any) => {
     pointAcod: "",
   };
   fromCross.pointAaRegin = mass.region.toString();
-  fromCross.pointAaArea = mass.area.toString();
+  fromCross.pointAaArea = mass.subarea.toString();
   fromCross.pointAaID = mass.ID;
   return fromCross;
 };
@@ -248,7 +247,7 @@ export const MakeToCross = (mass: any) => {
     pointBcod: "",
   };
   toCross.pointBbRegin = mass.region.toString();
-  toCross.pointBbArea = mass.area.toString();
+  toCross.pointBbArea = mass.subarea.toString();
   toCross.pointBbID = mass.ID;
   return toCross;
 };
@@ -350,13 +349,14 @@ export const DelPointVertexContent = (
   let regionV = massroute.vertexes[idxDel].region.toString();
   let areaV = massroute.vertexes[idxDel].area.toString();
   areaV === "0" && SendSocketDeletePoint(WS, idPoint); // объкт
-  areaV !== "0" && SendSocketDeleteVertex(WS, regionV, areaV, idPoint); // светофор
+  areaV !== "0" && SendSocketDeleteVertex(regionV, areaV, idPoint); // светофор
   for (let i = 0; i < massroute.ways.length; i++) {
     let iffer =
       coordPoint !== massroute.ways[i].starts &&
       coordPoint !== massroute.ways[i].stops;
     iffer && massRouteRab.push(massroute.ways[i]);
-    !iffer && SocketDeleteWay(WS, massroute.ways[i]);
+    //!iffer && SocketDeleteWay(WS, massroute.ways[i]);
+    !iffer && SocketDeleteWay(massroute, i);
   }
   return massRouteRab;
 };
@@ -1195,8 +1195,8 @@ export const СontentModalPressBalloon = (
 };
 
 export const MasskPoint = (massrouteVertexes: any) => {
-  if (massrouteVertexes.id === 42 || massrouteVertexes.id === 61)
-    console.log("MasskPoint:", massrouteVertexes);
+  // if (massrouteVertexes.id === 42 || massrouteVertexes.id === 61)
+  //   console.log("MasskPoint:", massrouteVertexes);
 
   let masskPoint: Pointer = {
     ID: massrouteVertexes.id,
@@ -2600,6 +2600,18 @@ export const FooterContent = (SaveForm: Function) => {
   );
 };
 //=====================================================================
+export const TypeDefinit = (massroute: any, id: number) => {
+  // определение типа - точка или пререкрёсток (null - точка)
+  let type: any = null;
+  for (let i = 0; i < massroute.vertexes.length; i++) {
+    if (massroute.vertexes[i].id === id) {
+      type = massroute.vertexes[i].lin;
+      break;
+    }
+  }
+  return type;
+};
+
 export const CalculatNullWays = (
   ymaps: any,
   mapp: any,
@@ -2638,16 +2650,18 @@ export const CalculatNullWays = (
             let duration = activeRoute.properties.get("duration").value;
             rec.time = reqRoute.tmRoute = Math.round(duration); // время прохождения
             // запись в базу
-            if (!rec.sourceArea) {
-              SendSocketDeleteWayFromPoint(WS, pAa, pBb);
-              SendSocketCreateWayFromPoint(WS, pAa, pBb, massBind, reqRoute);
+            //if (!rec.sourceArea) {
+              if (!TypeDefinit(massroute, rec.sourceID)) {
+              SendSocketDeleteWayFromPoint(pAa, pBb);
+              SendSocketCreateWayFromPoint(pAa, pBb, massBind, reqRoute);
             } else {
-              if (!rec.targetArea) {
-                SendSocketDeleteWayToPoint(WS, pAa, pBb);
-                SendSocketCreateWayToPoint(WS, pAa, pBb, massBind, reqRoute);
+              //if (!rec.targetArea) {
+              if (!TypeDefinit(massroute, rec.targetID)) {
+                SendSocketDeleteWayToPoint(pAa, pBb);
+                SendSocketCreateWayToPoint(pAa, pBb, massBind, reqRoute);
               } else {
-                SendSocketDeleteWay(WS, pAa, pBb);
-                SendSocketCreateWay(WS, pAa, pBb, massBind, reqRoute);
+                SendSocketDeleteWay(pAa, pBb);
+                SendSocketCreateWay(pAa, pBb, massBind, reqRoute);
               }
             }
             Have++;
@@ -2675,3 +2689,4 @@ export const CalculatNullWays = (
     ReadyRoute();
   }
 };
+

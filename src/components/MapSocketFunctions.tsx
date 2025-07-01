@@ -1,5 +1,7 @@
-import { Way } from "./../interfaceRoute";
+//import { Way } from "./../interfaceRoute";
 import { debug, WS } from "./../App";
+
+import { TypeDefinit } from "./MapServiceFunctions";
 
 //=== SendSocket ===================================
 export const SendSocketCreatePoint = (
@@ -78,15 +80,16 @@ export const SendSocketCreateVertex = (
 };
 
 export const SendSocketDeleteVertex = (
-  ws: WebSocket,
   region: string,
   area: string,
   id: number
 ) => {
-  const handleSendOpen = () => {
-    if (ws.url !== "wss://localhost:3000/W") {
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.send(
+  console.log("DeleteVertex:", area, id);
+
+  if (!debug) {
+    const handleSendOpen = () => {
+      if (WS.readyState === WebSocket.OPEN) {
+        WS.send(
           JSON.stringify({ type: "deleteVertex", data: { region, area, id } })
         );
       } else {
@@ -94,22 +97,23 @@ export const SendSocketDeleteVertex = (
           handleSendOpen();
         }, 100);
       }
-    }
-  };
-  handleSendOpen();
+    };
+    handleSendOpen();
+  }
 };
 
 export const SendSocketCreateWay = (
-  ws: WebSocket,
   fromCr: any,
   toCr: any,
   massBind: Array<number>,
   reqRoute: any
 ) => {
-  const handleSendOpen = () => {
-    if (ws.url !== "wss://localhost:3000/W") {
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.send(
+  console.log("CreateWay:", fromCr, toCr);
+
+  if (!debug) {
+    const handleSendOpen = () => {
+      if (WS.readyState === WebSocket.OPEN) {
+        WS.send(
           JSON.stringify({
             type: "createWay",
             data: {
@@ -135,16 +139,18 @@ export const SendSocketCreateWay = (
           handleSendOpen();
         }, 100);
       }
-    }
-  };
-  handleSendOpen();
+    };
+    handleSendOpen();
+  }
 };
 
-export const SendSocketDeleteWay = (ws: WebSocket, fromCr: any, toCr: any) => {
-  const handleSendOpen = () => {
-    if (ws.url !== "wss://localhost:3000/W") {
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.send(
+export const SendSocketDeleteWay = (fromCr: any, toCr: any) => {
+  console.log("DeleteWay:", fromCr, toCr);
+
+  if (!debug) {
+    const handleSendOpen = () => {
+      if (WS.readyState === WebSocket.OPEN) {
+        WS.send(
           JSON.stringify({
             type: "deleteWay",
             data: {
@@ -166,24 +172,23 @@ export const SendSocketDeleteWay = (ws: WebSocket, fromCr: any, toCr: any) => {
           handleSendOpen();
         }, 100);
       }
-    }
-  };
-  handleSendOpen();
+    };
+    handleSendOpen();
+  }
 };
 
 export const SendSocketCreateWayFromPoint = (
-  ws: WebSocket,
   fromCr: any,
   toCr: any,
   massBind: Array<number>,
   reqRoute: any
 ) => {
-  console.log("CreateWayFromPoint:", fromCr, toCr, massBind, reqRoute);
+  console.log("CreateWayFromPoint:", fromCr, toCr, massBind);
 
-  const handleSendOpen = () => {
-    if (ws.url !== "wss://localhost:3000/W") {
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.send(
+  if (!debug) {
+    const handleSendOpen = () => {
+      if (WS.readyState === WebSocket.OPEN) {
+        WS.send(
           JSON.stringify({
             type: "createWayFromPoint",
             data: {
@@ -205,20 +210,18 @@ export const SendSocketCreateWayFromPoint = (
           handleSendOpen();
         }, 100);
       }
-    }
-  };
-  handleSendOpen();
+    };
+    handleSendOpen();
+  }
 };
 
-export const SendSocketDeleteWayFromPoint = (
-  ws: WebSocket,
-  fromCr: any,
-  toCr: any
-) => {
-  const handleSendOpen = () => {
-    if (ws.url !== "wss://localhost:3000/W") {
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.send(
+export const SendSocketDeleteWayFromPoint = (fromCr: any, toCr: any) => {
+  console.log("DeleteWayFromPoint:", fromCr, toCr);
+
+  if (!debug) {
+    const handleSendOpen = () => {
+      if (WS.readyState === WebSocket.OPEN) {
+        WS.send(
           JSON.stringify({
             type: "deleteWayFromPoint",
             data: {
@@ -236,22 +239,23 @@ export const SendSocketDeleteWayFromPoint = (
           handleSendOpen();
         }, 100);
       }
-    }
-  };
-  handleSendOpen();
+    };
+    handleSendOpen();
+  }
 };
 
 export const SendSocketCreateWayToPoint = (
-  ws: WebSocket,
   fromCr: any,
   toCr: any,
   massBind: Array<number>,
   reqRoute: any
 ) => {
-  const handleSendOpen = () => {
-    if (ws.url !== "wss://localhost:3000/W") {
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.send(
+  console.log("CreateWayToPoint:", fromCr, toCr);
+
+  if (!debug) {
+    const handleSendOpen = () => {
+      if (WS.readyState === WebSocket.OPEN) {
+        WS.send(
           JSON.stringify({
             type: "createWayToPoint",
             data: {
@@ -273,20 +277,18 @@ export const SendSocketCreateWayToPoint = (
           handleSendOpen();
         }, 100);
       }
-    }
-  };
-  handleSendOpen();
+    };
+    handleSendOpen();
+  }
 };
 
-export const SendSocketDeleteWayToPoint = (
-  ws: WebSocket,
-  fromCr: any,
-  toCr: any
-) => {
-  const handleSendOpen = () => {
-    if (ws.url !== "wss://localhost:3000/W") {
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.send(
+export const SendSocketDeleteWayToPoint = (fromCr: any, toCr: any) => {
+  console.log("DeleteWayToPoint:", fromCr, toCr);
+
+  if (!debug) {
+    const handleSendOpen = () => {
+      if (WS.readyState === WebSocket.OPEN) {
+        WS.send(
           JSON.stringify({
             type: "deleteWayToPoint",
             data: {
@@ -305,9 +307,9 @@ export const SendSocketDeleteWayToPoint = (
           handleSendOpen();
         }, 100);
       }
-    }
-  };
-  handleSendOpen();
+    };
+    handleSendOpen();
+  }
 };
 
 export const SendSocketGetSvg = (
@@ -351,7 +353,8 @@ export const SendSocketGetSvg = (
   handleSendOpen();
 };
 //==================================================
-export const SocketDeleteWay = (WS: WebSocket, ways: Way) => {
+export const SocketDeleteWay = (massroute: any, i: number) => {
+  let ways = massroute.ways[i]
   let fromCross: any = {
     pointAaRegin: "",
     pointAaArea: "",
@@ -373,19 +376,19 @@ export const SocketDeleteWay = (WS: WebSocket, ways: Way) => {
   toCross.pointBbArea = ways.targetArea.toString();
   toCross.pointBbID = ways.targetID;
   toCross.pointBcod = ways.stops;
-  if (ways.sourceArea === 0) {
-    SendSocketDeleteWayFromPoint(WS, fromCross, toCross);
+  // if (ways.sourceArea === 0) {
+  if (!TypeDefinit(massroute,ways.sourceID)) {
+    SendSocketDeleteWayFromPoint(fromCross, toCross);
   } else {
-    if (ways.targetArea === 0) {
-      SendSocketDeleteWayToPoint(WS, fromCross, toCross);
+    // if (ways.targetArea === 0) {
+    if (!TypeDefinit(massroute,ways.targetID)) {
+      SendSocketDeleteWayToPoint(fromCross, toCross);
     } else {
-      SendSocketDeleteWay(WS, fromCross, toCross);
+      SendSocketDeleteWay(fromCross, toCross);
     }
   }
 };
-
 //=== SoobErrorSocket ==============================
-
 export const SoobErrorCreateWay = (data: any) => {
   let soob =
     "Произошла ошибка при создании связи перекрёстка (район:" +

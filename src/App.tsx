@@ -149,44 +149,35 @@ const App = () => {
   const [trigger, setTrigger] = React.useState(false);
   const [svg, setSvg] = React.useState<any>(null);
 
-  const FilterArea = React.useCallback(
+  const FilterMapInfo = React.useCallback(
     (data: any) => {
+      console.log("MAP:", homeRegion, ZONE, JSON.parse(JSON.stringify(data)));
       dateMapGl = data;
-
-      console.log(
-        "1FilterArea:",
-        homeRegion,
-        homeRegion.toString(),
-        typeof homeRegion,
-        JSON.parse(JSON.stringify(dateMapGl))
-      );
-
       if (homeRegion) {
         dateMapGl.tflight = dateMapGl.tflight.filter(
           (user: { region: { num: any } }) =>
             user.region.num === homeRegion.toString()
         );
       }
-
-      //(user) => user.region.num ===  homeRegion.toString()
-
-      console.log(
-        "!2FilterArea:",
-        homeRegion,
-        ZONE,
-        JSON.parse(JSON.stringify(dateMapGl))
-      );
-
       if (ZONE) {
         dateMapGl.tflight = dateMapGl.tflight.filter(
           (user: { area: { num: string } }) => user.area.num === ZONE.toString()
         );
       }
+      //console.log("!3FilterArea:", JSON.parse(JSON.stringify(dateMapGl)));
       dispatch(mapCreate(dateMapGl));
       setFindMapInfo(true);
     },
     [dispatch]
   );
+  const FilterGraphInfo = React.useCallback(() => {
+    //console.log("1dateRouteGl:", ZONE, JSON.parse(JSON.stringify(dateRouteGl)));
+    if (ZONE) {
+      dateRouteGl.vertexes = dateRouteGl.vertexes.filter(
+        (user: { area: number }) => user.area === ZONE
+      );
+    }
+  }, []);
 
   const Initialisation = () => {
     // достать начальный zoom Yandex-карты Map из LocalStorage
@@ -238,8 +229,7 @@ const App = () => {
       console.log("пришло:", allData.type, data);
       switch (allData.type) {
         case "mapInfo":
-          FilterArea(data); // берём в работу заданный район
-          //FilterArea(dataMap); // берём в работу заданный район === костыль, потом убрать ================================
+          FilterMapInfo(data); // берём в работу заданный район и регион
           break;
         case "graphInfo":
           let pointRab = JSON.parse(JSON.stringify(data));
@@ -251,6 +241,7 @@ const App = () => {
           if (dateRouteGl.points === null) dateRouteGl.points = [];
           if (dateRouteGl.vertexes === null) dateRouteGl.vertexes = [];
           if (dateRouteGl.ways === null) dateRouteGl.ways = [];
+          FilterGraphInfo();
           dispatch(massrouteCreate(dateRouteGl));
           dispatch(massrouteproCreate(dateRouteProGl));
           setFindGraphInfo(true);
@@ -365,33 +356,37 @@ const App = () => {
           console.log("data_default:", data);
       }
     };
-  }, [dispatch, massdk, coordinates, svg, trigger, FilterArea]);
+  }, [
+    dispatch,
+    massdk,
+    coordinates,
+    svg,
+    trigger,
+    FilterMapInfo,
+    FilterGraphInfo,
+  ]);
 
   if (dateStat.debug && flagOpen) {
     console.log("РЕЖИМ ОТЛАДКИ!!!");
+    flagOpen = false;
     let road =
       window.location.origin.slice(0, 22) === "https://localhost:3000"
         ? "https://localhost:3000/"
         : "./";
-    FilterArea(dataMap); // берём в работу заданный район
+    FilterMapInfo(dataMap); // берём в работу заданный район и регион
     dateRouteGl = { ...dataRoute.data };
     // массив протоколов
     dateRouteProGl = { ...dataRoute.data };
     dateRouteProGl.points = [];
     dateRouteProGl.vertexes = [];
     dateRouteProGl.ways = [];
-
-    flagOpen = false;
-
-    //for (let i = 0; i < dateRouteGl.vertex.length; i++) {}
-
+    FilterGraphInfo();
     dispatch(massrouteCreate(dateRouteGl));
     dispatch(massrouteproCreate(dateRouteProGl));
 
     axios.get(road + "otladkaPlans.json").then(({ data }) => {
       datePlan = data.data;
       dispatch(massplanCreate(datePlan));
-      //console.log("datePlan:", datePlan);
     });
     axios.get(road + "examplSvg0.svg").then(({ data }) => {
       dateStat.exampleImg1 = data;

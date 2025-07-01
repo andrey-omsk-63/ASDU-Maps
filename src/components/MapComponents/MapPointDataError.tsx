@@ -11,7 +11,7 @@ import MapRouteBind from "./MapRouteBind";
 
 import { questionForDelete, HeadDoublError } from "./../MapServiceFunctions";
 import { InputerDlTm, СontentStrErr } from "./../MapServiceFunctions";
-import { StrokaMenuErr, BadExit } from "./../MapServiceFunctions";
+import { StrokaMenuErr, BadExit, TypeDefinit } from "./../MapServiceFunctions";
 
 import { SendSocketDeleteWay } from "./../MapSocketFunctions";
 import { SendSocketDeleteWayFromPoint } from "./../MapSocketFunctions";
@@ -62,8 +62,7 @@ const MapPointDataError = (props: {
   update: any;
   setSvg: any;
 }) => {
-  console.log("MapPointDataError:", props.sErr, props.fromCross, props.toCross);
-
+  //console.log("MapPointDataError:", props.sErr, props.fromCross, props.toCross);
   //== Piece of Redux =======================================
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
@@ -91,7 +90,6 @@ const MapPointDataError = (props: {
       top: "50%",
       transform: "translate(-50%, -50%)",
       width: 430,
-      //bgcolor: "background.paper",
       bgcolor: background,
       border: "1px solid #fff",
       borderColor: background,
@@ -133,6 +131,9 @@ const MapPointDataError = (props: {
         break;
       }
     }
+
+    //console.log("###:", index);
+
     sec = massroute.ways[index].time;
     tmRouteBegin = sec;
     dlRouteBegin = dlRoute1;
@@ -218,12 +219,14 @@ const MapPointDataError = (props: {
   const handleCloseDel = (mode: number) => {
     if (mode === 1) {
       DeleteWay();
-      if (props.fromCross.pointAaArea === "0") {
-        SendSocketDeleteWayFromPoint(WS, props.fromCross, props.toCross);
+      // if (props.fromCross.pointAaArea === "0") {
+      if (!TypeDefinit(massroute, props.fromCross.pointAaID)) {
+        SendSocketDeleteWayFromPoint(props.fromCross, props.toCross);
       } else {
-        if (props.toCross.pointBbArea === "0") {
-          SendSocketDeleteWayToPoint(WS, props.fromCross, props.toCross);
-        } else SendSocketDeleteWay(WS, props.fromCross, props.toCross);
+        // if (props.toCross.pointBbArea === "0") {
+        if (!TypeDefinit(massroute, props.toCross.pointBbID)) {
+          SendSocketDeleteWayToPoint(props.fromCross, props.toCross);
+        } else SendSocketDeleteWay(props.fromCross, props.toCross);
       }
     }
     handleCloseEnd();
@@ -239,16 +242,18 @@ const MapPointDataError = (props: {
     dispatch(massrouteCreate(massroute));
     let frCr = props.fromCross;
     let toCr = props.toCross;
-    if (props.fromCross.pointAaArea === "0") {
-      SendSocketDeleteWayFromPoint(WS, frCr, toCr);
-      SendSocketCreateWayFromPoint(WS, frCr, toCr, massBindNew, reqRoute);
+    //if (props.fromCross.pointAaArea === "0") {
+    if (!TypeDefinit(massroute, props.fromCross.pointAaID)) {
+      SendSocketDeleteWayFromPoint(frCr, toCr);
+      SendSocketCreateWayFromPoint(frCr, toCr, massBindNew, reqRoute);
     } else {
-      if (props.toCross.pointBbArea === "0") {
-        SendSocketDeleteWayToPoint(WS, frCr, props.toCross);
-        SendSocketCreateWayToPoint(WS, frCr, toCr, massBindNew, reqRoute);
+      //if (props.toCross.pointBbArea === "0") {
+      if (!TypeDefinit(massroute, props.toCross.pointBbID)) {
+        SendSocketDeleteWayToPoint(frCr, props.toCross);
+        SendSocketCreateWayToPoint(frCr, toCr, massBindNew, reqRoute);
       } else {
-        SendSocketDeleteWay(WS, frCr, props.toCross);
-        SendSocketCreateWay(WS, frCr, toCr, massBindNew, reqRoute);
+        SendSocketDeleteWay(frCr, props.toCross);
+        SendSocketCreateWay(frCr, toCr, massBindNew, reqRoute);
       }
     }
     handleCloseEnd();
