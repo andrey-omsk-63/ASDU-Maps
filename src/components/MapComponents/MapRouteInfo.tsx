@@ -129,13 +129,13 @@ const MapRouteInfo = (props: {
           <Box sx={{ color: "#5B1080" }}>
             <b>Исходящая точка связи:</b> <br />
           </Box>
-          Район: <b>{massdk[props.idxA].area}</b>
+          Подрайон: <b>{massdk[props.idxA].subarea}</b>
           &nbsp;ID:&nbsp;<b>{massdk[props.idxA].ID}</b> <br />
           {massdk[props.idxA].nameCoordinates} <br /> <br />
           <Box sx={{ color: "#5B1080" }}>
             <b>Входящая точка связи:</b> <br />
           </Box>
-          Pайон: <b>{massdk[props.idxB].area}</b>
+          Подрайон: <b>{massdk[props.idxB].subarea}</b>
           &nbsp;ID:&nbsp;<b>{massdk[props.idxB].ID}</b> <br />
           {massdk[props.idxB].nameCoordinates} <br /> <br />
         </Box>

@@ -192,8 +192,7 @@ const MapRouteBind = (props: {
   };
 
   const handleCloseGood = () => {
-    console.log("Good:",massTotal);
-
+    //console.log("Good:",massTotal);
     props.func(true, massBind);
     CloseEnd();
   };
@@ -225,11 +224,11 @@ const MapRouteBind = (props: {
       ReplaceSizeImg();
     }
     SvgA = SvgB = true;
-    if (!massroute.vertexes[props.idxA].area) {
+    if (!massroute.vertexes[props.idxA].lin) {
       SvgA = false;
       massBind[0] = 0;
     }
-    if (!massroute.vertexes[props.idxB].area) {
+    if (!massroute.vertexes[props.idxB].lin) {
       SvgB = false;
       massBind[1] = 0;
     }

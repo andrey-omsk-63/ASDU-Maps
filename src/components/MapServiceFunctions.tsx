@@ -53,7 +53,7 @@ import {
   AREA,
   homeRegion,
 } from "./MainMapGl";
-import { OUTGO } from "./MapConst";
+import { OUTGO, FromCross, ToCross } from "./MapConst";
 import { dateMapGl } from "./../App";
 
 export const handleKey = (event: any) => {
@@ -228,27 +228,27 @@ export const FillMassRouteContent = (
 
 export const MakeFromCross = (mass: any) => {
   let fromCross: any = {
-    pointAaRegin: "",
-    pointAaArea: "",
-    pointAaID: 0,
+    pointAaRegin: mass.region.toString(),
+    pointAaArea: mass.subarea.toString(),
+    pointAaID: mass.ID,
     pointAcod: "",
   };
-  fromCross.pointAaRegin = mass.region.toString();
-  fromCross.pointAaArea = mass.subarea.toString();
-  fromCross.pointAaID = mass.ID;
+  // fromCross.pointAaRegin = mass.region.toString();
+  // fromCross.pointAaArea = mass.subarea.toString();
+  // fromCross.pointAaID = mass.ID;
   return fromCross;
 };
 
 export const MakeToCross = (mass: any) => {
   let toCross: any = {
-    pointBbRegin: "",
-    pointBbArea: "",
-    pointBbID: 0,
+    pointBbRegin: mass.region.toString(),
+    pointBbArea: mass.subarea.toString(),
+    pointBbID: mass.ID,
     pointBcod: "",
   };
-  toCross.pointBbRegin = mass.region.toString();
-  toCross.pointBbArea = mass.subarea.toString();
-  toCross.pointBbID = mass.ID;
+  // toCross.pointBbRegin = mass.region.toString();
+  // toCross.pointBbArea = mass.subarea.toString();
+  // toCross.pointBbID = mass.ID;
   return toCross;
 };
 
@@ -319,8 +319,31 @@ export const SaveZoom = (zoom: number, pointCenter: Array<number>) => {
   //console.log("SaveZoom:", pointCenter);
 };
 
+export const TypeDefinit = (massroute: any, id: number) => {
+  // определение типа - точка или пререкрёсток (null - точка)
+  let type: any = null;
+  for (let i = 0; i < massroute.vertexes.length; i++) {
+    if (massroute.vertexes[i].id === id) {
+      type = massroute.vertexes[i].lin;
+      break;
+    }
+  }
+  return type;
+};
+
+export const AreaDefinit = (massdk: any, id: number) => {
+  // определение района по ID
+  let area = -1;
+  for (let i = 0; i < massdk.length; i++) {
+    if (massdk[i].ID === id) {
+      area = massdk[i].area;
+      break;
+    }
+  }
+  return area;
+};
+
 export const MakeNewPointContent = (
-  //WS: any,
   coords: any,
   avail: boolean,
   homeRegion: number,
@@ -338,18 +361,15 @@ export const MakeNewPointContent = (
   !lin && SendSocketCreatePoint(coor, adress, areaV); // объект
 };
 
-export const DelPointVertexContent = (
-  WS: any,
-  massroute: any,
-  idxDel: number
-) => {
+export const DelPointVertexContent = (massroute: any, idxDel: number) => {
   let massRouteRab: any = []; // удаление из массива сети связей
   let coordPoint = massroute.vertexes[idxDel].dgis;
   let idPoint = massroute.vertexes[idxDel].id;
   let regionV = massroute.vertexes[idxDel].region.toString();
   let areaV = massroute.vertexes[idxDel].area.toString();
-  areaV === "0" && SendSocketDeletePoint(WS, idPoint); // объкт
-  areaV !== "0" && SendSocketDeleteVertex(regionV, areaV, idPoint); // светофор
+  let lin = massroute.vertexes[idxDel].lin;
+  !lin && SendSocketDeletePoint(idPoint); // объект
+  lin && SendSocketDeleteVertex(regionV, areaV, idPoint); // светофор
   for (let i = 0; i < massroute.ways.length; i++) {
     let iffer =
       coordPoint !== massroute.ways[i].starts &&
@@ -457,6 +477,26 @@ export const PreparCurrenciesForm = () => {
   return currencies;
 };
 
+export const PreparCurrenciesWay = () => {
+  const currencies: any = [];
+  let dat = [
+    "Обработка новой связи:",
+    "● Сохранение связи",
+    "● Отмена связи",
+    "● Реверc связи",
+    "● Редактирование связи",
+  ];
+  let massKey: any = [];
+  let massDat: any = [];
+  for (let key in dat) {
+    massKey.push(key);
+    massDat.push(dat[key]);
+  }
+  for (let i = 0; i < massKey.length; i++)
+    currencies.push({ value: massKey[i], label: massDat[i] });
+  return currencies;
+};
+
 export const PreparCurrencies = () => {
   const currencies: any = [];
   let dat: Array<string> = [];
@@ -471,12 +511,12 @@ export const PreparCurrencies = () => {
   }
   for (let i = 0; i < massKey.length; i++)
     currencies.push({ value: massKey[i], label: massDat[i] });
-  //if (debug) {
+
   currencies.push({
     value: (massKey.length + 1).toString(),
     label: "● Добавить подрайон",
   });
-  //}
+
   return currencies;
 };
 
@@ -681,6 +721,75 @@ export const InputMenuPK = (func: any, currency: any, currencies: any) => {
                 sx={{
                   color: option.label === "ПК и модели:" ? "blue" : "black",
                   cursor: option.label === "ПК и модели:" ? "none" : "pointer",
+                }}
+              >
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Box>
+      </Box>
+    </>
+  );
+};
+
+export const InputMenuWay = (func: any, currency: any, currencies: any) => {
+  const styleSet = {
+    width: "175px",
+    maxHeight: "2px",
+    minHeight: "2px",
+    marginLeft: 0.3,
+    bgcolor: "#BAE186", // салатовый
+    border: "1px solid #93D145", // тёмно салатовый
+    borderRadius: 1,
+    textAlign: "center",
+    p: 1.25,
+    boxShadow: 6,
+  };
+
+  const styleBoxForm = {
+    "& > :not(style)": {
+      marginTop: "-10px",
+      marginLeft: "-15px",
+      width: "200px",
+    },
+  };
+
+  return (
+    <>
+      <Box sx={styleSet}>
+        <Box component="form" sx={styleBoxForm}>
+          <TextField
+            select
+            size="small"
+            onKeyPress={handleKey} //отключение Enter
+            value={currency}
+            onChange={func}
+            InputProps={{
+              disableUnderline: true,
+              style: {
+                fontWeight: 700,
+                color: currency === "0" ? "blue" : "black",
+                marginLeft: 10,
+                fontSize: 14,
+              },
+            }}
+            variant="standard"
+            color="secondary"
+          >
+            {currencies.map((option: any) => (
+              <MenuItem
+                key={option.value}
+                value={option.value}
+                sx={{
+                  color:
+                    option.label === "Обработка новой связи:"
+                      ? "blue"
+                      : "black",
+                  cursor:
+                    option.label === "Обработка новой связи:"
+                      ? "none"
+                      : "pointer",
                 }}
               >
                 {option.label}
@@ -1127,24 +1236,24 @@ export const ShowFormalRoute = (flagDemo: boolean, PressButton: Function) => {
   );
 };
 
-export const MainMenu = (
-  flagPusk: boolean,
-  flagRoute: boolean,
-  PressButton: Function
-) => {
-  return (
-    <>
-      {flagPusk && flagRoute && (
-        <>
-          {StrokaMenuGlob("Отмена", PressButton, 77)}
-          {StrokaMenuGlob("Сохр-е", PressButton, 33)}
-          {StrokaMenuGlob("Реверc", PressButton, 12)}
-          {StrokaMenuGlob("Редактир-е", PressButton, 69)}
-        </>
-      )}
-    </>
-  );
-};
+// export const MainMenu = (
+//   flagPusk: boolean,
+//   flagRoute: boolean,
+//   PressButton: Function
+// ) => {
+//   return (
+//     <>
+//       {flagPusk && flagRoute && (
+//         <>
+//           {StrokaMenuGlob("Отмена", PressButton, 77)}
+//           {StrokaMenuGlob("Сохр-е", PressButton, 33)}
+//           {StrokaMenuGlob("Реверc", PressButton, 12)}
+//           {StrokaMenuGlob("Редактир-е", PressButton, 69)}
+//         </>
+//       )}
+//     </>
+//   );
+// };
 
 export const YandexServices = () => {
   return (
@@ -2600,28 +2709,21 @@ export const FooterContent = (SaveForm: Function) => {
   );
 };
 //=====================================================================
-export const TypeDefinit = (massroute: any, id: number) => {
-  // определение типа - точка или пререкрёсток (null - точка)
-  let type: any = null;
-  for (let i = 0; i < massroute.vertexes.length; i++) {
-    if (massroute.vertexes[i].id === id) {
-      type = massroute.vertexes[i].lin;
-      break;
-    }
-  }
-  return type;
-};
-
 export const CalculatNullWays = (
   ymaps: any,
   mapp: any,
   massroute: any,
+  massdk: any,
   func: Function
 ) => {
   let have = 0;
   let Have = 0;
+  //let fromCross: any = FromCross;
+  //let toCross: any = ToCross;
   for (let i = 0; i < massroute.ways.length; i++) {
     if (!massroute.ways[i].lenght || !massroute.ways[i].time) {
+      console.log("корректировка связи", { ...massroute.ways[i] });
+
       let rec = massroute.ways[i];
       have++;
       let pAa = DecodingCoord(rec.starts);
@@ -2650,8 +2752,11 @@ export const CalculatNullWays = (
             let duration = activeRoute.properties.get("duration").value;
             rec.time = reqRoute.tmRoute = Math.round(duration); // время прохождения
             // запись в базу
+
+            //let fromCross: any =  MakeFromCross(massdk[index]);
+
             //if (!rec.sourceArea) {
-              if (!TypeDefinit(massroute, rec.sourceID)) {
+            if (!TypeDefinit(massroute, rec.sourceID)) {
               SendSocketDeleteWayFromPoint(pAa, pBb);
               SendSocketCreateWayFromPoint(pAa, pBb, massBind, reqRoute);
             } else {
@@ -2689,4 +2794,3 @@ export const CalculatNullWays = (
     ReadyRoute();
   }
 };
-

@@ -33,16 +33,21 @@ import { getPointData, GetPointOptions, SaveZoom } from "./MapServiceFunctions";
 import { СontentModalPressBalloon, MakeFromCross } from "./MapServiceFunctions";
 import { ChangeCrossFunc, PreparCurrencies } from "./MapServiceFunctions";
 import { RecevKeySvg, StrokaMenuGlob, MasskPoint } from "./MapServiceFunctions";
-import { DelVerOrPoint, MainMenu, NearestPoint } from "./MapServiceFunctions";
+import {
+  DelVerOrPoint,
+  NearestPoint,
+  //MainMenu
+} from "./MapServiceFunctions";
 import { DelPointVertexContent, MassCoord } from "./MapServiceFunctions";
 import { FillMassRouteContent, InputMenuPK } from "./MapServiceFunctions";
 import { InputMenuForm, MasrouteAgreeMap } from "./MapServiceFunctions";
 import { PreparCurrenciesMode, CenterCoordBegin } from "./MapServiceFunctions";
 import { PreparCurrenciesForm, InputMenuMODE } from "./MapServiceFunctions";
-import { PreparCurrenciesPK } from "./MapServiceFunctions";
+import { PreparCurrenciesPK, PreparCurrenciesWay } from "./MapServiceFunctions";
 import { PreparCurrenciesCalc, InputMenuCalc } from "./MapServiceFunctions";
 import { PreparCurrenciesOptim, InputMenuOptim } from "./MapServiceFunctions";
-import { CalculatNullWays } from "./MapServiceFunctions";
+import { CalculatNullWays, InputMenuWay } from "./MapServiceFunctions";
+import { AreaDefinit } from "./MapServiceFunctions";
 
 import { MakeMultiRouteIn, MakePolyRoute } from "./MapRouteFunctions";
 import { MakeMultiRoute, MakeMainRoute } from "./MapRouteFunctions";
@@ -97,6 +102,9 @@ let currenciesPK: any = []; // для меню ПК и модели
 let currenciesCalc: any = []; // для меню расчётов
 let currenciesOptim: any = []; // для меню оптимизации ПК
 let currenciesForm: any = []; // для меню диспетчера форм
+
+let currenciesWay: any = []; // для меню диспетчера работы с создаваемой связью
+
 let idxDel: number, pointAaIndex: number;
 let indexPoint: number, pointBbIndex: number;
 idxDel = indexPoint = pointAaIndex = pointBbIndex = -1;
@@ -152,6 +160,7 @@ const MainMap = (props: {
   const [currencyCalc, setCurrencyCalc] = React.useState("0");
   const [currencyOptim, setCurrencyOptim] = React.useState("0");
   const [currencyForm, setCurrencyForm] = React.useState("0");
+  //const [currencyWay, setCurrencyWay] = React.useState("0");
   const [openInf, setOpenInf] = React.useState(false);
   const [openPro, setOpenPro] = React.useState(false);
   const [openVertForm, setOpenVertForm] = React.useState(false);
@@ -207,11 +216,13 @@ const MainMap = (props: {
     (route: any) => {
       reqRoute.dlRoute = route.lenght;
       reqRoute.tmRoute = route.time;
-      let arIn = route.sourceArea;
+      //let arIn = route.sourceArea;
+      let arIn = AreaDefinit(massdk, route.sourceID);
       let idIn = route.sourceID;
-      let arOn = route.targetArea;
+      // let arOn = route.targetArea;
+      let arOn = AreaDefinit(massdk, route.targetID);
       let idOn = route.targetID;
-      SendSocketGetSvg(WS, homeRegion, arIn, idIn, arOn, idOn);
+      SendSocketGetSvg(homeRegion, arIn, idIn, arOn, idOn);
       for (let i = 0; i < massroute.vertexes.length; i++) {
         let rec = massroute.vertexes[i];
         if (rec.area === arIn && rec.id === idIn) pointAaIndex = i;
@@ -690,11 +701,13 @@ const MainMap = (props: {
   };
   //=== Функции - обработчики ==============================
   const LinkBind = () => {
-    let arIn = massroute.vertexes[pointAaIndex].area;
+    //let arIn = massroute.vertexes[pointAaIndex].area;
+    let arIn = AreaDefinit(massdk, massroute.vertexes[pointAaIndex].id);
     let idIn = massroute.vertexes[pointAaIndex].id;
-    let arOn = massroute.vertexes[pointBbIndex].area;
+    //let arOn = massroute.vertexes[pointBbIndex].area;
+    let arOn = AreaDefinit(massdk, massroute.vertexes[pointBbIndex].id);
     let idOn = massroute.vertexes[pointBbIndex].id;
-    SendSocketGetSvg(WS, homeRegion, arIn, idIn, arOn, idOn);
+    SendSocketGetSvg(homeRegion, arIn, idIn, arOn, idOn);
     modeBind = 0; // режим открытия RouteBind
     setOpenBind((flagBind = true));
   };
@@ -712,7 +725,7 @@ const MainMap = (props: {
 
   const handleCloseDel = (mode: boolean) => {
     if (mode) {
-      let massRouteRab = DelPointVertexContent(WS, massroute, idxDel);
+      let massRouteRab = DelPointVertexContent(massroute, idxDel);
       massroute.ways.splice(0, massroute.ways.length); // massroute = [];
       massroute.ways = massRouteRab;
       if (flagDemo) massRoute = massroute.ways;
@@ -778,6 +791,9 @@ const MainMap = (props: {
 
   const handleChangePK = (event: React.ChangeEvent<HTMLInputElement>) => {
     let pk = Number(event.target.value);
+
+    console.log("handleChangePK:", pk);
+
     if (!pk) pk++;
     setCurrencyPK((PK = pk.toString()));
     setCurrencyMode("0"); // переключение меню 'Перекрёстки и связи' на заголовок
@@ -787,6 +803,13 @@ const MainMap = (props: {
     pk === 1 && PressButton(202);
     pk === 2 && PressButton(201);
     pk === 4 && PressButton(204);
+  };
+
+  const handleChangeWay = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.target.value === "1" && PressButton(33); // Сохранение
+    event.target.value === "2" && PressButton(77); // Отмена
+    event.target.value === "3" && PressButton(12); // Реверc
+    event.target.value === "4" && PressButton(69); // Редактирование
   };
 
   const handleChangeCalc = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -934,6 +957,7 @@ const MainMap = (props: {
     currenciesCalc = PreparCurrenciesCalc(); // для меню расчётов
     currenciesOptim = PreparCurrenciesOptim(); // для меню оптимизации ПК
     currenciesForm = PreparCurrenciesForm(); // для меню диспетчера форм
+    currenciesWay = PreparCurrenciesWay(); // для меню диспетчера работы с создаваемой связью
     flagOpen = true;
     console.log("Map:", map);
     console.log("Massroute:", massroute);
@@ -983,6 +1007,9 @@ const MainMap = (props: {
         <>
           {InputMenu(handleChangeSubArea, currency, currencies)}
           {InputMenuMODE(handleChangeMode, currencyMode, currenciesMode)}
+          {flagPusk && flagRoute && (
+            <>{InputMenuWay(handleChangeWay, "0", currenciesWay)}</>
+          )}
           {InputMenuPK(handleChangePK, currencyPK, currenciesPK)}
           {PLANER > 0 && (
             <>
@@ -998,7 +1025,7 @@ const MainMap = (props: {
       )}
       {MakeRevers(makeRevers, needRevers, PressButton)}
       {ShowFormalRoute(flagDemo, PressButton)}
-      {MainMenu(flagPusk, flagRoute, PressButton)}
+      {/* {MainMenu(flagPusk, flagRoute, PressButton)} */}
       {flagPro && MODE === "0" && (
         <>{StrokaMenuGlob("Протокол", PressButton, 24)}</>
       )}
@@ -1021,7 +1048,7 @@ const MainMap = (props: {
               <MapWindPK close={setRoutePKW} route={routePKW} svg={masSvg} />
             )}
             {flWays && ymaps && (
-              <>{CalculatNullWays(ymaps, mapp, massroute, SetFlWays)}</>
+              <>{CalculatNullWays(ymaps, mapp, massroute, massdk, SetFlWays)}</>
             )}
             {dispCalc && <MapDispCalc setOpen={SetDispCalc} />}
             {dispOptim && <MapDispOptim setOpen={SetDispOptim} />}

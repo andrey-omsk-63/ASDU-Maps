@@ -10,7 +10,7 @@ import MapWindViewGraf from "./MapWindViewGraf";
 import MapWindViewImg from "./MapWindViewImg";
 
 import { StrokaTablWindPK, ReplaceInSvg } from "../../MapServiceFunctions";
-import { RandomNumber } from "../../MapServiceFunctions";
+import { RandomNumber, AreaDefinit } from "../../MapServiceFunctions";
 
 import { SendSocketGetSvg } from "../../MapSocketFunctions";
 
@@ -92,6 +92,10 @@ const MapWindPK = (props: {
   //   return massplanReducer.massplan;
   // });
   // console.log("###massplan:", massplan);
+  let massdk = useSelector((state: any) => {
+    const { massdkReducer } = state;
+    return massdkReducer.massdk;
+  });
   let datestat = useSelector((state: any) => {
     const { statsaveReducer } = state;
     return statsaveReducer.datestat;
@@ -106,11 +110,13 @@ const MapWindPK = (props: {
   if (props.route) nameIn = props.route.targetID + ".";
   if (!debug && props.route !== oldRoute && props.route) {
     masSvg = ["", ""];
-    let arIn = props.route.sourceArea;
+    //let arIn = props.route.sourceArea;
+    let arIn = AreaDefinit(massdk, props.route.sourceID);
     let idIn = props.route.sourceID;
-    let arOn = props.route.targetArea;
+    //let arOn = props.route.targetArea;
+    let arOn = AreaDefinit(massdk, props.route.targetID);
     let idOn = props.route.targetID;
-    SendSocketGetSvg(WS, homeRegion, arIn, idIn, arOn, idOn);
+    SendSocketGetSvg(homeRegion, arIn, idIn, arOn, idOn);
     oldRoute = props.route;
   }
   if (debug)

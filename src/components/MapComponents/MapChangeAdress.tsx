@@ -128,7 +128,7 @@ const MapChangeAdress = (props: {
           SocketDeleteWay(massroute, i);
         }
       }
-      SendSocketDeletePoint(WS, idPoint);
+      SendSocketDeletePoint(idPoint);
       handleSendOpen(); // создание новой точки со старым ID
 
       massdk.splice(props.iP, 1); // удаление самой точки

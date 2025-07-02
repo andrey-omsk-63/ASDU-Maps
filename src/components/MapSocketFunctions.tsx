@@ -34,19 +34,21 @@ export const SendSocketCreatePoint = (
   }
 };
 
-export const SendSocketDeletePoint = (ws: WebSocket, id: number) => {
-  const handleSendOpen = () => {
-    if (ws.url !== "wss://localhost:3000/W") {
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify({ type: "deletePoint", data: { id } }));
+export const SendSocketDeletePoint = (id: number) => {
+  console.log("DeletePoint:", id);
+
+  if (!debug) {
+    const handleSendOpen = () => {
+      if (WS.readyState === WebSocket.OPEN) {
+        WS.send(JSON.stringify({ type: "deletePoint", data: { id } }));
       } else {
         setTimeout(() => {
           handleSendOpen();
         }, 100);
       }
-    }
-  };
-  handleSendOpen();
+    };
+    handleSendOpen();
+  }
 };
 
 export const SendSocketCreateVertex = (
@@ -183,7 +185,7 @@ export const SendSocketCreateWayFromPoint = (
   massBind: Array<number>,
   reqRoute: any
 ) => {
-  console.log("CreateWayFromPoint:", fromCr, toCr, massBind);
+  console.log("CreateWayFromPoint:", fromCr, toCr);
 
   if (!debug) {
     const handleSendOpen = () => {
@@ -313,18 +315,19 @@ export const SendSocketDeleteWayToPoint = (fromCr: any, toCr: any) => {
 };
 
 export const SendSocketGetSvg = (
-  ws: WebSocket,
+  //ws: WebSocket,
   region: number,
-  areaIn: number,
+  areaIn: number, // нужен обязвтельно район, а не подрайон
   idIn: number,
-  areaOn: number,
+  areaOn: number, // нужен обязвтельно район, а не подрайон
   idOn: number
 ) => {
   console.log("SendSocketGetSvg:", region, areaIn, idIn, areaOn, idOn);
-  const handleSendOpen = () => {
-    if (ws.url !== "wss://localhost:3000/W") {
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.send(
+
+  if (!debug) {
+    const handleSendOpen = () => {
+      if (WS.readyState === WebSocket.OPEN) {
+        WS.send(
           JSON.stringify({
             type: "getSvg",
             data: {
@@ -348,13 +351,13 @@ export const SendSocketGetSvg = (
           handleSendOpen();
         }, 100);
       }
-    }
-  };
-  handleSendOpen();
+    };
+    handleSendOpen();
+  }
 };
 //==================================================
 export const SocketDeleteWay = (massroute: any, i: number) => {
-  let ways = massroute.ways[i]
+  let ways = massroute.ways[i];
   let fromCross: any = {
     pointAaRegin: "",
     pointAaArea: "",
@@ -377,11 +380,11 @@ export const SocketDeleteWay = (massroute: any, i: number) => {
   toCross.pointBbID = ways.targetID;
   toCross.pointBcod = ways.stops;
   // if (ways.sourceArea === 0) {
-  if (!TypeDefinit(massroute,ways.sourceID)) {
+  if (!TypeDefinit(massroute, ways.sourceID)) {
     SendSocketDeleteWayFromPoint(fromCross, toCross);
   } else {
     // if (ways.targetArea === 0) {
-    if (!TypeDefinit(massroute,ways.targetID)) {
+    if (!TypeDefinit(massroute, ways.targetID)) {
       SendSocketDeleteWayToPoint(fromCross, toCross);
     } else {
       SendSocketDeleteWay(fromCross, toCross);

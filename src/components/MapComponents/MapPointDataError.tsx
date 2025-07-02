@@ -12,6 +12,7 @@ import MapRouteBind from "./MapRouteBind";
 import { questionForDelete, HeadDoublError } from "./../MapServiceFunctions";
 import { InputerDlTm, СontentStrErr } from "./../MapServiceFunctions";
 import { StrokaMenuErr, BadExit, TypeDefinit } from "./../MapServiceFunctions";
+import { AreaDefinit } from "./../MapServiceFunctions";
 
 import { SendSocketDeleteWay } from "./../MapSocketFunctions";
 import { SendSocketDeleteWayFromPoint } from "./../MapSocketFunctions";
@@ -71,6 +72,10 @@ const MapPointDataError = (props: {
   let massroutepro = useSelector((state: any) => {
     const { massrouteproReducer } = state;
     return massrouteproReducer.massroutepro;
+  });
+  let massdk = useSelector((state: any) => {
+    const { massdkReducer } = state;
+    return massdkReducer.massdk;
   });
   let datestat = useSelector((state: any) => {
     const { statsaveReducer } = state;
@@ -155,7 +160,7 @@ const MapPointDataError = (props: {
         massroute.vertexes[i].id === massroute.ways[index].sourceID
       ) {
         fromIdx = i; // выход
-        whatFrom = massroute.vertexes[i].area ? "перекрёстком" : "объектом";
+        whatFrom = massroute.vertexes[i].lin ? "перекрёстком" : "объектом";
         nameFrom = massroute.vertexes[i].name;
       }
       if (
@@ -164,7 +169,7 @@ const MapPointDataError = (props: {
         massroute.vertexes[i].id === massroute.ways[index].targetID
       ) {
         inIdx = i; // вход
-        whatIn = massroute.vertexes[i].area ? "перекрёстком" : "объектом";
+        whatIn = massroute.vertexes[i].lin ? "перекрёстком" : "объектом";
         nameIn = massroute.vertexes[i].name;
       }
     }
@@ -317,11 +322,13 @@ const MapPointDataError = (props: {
   const CallEditorBind = () => {
     flagSave = true;
     let homeRegion = massroute.vertexes[fromIdx].region;
-    let arIn = massroute.vertexes[fromIdx].area;
+    // let arIn = massroute.vertexes[fromIdx].area;
+    let arIn = AreaDefinit(massdk, massroute.vertexes[fromIdx].id);
     let idIn = massroute.vertexes[fromIdx].id;
-    let arOn = massroute.vertexes[inIdx].area;
+    // let arOn = massroute.vertexes[inIdx].area;
+    let arOn = AreaDefinit(massdk, massroute.vertexes[inIdx].id);
     let idOn = massroute.vertexes[inIdx].id;
-    SendSocketGetSvg(WS, homeRegion, arIn, idIn, arOn, idOn);
+    SendSocketGetSvg(homeRegion, arIn, idIn, arOn, idOn);
     setOpenSetBind(true);
   };
 
