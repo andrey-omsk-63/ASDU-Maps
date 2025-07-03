@@ -44,15 +44,8 @@ import { styleSetPK04, StyleBind09, styleSpisPK05 } from "./MainMapStyle";
 import { styleModalMenuErr, styleHeadError } from "./MapPointDataErrorStyle";
 import { styleBoxFormArea, styleSetArea } from "./MapPointDataErrorStyle";
 
-import {
-  debug,
-  SUBAREA,
-  MODE,
-  MASSPK,
-  SubArea,
-  AREA,
-  homeRegion,
-} from "./MainMapGl";
+import { debug, SUBAREA, MODE, MASSPK, homeRegion } from "./MainMapGl";
+import { SubArea, AREA } from "./MainMapGl";
 import { OUTGO, FromCross, ToCross } from "./MapConst";
 import { dateMapGl } from "./../App";
 
@@ -178,30 +171,30 @@ export const RecordMassRoute = (
   reqRoute: any
 ) => {
   let masskRoute: Router = {
-    region: 0,
-    sourceArea: 0,
-    sourceID: 0,
-    targetArea: 0,
-    targetID: 0,
-    lsource: 0,
-    ltarget: 0,
-    starts: "",
-    stops: "",
-    lenght: 0,
-    time: 0,
+    region: Number(fromCross.pointAaRegin),
+    sourceArea: Number(fromCross.pointAaArea),
+    sourceID: fromCross.pointAaID,
+    targetArea: Number(toCross.pointBbArea),
+    targetID: toCross.pointBbID,
+    lsource: massBind[0],
+    ltarget: massBind[1],
+    starts: fromCross.pointAcod,
+    stops: toCross.pointBcod,
+    lenght: reqRoute.dlRoute,
+    time: reqRoute.tmRoute,
   };
 
-  masskRoute.region = Number(fromCross.pointAaRegin);
-  masskRoute.sourceArea = Number(fromCross.pointAaArea);
-  masskRoute.sourceID = fromCross.pointAaID;
-  masskRoute.targetArea = Number(toCross.pointBbArea);
-  masskRoute.targetID = toCross.pointBbID;
-  masskRoute.starts = fromCross.pointAcod;
-  masskRoute.stops = toCross.pointBcod;
-  masskRoute.lsource = massBind[0];
-  masskRoute.ltarget = massBind[1];
-  masskRoute.lenght = reqRoute.dlRoute;
-  masskRoute.time = reqRoute.tmRoute;
+  //masskRoute.region = Number(fromCross.pointAaRegin);
+  //masskRoute.sourceArea = Number(fromCross.pointAaArea);
+  //masskRoute.sourceID = fromCross.pointAaID;
+  //masskRoute.targetArea = Number(toCross.pointBbArea);
+  //masskRoute.targetID = toCross.pointBbID;
+  //masskRoute.starts = fromCross.pointAcod;
+  //masskRoute.stops = toCross.pointBcod;
+  //masskRoute.lsource = massBind[0];
+  //masskRoute.ltarget = massBind[1];
+  //masskRoute.lenght = reqRoute.dlRoute;
+  //asskRoute.time = reqRoute.tmRoute;
 
   return masskRoute;
 };
@@ -233,9 +226,6 @@ export const MakeFromCross = (mass: any) => {
     pointAaID: mass.ID,
     pointAcod: "",
   };
-  // fromCross.pointAaRegin = mass.region.toString();
-  // fromCross.pointAaArea = mass.subarea.toString();
-  // fromCross.pointAaID = mass.ID;
   return fromCross;
 };
 
@@ -246,9 +236,6 @@ export const MakeToCross = (mass: any) => {
     pointBbID: mass.ID,
     pointBcod: "",
   };
-  // toCross.pointBbRegin = mass.region.toString();
-  // toCross.pointBbArea = mass.subarea.toString();
-  // toCross.pointBbID = mass.ID;
   return toCross;
 };
 
@@ -1279,19 +1266,19 @@ export const StrokaBalloon = (soob: string, func: any, mode: number) => {
 
 export const СontentModalPressBalloon = (
   setOpenSet: Function,
-  handleClose: Function,
-  areaPoint: number
+  handleClose: Function
+  //areaPoint: number
 ) => {
   return (
     <Box sx={styleSetPoint}>
       <Button sx={styleModalEndMapGl} onClick={() => setOpenSet(false)}>
         <b>&#10006;</b>
       </Button>
-      <Box sx={{ marginTop: 1, textAlign: "center" }}>
+      {/* <Box sx={{ marginTop: 1, textAlign: "center" }}>
         {!areaPoint && (
           <>{StrokaBalloon("Редактированиее адреса точки", handleClose, 4)}</>
         )}
-      </Box>
+      </Box> */}
       <Typography variant="h6" sx={styleTypography}>
         Перестроение связи:
       </Typography>
@@ -1304,9 +1291,6 @@ export const СontentModalPressBalloon = (
 };
 
 export const MasskPoint = (massrouteVertexes: any) => {
-  // if (massrouteVertexes.id === 42 || massrouteVertexes.id === 61)
-  //   console.log("MasskPoint:", massrouteVertexes);
-
   let masskPoint: Pointer = {
     ID: massrouteVertexes.id,
     coordinates: DecodingCoord(massrouteVertexes.dgis),
@@ -2718,11 +2702,12 @@ export const CalculatNullWays = (
 ) => {
   let have = 0;
   let Have = 0;
-  //let fromCross: any = FromCross;
+
   //let toCross: any = ToCross;
   for (let i = 0; i < massroute.ways.length; i++) {
-    if (!massroute.ways[i].lenght || !massroute.ways[i].time) {
-      console.log("корректировка связи", { ...massroute.ways[i] });
+    //if (!massroute.ways[i].lenght || !massroute.ways[i].time) {
+    if (!massroute.ways[i].time) {
+      //console.log("корректировка связи", { ...massroute.ways[i] });
 
       let rec = massroute.ways[i];
       have++;
@@ -2751,24 +2736,29 @@ export const CalculatNullWays = (
             rec.lenght = reqRoute.dlRoute = Math.round(dist); // длина связи
             let duration = activeRoute.properties.get("duration").value;
             rec.time = reqRoute.tmRoute = Math.round(duration); // время прохождения
-            // запись в базу
-
-            //let fromCross: any =  MakeFromCross(massdk[index]);
-
-            //if (!rec.sourceArea) {
+            //if (!debug) {
+            // запись на сервер
+            let fromCr: any = FromCross;
+            let toCr: any = ToCross;
+            for (let j = 0; j < massdk.length; j++) {
+              if (massdk[j].ID === massroute.ways[i].sourceID)
+                fromCr = MakeFromCross(massdk[j]);
+              if (massdk[j].ID === massroute.ways[i].targetID)
+                toCr = MakeFromCross(massdk[j]);
+            }
             if (!TypeDefinit(massroute, rec.sourceID)) {
-              SendSocketDeleteWayFromPoint(pAa, pBb);
-              SendSocketCreateWayFromPoint(pAa, pBb, massBind, reqRoute);
+              SendSocketDeleteWayFromPoint(fromCr, toCr);
+              SendSocketCreateWayFromPoint(fromCr, toCr, massBind, reqRoute);
             } else {
-              //if (!rec.targetArea) {
               if (!TypeDefinit(massroute, rec.targetID)) {
-                SendSocketDeleteWayToPoint(pAa, pBb);
-                SendSocketCreateWayToPoint(pAa, pBb, massBind, reqRoute);
+                SendSocketDeleteWayToPoint(fromCr, toCr);
+                SendSocketCreateWayToPoint(fromCr, toCr, massBind, reqRoute);
               } else {
-                SendSocketDeleteWay(pAa, pBb);
-                SendSocketCreateWay(pAa, pBb, massBind, reqRoute);
+                SendSocketDeleteWay(fromCr, toCr);
+                SendSocketCreateWay(fromCr, toCr, massBind, reqRoute);
               }
             }
+            //}
             Have++;
           }
         });
@@ -2783,7 +2773,7 @@ export const CalculatNullWays = (
     const ReadyRoute = () => {
       if (have === Have) {
         mapp.current.geoObjects.removeAll(); // удаление временных "пустых" связей
-        console.log("Обновились связи:", have, Have);
+        console.log("Обновилось связей:", have, Have);
         func(true);
       } else {
         setTimeout(() => {

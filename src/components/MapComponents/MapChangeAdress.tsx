@@ -114,20 +114,23 @@ const MapChangeAdress = (props: {
       let massWays: any = [];
       for (let i = 0; i < massroute.ways.length; i++) {
         if (
-          !massroute.ways[i].sourceArea &&
+          //!massroute.ways[i].sourceArea &&
           massroute.ways[i].sourceID === idPoint
         ) {
           massWays.push(massroute.ways[i]);
           SocketDeleteWay(massroute, i);
         }
         if (
-          !massroute.ways[i].targetArea &&
+          //!massroute.ways[i].targetArea &&
           massroute.ways[i].targetID === idPoint
         ) {
           massWays.push(massroute.ways[i]);
           SocketDeleteWay(massroute, i);
         }
       }
+
+      console.log("massWay", massWays);
+
       SendSocketDeletePoint(idPoint);
       handleSendOpen(); // создание новой точки со старым ID
 

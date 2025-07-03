@@ -315,7 +315,6 @@ export const SendSocketDeleteWayToPoint = (fromCr: any, toCr: any) => {
 };
 
 export const SendSocketGetSvg = (
-  //ws: WebSocket,
   region: number,
   areaIn: number, // нужен обязвтельно район, а не подрайон
   idIn: number,

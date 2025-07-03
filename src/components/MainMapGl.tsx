@@ -9,7 +9,7 @@ import Modal from "@mui/material/Modal";
 import { YMaps, Map, Placemark, YMapsApi } from "react-yandex-maps";
 
 import MapRouteInfo from "./MapComponents/MapRouteInfo";
-import MapChangeAdress from "./MapComponents/MapChangeAdress";
+//import MapChangeAdress from "./MapComponents/MapChangeAdress";
 import MapPointDataError from "./MapComponents/MapPointDataError";
 import MapRouteBind from "./MapComponents/MapRouteBind";
 import MapCreatePointVertex from "./MapComponents/MapCreatePointVertex";
@@ -33,11 +33,7 @@ import { getPointData, GetPointOptions, SaveZoom } from "./MapServiceFunctions";
 import { СontentModalPressBalloon, MakeFromCross } from "./MapServiceFunctions";
 import { ChangeCrossFunc, PreparCurrencies } from "./MapServiceFunctions";
 import { RecevKeySvg, StrokaMenuGlob, MasskPoint } from "./MapServiceFunctions";
-import {
-  DelVerOrPoint,
-  NearestPoint,
-  //MainMenu
-} from "./MapServiceFunctions";
+import { DelVerOrPoint, NearestPoint } from "./MapServiceFunctions";
 import { DelPointVertexContent, MassCoord } from "./MapServiceFunctions";
 import { FillMassRouteContent, InputMenuPK } from "./MapServiceFunctions";
 import { InputMenuForm, MasrouteAgreeMap } from "./MapServiceFunctions";
@@ -102,9 +98,7 @@ let currenciesPK: any = []; // для меню ПК и модели
 let currenciesCalc: any = []; // для меню расчётов
 let currenciesOptim: any = []; // для меню оптимизации ПК
 let currenciesForm: any = []; // для меню диспетчера форм
-
 let currenciesWay: any = []; // для меню диспетчера работы с создаваемой связью
-
 let idxDel: number, pointAaIndex: number;
 let indexPoint: number, pointBbIndex: number;
 idxDel = indexPoint = pointAaIndex = pointBbIndex = -1;
@@ -182,14 +176,13 @@ const MainMap = (props: {
   const [open, setOpen] = React.useState(false);
   const [openCreate, setOpenCreate] = React.useState(false);
   const [openDel, setOpenDel] = React.useState(false);
-  const [openAdress, setOpenAdress] = React.useState(false);
+  //const [openAdress, setOpenAdress] = React.useState(false);
   const [openRevers, setOpenRevers] = React.useState(false);
   const [makeRevers, setMakeRevers] = React.useState(false);
   const [needRevers, setNeedRevers] = React.useState(0);
   const [routePKW, setRoutePKW] = React.useState<any>(null);
   const [ymaps, setYmaps] = React.useState<YMapsApi | null>(null);
   const mapp = React.useRef<any>(null);
-  const WS = datestat.ws;
   debug = datestat.debug;
 
   let mapState: any = {
@@ -216,10 +209,8 @@ const MainMap = (props: {
     (route: any) => {
       reqRoute.dlRoute = route.lenght;
       reqRoute.tmRoute = route.time;
-      //let arIn = route.sourceArea;
       let arIn = AreaDefinit(massdk, route.sourceID);
       let idIn = route.sourceID;
-      // let arOn = route.targetArea;
       let arOn = AreaDefinit(massdk, route.targetID);
       let idOn = route.targetID;
       SendSocketGetSvg(homeRegion, arIn, idIn, arOn, idOn);
@@ -231,7 +222,7 @@ const MainMap = (props: {
       modeBind = 3; // режим открытия RouteBind
       setOpenBind((flagBind = true));
     },
-    [WS, massroute.vertexes]
+    [massdk, massroute.vertexes]
   );
 
   const InfoRoute = React.useCallback((route: any) => {
@@ -562,8 +553,8 @@ const MainMap = (props: {
 
   const ModalPressBalloon = () => {
     let pointRoute: any = 0;
-    let areaPoint = -1;
-    if (indexPoint >= 0) areaPoint = massdk[indexPoint].area;
+    //let areaPoint = -1;
+    //if (indexPoint >= 0) areaPoint = massdk[indexPoint].area;
     if (indexPoint >= 0 && indexPoint < massdk.length)
       pointRoute = MassCoord(massdk[indexPoint]);
 
@@ -609,9 +600,9 @@ const MainMap = (props: {
               } else ymaps && addRoute(ymaps); // перерисовка связей
             }
           }
-          break;
-        case 4: // Редактирование адреса
-          setOpenAdress(true);
+        //   break;
+        // case 4: // Редактирование адреса
+        //   setOpenAdress(true);
       }
       setOpen(false);
     };
@@ -619,16 +610,17 @@ const MainMap = (props: {
     return (
       <>
         <Modal open={open} onClose={() => setOpen(false)}>
-          {СontentModalPressBalloon(setOpen, handleClose, areaPoint)}
+          {/* {СontentModalPressBalloon(setOpen, handleClose, areaPoint)} */}
+          {СontentModalPressBalloon(setOpen, handleClose)}
         </Modal>
-        {openAdress && (
+        {/* {openAdress && (
           <MapChangeAdress
             iP={indexPoint}
             Open={setOpenAdress}
             zero={ZeroRoute}
             Cl={setOpen}
           />
-        )}
+        )} */}
       </>
     );
   };
@@ -701,11 +693,9 @@ const MainMap = (props: {
   };
   //=== Функции - обработчики ==============================
   const LinkBind = () => {
-    //let arIn = massroute.vertexes[pointAaIndex].area;
-    let arIn = AreaDefinit(massdk, massroute.vertexes[pointAaIndex].id);
+    let arIn = massdk[pointAaIndex].area; // для запроса нужен реальный номер района
     let idIn = massroute.vertexes[pointAaIndex].id;
-    //let arOn = massroute.vertexes[pointBbIndex].area;
-    let arOn = AreaDefinit(massdk, massroute.vertexes[pointBbIndex].id);
+    let arOn = massdk[pointBbIndex].area; // для запроса нужен реальный номер района
     let idOn = massroute.vertexes[pointBbIndex].id;
     SendSocketGetSvg(homeRegion, arIn, idIn, arOn, idOn);
     modeBind = 0; // режим открытия RouteBind
@@ -744,7 +734,7 @@ const MainMap = (props: {
   const MakeNewPoint = (coords: any, avail: boolean) => {
     MakeNewPointContent(coords, avail, homeRegion, massroute);
     let lin = massroute.vertexes[massroute.vertexes.length - 1].lin;
-    if (!lin) {
+    if (!lin && !debug) {
       datestat.permitСreatPoint = false; // запрет на создание новых точек
       dispatch(statsaveCreate(datestat));
     }
@@ -791,9 +781,6 @@ const MainMap = (props: {
 
   const handleChangePK = (event: React.ChangeEvent<HTMLInputElement>) => {
     let pk = Number(event.target.value);
-
-    console.log("handleChangePK:", pk);
-
     if (!pk) pk++;
     setCurrencyPK((PK = pk.toString()));
     setCurrencyMode("0"); // переключение меню 'Перекрёстки и связи' на заголовок
@@ -927,7 +914,6 @@ const MainMap = (props: {
       }
     }
     console.log("!!!Massroute:", JSON.parse(JSON.stringify(massroute)));
-
     for (let i = 0; i < massroute.vertexes.length; i++) {
       if (massroute.vertexes[i].region === homeRegion) {
         massdk.push(MasskPoint(massroute.vertexes[i]));
@@ -1025,7 +1011,6 @@ const MainMap = (props: {
       )}
       {MakeRevers(makeRevers, needRevers, PressButton)}
       {ShowFormalRoute(flagDemo, PressButton)}
-      {/* {MainMenu(flagPusk, flagRoute, PressButton)} */}
       {flagPro && MODE === "0" && (
         <>{StrokaMenuGlob("Протокол", PressButton, 24)}</>
       )}
