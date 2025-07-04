@@ -183,19 +183,6 @@ export const RecordMassRoute = (
     lenght: reqRoute.dlRoute,
     time: reqRoute.tmRoute,
   };
-
-  //masskRoute.region = Number(fromCross.pointAaRegin);
-  //masskRoute.sourceArea = Number(fromCross.pointAaArea);
-  //masskRoute.sourceID = fromCross.pointAaID;
-  //masskRoute.targetArea = Number(toCross.pointBbArea);
-  //masskRoute.targetID = toCross.pointBbID;
-  //masskRoute.starts = fromCross.pointAcod;
-  //masskRoute.stops = toCross.pointBcod;
-  //masskRoute.lsource = massBind[0];
-  //masskRoute.ltarget = massBind[1];
-  //masskRoute.lenght = reqRoute.dlRoute;
-  //asskRoute.time = reqRoute.tmRoute;
-
   return masskRoute;
 };
 
@@ -362,7 +349,6 @@ export const DelPointVertexContent = (massroute: any, idxDel: number) => {
       coordPoint !== massroute.ways[i].starts &&
       coordPoint !== massroute.ways[i].stops;
     iffer && massRouteRab.push(massroute.ways[i]);
-    //!iffer && SocketDeleteWay(WS, massroute.ways[i]);
     !iffer && SocketDeleteWay(massroute, i);
   }
   return massRouteRab;
@@ -1105,8 +1091,6 @@ export const GetPointOptions = (
     if (MODE === "1")
       if (index === pointBbIndex || index === pointAaIndex) HosterIllum("2");
 
-    //console.log("0HOST:", host);
-
     return host;
   };
 
@@ -1151,7 +1135,8 @@ export const RecevKeySvg = (recMassroute: any) => {
   let keySvg =
     recMassroute.region.toString() +
     "-" +
-    recMassroute.area.toString() +
+    AREA +
+    // recMassroute.area.toString() +
     "-" +
     recMassroute.id.toString();
   return keySvg;
@@ -1203,7 +1188,6 @@ export const MakeRevers = (
   needRevers: number,
   PressButton: Function
 ) => {
-  //console.log("MakeRevers:", makeRevers, needRevers);
   return (
     <>
       {makeRevers && needRevers === 0 && <>{PressButton(35)}</>}
@@ -1267,18 +1251,12 @@ export const StrokaBalloon = (soob: string, func: any, mode: number) => {
 export const СontentModalPressBalloon = (
   setOpenSet: Function,
   handleClose: Function
-  //areaPoint: number
 ) => {
   return (
     <Box sx={styleSetPoint}>
       <Button sx={styleModalEndMapGl} onClick={() => setOpenSet(false)}>
         <b>&#10006;</b>
       </Button>
-      {/* <Box sx={{ marginTop: 1, textAlign: "center" }}>
-        {!areaPoint && (
-          <>{StrokaBalloon("Редактированиее адреса точки", handleClose, 4)}</>
-        )}
-      </Box> */}
       <Typography variant="h6" sx={styleTypography}>
         Перестроение связи:
       </Typography>
@@ -1321,8 +1299,6 @@ export const MasskPoint = (massrouteVertexes: any) => {
   }
   masskPoint.area = area;
   masskPoint.phases = phases;
-  //=============================================================
-  //masskPoint.newCoordinates = 0;
   return masskPoint;
 };
 
@@ -1511,6 +1487,8 @@ export const NoVertex = (openSetErr: boolean, handleCloseErr: Function) => {
 };
 //=== RouteBind =======================================================
 export const ReplaceInSvg = (Svg: any, widthHeight: string) => {
+  //console.log("ReplaceInSvg:", Svg);
+
   let ch = "";
   let svgPipa = Svg;
   let vxod = Svg.indexOf("width=");
@@ -1651,8 +1629,6 @@ export function AppIconAsdu(heightImg: number) {
 }
 
 let HeaderBindIDX = -1;
-//let comment0 = false;
-//let comment1 = false;
 
 export const HeaderBind = (
   nameA: string,
@@ -1662,24 +1638,11 @@ export const HeaderBind = (
   masSvg: any,
   haveSvgA: boolean,
   haveSvgB: boolean
-  //setTrigger: Function,
-  //trigger: boolean
 ) => {
   const [openSvg, setOpenSvg] = React.useState(false);
   const [comment0, setComment0] = React.useState(false);
   const [comment1, setComment1] = React.useState(false);
-  //const [trigger, setTrigger] = React.useState(false);
   const heightWind = window.innerHeight * 0.8;
-
-  // const SetComment0 = (mode: boolean) => {
-  //   comment0 = mode;
-  //   setTrigger(!trigger);
-  // };
-
-  // const SetComment1 = (mode: boolean) => {
-  //   comment1 = mode;
-  //   setTrigger(!trigger);
-  // };
 
   const handleClose = () => setOpenSvg(false);
 
@@ -1737,8 +1700,6 @@ export const HeaderBind = (
 
   let soobComment =
     "Для более детального просмотра изображения нажмите левую кнопку мыши";
-
-  //console.log("реренд", comment0, comment1);
 
   return (
     <>
@@ -2703,12 +2664,9 @@ export const CalculatNullWays = (
   let have = 0;
   let Have = 0;
 
-  //let toCross: any = ToCross;
   for (let i = 0; i < massroute.ways.length; i++) {
     //if (!massroute.ways[i].lenght || !massroute.ways[i].time) {
     if (!massroute.ways[i].time) {
-      //console.log("корректировка связи", { ...massroute.ways[i] });
-
       let rec = massroute.ways[i];
       have++;
       let pAa = DecodingCoord(rec.starts);
@@ -2718,7 +2676,6 @@ export const CalculatNullWays = (
           { referencePoints: [pAa, pBb] },
           {
             routeActiveStrokeWidth: 0, // толщина линии
-            //routeActiveStrokeColor: "#FA032F", // красный
             wayPointVisible: false, // отметки "начало - конец"
           }
         );
@@ -2773,7 +2730,7 @@ export const CalculatNullWays = (
     const ReadyRoute = () => {
       if (have === Have) {
         mapp.current.geoObjects.removeAll(); // удаление временных "пустых" связей
-        console.log("Обновилось связей:", have, Have);
+        console.log("Откорректировано связей:", have, Have);
         func(true);
       } else {
         setTimeout(() => {

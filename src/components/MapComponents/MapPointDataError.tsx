@@ -77,10 +77,6 @@ const MapPointDataError = (props: {
     const { massdkReducer } = state;
     return massdkReducer.massdk;
   });
-  let datestat = useSelector((state: any) => {
-    const { statsaveReducer } = state;
-    return statsaveReducer.datestat;
-  });
   const dispatch = useDispatch();
   //========================================================
   const [openSetEr, setOpenSetEr] = React.useState(true);
@@ -106,10 +102,8 @@ const MapPointDataError = (props: {
     return styleSetInf;
   };
 
-  const WS = datestat.ws;
   let colorBackground =
     props.sErr === "Дубликатная связь" ? "background.paper" : "#ffe16e"; // белый/жёлтый
-  //let colorEnd = props.sErr === "Дубликатная связь" ? "#5B1080" : "black";
   let styleModalEnd = styleModalEndErr("black");
   let styleSetInf = styleSetInfErr(colorBackground);
   let soob = flagSave
@@ -136,8 +130,6 @@ const MapPointDataError = (props: {
         break;
       }
     }
-
-    //console.log("###:", index);
 
     sec = massroute.ways[index].time;
     tmRouteBegin = sec;
@@ -224,11 +216,9 @@ const MapPointDataError = (props: {
   const handleCloseDel = (mode: number) => {
     if (mode === 1) {
       DeleteWay();
-      // if (props.fromCross.pointAaArea === "0") {
       if (!TypeDefinit(massroute, props.fromCross.pointAaID)) {
         SendSocketDeleteWayFromPoint(props.fromCross, props.toCross);
       } else {
-        // if (props.toCross.pointBbArea === "0") {
         if (!TypeDefinit(massroute, props.toCross.pointBbID)) {
           SendSocketDeleteWayToPoint(props.fromCross, props.toCross);
         } else SendSocketDeleteWay(props.fromCross, props.toCross);
@@ -247,12 +237,10 @@ const MapPointDataError = (props: {
     dispatch(massrouteCreate(massroute));
     let frCr = props.fromCross;
     let toCr = props.toCross;
-    //if (props.fromCross.pointAaArea === "0") {
     if (!TypeDefinit(massroute, props.fromCross.pointAaID)) {
       SendSocketDeleteWayFromPoint(frCr, toCr);
       SendSocketCreateWayFromPoint(frCr, toCr, massBindNew, reqRoute);
     } else {
-      //if (props.toCross.pointBbArea === "0") {
       if (!TypeDefinit(massroute, props.toCross.pointBbID)) {
         SendSocketDeleteWayToPoint(frCr, props.toCross);
         SendSocketCreateWayToPoint(frCr, toCr, massBindNew, reqRoute);
@@ -322,10 +310,8 @@ const MapPointDataError = (props: {
   const CallEditorBind = () => {
     flagSave = true;
     let homeRegion = massroute.vertexes[fromIdx].region;
-    // let arIn = massroute.vertexes[fromIdx].area;
     let arIn = AreaDefinit(massdk, massroute.vertexes[fromIdx].id);
     let idIn = massroute.vertexes[fromIdx].id;
-    // let arOn = massroute.vertexes[inIdx].area;
     let arOn = AreaDefinit(massdk, massroute.vertexes[inIdx].id);
     let idOn = massroute.vertexes[inIdx].id;
     SendSocketGetSvg(homeRegion, arIn, idIn, arOn, idOn);

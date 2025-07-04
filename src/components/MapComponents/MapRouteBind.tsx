@@ -117,7 +117,6 @@ const MapRouteBind = (props: {
   const [openFormIn, setOpenFormIn] = React.useState(false);
   const [openGraf, setOpenGraf] = React.useState(false);
   const [badExit, setBadExit] = React.useState(false);
-  //const [comment, setComment] = React.useState(false);
   const [trigger, setTrigger] = React.useState(false);
   const SEC = props.reqRoute.tmRoute;
   let heightImg = Math.round(window.innerWidth / 7);

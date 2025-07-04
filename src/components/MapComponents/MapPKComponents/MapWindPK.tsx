@@ -101,7 +101,7 @@ const MapWindPK = (props: {
     return statsaveReducer.datestat;
   });
   //===========================================================
-  const WS = datestat.ws;
+  //const WS = datestat.ws;
   const [value, setValue] = React.useState(69);
   const [openImg, setOpenImg] = React.useState(false);
   const [openGraf, setOpenGraf] = React.useState(false);

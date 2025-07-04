@@ -45,6 +45,8 @@ const MapChangeAdress = (props: {
   zero: any;
   Cl: any;
 }) => {
+  // нерабочий компонент!!!
+
   //== Piece of Redux ======================================
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;

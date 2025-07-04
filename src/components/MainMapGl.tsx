@@ -9,7 +9,6 @@ import Modal from "@mui/material/Modal";
 import { YMaps, Map, Placemark, YMapsApi } from "react-yandex-maps";
 
 import MapRouteInfo from "./MapComponents/MapRouteInfo";
-//import MapChangeAdress from "./MapComponents/MapChangeAdress";
 import MapPointDataError from "./MapComponents/MapPointDataError";
 import MapRouteBind from "./MapComponents/MapRouteBind";
 import MapCreatePointVertex from "./MapComponents/MapCreatePointVertex";
@@ -154,7 +153,6 @@ const MainMap = (props: {
   const [currencyCalc, setCurrencyCalc] = React.useState("0");
   const [currencyOptim, setCurrencyOptim] = React.useState("0");
   const [currencyForm, setCurrencyForm] = React.useState("0");
-  //const [currencyWay, setCurrencyWay] = React.useState("0");
   const [openInf, setOpenInf] = React.useState(false);
   const [openPro, setOpenPro] = React.useState(false);
   const [openVertForm, setOpenVertForm] = React.useState(false);
@@ -176,7 +174,6 @@ const MainMap = (props: {
   const [open, setOpen] = React.useState(false);
   const [openCreate, setOpenCreate] = React.useState(false);
   const [openDel, setOpenDel] = React.useState(false);
-  //const [openAdress, setOpenAdress] = React.useState(false);
   const [openRevers, setOpenRevers] = React.useState(false);
   const [makeRevers, setMakeRevers] = React.useState(false);
   const [needRevers, setNeedRevers] = React.useState(0);
@@ -216,8 +213,8 @@ const MainMap = (props: {
       SendSocketGetSvg(homeRegion, arIn, idIn, arOn, idOn);
       for (let i = 0; i < massroute.vertexes.length; i++) {
         let rec = massroute.vertexes[i];
-        if (rec.area === arIn && rec.id === idIn) pointAaIndex = i;
-        if (rec.area === arOn && rec.id === idOn) pointBbIndex = i;
+        if (rec.area === route.sourceArea && rec.id === idIn) pointAaIndex = i;
+        if (rec.area === route.targetArea && rec.id === idOn) pointBbIndex = i;
       }
       modeBind = 3; // режим открытия RouteBind
       setOpenBind((flagBind = true));
@@ -553,8 +550,6 @@ const MainMap = (props: {
 
   const ModalPressBalloon = () => {
     let pointRoute: any = 0;
-    //let areaPoint = -1;
-    //if (indexPoint >= 0) areaPoint = massdk[indexPoint].area;
     if (indexPoint >= 0 && indexPoint < massdk.length)
       pointRoute = MassCoord(massdk[indexPoint]);
 
@@ -600,28 +595,14 @@ const MainMap = (props: {
               } else ymaps && addRoute(ymaps); // перерисовка связей
             }
           }
-        //   break;
-        // case 4: // Редактирование адреса
-        //   setOpenAdress(true);
       }
       setOpen(false);
     };
 
     return (
-      <>
-        <Modal open={open} onClose={() => setOpen(false)}>
-          {/* {СontentModalPressBalloon(setOpen, handleClose, areaPoint)} */}
-          {СontentModalPressBalloon(setOpen, handleClose)}
-        </Modal>
-        {/* {openAdress && (
-          <MapChangeAdress
-            iP={indexPoint}
-            Open={setOpenAdress}
-            zero={ZeroRoute}
-            Cl={setOpen}
-          />
-        )} */}
-      </>
+      <Modal open={open} onClose={() => setOpen(false)}>
+        {СontentModalPressBalloon(setOpen, handleClose)}
+      </Modal>
     );
   };
 
@@ -658,9 +639,6 @@ const MainMap = (props: {
   const ContentContextmenu = (e: any) => {
     newPointCoord = e.get("coords");
     idxDel = NearestPoint(massdk, newPointCoord);
-
-    console.log("ContentContextmenu:", MODE, idxDel);
-
     if (MODE === "1") {
       idxDel >= 0 && setOpenDel(true);
       idxDel < 0 && setOpenCreate(true);
@@ -744,18 +722,21 @@ const MainMap = (props: {
   };
 
   const handleChangeSubArea = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.value === "0" && MODE === "0") {
-      SUBAREA = SubArea[0].toString();
-      setCurrency("1"); // встать на перваый подрайон в списке
-    } else {
-      if (Number(event.target.value) > SubArea.length) {
-        console.log("Здесь будет добавление подрайона"); //=====================
-      } else {
-        if (Number(event.target.value)) {
-          SUBAREA = SubArea[Number(event.target.value) - 1].toString();
-        } else SUBAREA = event.target.value;
-        setCurrency(event.target.value);
+    let evt = event.target.value;
+    if (evt === "0" || Number(evt) > SubArea.length) {
+      if (Number(evt) > SubArea.length) {
+        SoobOpenSetEr("Здесь будет добавление подрайона");
+        if (MODE === "-1") return;
       }
+      setCurrencyMode("0"); // переключение меню 'Перекрёстки и связи' на заголовок
+      SUBAREA = "0";
+      MODE = "-1";
+      setCurrency("0"); // встать на заголовок в меню подрайонов
+    } else {
+      if (Number(event.target.value)) {
+        SUBAREA = SubArea[Number(evt) - 1].toString();
+      } else SUBAREA = evt;
+      setCurrency(evt);
     }
     PressButton(121);
   };
