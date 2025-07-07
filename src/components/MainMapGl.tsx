@@ -111,7 +111,9 @@ const MainMap = (props: {
   region: any;
   sErr: string;
   svg: any;
-  setSvg: any;
+  setSvg: Function;
+  add: boolean;
+  setAdd: Function;
   trigger: boolean;
 }) => {
   //== Piece of Redux =======================================
@@ -398,6 +400,7 @@ const MainMap = (props: {
         break;
       case 35: // отказ от создания реверсной связи
         setMakeRevers((flagRevers = false));
+        FillMassRoute();
         ZeroRoute(false);
         break;
       case 36: // реверс связи + привязка направлений + сохранение связи
@@ -951,6 +954,13 @@ const MainMap = (props: {
       masSvg[0] = props.svg[regArea + routePKW.sourceID.toString()];
       masSvg[1] = props.svg[regArea + routePKW.targetID.toString()];
     }
+    masSvg[0] = masSvg[0] === undefined ? "" : masSvg[0];
+    masSvg[1] = masSvg[1] === undefined ? "" : masSvg[1];
+  }
+  if (props.add) {
+    FillMassRoute(); // пришёл запрос на перерисовку связей
+    ymaps && addRoute(ymaps);
+    props.setAdd(false);
   }
   if (openBind && pointAaIndex < 0 && pointBbIndex < 0) setOpenBind(false); // отработка Esc из RouteBind
   //=== обработка Esc ======================================

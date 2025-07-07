@@ -212,6 +212,8 @@ export const MakePolyRoute = (
     }
   }
 
+  console.log('MakePolyRoute:',)
+
   for (let i = 0; i < massCoord1.length; i++) {
     MakeCONT(massRoute1[i], massroute);
     massPolyRoute1[i] = new ymaps.Polyline(

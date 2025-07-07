@@ -5,10 +5,37 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 
-import { styleModalEnd, styleSetInf } from "./components/MainMapStyle";
+//import { styleModalEnd } from "./components/MainMapStyle";
 
 const AppSocketError = (props: { sErr: string; setOpen: any }) => {
   const [openSet, setOpenSet] = React.useState(true);
+
+  const styleSetInf = {
+    outline: "none",
+    position: "absolute",
+    left: "50%",
+    top: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 430,
+    bgcolor: "#ffe16e", // жёлтый
+    border: "1px solid #ffe16e", // жёлтый
+    borderRadius: 1,
+    boxShadow: 24,
+    textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+    p: 1.5,
+  };
+
+  const styleModalEnd = {
+  position: "absolute",
+  top: "0%",
+  left: "auto",
+  right: "-0%",
+  height: "21px",
+  maxWidth: "2%",
+  minWidth: "2%",
+  color: "black",
+  textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+};
 
   const handleClose = () => {
     props.setOpen(false);
@@ -21,7 +48,7 @@ const AppSocketError = (props: { sErr: string; setOpen: any }) => {
         <Button sx={styleModalEnd} onClick={handleClose}>
           <b>&#10006;</b>
         </Button>
-        <Typography variant="h6" sx={{ textAlign: "center", color: "red" }}>
+        <Typography variant="h6" sx={{ textAlign: "center", color: "black" }}>
           {props.sErr}
         </Typography>
       </Box>

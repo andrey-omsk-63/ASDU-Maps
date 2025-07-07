@@ -147,7 +147,9 @@ const App = () => {
   const [findGraphInfo, setFindGraphInfo] = React.useState(false);
   const [openSetErr, setOpenSetErr] = React.useState(false);
   const [trigger, setTrigger] = React.useState(false);
+  const [addRoute, setAddRoute] = React.useState(false);
   const [svg, setSvg] = React.useState<any>(null);
+
 
   const FilterMapInfo = React.useCallback(
     (data: any) => {
@@ -293,14 +295,12 @@ const App = () => {
         case "createWay": //
           if (!data.status) {
             soob = SoobErrorCreateWay(data);
-            //================================= потом исправить ======
-            console.log("createWay:", soob);
-            // dateRouteGl.ways.splice(dateRouteGl.ways.length - 1, 1);
-            // dateRouteProGl.ways.splice(dateRouteGl.ways.length - 1, 1);
-            // dispatch(massrouteproCreate(dateRouteProGl));
-            // dispatch(massrouteCreate(dateRouteGl));
-            // console.log('dateRouteGl:',dateRouteGl)
-            // setOpenSetErr(true);
+            dateRouteGl.ways.splice(dateRouteGl.ways.length - 1, 1);
+            dateRouteProGl.ways.splice(dateRouteGl.ways.length - 1, 1);
+            dispatch(massrouteproCreate(dateRouteProGl));
+            dispatch(massrouteCreate(dateRouteGl));
+            setOpenSetErr(true);
+            setAddRoute(true); // запрос на перерисовку связей
           }
           break;
         case "deleteWay":
@@ -312,13 +312,12 @@ const App = () => {
         case "createWayToPoint":
           if (!data.status) {
             soob = SoobErrorCreateWayToPoint(data);
-            //================================= потом исправить ======
-            console.log("createWayToPoint:", soob);
-            // dateRouteGl.ways.splice(dateRouteGl.ways.length - 1, 1);
-            // dispatch(massrouteCreate(dateRouteGl));
-            // dateRouteProGl.ways.splice(dateRouteGl.ways.length - 1, 1);
-            // dispatch(massrouteproCreate(dateRouteProGl));
-            // setOpenSetErr(true);
+            dateRouteGl.ways.splice(dateRouteGl.ways.length - 1, 1);
+            dispatch(massrouteCreate(dateRouteGl));
+            dateRouteProGl.ways.splice(dateRouteGl.ways.length - 1, 1);
+            dispatch(massrouteproCreate(dateRouteProGl));
+            setOpenSetErr(true);
+            setAddRoute(true); // запрос на перерисовку связей
           }
           break;
         case "deleteWayToPoint":
@@ -330,13 +329,13 @@ const App = () => {
         case "createWayFromPoint":
           if (!data.status) {
             soob = SoobErrorCreateWayFromPoint(data);
-            //================================= потом исправить ======
             console.log("createWayFromPoint:", soob);
-            // dateRouteGl.ways.splice(dateRouteGl.ways.length - 1, 1);
-            // dispatch(massrouteCreate(dateRouteGl));
-            // dateRouteProGl.ways.splice(dateRouteGl.ways.length - 1, 1);
-            // dispatch(massrouteproCreate(dateRouteProGl));
-            // setOpenSetErr(true);
+            dateRouteGl.ways.splice(dateRouteGl.ways.length - 1, 1);
+            dispatch(massrouteCreate(dateRouteGl));
+            dateRouteProGl.ways.splice(dateRouteGl.ways.length - 1, 1);
+            dispatch(massrouteproCreate(dateRouteProGl));
+            setOpenSetErr(true);
+            setAddRoute(true); // запрос на перерисовку связей
           }
           break;
         case "deleteWayFromPoint":
@@ -421,6 +420,8 @@ const App = () => {
             sErr={soob}
             svg={svg}
             setSvg={setSvg}
+            add={addRoute}
+            setAdd={setAddRoute}
             trigger={trigger}
           />
         )}

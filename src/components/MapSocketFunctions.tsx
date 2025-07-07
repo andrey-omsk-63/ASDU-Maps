@@ -393,11 +393,11 @@ export const SocketDeleteWay = (massroute: any, i: number) => {
 //=== SoobErrorSocket ==============================
 export const SoobErrorCreateWay = (data: any) => {
   let soob =
-    "Произошла ошибка при создании связи перекрёстка (район:" +
+    "Произошла ошибка при создании связи перекрёстка (подрайон:" +
     data.fromCross.area +
     " ID:" +
     data.fromCross.id +
-    ") c перекрёстком (район:" +
+    ") c перекрёстком (подрайон:" +
     data.toCross.area +
     " ID:" +
     data.toCross.id +
@@ -407,11 +407,11 @@ export const SoobErrorCreateWay = (data: any) => {
 
 export const SoobErrorDeleteWay = (data: any) => {
   let soob =
-    "Произошла ошибка при удалении связи перекрёстка (район:" +
+    "Произошла ошибка при удалении связи перекрёстка (подрайон:" +
     data.fromCross.area +
     " ID:" +
     data.fromCross.id +
-    ") c перекрёстком (район:" +
+    ") c перекрёстком (подрайон:" +
     data.toCross.area +
     " ID:" +
     data.toCross.id +
@@ -421,7 +421,7 @@ export const SoobErrorDeleteWay = (data: any) => {
 
 export const SoobErrorCreateWayToPoint = (data: any) => {
   let soob =
-    "Произошла ошибка при создании связи перекрёстка (район:" +
+    "Произошла ошибка при создании связи перекрёстка (подрайон:" +
     data.fromCross.area +
     " ID:" +
     data.fromCross.id +
@@ -431,7 +431,7 @@ export const SoobErrorCreateWayToPoint = (data: any) => {
 
 export const SoobErrorDeleteWayToPoint = (data: any) => {
   let soob =
-    "Произошла ошибка при удалении связи перекрёстка (район:" +
+    "Произошла ошибка при удалении связи перекрёстка (подрайон:" +
     data.fromCross.area +
     " ID:" +
     data.fromCross.id +
@@ -441,7 +441,7 @@ export const SoobErrorDeleteWayToPoint = (data: any) => {
 
 export const SoobErrorCreateWayFromPoint = (data: any) => {
   let soob =
-    "Произошла ошибка при создании связи точки с перекрёстком (район:" +
+    "Произошла ошибка при создании связи точки с перекрёстком (подрайон:" +
     data.toCross.area +
     " ID:" +
     data.toCross.id +
@@ -451,7 +451,7 @@ export const SoobErrorCreateWayFromPoint = (data: any) => {
 
 export const SoobErrorDeleteWayFromPoint = (data: any) => {
   let soob =
-    "Произошла ошибка при удалении связи точки с перекрёстком (район:" +
+    "Произошла ошибка при удалении связи точки с перекрёстком (подрайон:" +
     data.toCross.area +
     " ID:" +
     data.toCross.id +
