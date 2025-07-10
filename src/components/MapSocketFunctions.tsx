@@ -9,7 +9,7 @@ export const SendSocketCreatePoint = (
   adress: string,
   subarea: number // на самом деле это подрайон
 ) => {
-  console.log("CreatePoint:", adress, subarea);
+  console.log("CreatePoint:", adress, subarea, typeof subarea);
 
   if (!debug) {
     const handleSendOpen = () => {

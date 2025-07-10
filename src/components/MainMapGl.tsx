@@ -292,6 +292,8 @@ const MainMap = (props: {
   };
 
   const MakeRecordMassRoute = (mode: boolean, mass: any) => {
+    console.log("MakeRecordMassRoute:", mass);
+
     props.setSvg(null);
     if (!mode) {
       ZeroRoute(mode);
@@ -612,6 +614,9 @@ const MainMap = (props: {
   const PlacemarkDo = () => {
     let pA = pointAaIndex;
     let pB = pointBbIndex;
+
+    console.log("PlacemarkDo");
+
     const DoPlacemarkDo = (props: { coordinate: any; idx: number }) => {
       const MemoPlacemarkDo = React.useMemo(
         () => (

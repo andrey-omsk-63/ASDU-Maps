@@ -21,7 +21,7 @@ import { styleSetArea, styleBoxFormArea } from "./../MainMapStyle";
 
 let subArea = -1;
 let flagInput = true;
-let massKey: string[] = [];
+let massKey: string[] = ["0"];
 let currencies: any = [];
 let soobErr = "";
 
@@ -61,6 +61,8 @@ const MapCreatePoint = (props: {
   const [currency, setCurrency] = React.useState(massKey[0]);
   const REGION = homeRegion;
 
+  console.log("000!!!!!!:", massKey[0]);
+
   if (flagInput) {
     let dat = [];
     for (let i = 0; i < SubArea.length; i++)
@@ -80,6 +82,9 @@ const MapCreatePoint = (props: {
     let idx = SubArea.indexOf(subb);
     subArea = SubArea[idx];
     flagInput = false;
+
+    console.log("111!!!!!!:", idx, massKey[idx], typeof massKey[idx], massKey);
+
     setCurrency(massKey[idx]);
   }
 
@@ -99,8 +104,6 @@ const MapCreatePoint = (props: {
   };
 
   const handleCloseSetAdr = () => {
-    console.log("handleCloseSetAdr:", datestat.permitСreatPoint);
-
     if (!datestat.permitСreatPoint) {
       soobErr =
         "Новую точку создовать нельзя пока не пришло подтверждение с сервера о том, что обработана информация о создании предыдущей точки";
@@ -119,6 +122,8 @@ const MapCreatePoint = (props: {
         if (!have) Have = false;
       }
 
+      console.log("handleCloseSetAdr:", subArea, typeof subArea);
+
       massdk.push(
         MapssdkNewPoint(REGION, props.coord, valueAdr, 0, subArea, tempId)
       );
@@ -132,9 +137,6 @@ const MapCreatePoint = (props: {
       );
       massroute.vertexes.push(rec);
       massroute.points.push(rec);
-
-      console.log("######:", subArea);
-      console.log(massroute, massdk);
 
       dispatch(massdkCreate(massdk));
       dispatch(massrouteCreate(massroute));
@@ -174,7 +176,7 @@ const MapCreatePoint = (props: {
     let sub = Number(event.target.value);
     subArea = SubArea[sub];
 
-    console.log("handleChangeSArea:", subArea);
+    console.log("handleChangeSArea:", subArea, typeof subArea);
 
     setCurrency(event.target.value);
   };

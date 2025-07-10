@@ -329,7 +329,7 @@ export const MakeNewPointContent = (
   let adress = massroute.vertexes[massroute.vertexes.length - 1].name;
   let lin = massroute.vertexes[massroute.vertexes.length - 1].lin;
 
-  console.log("MakeNewPointContent:", avail, lin);
+  console.log("MakeNewPointContent:", areaV, avail, lin);
 
   lin && avail && SendSocketCreateVertex(homeRegion, areaV, idV); // светофор
   !lin && SendSocketCreatePoint(coor, adress, areaV); // объект
@@ -1005,7 +1005,8 @@ export const ComplianceMapMassdk = (index: number, massdk: any, map: any) => {
     for (let i = 0; i < map.dateMap.tflight.length; i++) {
       if (
         map.dateMap.tflight[i].ID === massdk[index].ID &&
-        Number(map.dateMap.tflight[i].area.num) === massdk[index].area
+        // Number(map.dateMap.tflight[i].area.num) === massdk[index].area
+        map.dateMap.tflight[i].subarea === massdk[index].subarea
       ) {
         idxMap = i;
         break;
@@ -1061,6 +1062,7 @@ export const GetPointOptions = (
       window.location.origin.slice(0, 22) === "https://localhost:3000"
         ? "https://localhost:3000/"
         : "./";
+
     if (idxMap >= 0) {
       if (SubArea === SUBAREA || SUBAREA === "0") {
         host = hostt + "1.svg";
@@ -1091,6 +1093,8 @@ export const GetPointOptions = (
     if (MODE === "1")
       if (index === pointBbIndex || index === pointAaIndex) HosterIllum("2");
 
+    //console.log("1######:", MODE, index, SubArea, SUBAREA);
+
     return host;
   };
 
@@ -1099,6 +1103,8 @@ export const GetPointOptions = (
     colorBalloon = "islands#violetCircleDotIcon"; // точка
     if (massdk[index].newCoordinates > 0)
       colorBalloon = "islands#darkOrangeCircleDotIcon"; // новая точка
+
+    //console.log("2######:", MODE, index, SubArea, SUBAREA);
   }
 
   if (index === pointAaIndex && MODE === "0")
@@ -1126,7 +1132,7 @@ export const GetPointOptions = (
     };
   };
 
-  //console.log("HOST:", colorBalloon);
+  //console.log("HOST:",index, colorBalloon);
 
   return colorBalloon === "Icon" ? YesImg() : NoImg();
 };
@@ -1489,21 +1495,23 @@ export const NoVertex = (openSetErr: boolean, handleCloseErr: Function) => {
 export const ReplaceInSvg = (Svg: any, widthHeight: string) => {
   //console.log("ReplaceInSvg:", Svg);
 
-  let ch = "";
   let svgPipa = Svg;
-  let vxod = Svg.indexOf("width=");
-  for (let i = 0; i < 100; i++) {
-    if (isNaN(Number(svgPipa[vxod + 7 + i]))) break;
-    ch = ch + svgPipa[vxod + 7 + i];
+  if (svgPipa) {
+    let ch = "";
+    let vxod = Svg.indexOf("width=");
+    for (let i = 0; i < 100; i++) {
+      if (isNaN(Number(svgPipa[vxod + 7 + i]))) break;
+      ch = ch + svgPipa[vxod + 7 + i];
+    }
+    for (let i = 0; i < 6; i++) svgPipa = svgPipa.replace(ch, widthHeight);
+    let chh = "";
+    let vxodh = Svg.indexOf("height=");
+    for (let i = 0; i < 100; i++) {
+      if (isNaN(Number(svgPipa[vxodh + 8 + i]))) break;
+      chh = chh + svgPipa[vxodh + 8 + i];
+    }
+    for (let i = 0; i < 6; i++) svgPipa = svgPipa.replace(chh, widthHeight);
   }
-  for (let i = 0; i < 6; i++) svgPipa = svgPipa.replace(ch, widthHeight);
-  let chh = "";
-  let vxodh = Svg.indexOf("height=");
-  for (let i = 0; i < 100; i++) {
-    if (isNaN(Number(svgPipa[vxodh + 8 + i]))) break;
-    chh = chh + svgPipa[vxodh + 8 + i];
-  }
-  for (let i = 0; i < 6; i++) svgPipa = svgPipa.replace(chh, widthHeight);
 
   return svgPipa;
 };
@@ -1600,31 +1608,38 @@ export const ArgTablBindContent = (xss: number, soob: any, mode: number) => {
 };
 
 export const ExampleComponent = (idx: number, masSvg: any) => {
+  console.log("ExampleComponent:", idx, masSvg);
+
   return (
     <Box sx={{ padding: "4px 0px 0px 0px" }}>
-      <div dangerouslySetInnerHTML={{ __html: masSvg[idx] }} />
+      {masSvg[idx] && <div dangerouslySetInnerHTML={{ __html: masSvg[idx] }} />}
     </Box>
   );
 };
 
 export function AppIconAsdu(heightImg: number) {
+  console.log("AppIconAsdu:", heightImg);
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={heightImg + 6}
-      height={heightImg - 10}
-      version="1"
-      viewBox="0 0 91 54"
-    >
-      <path
-        d="M425 513C81 440-106 190 91 68 266-41 640 15 819 176c154 139 110 292-98 341-73 17-208 15-296-4zm270-14c208-38 257-178 108-308C676 79 413 8 240 40 29 78-30 199 100 329c131 131 396 207 595 170z"
-        transform="matrix(.1 0 0 -.1 0 54)"
-      ></path>
-      <path
-        d="M425 451c-11-18-5-20 74-30 108-14 157-56 154-133-2-52-41-120-73-129-44-12-110-10-110 4 1 6 7 62 14 122 7 61 12 113 10 117-4 6-150 1-191-8-45-9-61-40-74-150-10-90-14-104-30-104-12 0-19-7-19-20 0-11 7-20 15-20s15-7 15-15c0-11 11-15 35-15 22 0 38 6 41 15 4 9 19 15 35 15 22 0 29 5 29 20s-7 20-25 20c-29 0-31 10-14 127 12 82 31 113 71 113 18 0 20-5 15-42-4-24-9-74-12-113-3-38-8-87-11-107l-6-38h46c34 0 46 4 46 15s12 15 48 15c97 0 195 47 227 110 59 115-44 225-223 237-56 4-81 2-87-6z"
-        transform="matrix(.1 0 0 -.1 0 54)"
-      ></path>
-    </svg>
+    <>
+      {heightImg > 11 && (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width={heightImg + 6}
+          height={heightImg - 10}
+          version="1"
+          viewBox="0 0 91 54"
+        >
+          <path
+            d="M425 513C81 440-106 190 91 68 266-41 640 15 819 176c154 139 110 292-98 341-73 17-208 15-296-4zm270-14c208-38 257-178 108-308C676 79 413 8 240 40 29 78-30 199 100 329c131 131 396 207 595 170z"
+            transform="matrix(.1 0 0 -.1 0 54)"
+          ></path>
+          <path
+            d="M425 451c-11-18-5-20 74-30 108-14 157-56 154-133-2-52-41-120-73-129-44-12-110-10-110 4 1 6 7 62 14 122 7 61 12 113 10 117-4 6-150 1-191-8-45-9-61-40-74-150-10-90-14-104-30-104-12 0-19-7-19-20 0-11 7-20 15-20s15-7 15-15c0-11 11-15 35-15 22 0 38 6 41 15 4 9 19 15 35 15 22 0 29 5 29 20s-7 20-25 20c-29 0-31 10-14 127 12 82 31 113 71 113 18 0 20-5 15-42-4-24-9-74-12-113-3-38-8-87-11-107l-6-38h46c34 0 46 4 46 15s12 15 48 15c97 0 195 47 227 110 59 115-44 225-223 237-56 4-81 2-87-6z"
+            transform="matrix(.1 0 0 -.1 0 54)"
+          ></path>
+        </svg>
+      )}
+    </>
   );
 }
 
@@ -1643,6 +1658,8 @@ export const HeaderBind = (
   const [comment0, setComment0] = React.useState(false);
   const [comment1, setComment1] = React.useState(false);
   const heightWind = window.innerHeight * 0.8;
+
+  console.log("1HeaderBind", HeaderBindIDX);
 
   const handleClose = () => setOpenSvg(false);
 
@@ -1691,7 +1708,7 @@ export const HeaderBind = (
             <b>&#10006;</b>
           </Button>
           <Box sx={styleWindPK04}>
-            <div dangerouslySetInnerHTML={{ __html: expSvg }} />
+            {expSvg && <div dangerouslySetInnerHTML={{ __html: expSvg }} />}
           </Box>
         </Box>
       </Modal>

@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { statsaveCreate } from "./../../redux/actions";
 
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
 import Modal from "@mui/material/Modal";
 
 import MapWindViewGraf from "./MapPKComponents/MapWindViewGraf";
@@ -13,24 +13,14 @@ import { Directions } from "./../../App"; // интерфейс massForm
 
 import MapRouteBindForm from "./MapRouteBindForm";
 
-import { StrokaMenuFooterBind, ReplaceInSvg } from "./../MapServiceFunctions";
-import { HeaderBind, BindInput, MaskFormWay } from "./../MapServiceFunctions";
-import { HeaderTablBindContent, BindTablFrom } from "./../MapServiceFunctions";
-import { BadExit, KnopProps } from "./../MapServiceFunctions";
+import { BadExit, BindInput, BindTablFrom, HeaderBind, HeaderTablBindContent, KnopProps, MaskFormWay, ReplaceInSvg, StrokaMenuFooterBind } from "./../MapServiceFunctions";
 
 import { MODE, debug } from "./../MainMapGl";
-import { KolFrom, KolIn, INCOM, OUTGO, optionsMiniGraf } from "./../MapConst";
+import { INCOM, KolFrom, KolIn, OUTGO, optionsMiniGraf } from "./../MapConst";
 
-import { styleSetImg, styleModalEndBind } from "./../MainMapStyle";
-import { styleBind042, MakeStyleBind00, styleBind043 } from "./../MainMapStyle";
-import { styleBind03, styleBind033, styleBind041 } from "./../MainMapStyle";
-import { styleBind01, styleBind04, styleBind05 } from "./../MainMapStyle";
-import { styleBind06, styleBind07, styleBind08 } from "./../MainMapStyle";
-import { styleBind0333, StyleBind09, styleTypography } from "./../MainMapStyle";
+import { MakeStyleBind00, StyleBind09, styleBind01, styleBind03, styleBind033, styleBind0333, styleBind04, styleBind041, styleBind042, styleBind043, styleBind05, styleBind06, styleBind07, styleBind08, styleModalEndBind, styleSetImg, styleTypography } from "./../MainMapStyle";
 
-import { Chart as ChartJS, CategoryScale } from "chart.js";
-import { LinearScale, PointElement } from "chart.js";
-import { LineElement, Title, Tooltip, Legend } from "chart.js";
+import { CategoryScale, Chart as ChartJS, Legend, LineElement, LinearScale, PointElement, Title, Tooltip } from "chart.js";
 import { Line } from "react-chartjs-2";
 ChartJS.register(
   CategoryScale,
@@ -171,6 +161,8 @@ const MapRouteBind = (props: {
   };
 
   const handleCloseBadExit = (mode: boolean) => {
+    console.log("hhandleCloseBadExit:", massBind);
+
     setBadExit(false);
     if (mode) {
       props.func(false, massBind); // выход без сохранения
@@ -187,11 +179,14 @@ const MapRouteBind = (props: {
   };
 
   const handleCloseEnd = (event: any, reason: string) => {
+    console.log("handleCloseEnd:");
+
     if (reason === "escapeKeyDown") handleCloseBad();
   };
 
   const handleCloseGood = () => {
-    //console.log("Good:",massTotal);
+    console.log("handleCloseGood:", massTotal);
+
     props.func(true, massBind);
     CloseEnd();
   };
@@ -270,8 +265,6 @@ const MapRouteBind = (props: {
     }
   }
   //=== Ожидания получения изображений перекрёстков ========
-  console.log("!!!111:", props.svg, masSvg);
-
   if (props.svg && masSvg[0] === "" && masSvg[1] === "") {
     let dat = props.svg;
     masSvg = [];
@@ -604,6 +597,8 @@ const MapRouteBind = (props: {
     // }
     // data.datasets[1].data = datas;
 
+    console.log(' ')
+
     return <Line options={optionsMiniGraf} data={data} />;
   };
 
@@ -615,6 +610,9 @@ const MapRouteBind = (props: {
   const OutputGraf = () => {
     let nom = beginMassTotal / kolFrom + 1;
     let nameRoute = massroute.vertexes[props.idxB].id + "." + nom.toString();
+
+    console.log("4444444");
+
     return (
       <Box
         sx={styleBind06}
@@ -647,6 +645,8 @@ const MapRouteBind = (props: {
       </Box>
     );
   };
+
+  console.log("333333");
 
   return (
     <>
