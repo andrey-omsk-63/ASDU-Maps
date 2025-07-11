@@ -252,9 +252,7 @@ const App = () => {
             dateRouteGl.vertexes[dateRouteGl.vertexes.length - 1].id = data.id; // прописывакм реальное ID
             dateRouteGl.vertexes[dateRouteGl.points.length - 1].id = data.id;
             massdk[massdk.length - 1].ID = data.id;
-
-            console.log("createPoint:", { ...dateRouteGl }, { ...massdk });
-
+            //console.log("createPoint:", { ...dateRouteGl }, { ...massdk });
             setTrigger(!trigger);
           } else {
             dateRouteGl.vertexes.splice(dateRouteGl.vertexes.length - 1, 1); // произошла ошибка
@@ -269,7 +267,6 @@ const App = () => {
           dispatch(statsaveCreate(dateStat));
           dispatch(massrouteCreate(dateRouteGl));
           dispatch(massdkCreate(massdk));
-
           break;
         case "deletePoint":
           if (!data.status) {

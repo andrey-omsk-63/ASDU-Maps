@@ -13,14 +13,51 @@ import { Directions } from "./../../App"; // интерфейс massForm
 
 import MapRouteBindForm from "./MapRouteBindForm";
 
-import { BadExit, BindInput, BindTablFrom, HeaderBind, HeaderTablBindContent, KnopProps, MaskFormWay, ReplaceInSvg, StrokaMenuFooterBind } from "./../MapServiceFunctions";
+import {
+  BadExit,
+  BindInput,
+  BindTablFrom,
+  HeaderBind,
+  HeaderTablBindContent,
+  KnopProps,
+  MaskFormWay,
+  ReplaceInSvg,
+  StrokaMenuFooterBind,
+} from "./../MapServiceFunctions";
 
 import { MODE, debug } from "./../MainMapGl";
 import { INCOM, KolFrom, KolIn, OUTGO, optionsMiniGraf } from "./../MapConst";
 
-import { MakeStyleBind00, StyleBind09, styleBind01, styleBind03, styleBind033, styleBind0333, styleBind04, styleBind041, styleBind042, styleBind043, styleBind05, styleBind06, styleBind07, styleBind08, styleModalEndBind, styleSetImg, styleTypography } from "./../MainMapStyle";
+import {
+  MakeStyleBind00,
+  StyleBind09,
+  styleBind01,
+  styleBind03,
+  styleBind033,
+  styleBind0333,
+  styleBind04,
+  styleBind041,
+  styleBind042,
+  styleBind043,
+  styleBind05,
+  styleBind06,
+  styleBind07,
+  styleBind08,
+  styleModalEndBind,
+  styleSetImg,
+  styleTypography,
+} from "./../MainMapStyle";
 
-import { CategoryScale, Chart as ChartJS, Legend, LineElement, LinearScale, PointElement, Title, Tooltip } from "chart.js";
+import {
+  CategoryScale,
+  Chart as ChartJS,
+  Legend,
+  LineElement,
+  LinearScale,
+  PointElement,
+  Title,
+  Tooltip,
+} from "chart.js";
 import { Line } from "react-chartjs-2";
 ChartJS.register(
   CategoryScale,
@@ -77,7 +114,7 @@ let Route: any = {
 let From = "";
 let HAVE = 0;
 let timeInterval = 80;
-let comment = false;
+//let comment: boolean = false;
 
 let maskForm: Directions = JSON.parse(JSON.stringify(MaskFormWay()));
 let massForm: Directions = JSON.parse(JSON.stringify(MaskFormWay()));
@@ -108,6 +145,8 @@ const MapRouteBind = (props: {
   const [openGraf, setOpenGraf] = React.useState(false);
   const [badExit, setBadExit] = React.useState(false);
   const [trigger, setTrigger] = React.useState(false);
+  const [comment, setComment] = React.useState(false);
+
   const SEC = props.reqRoute.tmRoute;
   let heightImg = Math.round(window.innerWidth / 7);
   let widthHeight = heightImg.toString();
@@ -161,7 +200,7 @@ const MapRouteBind = (props: {
   };
 
   const handleCloseBadExit = (mode: boolean) => {
-    console.log("hhandleCloseBadExit:", massBind);
+    //console.log("hhandleCloseBadExit:", massBind);
 
     setBadExit(false);
     if (mode) {
@@ -205,7 +244,7 @@ const MapRouteBind = (props: {
   if (oldIdxA !== props.idxA || oldIdxB !== props.idxB) {
     massBind = [1, 2]; // ====== потом определится со зачениями lsource и ltarget ======
     HAVE = 0;
-    comment = false;
+    //comment = false;
     oldIdxA = props.idxA;
     oldIdxB = props.idxB;
     Route.dlRoute = props.reqRoute.dlRoute;
@@ -263,6 +302,7 @@ const MapRouteBind = (props: {
       masFormFrom.push(JSON.parse(JSON.stringify(maskForm)));
       masFormFrom[i].name = OUTGO + (i + 1).toString();
     }
+    setComment(false);
   }
   //=== Ожидания получения изображений перекрёстков ========
   if (props.svg && masSvg[0] === "" && masSvg[1] === "") {
@@ -597,27 +637,24 @@ const MapRouteBind = (props: {
     // }
     // data.datasets[1].data = datas;
 
-    console.log(' ')
+    //console.log("PointsGraf00:", data);
 
     return <Line options={optionsMiniGraf} data={data} />;
   };
 
-  const SetComment = (mode: boolean) => {
-    comment = mode;
-    setTrigger(!trigger);
-  };
+  // const SetComment = (mode: boolean) => {
+  //   setComment(mode);
+  // };
 
   const OutputGraf = () => {
     let nom = beginMassTotal / kolFrom + 1;
     let nameRoute = massroute.vertexes[props.idxB].id + "." + nom.toString();
 
-    console.log("4444444");
-
     return (
       <Box
         sx={styleBind06}
-        onMouseEnter={() => SetComment(true)}
-        onMouseLeave={() => SetComment(false)}
+        onMouseEnter={() => setComment(true)}
+        onMouseLeave={() => setComment(false)}
         onClick={() => ClickBlok(nom)}
       >
         {comment ? (
@@ -646,7 +683,7 @@ const MapRouteBind = (props: {
     );
   };
 
-  console.log("333333");
+  //console.log("@@@@@@:", openSetBind);
 
   return (
     <>

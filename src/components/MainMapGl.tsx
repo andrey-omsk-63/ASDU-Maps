@@ -615,9 +615,13 @@ const MainMap = (props: {
     let pA = pointAaIndex;
     let pB = pointBbIndex;
 
-    console.log("PlacemarkDo");
-
     const DoPlacemarkDo = (props: { coordinate: any; idx: number }) => {
+      // Number(MODE) > 0 &&
+      //   console.log("3######:", MODE, props.idx, props.coordinate);
+      // Number(MODE) > 0 &&
+      //   props.idx === coordinates.length - 1 &&
+      //   console.log("coordinates:", coordinates);
+
       const MemoPlacemarkDo = React.useMemo(
         () => (
           <Placemark
@@ -946,21 +950,23 @@ const MainMap = (props: {
   masSvg = ["", ""];
   if (!debug && props.svg !== oldPropsSvg) {
     oldPropsSvg = props.svg;
-    if (props.svg && pointAaIndex >= 0 && pointBbIndex >= 0) {
-      masSvg[0] = props.svg[RecevKeySvg(massroute.vertexes[pointAaIndex])]; // передача изображений в обычную привязку
-      masSvg[1] = props.svg[RecevKeySvg(massroute.vertexes[pointBbIndex])];
+    if (props.svg) {
+      if (props.svg && pointAaIndex >= 0 && pointBbIndex >= 0) {
+        masSvg[0] = props.svg[RecevKeySvg(massroute.vertexes[pointAaIndex])]; // передача изображений в обычную привязку
+        masSvg[1] = props.svg[RecevKeySvg(massroute.vertexes[pointBbIndex])];
+      }
+      if (props.svg && openEr) {
+        masSvg[0] = props.svg[RecevKeySvg(massroute.vertexes[fromIdx])]; // передача изображений в привязку через "дубликатные связи"
+        masSvg[1] = props.svg[RecevKeySvg(massroute.vertexes[inIdx])];
+      }
+      if (PLANER > 0 && routePKW) {
+        let regArea = homeRegion.toString() + "-" + AREA + "-"; // передача изображений в привязку через "инф-я о направлениях"
+        masSvg[0] = props.svg[regArea + routePKW.sourceID.toString()];
+        masSvg[1] = props.svg[regArea + routePKW.targetID.toString()];
+      }
+      masSvg[0] = masSvg[0] === undefined ? "" : masSvg[0];
+      masSvg[1] = masSvg[1] === undefined ? "" : masSvg[1];
     }
-    if (props.svg && openEr) {
-      masSvg[0] = props.svg[RecevKeySvg(massroute.vertexes[fromIdx])]; // передача изображений в привязку через "дубликатные связи"
-      masSvg[1] = props.svg[RecevKeySvg(massroute.vertexes[inIdx])];
-    }
-    if (PLANER > 0 && routePKW) {
-      let regArea = homeRegion.toString() + "-" + AREA + "-"; // передача изображений в привязку через "инф-я о направлениях"
-      masSvg[0] = props.svg[regArea + routePKW.sourceID.toString()];
-      masSvg[1] = props.svg[regArea + routePKW.targetID.toString()];
-    }
-    masSvg[0] = masSvg[0] === undefined ? "" : masSvg[0];
-    masSvg[1] = masSvg[1] === undefined ? "" : masSvg[1];
   }
   if (props.add) {
     FillMassRoute(); // пришёл запрос на перерисовку связей

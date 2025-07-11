@@ -1049,12 +1049,17 @@ export const GetPointOptions = (
 ) => {
   let idxMap = -1;
   let SubArea = massdk[index].subarea.toString();
-  for (let i = 0; i < map.dateMap.tflight.length; i++) {
-    if (map.dateMap.tflight[i].ID === massdk[index].ID) {
-      idxMap = i;
-      break;
+  if (massdk[index].area) {
+    // это перекрёсток (massdk[index].area = 0 - точка)
+    for (let i = 0; i < map.dateMap.tflight.length; i++) {
+      if (map.dateMap.tflight[i].ID === massdk[index].ID) {
+        idxMap = i;
+        break;
+      }
     }
   }
+
+  //Number(MODE) > 0 && console.log("GetPointOptions:", MODE, idxMap, SubArea);
 
   const Hoster = () => {
     let host = "";
@@ -1093,7 +1098,8 @@ export const GetPointOptions = (
     if (MODE === "1")
       if (index === pointBbIndex || index === pointAaIndex) HosterIllum("2");
 
-    //console.log("1######:", MODE, index, SubArea, SUBAREA);
+    // Number(MODE) > 0 &&
+    //   console.log("1######:", MODE, index, SubArea, SUBAREA, host);
 
     return host;
   };
@@ -1103,8 +1109,6 @@ export const GetPointOptions = (
     colorBalloon = "islands#violetCircleDotIcon"; // точка
     if (massdk[index].newCoordinates > 0)
       colorBalloon = "islands#darkOrangeCircleDotIcon"; // новая точка
-
-    //console.log("2######:", MODE, index, SubArea, SUBAREA);
   }
 
   if (index === pointAaIndex && MODE === "0")
@@ -1113,6 +1117,9 @@ export const GetPointOptions = (
     colorBalloon = "islands#darkBlueStretchyIcon"; // конец связи
 
   const NoImg = () => {
+    // Number(MODE) > 0 &&
+    //   console.log("2######:", MODE, index, SubArea, SUBAREA, colorBalloon);
+
     return {
       preset: colorBalloon,
     };
@@ -1285,13 +1292,6 @@ export const MasskPoint = (massrouteVertexes: any) => {
     phases: [1, 2, 7],
     newCoordinates: 0,
   };
-  //masskPoint.ID = massrouteVertexes.id;
-  //masskPoint.coordinates = DecodingCoord(massrouteVertexes.dgis);
-  //masskPoint.nameCoordinates = massrouteVertexes.name;
-  //masskPoint.region = massrouteVertexes.region;
-  //masskPoint.area = massrouteVertexes.area; // была замена area на subarea
-  //=============================================================
-  //let area = massrouteVertexes.area;
   let area = 0;
   let phases = [1, 2, 7];
   if (massrouteVertexes.lin) {
@@ -1493,8 +1493,6 @@ export const NoVertex = (openSetErr: boolean, handleCloseErr: Function) => {
 };
 //=== RouteBind =======================================================
 export const ReplaceInSvg = (Svg: any, widthHeight: string) => {
-  //console.log("ReplaceInSvg:", Svg);
-
   let svgPipa = Svg;
   if (svgPipa) {
     let ch = "";
@@ -1512,6 +1510,8 @@ export const ReplaceInSvg = (Svg: any, widthHeight: string) => {
     }
     for (let i = 0; i < 6; i++) svgPipa = svgPipa.replace(chh, widthHeight);
   }
+
+  //console.log("ReplaceInSvg:", svgPipa);
 
   return svgPipa;
 };
@@ -1608,7 +1608,7 @@ export const ArgTablBindContent = (xss: number, soob: any, mode: number) => {
 };
 
 export const ExampleComponent = (idx: number, masSvg: any) => {
-  console.log("ExampleComponent:", idx, masSvg);
+  //console.log("ExampleComponent:", idx, masSvg);
 
   return (
     <Box sx={{ padding: "4px 0px 0px 0px" }}>
@@ -1618,7 +1618,8 @@ export const ExampleComponent = (idx: number, masSvg: any) => {
 };
 
 export function AppIconAsdu(heightImg: number) {
-  console.log("AppIconAsdu:", heightImg);
+  //console.log("AppIconAsdu:", heightImg);
+
   return (
     <>
       {heightImg > 11 && (
@@ -1658,8 +1659,6 @@ export const HeaderBind = (
   const [comment0, setComment0] = React.useState(false);
   const [comment1, setComment1] = React.useState(false);
   const heightWind = window.innerHeight * 0.8;
-
-  console.log("1HeaderBind", HeaderBindIDX);
 
   const handleClose = () => setOpenSvg(false);
 
@@ -1717,6 +1716,8 @@ export const HeaderBind = (
 
   let soobComment =
     "Для более детального просмотра изображения нажмите левую кнопку мыши";
+
+  //console.log("######:", openSvg);
 
   return (
     <>
