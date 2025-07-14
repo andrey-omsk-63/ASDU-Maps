@@ -329,8 +329,6 @@ export const MakeNewPointContent = (
   let adress = massroute.vertexes[massroute.vertexes.length - 1].name;
   let lin = massroute.vertexes[massroute.vertexes.length - 1].lin;
 
-  console.log("MakeNewPointContent:", areaV, avail, lin);
-
   lin && avail && SendSocketCreateVertex(homeRegion, areaV, idV); // светофор
   !lin && SendSocketCreatePoint(coor, adress, areaV); // объект
 };

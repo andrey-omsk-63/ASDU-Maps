@@ -392,16 +392,20 @@ export const SocketDeleteWay = (massroute: any, i: number) => {
 };
 //=== SoobErrorSocket ==============================
 export const SoobErrorCreateWay = (data: any) => {
-  let soob =
-    "Произошла ошибка при создании связи перекрёстка (подрайон:" +
-    data.fromCross.area +
-    " ID:" +
-    data.fromCross.id +
-    ") c перекрёстком (подрайон:" +
-    data.toCross.area +
-    " ID:" +
-    data.toCross.id +
-    ")";
+  let soob = "Произошла ошибка";
+  if (data) {
+    soob =
+      soob +
+      " при создании связи перекрёстка (подрайон:" +
+      data.fromCross.area +
+      " ID:" +
+      data.fromCross.id +
+      ") c перекрёстком (подрайон:" +
+      data.toCross.area +
+      " ID:" +
+      data.toCross.id +
+      ")";
+  }
   return soob;
 };
 

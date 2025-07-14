@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 
 //import { styleModalEnd } from "./components/MainMapStyle";
 
-const AppSocketError = (props: { sErr: string; setOpen: any }) => {
+const AppSocketError = (props: { sErr: string; setOpen: Function }) => {
   const [openSet, setOpenSet] = React.useState(true);
 
   const styleSetInf = {

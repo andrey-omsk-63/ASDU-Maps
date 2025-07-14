@@ -61,8 +61,6 @@ const MapCreatePoint = (props: {
   const [currency, setCurrency] = React.useState(massKey[0]);
   const REGION = homeRegion;
 
-  console.log("000!!!!!!:", massKey[0]);
-
   if (flagInput) {
     let dat = [];
     for (let i = 0; i < SubArea.length; i++)
@@ -82,8 +80,6 @@ const MapCreatePoint = (props: {
     let idx = SubArea.indexOf(subb);
     subArea = SubArea[idx];
     flagInput = false;
-
-    console.log("111!!!!!!:", idx, massKey[idx], typeof massKey[idx], massKey);
 
     setCurrency(massKey[idx]);
   }
@@ -121,8 +117,6 @@ const MapCreatePoint = (props: {
         }
         if (!have) Have = false;
       }
-
-      console.log("handleCloseSetAdr:", subArea, typeof subArea);
 
       massdk.push(
         MapssdkNewPoint(REGION, props.coord, valueAdr, 0, subArea, tempId)

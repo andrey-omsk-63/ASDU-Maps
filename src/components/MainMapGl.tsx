@@ -109,12 +109,14 @@ let soobTwoDots = "Связь между двумя точками создов�
 
 const MainMap = (props: {
   region: any;
-  sErr: string;
   svg: any;
   setSvg: Function;
   add: boolean;
   setAdd: Function;
   trigger: boolean;
+  //openSetErr: boolean;
+  sErr: string;
+  //setOpenSetErr: any;
 }) => {
   //== Piece of Redux =======================================
   let massdk = useSelector((state: any) => {
@@ -292,8 +294,6 @@ const MainMap = (props: {
   };
 
   const MakeRecordMassRoute = (mode: boolean, mass: any) => {
-    console.log("MakeRecordMassRoute:", mass);
-
     props.setSvg(null);
     if (!mode) {
       ZeroRoute(mode);
@@ -616,12 +616,6 @@ const MainMap = (props: {
     let pB = pointBbIndex;
 
     const DoPlacemarkDo = (props: { coordinate: any; idx: number }) => {
-      // Number(MODE) > 0 &&
-      //   console.log("3######:", MODE, props.idx, props.coordinate);
-      // Number(MODE) > 0 &&
-      //   props.idx === coordinates.length - 1 &&
-      //   console.log("coordinates:", coordinates);
-
       const MemoPlacemarkDo = React.useMemo(
         () => (
           <Placemark
@@ -943,6 +937,8 @@ const MainMap = (props: {
     console.log("Massdk:", massdk);
   }
   //========================================================
+  //console.log("MAIN:", props.add, props.svg, props.trigger, props.sErr);
+
   if (props.sErr && props.sErr !== oldsErr) {
     ymaps && addRoute(ymaps); // перерисовка связей
     oldsErr = props.sErr;
@@ -1086,6 +1082,18 @@ const MainMap = (props: {
                 setSvg={props.setSvg}
               />
             )}
+
+            {/* {props.openSetErr && (
+              <MapPointDataError
+                setOpen={props.setOpenSetErr}
+                sErr={props.sErr}
+                fromCross={0}
+                toCross={0}
+                update={0}
+                setSvg={{}}
+              />
+            )} */}
+
             {openInf && (
               <MapRouteInfo
                 setOpen={setOpenInf}

@@ -56,7 +56,7 @@ let flagInput = true;
 let HAVE = 0;
 
 const MapPointDataError = (props: {
-  setOpen: any;
+  setOpen: Function;
   sErr: string;
   fromCross: any;
   toCross: any;
