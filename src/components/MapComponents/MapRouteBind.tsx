@@ -13,40 +13,20 @@ import { Directions } from "./../../App"; // интерфейс massForm
 
 import MapRouteBindForm from "./MapRouteBindForm";
 
-import {
-  BadExit,
-  BindInput,
-  BindTablFrom,
-  HeaderBind,
-  HeaderTablBindContent,
-  KnopProps,
-  MaskFormWay,
-  ReplaceInSvg,
-  StrokaMenuFooterBind,
-} from "./../MapServiceFunctions";
+import { BadExit, BindInput, BindTablFrom } from "./../MapServiceFunctions";
+import { HeaderBind, HeaderTablBindContent } from "./../MapServiceFunctions";
+import { KnopProps, MaskFormWay, ReplaceInSvg } from "./../MapServiceFunctions";
+import { StrokaMenuFooterBind } from "./../MapServiceFunctions";
 
 import { MODE, debug } from "./../MainMapGl";
 import { INCOM, KolFrom, KolIn, OUTGO, optionsMiniGraf } from "./../MapConst";
 
-import {
-  MakeStyleBind00,
-  StyleBind09,
-  styleBind01,
-  styleBind03,
-  styleBind033,
-  styleBind0333,
-  styleBind04,
-  styleBind041,
-  styleBind042,
-  styleBind043,
-  styleBind05,
-  styleBind06,
-  styleBind07,
-  styleBind08,
-  styleModalEndBind,
-  styleSetImg,
-  styleTypography,
-} from "./../MainMapStyle";
+import { MakeStyleBind00, StyleBind09, styleBind01 } from "./../MainMapStyle";
+import { styleBind03, styleBind033, styleBind0333 } from "./../MainMapStyle";
+import { styleBind04, styleBind041, styleBind042 } from "./../MainMapStyle";
+import { styleBind043, styleBind05, styleBind06 } from "./../MainMapStyle";
+import { styleBind07, styleBind08, styleModalEndBind } from "./../MainMapStyle";
+import { styleSetImg, styleTypography } from "./../MainMapStyle";
 
 import {
   CategoryScale,
@@ -114,7 +94,6 @@ let Route: any = {
 let From = "";
 let HAVE = 0;
 let timeInterval = 80;
-//let comment: boolean = false;
 
 let maskForm: Directions = JSON.parse(JSON.stringify(MaskFormWay()));
 let massForm: Directions = JSON.parse(JSON.stringify(MaskFormWay()));
@@ -200,8 +179,6 @@ const MapRouteBind = (props: {
   };
 
   const handleCloseBadExit = (mode: boolean) => {
-    //console.log("hhandleCloseBadExit:", massBind);
-
     setBadExit(false);
     if (mode) {
       props.func(false, massBind); // выход без сохранения
@@ -218,14 +195,10 @@ const MapRouteBind = (props: {
   };
 
   const handleCloseEnd = (event: any, reason: string) => {
-    console.log("handleCloseEnd:");
-
     if (reason === "escapeKeyDown") handleCloseBad();
   };
 
   const handleCloseGood = () => {
-    console.log("handleCloseGood:", massTotal);
-
     props.func(true, massBind);
     CloseEnd();
   };
@@ -305,11 +278,16 @@ const MapRouteBind = (props: {
     setComment(false);
   }
   //=== Ожидания получения изображений перекрёстков ========
+  //console.log("1PropsSvg:", props.svg, masSvg);
   if (props.svg && masSvg[0] === "" && masSvg[1] === "") {
-    let dat = props.svg;
-    masSvg = [];
-    for (let key in dat) masSvg.push(dat[key]);
+    //let dat = props.svg;
+    //masSvg = [];
+    //for (let key in dat) masSvg.push(dat[key]);
+    masSvg[0] = props.svg[0];
+    masSvg[1] = props.svg[1];
     ReplaceSizeImg();
+
+    //console.log("2PropsSvg:", props.svg, masSvg);
   }
   //=== Функции - обработчики ==============================
   const ReCalcIntensTr = () => {
@@ -682,8 +660,6 @@ const MapRouteBind = (props: {
       </Box>
     );
   };
-
-  //console.log("@@@@@@:", openSetBind);
 
   return (
     <>

@@ -250,7 +250,7 @@ const App = () => {
             dateRouteGl.vertexes[dateRouteGl.vertexes.length - 1].id = data.id; // прописывакм реальное ID
             dateRouteGl.vertexes[dateRouteGl.points.length - 1].id = data.id;
             massdk[massdk.length - 1].ID = data.id;
-            console.log("createPoint:", { ...dateRouteGl }, { ...massdk });
+            //console.log("createPoint:", { ...dateRouteGl }, { ...massdk });
             setTrigger(!trigger);
           } else {
             dateRouteGl.vertexes.splice(dateRouteGl.vertexes.length - 1, 1); // произошла ошибка
@@ -265,7 +265,7 @@ const App = () => {
           dispatch(statsaveCreate(dateStat));
           dispatch(massrouteCreate(dateRouteGl));
           dispatch(massdkCreate(massdk));
-          console.log("createPoint:", data, dateRouteGl, massdk);
+          //console.log("createPoint:", data, dateRouteGl, massdk);
           break;
         case "deletePoint":
           if (!data.status) {
@@ -296,14 +296,14 @@ const App = () => {
             if (!data.status) {
               soob = SoobErrorCreateWay(data);
               dateRouteGl.ways.splice(dateRouteGl.ways.length - 1, 1);
-              dateRouteProGl.ways.splice(dateRouteGl.ways.length - 1, 1);
+              dateRouteProGl.ways.splice(dateRouteProGl.ways.length - 1, 1);
               dispatch(massrouteproCreate(dateRouteProGl));
               dispatch(massrouteCreate(dateRouteGl));
               setOpenSetErr(true); // запрос на вывод сообщения об ошибке
               setAddRoute(true); // запрос на перерисовку связей
             }
           }
-          console.log("createWay:", data, { ...dateRouteGl });
+          //console.log("createWay:", data, { ...dateRouteGl });
           break;
         case "deleteWay":
           if (!data.status) {
@@ -316,7 +316,7 @@ const App = () => {
             soob = SoobErrorCreateWayToPoint(data);
             dateRouteGl.ways.splice(dateRouteGl.ways.length - 1, 1);
             dispatch(massrouteCreate(dateRouteGl));
-            dateRouteProGl.ways.splice(dateRouteGl.ways.length - 1, 1);
+            dateRouteProGl.ways.splice(dateRouteProGl.ways.length - 1, 1);
             dispatch(massrouteproCreate(dateRouteProGl));
             setOpenSetErr(true);
             setAddRoute(true); // запрос на перерисовку связей
@@ -334,7 +334,7 @@ const App = () => {
             console.log("createWayFromPoint:", soob);
             dateRouteGl.ways.splice(dateRouteGl.ways.length - 1, 1);
             dispatch(massrouteCreate(dateRouteGl));
-            dateRouteProGl.ways.splice(dateRouteGl.ways.length - 1, 1);
+            dateRouteProGl.ways.splice(dateRouteProGl.ways.length - 1, 1);
             dispatch(massrouteproCreate(dateRouteProGl));
             setOpenSetErr(true);
             setAddRoute(true); // запрос на перерисовку связей
@@ -353,6 +353,7 @@ const App = () => {
               setOpenSetErr(true);
               setSvg(null);
             } else setSvg(data.svg);
+            //} else setSvg(null);
           }
           break;
         default:
@@ -363,16 +364,9 @@ const App = () => {
     dispatch,
     massdk,
     coordinates,
-    svg,
-    //setSvg,
     trigger,
-    //setTrigger,
     FilterMapInfo,
     FilterGraphInfo,
-    //openSetErr,
-    //setOpenSetErr,
-    //addRoute,
-    //setAddRoute,
   ]);
 
   if (dateStat.debug && flagOpen) {
@@ -436,7 +430,6 @@ const App = () => {
             trigger={trigger}
             //openSetErr={openSetErr}
             sErr={soob}
-            //setOpenSetErr={setOpenSetErr}
             //setOpenSetErr={{}}
           />
         )}

@@ -900,7 +900,6 @@ const MainMap = (props: {
         }
       }
     }
-    console.log("!!!Massroute:", JSON.parse(JSON.stringify(massroute)));
     for (let i = 0; i < massroute.vertexes.length; i++) {
       if (massroute.vertexes[i].region === homeRegion) {
         massdk.push(MasskPoint(massroute.vertexes[i]));
@@ -933,12 +932,10 @@ const MainMap = (props: {
     currenciesWay = PreparCurrenciesWay(); // для меню диспетчера работы с создаваемой связью
     flagOpen = true;
     console.log("Map:", map);
-    console.log("Massroute:", massroute);
-    console.log("Massdk:", massdk);
+    console.log("Massroute:", JSON.parse(JSON.stringify(massroute)));
+    console.log("Massdk:", { ...massdk });
   }
   //========================================================
-  //console.log("MAIN:", props.add, props.svg, props.trigger, props.sErr);
-
   if (props.sErr && props.sErr !== oldsErr) {
     ymaps && addRoute(ymaps); // перерисовка связей
     oldsErr = props.sErr;
@@ -963,6 +960,7 @@ const MainMap = (props: {
       masSvg[0] = masSvg[0] === undefined ? "" : masSvg[0];
       masSvg[1] = masSvg[1] === undefined ? "" : masSvg[1];
     }
+    //console.log('SVG:',props.svg,masSvg)
   }
   if (props.add) {
     FillMassRoute(); // пришёл запрос на перерисовку связей
