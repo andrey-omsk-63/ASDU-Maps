@@ -204,7 +204,6 @@ const App = () => {
     dispatch(statsaveCreate(dateStat));
     let pageUrl = new URL(window.location.href);
     homeRegion = Number(pageUrl.searchParams.get("Region"));
-    //if (!debug) homeRegion = 2; // костыль, потом поменять
 
     console.log("WS.url:", WS.url, homeRegion);
   }
@@ -360,14 +359,7 @@ const App = () => {
           console.log("data_default:", data);
       }
     };
-  }, [
-    dispatch,
-    massdk,
-    coordinates,
-    trigger,
-    FilterMapInfo,
-    FilterGraphInfo,
-  ]);
+  }, [dispatch, massdk, coordinates, trigger, FilterMapInfo, FilterGraphInfo]);
 
   if (dateStat.debug && flagOpen) {
     console.log("РЕЖИМ ОТЛАДКИ!!!");

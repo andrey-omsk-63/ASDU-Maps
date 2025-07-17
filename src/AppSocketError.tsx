@@ -26,16 +26,16 @@ const AppSocketError = (props: { sErr: string; setOpen: Function }) => {
   };
 
   const styleModalEnd = {
-  position: "absolute",
-  top: "0%",
-  left: "auto",
-  right: "-0%",
-  height: "21px",
-  maxWidth: "2%",
-  minWidth: "2%",
-  color: "black",
-  textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
-};
+    position: "absolute",
+    top: "0%",
+    left: "auto",
+    right: "-0%",
+    height: "21px",
+    maxWidth: "2%",
+    minWidth: "2%",
+    color: "black",
+    textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+  };
 
   const handleClose = () => {
     props.setOpen(false);

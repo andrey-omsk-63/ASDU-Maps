@@ -7,7 +7,7 @@ import { TypeDefinit } from "./MapServiceFunctions";
 export const SendSocketCreatePoint = (
   codCoord: string,
   adress: string,
-  subarea: number // на самом деле это подрайон
+  subarea: number // по-новому теперь передаётся подрайон
 ) => {
   console.log("CreatePoint:", adress, subarea, typeof subarea);
 
