@@ -352,7 +352,6 @@ const App = () => {
               setOpenSetErr(true);
               setSvg(null);
             } else setSvg(data.svg);
-            //} else setSvg(null);
           }
           break;
         default:
