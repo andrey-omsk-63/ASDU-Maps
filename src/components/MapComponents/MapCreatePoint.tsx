@@ -83,14 +83,14 @@ const MapCreatePoint = (props: {
 
     setCurrency(massKey[idx]);
 
-    console.log("0currency:",massKey[idx], SUBAREA, subb, idx, SubArea);
-    console.log(
-      "1currency:",
-      currency,
-      typeof currency,
-      subArea,
-      typeof subArea
-    );
+    // console.log("0currency:",massKey[idx], SUBAREA, subb, idx, SubArea);
+    // console.log(
+    //   "1currency:",
+    //   currency,
+    //   typeof currency,
+    //   subArea,
+    //   typeof subArea
+    // );
   }
 
   const handleKey = (event: any) => {
@@ -127,13 +127,13 @@ const MapCreatePoint = (props: {
         if (!have) Have = false;
       }
 
-      console.log(
-        "2currency:",
-        currency,
-        typeof currency,
-        subArea,
-        typeof subArea
-      );
+      // console.log(
+      //   "2currency:",
+      //   currency,
+      //   typeof currency,
+      //   subArea,
+      //   typeof subArea
+      // );
 
       massdk.push(
         MapssdkNewPoint(REGION, props.coord, valueAdr, 0, subArea, tempId)

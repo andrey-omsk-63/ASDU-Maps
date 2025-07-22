@@ -104,7 +104,9 @@ const MapPointDataError = (props: {
 
   let colorBackground =
     props.sErr === "Дубликатная связь" ? "background.paper" : "#ffe16e"; // белый/жёлтый
-  let styleModalEnd = styleModalEndErr("black");
+  let styleModalEnd = styleModalEndErr(
+    props.sErr === "Дубликатная связь" ? "#5B1080" : "black"
+  ); // сиреневый/чёрный
   let styleSetInf = styleSetInfErr(colorBackground);
   let soob = flagSave
     ? "Редактирование ранее созданной связи между"

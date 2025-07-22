@@ -500,6 +500,7 @@ export const styleFormMenu = {
   textTransform: "unset !important",
   boxShadow: 6,
   color: "black",
+  padding: "2px 8px 0px 8px",
 };
 
 export const styleFT02 = {

@@ -163,14 +163,12 @@ const App = () => {
           (user: { area: { num: string } }) => user.area.num === ZONE.toString()
         );
       }
-      //console.log("!3FilterArea:", JSON.parse(JSON.stringify(dateMapGl)));
       dispatch(mapCreate(dateMapGl));
       setFindMapInfo(true);
     },
     [dispatch]
   );
   const FilterGraphInfo = React.useCallback(() => {
-    //console.log("1dateRouteGl:", ZONE, JSON.parse(JSON.stringify(dateRouteGl)));
     if (ZONE) {
       dateRouteGl.vertexes = dateRouteGl.vertexes.filter(
         (user: { area: number }) => user.area === ZONE

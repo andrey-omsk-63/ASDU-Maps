@@ -1531,6 +1531,7 @@ export const StrokaMenuFooterBind = (
     color: "black",
     textTransform: "unset !important",
     boxShadow: 3,
+    padding: "2px 8px 0px 8px",
   };
 
   return (
