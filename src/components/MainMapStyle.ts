@@ -258,7 +258,8 @@ export const styleSetImg = {
   borderRadius: 1,
   textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
   boxShadow: 24,
-  cursor: "pointer",
+  //cursor: "pointer",
+  cursor: "help",
 };
 
 export const styleAppBind = {
@@ -307,6 +308,7 @@ export const styleBind03 = {
   borderTopLeftRadius: 5,
   borderTopRightRadius: 5,
   color: "#5B1080",
+  cursor: "default",
 };
 
 export const styleBind033 = {
@@ -398,7 +400,8 @@ export const styleBind05 = {
 export const styleBind06 = {
   fontSize: 10.5,
   height: "27.6vh",
-  cursor: "pointer",
+  //cursor: "pointer",
+  cursor: "help",
 };
 
 export const styleBind07 = {
@@ -445,6 +448,11 @@ export const styleSetBindForm = {
   p: 1.5,
 };
 
+export const styleBind10 = {
+  fontSize: 14,
+  cursor: "default",
+};
+
 export const MakeStyleBind00 = (heightImg: number) => {
   const styleBind00 = {
     outline: "none",
@@ -487,6 +495,7 @@ export const styleFormName = {
   textAlign: "center",
   color: "#5B1080", // сиреневый
   textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+  cursor: "default",
 };
 
 export const styleFormMenu = {
@@ -511,6 +520,7 @@ export const styleFT02 = {
   bgcolor: "#B8CBB9", //  зелёный для шапки
   borderTopLeftRadius: 3,
   borderTopRightRadius: 3,
+  cursor: "default",
 };
 
 export const styleFormTabl00 = {
@@ -560,6 +570,13 @@ export const styleFT04 = {
 export const styleFT05 = {
   color: "red",
   textShadow: "4px 4px 6px rgba(0,0,0,0.3)",
+};
+
+export const styleFT06 = {
+  fontSize: 12,
+  marginTop: 2.5,
+  color: "#5B1080",
+  cursor: "default",
 };
 //=== WaysForma =======================================================
 export const styleFormInf = {
@@ -705,6 +722,7 @@ export const styleFormPK01 = {
   textAlign: "center",
   color: "#5B1080", // сиреневый
   textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+  cursor: "default",
 };
 
 export const MakeStyleFormPK02 = () => {
@@ -770,6 +788,7 @@ export const styleFormPK05 = {
   textAlign: "center",
   color: "#5B1080",
   textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+  cursor: "default",
 };
 
 export const styleFormPK06 = {
@@ -799,6 +818,7 @@ export const styleFormPK07 = {
 export const stylePKForm08 = {
   padding: "10px 0px 10px 0px",
   borderBottom: "1px solid #d4d4d4",
+
 };
 //=== SpisPK ==========================================================
 export const MakeStylSpisPK01 = () => {
@@ -894,6 +914,7 @@ export const styleSpisPK05 = {
   display: "flex",
   justifyContent: "left",
   textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+  cursor: "default",
 };
 
 export const MakeStylSpisPK06 = () => {
@@ -908,6 +929,7 @@ export const MakeStylSpisPK06 = () => {
     overflowX: "auto", // скролл
     boxShadow: 6,
     padding: "5px 5px 5px 5px",
+    cursor: "default",
   };
   return styleSpisPK06;
 };
@@ -921,12 +943,14 @@ export const styleSpisPK08 = {
   fontSize: 14,
   marginTop: 1,
   textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+  cursor: "default",
 };
 
 export const styleSpisPK09 = {
   fontSize: 14,
   marginTop: 0.5,
   textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+  cursor: "default",
 };
 //=== SetupPK =========================================================
 export const styleSetPK01 = (wdth: number, hdth: number) => {
@@ -954,6 +978,7 @@ export const styleSetPK02 = {
   color: "#5B1080", // сиреневый
   margin: "15px 0 10px 0",
   textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+  cursor: "default",
 };
 
 export const styleSetPK03 = {
@@ -1039,6 +1064,7 @@ export const stylePKForm02 = {
   borderTopRightRadius: 2,
   boxShadow: 6,
   padding: "3px 0px 3px 0px",
+  cursor: "default",
 };
 
 export const stylePKForm03 = (brb: number) => {
@@ -1115,6 +1141,7 @@ export const styleWindPK01 = {
   bgcolor: "background.paper",
   color: "#5B1080",
   textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+  cursor: "default",
 };
 
 export const styleWindPK02 = {
@@ -1216,6 +1243,7 @@ export const styleWVG02 = {
   top: "50%",
   marginLeft: 0.25,
   color: "blue",
+  cursor: "default",
 };
 //=== WindViewImg =====================================================
 export const styleWVI00 = {
@@ -1250,6 +1278,7 @@ export const styleCalc01 = {
   padding: "0px 5px 5px 5px",
   color: "#5B1080", // сиреневый
   textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+  cursor: "default",
 };
 
 export const styleCalc02 = {
@@ -1261,5 +1290,6 @@ export const styleCalc03 = {
   fontSize: 19,
   textAlign: "center",
   textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
+  cursor: "default",
 };
 //=====================================================================

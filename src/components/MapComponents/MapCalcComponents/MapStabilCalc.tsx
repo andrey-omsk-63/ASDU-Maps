@@ -202,7 +202,7 @@ const MapStabilCalc = (props: {
         </Grid>
         <Grid item xs>
           <Box sx={styleWVG01(55)}>{openGrafik && <>{PointsGraf00()}</>}</Box>
-          <Box sx={{ fontSize: 12.1, color: 'blue' }}>
+          <Box sx={{ fontSize: 12.1, cursor: "default", color: "blue" }}>
             <b>Количество заторных направлений</b>
           </Box>
         </Grid>

@@ -135,19 +135,19 @@ const MapSetupPK = (props: {
   const StrokaSetup01 = () => {
     return (
       <Grid container sx={{ marginTop: 1.5 }}>
-        <Grid item xs={1.5}>
+        <Grid item xs={1.5} sx={{ cursor: "default" }}>
           <b>Номер ПК</b>
         </Grid>
         <Grid item xs={1.5} sx={{ textAlign: "center", marginTop: -0.5 }}>
           {plan.length > 1 ? (
             <>{InputFromList(handleChangePlan, currencyPlan, currenciesPlan)}</>
           ) : (
-            <Box sx={{ textAlign: "left", marginTop: 0.5 }}>
+            <Box sx={{ textAlign: "left", marginTop: 0.5, cursor: "default" }}>
               {plan[idxPK].nomPK}{" "}
             </Box>
           )}
         </Grid>
-        <Grid item xs>
+        <Grid item xs sx={{ cursor: "default" }}>
           <em>{plan[idxPK].namePK}</em>
         </Grid>
       </Grid>
@@ -160,7 +160,7 @@ const MapSetupPK = (props: {
     return (
       <Grid container sx={{ marginTop: 3 }}>
         <Grid item xs={5.4}>
-          <Box sx={{ marginTop: -0.8, display: "flex" }}>
+          <Box sx={{ marginTop: -0.8, display: "flex", cursor: "default" }}>
             <b>{soob1}</b>
             <Box sx={{ marginTop: -0.3, display: "inline-block" }}>
               {WaysInput(0, plan[idxPK].timeCycle, SetCycle, 0, 100)}
@@ -188,7 +188,7 @@ const MapSetupPK = (props: {
     return (
       <Grid container sx={{ marginTop: 3 }}>
         <Grid item xs={6}>
-          <Box sx={{ marginTop: -0.7, display: "flex" }}>
+          <Box sx={{ marginTop: -0.7, display: "flex", cursor: "default" }}>
             <b>{soob2}</b>
             <Box sx={{ marginTop: -0.4, display: "inline-block" }}>
               {WaysInput(0, plan[idxPK].ki, SetKi, 0, 100)}
@@ -197,7 +197,7 @@ const MapSetupPK = (props: {
           </Box>
         </Grid>
         <Grid item xs>
-          <Box sx={{ marginTop: -0.7, display: "flex" }}>
+          <Box sx={{ marginTop: -0.7, display: "flex", cursor: "default" }}>
             <b>{soob3}</b>
             <Box sx={{ marginTop: -0.4, display: "inline-block" }}>
               {WaysInput(0, plan[idxPK].ks, SetKs, 0, 100)}

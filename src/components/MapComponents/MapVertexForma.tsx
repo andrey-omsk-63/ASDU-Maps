@@ -19,7 +19,7 @@ import { SUMPK, MaxFaz } from "./../MapConst";
 
 import { styleModalEnd, styleFormName } from "./../MainMapStyle";
 import { styleFormVert, styleFT033, styleFT03 } from "./../MainMapStyle";
-import { styleFormTabl00 } from "./../MainMapStyle";
+import { styleFormTabl00, styleFT06 } from "./../MainMapStyle";
 import { styleFormTabl01, styleFormTabl02 } from "./../MainMapStyle";
 
 import { PLANER } from "../MainMapGl";
@@ -360,7 +360,14 @@ const MapVertexForma = (props: {
                 <b>{massdk[props.idx].nameCoordinates}</b>
               </em>
             </Box>
-            <Box sx={{ fontSize: 12, marginTop: 0.5, color: "#5B1080" }}>
+            <Box
+              sx={{
+                fontSize: 12,
+                marginTop: 0.5,
+                color: "#5B1080",
+                cursor: "default",
+              }}
+            >
               Общие
             </Box>
             {StrTablVert(6, "Время цикла cек.", massForm.timeCycle + " сек.")}
@@ -375,9 +382,7 @@ const MapVertexForma = (props: {
               "Участвует в автоматической оптимизации",
               ShiftOptimal(massForm.optimal, ChangeOptimal, 0.5)
             )}
-            <Box sx={{ fontSize: 12, marginTop: 2.5, color: "#5B1080" }}>
-              Свойства фаз
-            </Box>
+            <Box sx={styleFT06}>Свойства фаз</Box>
             {StrTablVert(
               6,
               "Количество фаз",
@@ -388,9 +393,7 @@ const MapVertexForma = (props: {
               "Начальное смещение сек.",
               WaysInput(0, massForm.offset, SetOffset, 0, 100)
             )}
-            <Box sx={{ fontSize: 12, marginTop: 2.5, color: "#5B1080" }}>
-              Таблица параметров фаз
-            </Box>
+            <Box sx={styleFT06}>Таблица параметров фаз</Box>
             <Box sx={styleFormTabl00}>
               {HeaderTablFaz()}
               <Box sx={styleFormTabl01}>

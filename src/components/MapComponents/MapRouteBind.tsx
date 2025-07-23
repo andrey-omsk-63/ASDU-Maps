@@ -26,7 +26,7 @@ import { styleBind03, styleBind033, styleBind0333 } from "./../MainMapStyle";
 import { styleBind04, styleBind041, styleBind042 } from "./../MainMapStyle";
 import { styleBind043, styleBind05, styleBind06 } from "./../MainMapStyle";
 import { styleBind07, styleBind08, styleModalEndBind } from "./../MainMapStyle";
-import { styleSetImg, styleTypography } from "./../MainMapStyle";
+import { styleSetImg, styleTypography, styleBind10 } from "./../MainMapStyle";
 
 import {
   CategoryScale,
@@ -454,7 +454,7 @@ const MapRouteBind = (props: {
       let nr = INCOM + (i + 1).toString();
       let illum = beginMassTotal / kolFrom === i ? styleBind042 : styleBind041;
       resStr.push(
-        <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
+        <Grid key={i} container item xs={12} sx={styleBind10}>
           {OutputProps(1, i + 1)}
           {OutputProps(3, KnopProps(illum, handleCloseIn, nr, i))}
           <Grid item xs={4} sx={{ display: "grid", justifyContent: "center" }}>
@@ -478,7 +478,7 @@ const MapRouteBind = (props: {
             </em>
           </Box>
           <Box sx={styleBind033}>
-            <Grid container item xs={12}>
+            <Grid container item xs={12} sx={{ cursor: "default" }}>
               {HeaderTablBindContent(1, "№")}
               {HeaderTablBindContent(3, "Наименование")}
               {HeaderTablBindContent(4, "Интенсивность(т.е./ч)")}
@@ -545,7 +545,7 @@ const MapRouteBind = (props: {
     let resStr: any = [];
     for (let i = 0; i < kolFrom; i++) {
       resStr.push(
-        <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
+        <Grid key={i} container item xs={12} sx={styleBind10}>
           {TablTotalContent(i)}
         </Grid>
       );
@@ -565,7 +565,7 @@ const MapRouteBind = (props: {
             </em>
           </Box>
           <Box sx={styleBind033}>
-            <Grid container item xs={12}>
+            <Grid container item xs={12} sx={{ cursor: "default" }}>
               {HeaderTablBindContent(0.5, "")}
               {HeaderTablBindContent(0.5, "№")}
               {HeaderTablBindContent(2.5, "Наименование")}

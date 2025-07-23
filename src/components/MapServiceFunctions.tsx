@@ -40,6 +40,7 @@ import { styleBind02, styleTypography, searchControl } from "./MainMapStyle";
 import { styleBind03, styleBind033, styleSetImg } from "./MainMapStyle";
 import { styleFT04, styleFT05, styleModalEnd } from "./MainMapStyle";
 import { styleSetPK04, StyleBind09, styleSpisPK05 } from "./MainMapStyle";
+import { styleBind10 } from "./MainMapStyle";
 
 import { styleModalMenuErr, styleHeadError } from "./MapPointDataErrorStyle";
 import { styleBoxFormArea, styleSetArea } from "./MapPointDataErrorStyle";
@@ -1553,7 +1554,11 @@ export const HeaderBindMiddle = (
     ? "Изменение привязки направлений"
     : "Привязка направлений";
   return (
-    <Grid item xs={7.5} sx={{ textShadow: "2px 2px 3px rgba(0,0,0,0.3)" }}>
+    <Grid
+      item
+      xs={7.5}
+      sx={{ textShadow: "2px 2px 3px rgba(0,0,0,0.3)", cursor: "default" }}
+    >
       <Box sx={styleBind02}>
         <b>{bindTitle}</b>
       </Box>
@@ -1886,7 +1891,7 @@ export const BindTablFrom = (
     for (let i = 0; i < kolFazFrom; i++) {
       let nr = OUTGO + (i + 1).toString();
       resStr.push(
-        <Grid key={i} container item xs={12} sx={{ fontSize: 14 }}>
+        <Grid key={i} container item xs={12} sx={styleBind10}>
           {ArgTablBindContent(1, i + 1, 0)}
           {ArgTablBindContent(3, nr, 1)}
           <Grid item xs={4} sx={{ display: "grid", justifyContent: "center" }}>
@@ -1912,7 +1917,7 @@ export const BindTablFrom = (
           </em>
         </Box>
         <Box sx={styleBind033}>
-          <Grid container item xs={12}>
+          <Grid container item xs={12} sx={{ cursor: "default" }}>
             {HeaderTablBindContent(1, "№")}
             {HeaderTablBindContent(3, "Наименование")}
             {HeaderTablBindContent(4, "Интенсивность(т.е./ч)")}
@@ -1954,7 +1959,7 @@ export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
     top: "50%",
     transform: "translate(-50%, -50%)",
     width: 400,
-    bgcolor: "background.paper",
+    bgcolor: "#FFF6D2", // светло - жёлтый
     border: "1px solid #fff",
     borderRadius: 1,
     boxShadow: 24,
@@ -2194,7 +2199,7 @@ export const StrTablVert = (xss: number, recLeft: string, recRight: any) => {
     <>
       <Grid container sx={{ marginTop: 1 }}>
         <Grid item xs={0.25}></Grid>
-        <Grid item xs={xss} sx={{ border: 0 }}>
+        <Grid item xs={xss} sx={{ cursor: "default" }}>
           <b>{recLeft}</b>
         </Grid>
         {typeof recRight === "object" ? (
@@ -2202,7 +2207,11 @@ export const StrTablVert = (xss: number, recLeft: string, recRight: any) => {
             {recRight}
           </Grid>
         ) : (
-          <Grid item xs sx={{ fontSize: 15, color: "#5B1080", border: 0 }}>
+          <Grid
+            item
+            xs
+            sx={{ fontSize: 15, color: "#5B1080", cursor: "default" }}
+          >
             <b>{recRight}</b>
           </Grid>
         )}
