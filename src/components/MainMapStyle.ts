@@ -21,6 +21,7 @@ export const styleTypography = {
   textAlign: "center",
   color: "#5B1080",
   textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+  cursor: "default",
 };
 
 export const styleModalEnd = {
@@ -40,12 +41,6 @@ export const styleSetInf = {
   position: "absolute",
   marginTop: "15vh",
   marginLeft: "24vh",
-  //======
-  // position: 'absolute',
-  // left: '251px',
-  // top: '197px',
-  // transform: 'translate(-50%, -50%)',
-  //======
   width: 430,
   bgcolor: "background.paper",
   //background: "linear-gradient(180deg, #F1F5FB 59%, #DEE8F5 )",
@@ -190,6 +185,7 @@ export const styleSetArea = {
   boxShadow: 4,
   textAlign: "center",
   p: 1.5,
+  cursor: "pointer",
 };
 
 export const styleSetID = {
@@ -200,7 +196,7 @@ export const styleSetID = {
   boxShadow: 4,
   textAlign: "center",
   p: 1.5,
-  border: 0,
+  cursor: "pointer",
 };
 
 export const styleBoxFormArea = {
@@ -294,7 +290,7 @@ export const styleBind02 = {
   fontSize: 33,
   marginTop: -1.5,
   textAlign: "center",
-  color: "#5B1080",
+  color: "#5B1080", // сиреневый
   textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
 };
 
@@ -307,7 +303,7 @@ export const styleBind03 = {
   border: "1px solid #B8CBB9", // зелёный для шапки
   borderTopLeftRadius: 5,
   borderTopRightRadius: 5,
-  color: "#5B1080",
+  color: "#5B1080", // сиреневый
   cursor: "default",
 };
 
@@ -818,7 +814,6 @@ export const styleFormPK07 = {
 export const stylePKForm08 = {
   padding: "10px 0px 10px 0px",
   borderBottom: "1px solid #d4d4d4",
-
 };
 //=== SpisPK ==========================================================
 export const MakeStylSpisPK01 = () => {
@@ -1071,6 +1066,7 @@ export const stylePKForm03 = (brb: number) => {
   const stylePKForm3 = {
     padding: "10px 0px 10px 0px",
     borderBottom: brb,
+    cursor: "default",
   };
   return stylePKForm3;
 };
@@ -1170,7 +1166,8 @@ export const styleWindPK04 = {
 export const styleWindPK05 = {
   marginBottom: 0.5,
   height: 155,
-  cursor: "pointer",
+  //cursor: "pointer",
+  cursor: "help",
 };
 
 export const styleWindPK055 = {
@@ -1259,6 +1256,7 @@ export const styleWVI00 = {
   boxShadow: 24,
   textAlign: "center",
   padding: "5px 5px 5px 5px",
+  cursor: "default",
 };
 
 export const styleWVI01 = {

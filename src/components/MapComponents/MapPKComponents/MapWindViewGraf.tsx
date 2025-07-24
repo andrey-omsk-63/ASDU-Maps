@@ -192,7 +192,7 @@ const MapWindViewGraf = (props: {
         <Button sx={styleModalEndBind} onClick={() => handleClose()}>
           <b>&#10006;</b>
         </Button>
-        <Grid container sx={{}}>
+        <Grid container sx={{cursor: "default",}}>
           <Grid item xs={0.15} sx={{ border: 0 }}>
             <Box sx={styleWVG02}>
               <b>Tе:Тцикла*C</b>

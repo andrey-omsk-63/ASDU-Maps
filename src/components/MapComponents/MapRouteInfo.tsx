@@ -125,7 +125,7 @@ const MapRouteInfo = (props: {
         <Button sx={styleModalEnd} onClick={handleCloseSetEndInf}>
           <b>&#10006;</b>
         </Button>
-        <Box>
+        <Box sx={{ cursor: "default" }}>
           <Box sx={{ color: "#5B1080" }}>
             <b>Исходящая точка связи:</b> <br />
           </Box>
@@ -139,27 +139,29 @@ const MapRouteInfo = (props: {
           &nbsp;ID:&nbsp;<b>{massdk[props.idxB].ID}</b> <br />
           {massdk[props.idxB].nameCoordinates} <br /> <br />
         </Box>
-        <Grid container>
+        <Grid container sx={{ cursor: "default" }}>
           {СontentStrErr(3.5, "Длина связи:", 1)}
           {СontentStrErr(2.3, InputerDlTm(valueDl, handleChangeDl), 0)}
           {СontentStrErr(0.5, "м", 0)}
           {flagSave && <>{StrokaMenuErr(handleClose)}</>}
         </Grid>
-        <Grid container sx={{ marginTop: 1.5 }}>
+        <Grid container sx={{ marginTop: 1.5, cursor: "default" }}>
           {СontentStrErr(5.4, "Время прохождения:", 1)}
           {СontentStrErr(2.3, tmRoute2, 0)}
           {СontentStrErr(0.25, "(", 0)}
           {СontentStrErr(2.3, InputerDlTm(valueTm, handleChangeTm), 0)}
           {СontentStrErr(1.75, "сек)", 0)}
         </Grid>
-        <Box sx={{ marginTop: 1.5, display: "flex" }}>
+        <Box sx={{ marginTop: 1.5, display: "flex", cursor: "default" }}>
           <Box sx={{ color: "#5B1080" }}>
             <b>Средняя скорость прохождения:</b>
           </Box>
           &nbsp;{sRoute1} км/ч <br />
         </Box>
         {props.activeRoute && props.activeRoute.properties.get("blocked") && (
-          <Box>Имеются участки с перекрытыми дорогами</Box>
+          <Box sx={{ cursor: "default" }}>
+            Имеются участки с перекрытыми дорогами
+          </Box>
         )}
         {flagSave && <>{FooterError()}</>}
       </Box>

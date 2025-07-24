@@ -168,9 +168,13 @@ const MapCreatePoint = (props: {
           <TextField
             size="small"
             onKeyPress={handleKey} //отключение Enter
-            InputProps={{
-              disableUnderline: true,
-              style: { fontSize: 13.3, backgroundColor: "#FFFBE5" },
+            InputProps={{ disableUnderline: true }}
+            inputProps={{
+              style: {
+                cursor: "pointer",
+                fontSize: 13.3,
+                backgroundColor: "#FFFBE5",
+              },
             }}
             value={valueAdr}
             onChange={handleChangeAdr}
@@ -187,7 +191,7 @@ const MapCreatePoint = (props: {
     let sub = Number(event.target.value);
     subArea = SubArea[sub];
 
-    console.log("handleChangeSArea:", subArea, typeof subArea);
+    //console.log("handleChangeSArea:", subArea, typeof subArea);
 
     setCurrency(event.target.value);
   };

@@ -167,7 +167,7 @@ const MapCreateVertex = (props: {
   };
 
   const SaveVertex = () => {
-    console.log("1SaveVertex:", propsCoord);
+    //console.log("1SaveVertex:", propsCoord);
 
     //let avail = false;
     let avail = true;
@@ -201,7 +201,7 @@ const MapCreateVertex = (props: {
       rec.lin = rec.lout = [];
       massroute.vertexes.push(rec);
 
-      console.log("2SaveVertex:", massdk, massroute);
+      //console.log("2SaveVertex:", massdk, massroute);
 
       dispatch(massdkCreate(massdk));
       dispatch(massrouteCreate(massroute));
@@ -254,9 +254,13 @@ const MapCreateVertex = (props: {
             size="small"
             onKeyPress={handleKey} //отключение Enter
             type="number"
-            InputProps={{
-              disableUnderline: true,
-              style: { fontSize: 13.3, backgroundColor: "#FFFBE5" },
+            InputProps={{ disableUnderline: true }}
+            inputProps={{
+              style: {
+                cursor: "pointer",
+                fontSize: 13.3,
+                backgroundColor: "#FFFBE5",
+              },
             }}
             value={valuen}
             onChange={handleChangeID}
@@ -299,9 +303,13 @@ const MapCreateVertex = (props: {
               size="small"
               onKeyPress={handleKey} //отключение Enter
               type="text"
-              InputProps={{
-                disableUnderline: true,
-                style: { fontSize: 13.3, backgroundColor: "#FFFBE5" },
+              InputProps={{ disableUnderline: true }}
+              inputProps={{
+                style: {
+                  cursor: "pointer",
+                  fontSize: 13.3,
+                  backgroundColor: "#FFFBE5",
+                },
               }}
               value={valueAdr}
               onChange={handleChangeAdr}

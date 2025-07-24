@@ -40,7 +40,7 @@ const MapFormPK04 = (props: { view: boolean; handleClose: Function }) => {
       let bb = RandomNumber(1, 12) * 100;
       let arg7 = !aa ? 0 : aa === 1 ? -bb : bb;
       resStr.push(
-        <Grid key={i} container sx={{ marginBottom: 0 }}>
+        <Grid key={i} container  sx={{ cursor: "default" }}>
           {TablStr(0.25, i + 1, stylePKForm08)}
           {TablStr(0.75, i * 10 - i + 2, stylePKForm08)}
           {TablStr(1.4, RandomNumber(5, 12) * 100, stylePKForm08)}

@@ -54,7 +54,7 @@ const MapFormPK01 = (props: { view: boolean; handleClose: Function }) => {
         idx === plan.coordPlan.length - 1 ? 0 : "1px solid #d4d4d4";
 
       return (
-        <Grid key={idx} container>
+        <Grid key={idx} container sx={{ cursor: "default" }}>
           {TablStr(0.25, idx + 1, stylePKForm03(brb))}
           {TablStr(0.5, planCoordPlan.id, stylePKForm03(brb))}
           {TablStr(3, nameVert, stylePKForm033(brb))}

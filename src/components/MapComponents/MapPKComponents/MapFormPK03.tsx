@@ -54,7 +54,7 @@ const MapFormPK03 = (props: { view: boolean; handleClose: Function }) => {
       let rec1 = RandomNumber(0, 16) + RandomNumber(100, 1000) / 1000;
 
       resStr.push(
-        <Grid key={i} container>
+        <Grid key={i} container sx={{ cursor: "default" }}>
           {TablStr(0.25, i + 1, stylePKForm03)}
           {TablStr(0.75, i * 10 - i + 2, stylePKForm03)}
           {TablStr(1.5, RandomNumber(5, 12) * 100, stylePKForm03)}

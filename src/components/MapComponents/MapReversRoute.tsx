@@ -52,7 +52,7 @@ const MapReversRoute = (props: {
         <Button sx={styleModalEnd} onClick={() => handleClose(0)}>
           <b>&#10006;</b>
         </Button>
-        <Box sx={{ textAlign: "center" }}>
+        <Box sx={{ cursor: "default", textAlign: "center" }}>
           <Typography variant="h6" sx={styleTittle}>
             Создать реверсную связь?
           </Typography>

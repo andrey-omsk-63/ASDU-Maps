@@ -336,27 +336,40 @@ const MapPointDataError = (props: {
           {HeadDoublError(flagSave, props.sErr)}
           {props.sErr === "Дубликатная связь" && (
             <>
-              <Box sx={{ textAlign: "center" }}>{soob}</Box>
-              <Box sx={{ marginTop: -1, p: 1 }}>
+              <Box sx={{ cursor: "pointer", textAlign: "center" }}>{soob}</Box>
+              <Box sx={{ marginTop: -1, cursor: "pointer", p: 1 }}>
                 {whatFrom} <b>{nameFrom}</b> и {whatIn} <b>{nameIn}</b>
               </Box>
               <Button sx={styleModalEditBind} onClick={() => CallEditorBind()}>
                 <b>Редактирование привязки исходной связи</b>
               </Button>
-              <Grid container sx={{ marginLeft: 1.5, marginTop: 1.2 }}>
+              <Grid
+                container
+                sx={{ marginLeft: 1.5, cursor: "pointer", marginTop: 1.2 }}
+              >
                 {СontentStrErr(3.5, "Длина связи:", 1)}
                 {СontentStrErr(2.3, InputerDlTm(valueDl, handleChangeDl), 0)}
                 {СontentStrErr(0.5, "м", 0)}
                 {flagSave && <>{StrokaMenuErr(handleClose)}</>}
               </Grid>
-              <Grid container sx={{ marginLeft: 1.5, marginTop: 1.5 }}>
+              <Grid
+                container
+                sx={{ marginLeft: 1.5, cursor: "pointer", marginTop: 1.5 }}
+              >
                 {СontentStrErr(5.4, "Время прохождения:", 1)}
                 {СontentStrErr(2.3, tmRoute2, 0)}
                 {СontentStrErr(0.25, "(", 0)}
                 {СontentStrErr(2.3, InputerDlTm(valueTm, handleChangeTm), 0)}
                 {СontentStrErr(1.75, "сек)", 0)}
               </Grid>
-              <Box sx={{ marginLeft: 1.5, marginTop: 1.5, display: "flex" }}>
+              <Box
+                sx={{
+                  marginLeft: 1.5,
+                  marginTop: 1.5,
+                  cursor: "pointer",
+                  display: "flex",
+                }}
+              >
                 <Box sx={{ color: "#5B1080" }}>
                   <b> Средняя скорость прохождения:</b>
                 </Box>

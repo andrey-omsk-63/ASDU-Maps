@@ -1369,7 +1369,7 @@ export const DelVerOrPoint = (
   const NotHaveWays = () => {
     return (
       <>
-        <Box>
+        <Box sx={{ cursor: "default" }}>
           Будет удален {soob}&nbsp;
           <b>
             [{massdk[idx].subarea}, {massdk[idx].ID}
@@ -1378,7 +1378,7 @@ export const DelVerOrPoint = (
           </b>
         </Box>
         <Box sx={{ marginTop: 1.2 }}>
-          <Typography variant="h6" sx={{ color: "red" }}>
+          <Typography variant="h6" sx={{ cursor: "default", color: "red" }}>
             Удалять данный {soob}?
           </Typography>
           <Button sx={styleModalMenu} onClick={() => handleCloseDel(true)}>
@@ -1396,7 +1396,7 @@ export const DelVerOrPoint = (
   const HaveWays = () => {
     return (
       <>
-        <Box>
+        <Box sx={{ cursor: "default" }}>
           Вы пытаетесь удалить {soob}&nbsp;
           <b>
             [{massdk[idx].area}, {massdk[idx].ID}
@@ -1428,7 +1428,7 @@ export const DelVerOrPoint = (
         <Button sx={styleModalEndAttent} onClick={() => handleCloseDel(false)}>
           <b>&#10006;</b>
         </Button>
-        <Typography variant="h6" sx={{ color: "red" }}>
+        <Typography variant="h6" sx={{ cursor: "default", color: "red" }}>
           ⚠️Предупреждение
         </Typography>
         {have === 0 && <>{NotHaveWays()}</>}
@@ -1469,11 +1469,11 @@ export const NoVertex = (openSetErr: boolean, handleCloseErr: Function) => {
         <Button sx={styleModalEndMapGl} onClick={() => handleCloseErr(false)}>
           <b>&#10006;</b>
         </Button>
-        <Typography variant="h6" sx={{ color: "red" }}>
+        <Typography variant="h6" sx={{ cursor: "default", color: "red" }}>
           ⚠️Предупреждение
         </Typography>
         <Box sx={{ marginTop: 0.5 }}>
-          <Box sx={{ marginBottom: 1.2 }}>
+          <Box sx={{ cursor: "default", marginBottom: 1.2 }}>
             <b>
               В Базе Данных нет информации по данному перекрёстку. Продолжать?
             </b>
@@ -1979,6 +1979,18 @@ export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
     boxShadow: 6,
   };
 
+  const styleTP01 = {
+    color: "red",
+    cursor: "pointer",
+    textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+  };
+
+  const styleTP02 = {
+    marginBottom: 1.2,
+    textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+    cursor: "pointer",
+  };
+
   const handleClose = (mode: boolean) => handleCloseEnd(mode);
 
   const CloseEnd = (event: any, reason: string) => {
@@ -1991,19 +2003,11 @@ export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
         <Button sx={styleModalEndAttent} onClick={() => handleClose(false)}>
           <b>&#10006;</b>
         </Button>
-        <Typography
-          variant="h6"
-          sx={{ color: "red", textShadow: "2px 2px 3px rgba(0,0,0,0.3)" }}
-        >
+        <Typography variant="h6" sx={styleTP01}>
           ⚠️Предупреждение
         </Typography>
         <Box sx={{ marginTop: 0.5 }}>
-          <Box
-            sx={{
-              marginBottom: 1.2,
-              textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
-            }}
-          >
+          <Box sx={styleTP02}>
             Будет произведён выход без сохранения. Продолжать?
           </Box>
           <Button sx={styleModalMenu} onClick={() => handleClose(false)}>
@@ -2399,6 +2403,7 @@ export const HeadDoublError = (flagSave: boolean, propsErr: string) => {
     textAlign: "center",
     color: "black",
     textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+    cursor: "pointer",
   };
 
   return (
@@ -2421,7 +2426,11 @@ export const questionForDelete = (handleCloseDel: Function) => {
     <Box sx={{ textAlign: "center", marginTop: 1.2 }}>
       <Typography
         variant="h6"
-        sx={{ color: "red", textShadow: "2px 2px 3px rgba(0,0,0,0.3)" }}
+        sx={{
+          color: "red",
+          cursor: "pointer",
+          textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+        }}
       >
         Удалить исходную связь?
       </Typography>
@@ -2444,7 +2453,10 @@ export const InputerDlTm = (value: any, func: any) => {
           size="small"
           onKeyPress={handleKey} //отключение Enter
           type="number"
-          InputProps={{ disableUnderline: true, style: { fontSize: 14.2 } }}
+          InputProps={{ disableUnderline: true }}
+          inputProps={{
+            style: { cursor: "pointer", fontSize: 14.2 },
+          }}
           value={value}
           onChange={func}
           variant="standard"

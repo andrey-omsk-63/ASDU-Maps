@@ -77,13 +77,14 @@ const MapRouteProtokol = (props: { setOpen: any }) => {
     textAlign: "center",
     color: "#5B1080", // сиреневый
     textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+    cursor: "default",
   };
 
   const StrokaProtokol = () => {
     return massProtokol.map((mProtokol: any, idx: number, array: any) => {
       let tSh = "2px 2px 3px rgba(0,0,0,0.3)";
       return (
-        <Grid key={idx} container sx={{ textShadow: tSh }}>
+        <Grid key={idx} container sx={{ cursor: "default", textShadow: tSh }}>
           <Grid item xs={1.3}></Grid>
           <Grid item xs={6.1}>
             &nbsp;&nbsp;Район: <b>{mProtokol.sourceArea}</b>
@@ -110,7 +111,7 @@ const MapRouteProtokol = (props: { setOpen: any }) => {
           <b>Протокол созданных связей:</b>
         </Box>
         <Box sx={styleProtokol01}>
-          <Grid container sx={{ bgcolor: "#C0E2C3" }}>
+          <Grid container sx={{ cursor: "default", bgcolor: "#C0E2C3" }}>
             <Grid item xs={6} sx={{ textAlign: "center" }}>
               <b>Выход</b> (из)
             </Grid>

@@ -60,6 +60,7 @@ export const styleHeadError = {
   color: '#5B1080',
   textAlign: 'center',
   textShadow: '2px 2px 3px rgba(0,0,0,0.3)',
+  cursor: "pointer",
 };
 
 export const styleFooterError = {
@@ -67,6 +68,7 @@ export const styleFooterError = {
   color: '#5B1080',
   marginLeft: 1.5,
   marginTop: 2.5,
+  cursor: "pointer",
 };
 
 export const styleModalEndErr = (colorEnd: string) => {
