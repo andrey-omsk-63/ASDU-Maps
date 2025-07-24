@@ -2731,29 +2731,29 @@ export const CalculatNullWays = (
             rec.lenght = reqRoute.dlRoute = Math.round(dist); // длина связи
             let duration = activeRoute.properties.get("duration").value;
             rec.time = reqRoute.tmRoute = Math.round(duration); // время прохождения
-            //if (!debug) {
-            // запись на сервер
-            let fromCr: any = FromCross;
-            let toCr: any = ToCross;
-            for (let j = 0; j < massdk.length; j++) {
-              if (massdk[j].ID === massroute.ways[i].sourceID)
-                fromCr = MakeFromCross(massdk[j]);
-              if (massdk[j].ID === massroute.ways[i].targetID)
-                toCr = MakeFromCross(massdk[j]);
-            }
-            if (!TypeDefinit(massroute, rec.sourceID)) {
-              SendSocketDeleteWayFromPoint(fromCr, toCr);
-              SendSocketCreateWayFromPoint(fromCr, toCr, massBind, reqRoute);
-            } else {
-              if (!TypeDefinit(massroute, rec.targetID)) {
-                SendSocketDeleteWayToPoint(fromCr, toCr);
-                SendSocketCreateWayToPoint(fromCr, toCr, massBind, reqRoute);
+            if (!debug) {
+              // запись на сервер
+              let fromCr: any = FromCross;
+              let toCr: any = ToCross;
+              for (let j = 0; j < massdk.length; j++) {
+                if (massdk[j].ID === massroute.ways[i].sourceID)
+                  fromCr = MakeFromCross(massdk[j]);
+                if (massdk[j].ID === massroute.ways[i].targetID)
+                  toCr = MakeFromCross(massdk[j]);
+              }
+              if (!TypeDefinit(massroute, rec.sourceID)) {
+                SendSocketDeleteWayFromPoint(fromCr, toCr);
+                SendSocketCreateWayFromPoint(fromCr, toCr, massBind, reqRoute);
               } else {
-                SendSocketDeleteWay(fromCr, toCr);
-                SendSocketCreateWay(fromCr, toCr, massBind, reqRoute);
+                if (!TypeDefinit(massroute, rec.targetID)) {
+                  SendSocketDeleteWayToPoint(fromCr, toCr);
+                  SendSocketCreateWayToPoint(fromCr, toCr, massBind, reqRoute);
+                } else {
+                  SendSocketDeleteWay(fromCr, toCr);
+                  SendSocketCreateWay(fromCr, toCr, massBind, reqRoute);
+                }
               }
             }
-            //}
             Have++;
           }
         });
