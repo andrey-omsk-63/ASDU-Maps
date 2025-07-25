@@ -2403,7 +2403,7 @@ export const HeadDoublError = (flagSave: boolean, propsErr: string) => {
     textAlign: "center",
     color: "black",
     textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
-    cursor: "pointer",
+    cursor: "default",
   };
 
   return (
@@ -2428,7 +2428,7 @@ export const questionForDelete = (handleCloseDel: Function) => {
         variant="h6"
         sx={{
           color: "red",
-          cursor: "pointer",
+          cursor: "default",
           textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
         }}
       >

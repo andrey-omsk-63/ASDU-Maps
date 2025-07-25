@@ -98,6 +98,7 @@ const MapPointDataError = (props: {
       boxShadow: 24,
       textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
       p: 1.5,
+      cursor: "default",
     };
     return styleSetInf;
   };
@@ -336,8 +337,8 @@ const MapPointDataError = (props: {
           {HeadDoublError(flagSave, props.sErr)}
           {props.sErr === "Дубликатная связь" && (
             <>
-              <Box sx={{ cursor: "pointer", textAlign: "center" }}>{soob}</Box>
-              <Box sx={{ marginTop: -1, cursor: "pointer", p: 1 }}>
+              <Box sx={{ cursor: "default", textAlign: "center" }}>{soob}</Box>
+              <Box sx={{ marginTop: -1, cursor: "default", p: 1 }}>
                 {whatFrom} <b>{nameFrom}</b> и {whatIn} <b>{nameIn}</b>
               </Box>
               <Button sx={styleModalEditBind} onClick={() => CallEditorBind()}>
@@ -345,7 +346,7 @@ const MapPointDataError = (props: {
               </Button>
               <Grid
                 container
-                sx={{ marginLeft: 1.5, cursor: "pointer", marginTop: 1.2 }}
+                sx={{ marginLeft: 1.5, cursor: "default", marginTop: 1.2 }}
               >
                 {СontentStrErr(3.5, "Длина связи:", 1)}
                 {СontentStrErr(2.3, InputerDlTm(valueDl, handleChangeDl), 0)}
@@ -354,7 +355,7 @@ const MapPointDataError = (props: {
               </Grid>
               <Grid
                 container
-                sx={{ marginLeft: 1.5, cursor: "pointer", marginTop: 1.5 }}
+                sx={{ marginLeft: 1.5, cursor: "default", marginTop: 1.5 }}
               >
                 {СontentStrErr(5.4, "Время прохождения:", 1)}
                 {СontentStrErr(2.3, tmRoute2, 0)}
@@ -366,7 +367,7 @@ const MapPointDataError = (props: {
                 sx={{
                   marginLeft: 1.5,
                   marginTop: 1.5,
-                  cursor: "pointer",
+                  cursor: "default",
                   display: "flex",
                 }}
               >

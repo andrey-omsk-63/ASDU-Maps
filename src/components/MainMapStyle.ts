@@ -111,6 +111,7 @@ export const styleSet = {
   boxShadow: 4,
   textAlign: "center",
   p: 1.5,
+  cursor: "default",
 };
 
 export const styleInpKnop = {
@@ -185,7 +186,7 @@ export const styleSetArea = {
   boxShadow: 4,
   textAlign: "center",
   p: 1.5,
-  cursor: "pointer",
+  cursor: "default",
 };
 
 export const styleSetID = {
@@ -196,7 +197,7 @@ export const styleSetID = {
   boxShadow: 4,
   textAlign: "center",
   p: 1.5,
-  cursor: "pointer",
+  cursor: "default",
 };
 
 export const styleBoxFormArea = {

@@ -68,7 +68,7 @@ export const styleFooterError = {
   color: '#5B1080',
   marginLeft: 1.5,
   marginTop: 2.5,
-  cursor: "pointer",
+  cursor: "default",
 };
 
 export const styleModalEndErr = (colorEnd: string) => {
