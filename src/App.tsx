@@ -168,14 +168,7 @@ const App = () => {
     },
     [dispatch]
   );
-  const FilterGraphInfo = React.useCallback(() => {
-    if (ZONE) {
-      dateRouteGl.vertexes = dateRouteGl.vertexes.filter(
-        (user: { area: number }) => user.area === ZONE
-      );
-    }
-  }, []);
-
+  
   const Initialisation = () => {
     // достать начальный zoom Yandex-карты Map из LocalStorage
     if (window.localStorage.ZoomMap === undefined)
@@ -189,6 +182,14 @@ const App = () => {
     if (window.localStorage.PointCenterMap1 === undefined)
       window.localStorage.PointCenterMap1 = 0;
   };
+  
+  const FilterGraphInfo = React.useCallback(() => {
+    if (ZONE) {
+      dateRouteGl.vertexes = dateRouteGl.vertexes.filter(
+        (user: { area: number }) => user.area === ZONE
+      );
+    }
+  }, []);
   //=== инициализация ======================================
   if (flagOpenWS) {
     WS = new WebSocket(host);
@@ -247,7 +248,6 @@ const App = () => {
             dateRouteGl.vertexes[dateRouteGl.vertexes.length - 1].id = data.id; // прописывакм реальное ID
             dateRouteGl.vertexes[dateRouteGl.points.length - 1].id = data.id;
             massdk[massdk.length - 1].ID = data.id;
-            //console.log("createPoint:", { ...dateRouteGl }, { ...massdk });
             setTrigger(!trigger);
           } else {
             dateRouteGl.vertexes.splice(dateRouteGl.vertexes.length - 1, 1); // произошла ошибка
@@ -262,7 +262,6 @@ const App = () => {
           dispatch(statsaveCreate(dateStat));
           dispatch(massrouteCreate(dateRouteGl));
           dispatch(massdkCreate(massdk));
-          //console.log("createPoint:", data, dateRouteGl, massdk);
           break;
         case "deletePoint":
           if (!data.status) {

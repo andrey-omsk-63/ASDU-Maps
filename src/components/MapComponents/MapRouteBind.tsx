@@ -280,14 +280,9 @@ const MapRouteBind = (props: {
   //=== Ожидания получения изображений перекрёстков ========
   //console.log("1PropsSvg:", props.svg, masSvg);
   if (props.svg && masSvg[0] === "" && masSvg[1] === "") {
-    //let dat = props.svg;
-    //masSvg = [];
-    //for (let key in dat) masSvg.push(dat[key]);
     masSvg[0] = props.svg[0];
     masSvg[1] = props.svg[1];
     ReplaceSizeImg();
-
-    //console.log("2PropsSvg:", props.svg, masSvg);
   }
   //=== Функции - обработчики ==============================
   const ReCalcIntensTr = () => {
@@ -619,10 +614,6 @@ const MapRouteBind = (props: {
 
     return <Line options={optionsMiniGraf} data={data} />;
   };
-
-  // const SetComment = (mode: boolean) => {
-  //   setComment(mode);
-  // };
 
   const OutputGraf = () => {
     let nom = beginMassTotal / kolFrom + 1;

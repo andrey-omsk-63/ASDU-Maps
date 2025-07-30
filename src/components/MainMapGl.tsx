@@ -614,7 +614,6 @@ const MainMap = (props: {
   const PlacemarkDo = () => {
     let pA = pointAaIndex;
     let pB = pointBbIndex;
-
     const DoPlacemarkDo = (props: { coordinate: any; idx: number }) => {
       const MemoPlacemarkDo = React.useMemo(
         () => (
@@ -669,8 +668,7 @@ const MainMap = (props: {
       mapp.current.events.remove("boundschange", funcBound); // покрутили колёсико мыши
       funcBound = function () {
         pointCenter = mapp.current.getCenter();
-        zoom = mapp.current.getZoom();
-        SaveZoom(zoom, pointCenter);
+        SaveZoom(zoom = mapp.current.getZoom(), pointCenter);
       };
       mapp.current.events.add("boundschange", funcBound);
     }
@@ -931,9 +929,8 @@ const MainMap = (props: {
     currenciesForm = PreparCurrenciesForm(); // для меню диспетчера форм
     currenciesWay = PreparCurrenciesWay(); // для меню диспетчера работы с создаваемой связью
     flagOpen = true;
-    console.log("Map:", map);
     console.log("Massroute:", JSON.parse(JSON.stringify(massroute)));
-    console.log("Massdk:", { ...massdk });
+    console.log("Massdk:", JSON.parse(JSON.stringify(massdk)));
   }
   //========================================================
   if (props.sErr && props.sErr !== oldsErr) {
@@ -960,7 +957,6 @@ const MainMap = (props: {
       masSvg[0] = masSvg[0] === undefined ? "" : masSvg[0];
       masSvg[1] = masSvg[1] === undefined ? "" : masSvg[1];
     }
-    //console.log('SVG:',props.svg,masSvg)
   }
   if (props.add) {
     FillMassRoute(); // пришёл запрос на перерисовку связей
@@ -1080,18 +1076,6 @@ const MainMap = (props: {
                 setSvg={props.setSvg}
               />
             )}
-
-            {/* {props.openSetErr && (
-              <MapPointDataError
-                setOpen={props.setOpenSetErr}
-                sErr={props.sErr}
-                fromCross={0}
-                toCross={0}
-                update={0}
-                setSvg={{}}
-              />
-            )} */}
-
             {openInf && (
               <MapRouteInfo
                 setOpen={setOpenInf}
