@@ -69,7 +69,6 @@ const MapRouteInfo = (props: {
   const handleClose = () => {
     maskRoute.dlRoute = Number(dlRoute1);
     maskRoute.tmRoute = Number(sec);
-    //props.setReqRoute(maskRoute, props.needLinkBind);
     handleCloseSetEndInf();
   };
 

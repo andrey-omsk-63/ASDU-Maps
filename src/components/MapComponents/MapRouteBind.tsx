@@ -278,7 +278,6 @@ const MapRouteBind = (props: {
     setComment(false);
   }
   //=== Ожидания получения изображений перекрёстков ========
-  //console.log("1PropsSvg:", props.svg, masSvg);
   if (props.svg && masSvg[0] === "" && masSvg[1] === "") {
     masSvg[0] = props.svg[0];
     masSvg[1] = props.svg[1];

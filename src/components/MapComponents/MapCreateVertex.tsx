@@ -167,9 +167,6 @@ const MapCreateVertex = (props: {
   };
 
   const SaveVertex = () => {
-    //console.log("1SaveVertex:", propsCoord);
-
-    //let avail = false;
     let avail = true;
     if (!propsCoord[0]) {
       // светофор в базе есть
@@ -200,8 +197,6 @@ const MapCreateVertex = (props: {
       );
       rec.lin = rec.lout = [];
       massroute.vertexes.push(rec);
-
-      //console.log("2SaveVertex:", massdk, massroute);
 
       dispatch(massdkCreate(massdk));
       dispatch(massrouteCreate(massroute));

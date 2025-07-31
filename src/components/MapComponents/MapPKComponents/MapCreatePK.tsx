@@ -39,7 +39,6 @@ let massPkIdOld: any = [];
 let isOpen = false;
 let oldSubArea = -1;
 let oldIdx = -2;
-//let nameArea = "";
 let soobErr = "";
 let EscClinch = false;
 let needSort = false;

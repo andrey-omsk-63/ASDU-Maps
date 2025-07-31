@@ -63,7 +63,6 @@ const MapPointDataError = (props: {
   update: any;
   setSvg: any;
 }) => {
-  //console.log("MapPointDataError:", props.sErr, props.fromCross, props.toCross);
   //== Piece of Redux =======================================
   let massroute = useSelector((state: any) => {
     const { massrouteReducer } = state;
