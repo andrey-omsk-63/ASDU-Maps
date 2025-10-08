@@ -42,7 +42,7 @@ import { PreparCurrenciesPK, PreparCurrenciesWay } from "./MapServiceFunctions";
 import { PreparCurrenciesCalc, InputMenuCalc } from "./MapServiceFunctions";
 import { PreparCurrenciesOptim, InputMenuOptim } from "./MapServiceFunctions";
 import { CalculatNullWays, InputMenuWay } from "./MapServiceFunctions";
-import { AreaDefinit } from "./MapServiceFunctions";
+import { AreaDefinit, CalcSize } from "./MapServiceFunctions";
 
 import { MakeMultiRouteIn, MakePolyRoute } from "./MapRouteFunctions";
 import { MakeMultiRoute, MakeMainRoute } from "./MapRouteFunctions";
@@ -68,6 +68,7 @@ export let BALLOON: boolean = true; // разрешение/запрет на в
 export let PLANER: number = 0; // номер выбраного ПК
 export let VIEWDIR: boolean = true; // разрешение посмотра инф-ии о направл.в балуне
 export let masSvg: any = ["", ""]; // массив изображений перекрёстков для RouteBind
+export let FontSize: number = 14; // размер шрифта основного меню
 let coordStart: any = []; // рабочий массив коллекции входящих связей
 let coordStop: any = []; // рабочий массив коллекции входящих связей
 let coordStartIn: any = []; // рабочий массив коллекции исходящих связей
@@ -183,6 +184,7 @@ const MainMap = (props: {
   const [needRevers, setNeedRevers] = React.useState(0);
   const [routePKW, setRoutePKW] = React.useState<any>(null);
   const [ymaps, setYmaps] = React.useState<YMapsApi | null>(null);
+  const [Size, setSize] = React.useState(window.innerWidth); // ширина экрана
   const mapp = React.useRef<any>(null);
   debug = datestat.debug;
 
@@ -668,7 +670,7 @@ const MainMap = (props: {
       mapp.current.events.remove("boundschange", funcBound); // покрутили колёсико мыши
       funcBound = function () {
         pointCenter = mapp.current.getCenter();
-        SaveZoom(zoom = mapp.current.getZoom(), pointCenter);
+        SaveZoom((zoom = mapp.current.getZoom()), pointCenter);
       };
       mapp.current.events.add("boundschange", funcBound);
     }
@@ -978,26 +980,46 @@ const MainMap = (props: {
     document.addEventListener("keydown", escFunction);
     return () => document.removeEventListener("keydown", escFunction);
   }, [escFunction]);
+  //=== отслеживание изменения ширины ======================
+  React.useLayoutEffect(() => {
+    const updateSize = () => {
+      setSize(window.innerWidth);
+      FontSize = CalcSize(Size);
+      //console.log("Ширина экрана изменена", FontSize, window.innerWidth, Size);
+    };
+    window.addEventListener("resize", updateSize);
+    updateSize();
+    return () => window.removeEventListener("resize", updateSize);
+  }, [Size]);
   //========================================================
+  const PieceMenu = () => {
+    return (
+      <>
+        {InputMenuPK(handleChangePK, currencyPK, currenciesPK)}
+        {PLANER > 0 && (
+          <>
+            {MODE !== "0" && (
+              <>{InputMenuForm(handleChForm, currencyForm, currenciesForm)}</>
+            )}
+            {InputMenuCalc(handleChangeCalc, currencyCalc, currenciesCalc)}
+            {InputMenuOptim(handleChOptim, currencyOptim, currenciesOptim)}
+            {StrokaMenuGlob("Целевая функция", PressButton, 401)}
+          </>
+        )}
+      </>
+    );
+  };
+
   return (
     <Grid container sx={{ height: "99.9vh" }}>
       {!datestat.lockUp && (
         <>
           {InputMenu(handleChangeSubArea, currency, currencies)}
           {InputMenuMODE(handleChangeMode, currencyMode, currenciesMode)}
-          {flagPusk && flagRoute && (
+          {flagPusk && flagRoute ? (
             <>{InputMenuWay(handleChangeWay, "0", currenciesWay)}</>
-          )}
-          {InputMenuPK(handleChangePK, currencyPK, currenciesPK)}
-          {PLANER > 0 && (
-            <>
-              {MODE !== "0" && (
-                <>{InputMenuForm(handleChForm, currencyForm, currenciesForm)}</>
-              )}
-              {InputMenuCalc(handleChangeCalc, currencyCalc, currenciesCalc)}
-              {InputMenuOptim(handleChOptim, currencyOptim, currenciesOptim)}
-              {StrokaMenuGlob("Целевая функция", PressButton, 401)}
-            </>
+          ) : (
+            <>{PieceMenu()}</>
           )}
         </>
       )}

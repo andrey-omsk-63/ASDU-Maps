@@ -6,16 +6,16 @@ export const searchControl = {
   size: "large",
 };
 
-export const styleApp01 = {
-  fontSize: 14,
-  marginRight: 1,
-  width: "19%",
-  maxHeight: "21px",
-  minHeight: "21px",
-  bgcolor: "#D7F1C0",
-  color: "black",
-  textTransform: "unset !important",
-};
+// export const styleApp01 = {
+//   fontSize: 14,
+//   marginRight: 1,
+//   width: "19%",
+//   maxHeight: "21px",
+//   minHeight: "21px",
+//   bgcolor: "#D7F1C0",
+//   color: "black",
+//   textTransform: "unset !important",
+// };
 
 export const styleTypography = {
   textAlign: "center",

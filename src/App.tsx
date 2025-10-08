@@ -168,7 +168,7 @@ const App = () => {
     },
     [dispatch]
   );
-  
+
   const Initialisation = () => {
     // достать начальный zoom Yandex-карты Map из LocalStorage
     if (window.localStorage.ZoomMap === undefined)
@@ -182,7 +182,7 @@ const App = () => {
     if (window.localStorage.PointCenterMap1 === undefined)
       window.localStorage.PointCenterMap1 = 0;
   };
-  
+
   const FilterGraphInfo = React.useCallback(() => {
     if (ZONE) {
       dateRouteGl.vertexes = dateRouteGl.vertexes.filter(
@@ -397,8 +397,6 @@ const App = () => {
     }
   }
 
-  //console.log('Add:',openMapGl, findMapInfo, findGraphInfo)
-
   if (!openMapGl && findMapInfo && findGraphInfo) {
     Initialisation();
     setOpenMapGl(true);
@@ -416,9 +414,7 @@ const App = () => {
             add={addRoute}
             setAdd={setAddRoute}
             trigger={trigger}
-            //openSetErr={openSetErr}
             sErr={soob}
-            //setOpenSetErr={{}}
           />
         )}
       </Grid>

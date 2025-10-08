@@ -46,7 +46,7 @@ import { styleModalMenuErr, styleHeadError } from "./MapPointDataErrorStyle";
 import { styleBoxFormArea, styleSetArea } from "./MapPointDataErrorStyle";
 
 import { debug, SUBAREA, MODE, MASSPK, homeRegion } from "./MainMapGl";
-import { SubArea, AREA } from "./MainMapGl";
+import { SubArea, AREA, FontSize } from "./MainMapGl";
 import { OUTGO, FromCross, ToCross } from "./MapConst";
 import { dateMapGl } from "./../App";
 
@@ -72,6 +72,16 @@ export const UniqueName = () => {
     ")";
   return nameMode;
 };
+
+export const CalcSize = (Size: number) => {
+    if (Size > 1160) {
+      return 14;
+    } else {
+      if (Size > 1084) {
+        return 13;
+      } else return 12;
+    }
+  };
 
 export const KnopProps = (styleXX: any, func: any, rec: any, idx: any) => {
   return (
@@ -508,8 +518,10 @@ export const PreparCurrenciesFaza = (mazFaz: number) => {
 };
 
 export const InputMenu = (func: any, currency: any, currencies: any) => {
+  let dl = FontSize === 14 ? "120px" : FontSize === 13 ? "110px" : "100px";
+  let dll = FontSize === 14 ? "145px" : FontSize === 13 ? "135px" : "125px";
   const styleSet = {
-    width: "120px",
+    width: dl,
     maxHeight: "2px",
     minHeight: "2px",
     marginLeft: 0.3,
@@ -525,7 +537,7 @@ export const InputMenu = (func: any, currency: any, currencies: any) => {
     "& > :not(style)": {
       marginTop: "-10px",
       marginLeft: "-15px",
-      width: "145px",
+      width: dll,
     },
   };
 
@@ -550,7 +562,7 @@ export const InputMenu = (func: any, currency: any, currencies: any) => {
                     ? "blue"
                     : "black",
                 marginLeft: 10,
-                fontSize: 14,
+                fontSize: FontSize,
               },
             }}
             variant="standard"
@@ -576,8 +588,10 @@ export const InputMenu = (func: any, currency: any, currencies: any) => {
 };
 
 export const InputMenuMODE = (func: any, currency: any, currencies: any) => {
+  let dl = FontSize === 14 ? "155px" : FontSize === 13 ? "145px" : "135px";
+  let dll = FontSize === 14 ? "184px"  : FontSize === 13 ? "174px" : "160px";
   const styleSet = {
-    width: "160px",
+    width: dl,
     maxHeight: "2px",
     minHeight: "2px",
     marginLeft: 0.3,
@@ -593,7 +607,7 @@ export const InputMenuMODE = (func: any, currency: any, currencies: any) => {
     "& > :not(style)": {
       marginTop: "-10px",
       marginLeft: "-15px",
-      width: "185px",
+      width: dll,
     },
   };
 
@@ -613,7 +627,7 @@ export const InputMenuMODE = (func: any, currency: any, currencies: any) => {
                 fontWeight: 700,
                 color: currency === "0" ? "blue" : "black",
                 marginLeft: 10,
-                fontSize: 14,
+                fontSize: FontSize,
               },
             }}
             variant="standard"
@@ -643,8 +657,10 @@ export const InputMenuMODE = (func: any, currency: any, currencies: any) => {
 };
 
 export const InputMenuPK = (func: any, currency: any, currencies: any) => {
+  let dl = FontSize === 14 ? "100px" : FontSize === 13 ? "95px" : "90px";
+  let dll = FontSize === 14 ? "124px" : FontSize === 13 ? "119px" : "112px";
   const styleSet = {
-    width: "100px",
+    width: dl,
     maxHeight: "2px",
     minHeight: "2px",
     marginLeft: 0.3,
@@ -660,7 +676,7 @@ export const InputMenuPK = (func: any, currency: any, currencies: any) => {
     "& > :not(style)": {
       marginTop: "-10px",
       marginLeft: "-15px",
-      width: "125px",
+      width: dll,
     },
   };
 
@@ -680,7 +696,7 @@ export const InputMenuPK = (func: any, currency: any, currencies: any) => {
                 fontWeight: 700,
                 color: currency === "0" ? "blue" : "black",
                 marginLeft: 10,
-                fontSize: 14,
+                fontSize: FontSize,
               },
             }}
             variant="standard"
@@ -775,8 +791,10 @@ export const InputMenuWay = (func: any, currency: any, currencies: any) => {
 };
 
 export const InputMenuCalc = (func: any, currency: any, currencies: any) => {
+  let dl = FontSize === 14 ? "80px" : FontSize === 13 ? "70px" : "60px";
+  let dll = FontSize === 14 ? "105px" : FontSize === 13 ? "95px" : "90px";
   const styleSet = {
-    width: "75px",
+    width: dl,
     maxHeight: "2px",
     minHeight: "2px",
     marginLeft: 0.3,
@@ -792,7 +810,7 @@ export const InputMenuCalc = (func: any, currency: any, currencies: any) => {
     "& > :not(style)": {
       marginTop: "-10px",
       marginLeft: "-15px",
-      width: "100px",
+      width: dll,
     },
   };
 
@@ -812,7 +830,7 @@ export const InputMenuCalc = (func: any, currency: any, currencies: any) => {
                 fontWeight: 700,
                 color: currency === "0" ? "blue" : "black",
                 marginLeft: 10,
-                fontSize: 14,
+                fontSize: FontSize,
               },
             }}
             variant="standard"
@@ -838,8 +856,10 @@ export const InputMenuCalc = (func: any, currency: any, currencies: any) => {
 };
 
 export const InputMenuOptim = (func: any, currency: any, currencies: any) => {
+  let dl = FontSize === 14 ? "130px" : FontSize === 13 ? "120px" : "110px";
+  let dll = FontSize === 14 ? "155px" : FontSize === 13 ? "145px" : "137px";
   const styleSet = {
-    width: "130px",
+    width: dl,
     maxHeight: "2px",
     minHeight: "2px",
     marginLeft: 0.3,
@@ -855,7 +875,7 @@ export const InputMenuOptim = (func: any, currency: any, currencies: any) => {
     "& > :not(style)": {
       marginTop: "-10px",
       marginLeft: "-15px",
-      width: "155px",
+      width: dll,
     },
   };
 
@@ -875,7 +895,7 @@ export const InputMenuOptim = (func: any, currency: any, currencies: any) => {
                 fontWeight: 700,
                 color: currency === "0" ? "blue" : "black",
                 marginLeft: 10,
-                fontSize: 14,
+                fontSize: FontSize,
               },
             }}
             variant="standard"
@@ -902,8 +922,11 @@ export const InputMenuOptim = (func: any, currency: any, currencies: any) => {
 };
 
 export const InputMenuForm = (func: any, currency: any, currencies: any) => {
+  let dl = FontSize === 14 ? "135px" : "125px";
+  let dll = FontSize === 14 ? "160px" : "150px";
   const styleSet = {
-    width: "150px",
+    //width: "150px",
+    width: dl,
     maxHeight: "2px",
     minHeight: "2px",
     marginLeft: 0.3,
@@ -919,7 +942,7 @@ export const InputMenuForm = (func: any, currency: any, currencies: any) => {
     "& > :not(style)": {
       marginTop: "-10px",
       marginLeft: "-15px",
-      width: "175px",
+      width: dll,
     },
   };
 
@@ -939,7 +962,7 @@ export const InputMenuForm = (func: any, currency: any, currencies: any) => {
                 fontWeight: 700,
                 color: currency === "0" ? "blue" : "black",
                 marginLeft: 10,
-                fontSize: 14,
+                fontSize: FontSize,
               },
             }}
             variant="standard"
@@ -1097,9 +1120,6 @@ export const GetPointOptions = (
     if (MODE === "1")
       if (index === pointBbIndex || index === pointAaIndex) HosterIllum("2");
 
-    // Number(MODE) > 0 &&
-    //   console.log("1######:", MODE, index, SubArea, SUBAREA, host);
-
     return host;
   };
 
@@ -1116,9 +1136,6 @@ export const GetPointOptions = (
     colorBalloon = "islands#darkBlueStretchyIcon"; // конец связи
 
   const NoImg = () => {
-    // Number(MODE) > 0 &&
-    //   console.log("2######:", MODE, index, SubArea, SUBAREA, colorBalloon);
-
     return {
       preset: colorBalloon,
     };
@@ -1176,9 +1193,11 @@ export const StrokaMenuGlob = (soob: string, func: Function, mode: number) => {
   };
 
   const styleApp01 = {
-    fontSize: 14,
+    fontSize: FontSize,
+    //fontSize: 13,
     marginLeft: 0.4,
-    width: MesssgeLength(soob, 14) + 32,
+    width: MesssgeLength(soob, FontSize) + 26,
+    //width: MesssgeLength(soob, 13) + 32,
     maxHeight: "21px",
     minHeight: "21px",
     backgroundColor: "#C4EAA2", // салатовый
@@ -1218,25 +1237,6 @@ export const ShowFormalRoute = (flagDemo: boolean, PressButton: Function) => {
     </>
   );
 };
-
-// export const MainMenu = (
-//   flagPusk: boolean,
-//   flagRoute: boolean,
-//   PressButton: Function
-// ) => {
-//   return (
-//     <>
-//       {flagPusk && flagRoute && (
-//         <>
-//           {StrokaMenuGlob("Отмена", PressButton, 77)}
-//           {StrokaMenuGlob("Сохр-е", PressButton, 33)}
-//           {StrokaMenuGlob("Реверc", PressButton, 12)}
-//           {StrokaMenuGlob("Редактир-е", PressButton, 69)}
-//         </>
-//       )}
-//     </>
-//   );
-// };
 
 export const YandexServices = () => {
   return (
