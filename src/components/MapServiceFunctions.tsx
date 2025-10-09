@@ -74,14 +74,16 @@ export const UniqueName = () => {
 };
 
 export const CalcSize = (Size: number) => {
-    if (Size > 1160) {
-      return 14;
-    } else {
-      if (Size > 1084) {
-        return 13;
-      } else return 12;
-    }
-  };
+  //if (Size > 1160) {
+  if (Size > 1160) {
+    return 14;
+  } else {
+    //if (Size > 1084) {
+    if (Size > 1053) {
+      return 13;
+    } else return 12;
+  }
+};
 
 export const KnopProps = (styleXX: any, func: any, rec: any, idx: any) => {
   return (
@@ -520,6 +522,7 @@ export const PreparCurrenciesFaza = (mazFaz: number) => {
 export const InputMenu = (func: any, currency: any, currencies: any) => {
   let dl = FontSize === 14 ? "120px" : FontSize === 13 ? "110px" : "100px";
   let dll = FontSize === 14 ? "145px" : FontSize === 13 ? "135px" : "125px";
+  let tp = FontSize === 12 ? "-7px" : "-9px";
   const styleSet = {
     width: dl,
     maxHeight: "2px",
@@ -535,7 +538,7 @@ export const InputMenu = (func: any, currency: any, currencies: any) => {
 
   const styleBoxForm = {
     "& > :not(style)": {
-      marginTop: "-10px",
+      marginTop: tp,
       marginLeft: "-15px",
       width: dll,
     },
@@ -589,7 +592,8 @@ export const InputMenu = (func: any, currency: any, currencies: any) => {
 
 export const InputMenuMODE = (func: any, currency: any, currencies: any) => {
   let dl = FontSize === 14 ? "155px" : FontSize === 13 ? "145px" : "135px";
-  let dll = FontSize === 14 ? "184px"  : FontSize === 13 ? "174px" : "160px";
+  let dll = FontSize === 14 ? "184px" : FontSize === 13 ? "174px" : "160px";
+  let tp = FontSize === 12 ? "-7px" : "-9px";
   const styleSet = {
     width: dl,
     maxHeight: "2px",
@@ -605,7 +609,7 @@ export const InputMenuMODE = (func: any, currency: any, currencies: any) => {
 
   const styleBoxForm = {
     "& > :not(style)": {
-      marginTop: "-10px",
+      marginTop: tp,
       marginLeft: "-15px",
       width: dll,
     },
@@ -659,6 +663,7 @@ export const InputMenuMODE = (func: any, currency: any, currencies: any) => {
 export const InputMenuPK = (func: any, currency: any, currencies: any) => {
   let dl = FontSize === 14 ? "100px" : FontSize === 13 ? "95px" : "90px";
   let dll = FontSize === 14 ? "124px" : FontSize === 13 ? "119px" : "112px";
+  let tp = FontSize === 12 ? "-7px" : "-9px";
   const styleSet = {
     width: dl,
     maxHeight: "2px",
@@ -674,7 +679,7 @@ export const InputMenuPK = (func: any, currency: any, currencies: any) => {
 
   const styleBoxForm = {
     "& > :not(style)": {
-      marginTop: "-10px",
+      marginTop: tp,
       marginLeft: "-15px",
       width: dll,
     },
@@ -793,6 +798,7 @@ export const InputMenuWay = (func: any, currency: any, currencies: any) => {
 export const InputMenuCalc = (func: any, currency: any, currencies: any) => {
   let dl = FontSize === 14 ? "80px" : FontSize === 13 ? "70px" : "60px";
   let dll = FontSize === 14 ? "105px" : FontSize === 13 ? "95px" : "90px";
+  let tp = FontSize === 12 ? "-7px" : "-9px";
   const styleSet = {
     width: dl,
     maxHeight: "2px",
@@ -808,7 +814,7 @@ export const InputMenuCalc = (func: any, currency: any, currencies: any) => {
 
   const styleBoxForm = {
     "& > :not(style)": {
-      marginTop: "-10px",
+      marginTop: tp,
       marginLeft: "-15px",
       width: dll,
     },
@@ -856,8 +862,9 @@ export const InputMenuCalc = (func: any, currency: any, currencies: any) => {
 };
 
 export const InputMenuOptim = (func: any, currency: any, currencies: any) => {
-  let dl = FontSize === 14 ? "130px" : FontSize === 13 ? "120px" : "110px";
-  let dll = FontSize === 14 ? "155px" : FontSize === 13 ? "145px" : "137px";
+  let dl = FontSize === 14 ? "130px" : FontSize === 13 ? "120px" : "97px";
+  let dll = FontSize === 14 ? "155px" : FontSize === 13 ? "145px" : "124px";
+  let tp = FontSize === 12 ? "-7px" : "-9px";
   const styleSet = {
     width: dl,
     maxHeight: "2px",
@@ -873,11 +880,13 @@ export const InputMenuOptim = (func: any, currency: any, currencies: any) => {
 
   const styleBoxForm = {
     "& > :not(style)": {
-      marginTop: "-10px",
+      marginTop: tp,
       marginLeft: "-15px",
       width: dll,
     },
   };
+
+  currencies[0].label = FontSize < 13 ? "Оптимизац.ПК:" : "Оптимизация ПК:";
 
   return (
     <>
@@ -922,10 +931,10 @@ export const InputMenuOptim = (func: any, currency: any, currencies: any) => {
 };
 
 export const InputMenuForm = (func: any, currency: any, currencies: any) => {
-  let dl = FontSize === 14 ? "135px" : "125px";
-  let dll = FontSize === 14 ? "160px" : "150px";
+  let dl = FontSize === 14 ? "135px" : "85px";
+  let dll = FontSize === 14 ? "160px" : "110px";
+  let tp = FontSize === 12 ? "-7px" : "-9px";
   const styleSet = {
-    //width: "150px",
     width: dl,
     maxHeight: "2px",
     minHeight: "2px",
@@ -940,11 +949,13 @@ export const InputMenuForm = (func: any, currency: any, currencies: any) => {
 
   const styleBoxForm = {
     "& > :not(style)": {
-      marginTop: "-10px",
+      marginTop: tp,
       marginLeft: "-15px",
       width: dll,
     },
   };
+
+  currencies[0].label = FontSize < 14 ? "Вых.формы:" : "Выхоные формы:";
 
   return (
     <>
@@ -1192,9 +1203,10 @@ export const StrokaMenuGlob = (soob: string, func: Function, mode: number) => {
     return textWidth(text, bb);
   };
 
+  if (soob === "Целевая функция" && FontSize < 13) soob = "Цел.ф-ция";
+
   const styleApp01 = {
     fontSize: FontSize,
-    //fontSize: 13,
     marginLeft: 0.4,
     width: MesssgeLength(soob, FontSize) + 26,
     //width: MesssgeLength(soob, 13) + 32,
@@ -1230,10 +1242,12 @@ export const MakeRevers = (
 };
 
 export const ShowFormalRoute = (flagDemo: boolean, PressButton: Function) => {
+  let st1 = FontSize < 13 ? "Ф/связи" : "Формальн.связи";
+  let st2 = FontSize < 13 ? "Откл.Фс" : "Отключить Фс";
   return (
     <>
-      {!flagDemo && <>{StrokaMenuGlob("Формальн.связи", PressButton, 3)}</>}
-      {flagDemo && <>{StrokaMenuGlob("Отключить Фс", PressButton, 6)}</>}
+      {!flagDemo && <>{StrokaMenuGlob(st1, PressButton, 3)}</>}
+      {flagDemo && <>{StrokaMenuGlob(st2, PressButton, 6)}</>}
     </>
   );
 };

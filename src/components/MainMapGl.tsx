@@ -980,12 +980,12 @@ const MainMap = (props: {
     document.addEventListener("keydown", escFunction);
     return () => document.removeEventListener("keydown", escFunction);
   }, [escFunction]);
-  //=== отслеживание изменения ширины ======================
+  //=== отслеживание изменения ширины экрана ===============
   React.useLayoutEffect(() => {
     const updateSize = () => {
       setSize(window.innerWidth);
       FontSize = CalcSize(Size);
-      //console.log("Ширина экрана изменена", FontSize, window.innerWidth, Size);
+      console.log("Ширина экрана изменена", FontSize, window.innerWidth, Size);
     };
     window.addEventListener("resize", updateSize);
     updateSize();
