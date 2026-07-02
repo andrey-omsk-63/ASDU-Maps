@@ -1,15 +1,13 @@
 {
   "compilerOptions": {
-    // "target": "es5",
-    // "lib": [
-    //   "dom",
-    //   "dom.iterable",
-    //   "esnext"
-    // ],
-    "target": "ES6",
-
-    "lib": ["DOM", "ES6", "DOM.Iterable", "ScriptHost", "ES2016.Array.Include"],
-    // ...
+    "target": "es2016", // изменить
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "ignoreDeprecations": "6.0",  // добавить
+    "noUncheckedSideEffectImports": false,  // добавить
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -23,8 +21,5 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx"
-  },
-  "include": [
-    "src"
-, "basket/otladkaRoutesOld.ts", "basket/MapRouteBindFormIn.tsx", "basket/MapCreateVertexError.tsx", "src/components/MapComponents/MapWaysFormaMain.tsx", "src/components/MapComponents/MapRouteBindForm.tsx"  ]
+  }
 }
