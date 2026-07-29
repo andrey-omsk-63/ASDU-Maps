@@ -10,12 +10,15 @@ import axios from "axios";
 
 import MainMap from "./components/MainMapGl";
 import AppSocketError from "./AppSocketError";
+import ServerError from "./AppServerError";
 import { SoobErrorCreateWay } from "./components/MapSocketFunctions";
 import { SoobErrorDeleteWay } from "./components/MapSocketFunctions";
 import { SoobErrorCreateWayToPoint } from "./components/MapSocketFunctions";
 import { SoobErrorDeleteWayToPoint } from "./components/MapSocketFunctions";
 import { SoobErrorCreateWayFromPoint } from "./components/MapSocketFunctions";
 import { SoobErrorDeleteWayFromPoint } from "./components/MapSocketFunctions";
+
+import { styleMainScreen } from "./components/MainMapStyle";
 
 import { ZONE, zoomStart } from "./components/MapConst";
 
@@ -119,6 +122,8 @@ let flagOpenWS = true;
 let homeRegion: any = "";
 let soob = "";
 
+let notServerError = true; // не было ошибки сервера
+
 const App = () => {
   //== Piece of Redux ======================================
   let massdk = useSelector((state: any) => {
@@ -155,18 +160,19 @@ const App = () => {
       if (homeRegion) {
         dateMapGl.tflight = dateMapGl.tflight.filter(
           (user: { region: { num: any } }) =>
-            user.region.num === homeRegion.toString()
+            user.region.num === homeRegion.toString(),
         );
       }
       if (ZONE) {
         dateMapGl.tflight = dateMapGl.tflight.filter(
-          (user: { area: { num: string } }) => user.area.num === ZONE.toString()
+          (user: { area: { num: string } }) =>
+            user.area.num === ZONE.toString(),
         );
       }
       dispatch(mapCreate(dateMapGl));
       setFindMapInfo(true);
     },
-    [dispatch]
+    [dispatch],
   );
 
   const Initialisation = () => {
@@ -186,7 +192,7 @@ const App = () => {
   const FilterGraphInfo = React.useCallback(() => {
     if (ZONE) {
       dateRouteGl.vertexes = dateRouteGl.vertexes.filter(
-        (user: { area: number }) => user.area === ZONE
+        (user: { area: number }) => user.area === ZONE,
       );
     }
   }, []);
@@ -213,11 +219,13 @@ const App = () => {
     };
 
     WS.onclose = function (event: any) {
-      console.log("WS.current.onclose:", event);
+      if (!debug) notServerError = false;
+      console.log("WS.current.onclose:", notServerError, event);
     };
 
     WS.onerror = function (event: any) {
-      console.log("WS.current.onerror:", event);
+      if (!debug) notServerError = false;
+      console.log("WS.current.onerror:", notServerError, event);
     };
 
     WS.onmessage = function (event: any) {
@@ -403,22 +411,30 @@ const App = () => {
   }
 
   return (
-    <Grid container sx={{ height: "100vh", width: "100%", bgcolor: "#E9F5D8" }}>
-      <Grid item xs>
-        {openSetErr && <AppSocketError sErr={soob} setOpen={setOpenSetErr} />}
-        {openMapGl && (
-          <MainMap
-            region={homeRegion}
-            svg={svg}
-            setSvg={setSvg}
-            add={addRoute}
-            setAdd={setAddRoute}
-            trigger={trigger}
-            sErr={soob}
-          />
-        )}
-      </Grid>
-    </Grid>
+    <>
+      {!notServerError ? (
+        <ServerError />
+      ) : (
+        <Grid container sx={styleMainScreen}>
+          <Grid item xs>
+            {openSetErr && (
+              <AppSocketError sErr={soob} setOpen={setOpenSetErr} />
+            )}
+            {openMapGl && (
+              <MainMap
+                region={homeRegion}
+                svg={svg}
+                setSvg={setSvg}
+                add={addRoute}
+                setAdd={setAddRoute}
+                trigger={trigger}
+                sErr={soob}
+              />
+            )}
+          </Grid>
+        </Grid>
+      )}
+    </>
   );
 };
 
